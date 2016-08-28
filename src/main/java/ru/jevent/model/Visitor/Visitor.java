@@ -25,8 +25,8 @@ public class Visitor extends NamedEntity implements Attachable {
     private Email primaryEmail;                     // from UC-3-1
     private ArrayList<Email> additionalEmails;      // from UC-3-8
 
-    private String primaryPhotoURL;                 // string - to store images on special server directory
-    private ArrayList<String> additionalPhotoURLs;  //
+    private byte[] primaryPhoto;                    // byte[] - to store images on DB
+    private ArrayList<byte[]> additionalPhotos;     //
 
     private ArrayList<Event> eventsList;            // from UC-3-1, initialized from DB
     private ArrayList<Event> speakerEventsList;     // from UC-3-1, initialized from DB
@@ -37,10 +37,9 @@ public class Visitor extends NamedEntity implements Attachable {
 
     private ArrayList<Comment> commentList;         // like notes for visitor
 
+    private Activities activities;                  //
 
-    private Activities activities;
-
-    public static enum Sex {
+    public enum Sex {
         MALE, FEMALE
     }
 
@@ -48,9 +47,6 @@ public class Visitor extends NamedEntity implements Attachable {
     public Visitor() {
 
     }
-
-
-
 
     //     implements Attachable
 
@@ -70,11 +66,12 @@ public class Visitor extends NamedEntity implements Attachable {
         return new byte[0];
     }
 
+
+    // getters and setters
+
     public Sex getSex() {
         return sex;
     }
-
-
 
     public void setSex(Sex sex) {
         this.sex = sex;
@@ -144,20 +141,20 @@ public class Visitor extends NamedEntity implements Attachable {
         this.additionalEmails = additionalEmails;
     }
 
-    public String getPrimaryPhotoURL() {
-        return primaryPhotoURL;
+    public byte[] getPrimaryPhoto() {
+        return primaryPhoto;
     }
 
-    public void setPrimaryPhotoURL(String primaryPhotoURL) {
-        this.primaryPhotoURL = primaryPhotoURL;
+    public void setPrimaryPhoto(byte[] primaryPhoto) {
+        this.primaryPhoto = primaryPhoto;
     }
 
-    public ArrayList<String> getAdditionalPhotoURLs() {
-        return additionalPhotoURLs;
+    public ArrayList<byte[]> getAdditionalPhotos() {
+        return additionalPhotos;
     }
 
-    public void setAdditionalPhotoURLs(ArrayList<String> additionalPhotoURLs) {
-        this.additionalPhotoURLs = additionalPhotoURLs;
+    public void setAdditionalPhotos(ArrayList<byte[]> additionalPhotos) {
+        this.additionalPhotos = additionalPhotos;
     }
 
     public ArrayList<Event> getEventsList() {
