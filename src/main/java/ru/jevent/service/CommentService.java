@@ -1,6 +1,6 @@
 package ru.jevent.service;
 
-import ru.jevent.exception.NotFoundException;
+import ru.jevent.util.exception.NotFoundException;
 import ru.jevent.model.Common.Comment;
 
 import java.util.List;

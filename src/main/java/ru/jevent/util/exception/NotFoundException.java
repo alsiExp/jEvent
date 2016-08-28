@@ -1,4 +1,4 @@
-package ru.jevent.exception;
+package ru.jevent.util.exception;
 
 /**
  * User: gkislin
