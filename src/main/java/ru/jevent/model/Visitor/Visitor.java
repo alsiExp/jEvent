@@ -1,17 +1,17 @@
 package ru.jevent.model.Visitor;
 
 import ru.jevent.model.Activities.Activities;
-import ru.jevent.model.BaseEntity;
 import ru.jevent.model.Common.*;
 import ru.jevent.model.Event.Event;
 import ru.jevent.model.NamedEntity;
 import ru.jevent.model.Task.Task;
+import ru.jevent.service.Attachable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Visitor extends NamedEntity implements Attachable {
+public class Visitor extends NamedEntity {
 
     private Sex sex;                                // from UC-3-1
     private LocalDateTime birthDay;
@@ -47,25 +47,6 @@ public class Visitor extends NamedEntity implements Attachable {
     public Visitor() {
 
     }
-
-    //     implements Attachable
-
-    public String getAttachName() {
-        return null;
-    }
-
-    public String getAttachDescription() {
-        return null;
-    }
-
-    public String getAttachURL() {
-        return null;
-    }
-
-    public byte[] getAttachImage() {
-        return new byte[0];
-    }
-
 
     // getters and setters
 

@@ -1,4 +1,4 @@
-package ru.jevent.model.Common;
+package ru.jevent.service;
 
 public interface Attachable {
     public String getAttachName();

@@ -10,7 +10,7 @@ public class Slot extends NamedEntity {
     }
 
     private LocalDateTime start;
-    private SlotType orderType;
+    private SlotType slotType;
 
     public enum SlotType {
         CHEK_IN,
@@ -27,11 +27,11 @@ public class Slot extends NamedEntity {
         this.start = start;
     }
 
-    public SlotType getOrderType() {
-        return orderType;
+    public SlotType getSlotType() {
+        return slotType;
     }
 
-    public void setOrderType(SlotType orderType) {
-        this.orderType = orderType;
+    public void setSlotType(SlotType slotType) {
+        this.slotType = slotType;
     }
 }
