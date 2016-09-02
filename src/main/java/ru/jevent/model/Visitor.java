@@ -7,12 +7,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Visitor extends Person {
+public class Visitor extends Person implements Attachable{
 
     private LocalDateTime birthDay;
     private String gitHubProfile;                   // from UC-3-1
     private String linkedInProfile;                 // from UC-3-1
     private LocalDate registered;
+    private String description;
 
     private ArrayList<Event> eventsList;            // from UC-3-1, initialized from DB
     private ArrayList<Event> speakerEventsList;     // from UC-3-1, initialized from DB
@@ -27,6 +28,22 @@ public class Visitor extends Person {
     //    constructors
     public Visitor() {
     }
+
+    @Override
+    public String getAttachName() {
+        return this.getFullName();
+    }
+
+    @Override
+    public String getAttachDescription() {
+        return this.getDescription();
+    }
+
+    @Override
+    public byte[] getAttachImage() {
+        return this.getPhoto();
+    }
+
 
     // getters and setters
 
@@ -125,4 +142,11 @@ public class Visitor extends Person {
         this.commentList = commentList;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

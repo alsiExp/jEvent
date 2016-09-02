@@ -20,6 +20,10 @@ public class Person extends BaseEntity {
     public Person() {
     }
 
+    public String getFullName() {
+        return this.firstName + " " + this.getLastName();
+    }
+
     public String getFirstName() {
         return firstName;
     }
