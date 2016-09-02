@@ -1,6 +1,6 @@
 package ru.jevent.service;
 
-import ru.jevent.model.Event.Event;
+import ru.jevent.model.Event;
 
 import java.util.List;
 

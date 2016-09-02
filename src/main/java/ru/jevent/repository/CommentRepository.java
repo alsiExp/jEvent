@@ -1,6 +1,6 @@
 package ru.jevent.repository;
 
-import ru.jevent.model.Common.Comment;
+import ru.jevent.model.Comment;
 
 public interface CommentRepository {
 

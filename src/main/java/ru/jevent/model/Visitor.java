@@ -1,32 +1,18 @@
-package ru.jevent.model.Visitor;
+package ru.jevent.model;
 
-import ru.jevent.model.Activities.Activities;
-import ru.jevent.model.Common.*;
-import ru.jevent.model.Event.Event;
-import ru.jevent.model.NamedEntity;
-import ru.jevent.model.Task.Task;
-import ru.jevent.service.Attachable;
+import ru.jevent.model.PersonParts.Email;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Visitor extends NamedEntity {
+public class Visitor extends Person {
 
-    private Sex sex;                                // from UC-3-1
     private LocalDateTime birthDay;
     private String gitHubProfile;                   // from UC-3-1
     private String linkedInProfile;                 // from UC-3-1
-    private Date registered = new Date();
-
-    private Phone primaryPhone;                     // from UC-3-1
-    private ArrayList<Phone> additionalPhones;      // from UC-3-8
-
-    private Email primaryEmail;                     // from UC-3-1
-    private ArrayList<Email> additionalEmails;      // from UC-3-8
-
-    private byte[] primaryPhoto;                    // byte[] - to store images on DB
-    private ArrayList<byte[]> additionalPhotos;     //
+    private LocalDate registered;
 
     private ArrayList<Event> eventsList;            // from UC-3-1, initialized from DB
     private ArrayList<Event> speakerEventsList;     // from UC-3-1, initialized from DB
@@ -37,26 +23,12 @@ public class Visitor extends NamedEntity {
 
     private ArrayList<Comment> commentList;         // like notes for visitor
 
-    private Activities activities;                  //
-
-    public enum Sex {
-        MALE, FEMALE
-    }
 
     //    constructors
     public Visitor() {
-
     }
 
     // getters and setters
-
-    public Sex getSex() {
-        return sex;
-    }
-
-    public void setSex(Sex sex) {
-        this.sex = sex;
-    }
 
     public LocalDateTime getBirthDay() {
         return birthDay;
@@ -82,63 +54,18 @@ public class Visitor extends NamedEntity {
         this.linkedInProfile = linkedInProfile;
     }
 
-    public Date getRegistered() {
+    public LocalDate getRegistered() {
         return registered;
     }
 
-    public void setRegistered(Date registered) {
+    public void setRegistered(LocalDate registered) {
         this.registered = registered;
     }
 
-    public Phone getPrimaryPhone() {
-        return primaryPhone;
-    }
-
-    public void setPrimaryPhone(Phone primaryPhone) {
-        this.primaryPhone = primaryPhone;
-    }
-
-    public ArrayList<Phone> getAdditionalPhones() {
-        return additionalPhones;
-    }
-
-    public void setAdditionalPhones(ArrayList<Phone> additionalPhones) {
-        this.additionalPhones = additionalPhones;
-    }
-
-    public Email getPrimaryEmail() {
-        return primaryEmail;
-    }
-
-    public void setPrimaryEmail(Email primaryEmail) {
-        this.primaryEmail = primaryEmail;
-    }
-
-    public ArrayList<Email> getAdditionalEmails() {
-        return additionalEmails;
-    }
-
-    public void setAdditionalEmails(ArrayList<Email> additionalEmails) {
-        this.additionalEmails = additionalEmails;
-    }
-
-    public byte[] getPrimaryPhoto() {
-        return primaryPhoto;
-    }
-
-    public void setPrimaryPhoto(byte[] primaryPhoto) {
-        this.primaryPhoto = primaryPhoto;
-    }
-
-    public ArrayList<byte[]> getAdditionalPhotos() {
-        return additionalPhotos;
-    }
-
-    public void setAdditionalPhotos(ArrayList<byte[]> additionalPhotos) {
-        this.additionalPhotos = additionalPhotos;
-    }
-
     public ArrayList<Event> getEventsList() {
+        if( eventsList == null) {
+            eventsList = new ArrayList<>();
+        }
         return eventsList;
     }
 
@@ -147,6 +74,9 @@ public class Visitor extends NamedEntity {
     }
 
     public ArrayList<Event> getSpeakerEventsList() {
+        if(speakerEventsList == null) {
+            speakerEventsList = new ArrayList<>();
+        }
         return speakerEventsList;
     }
 
@@ -163,6 +93,9 @@ public class Visitor extends NamedEntity {
     }
 
     public ArrayList<Task> getVisitorTasks() {
+        if(visitorTasks == null) {
+            visitorTasks = new ArrayList<>();
+        }
         return visitorTasks;
     }
 
@@ -171,6 +104,9 @@ public class Visitor extends NamedEntity {
     }
 
     public ArrayList<Email> getVisitorLetter() {
+        if (visitorLetter == null) {
+            visitorLetter = new ArrayList<>();
+        }
         return visitorLetter;
     }
 
@@ -179,6 +115,9 @@ public class Visitor extends NamedEntity {
     }
 
     public ArrayList<Comment> getCommentList() {
+        if(commentList == null) {
+            commentList = new ArrayList<>();
+        }
         return commentList;
     }
 
@@ -186,11 +125,4 @@ public class Visitor extends NamedEntity {
         this.commentList = commentList;
     }
 
-    public Activities getActivities() {
-        return activities;
-    }
-
-    public void setActivities(Activities activities) {
-        this.activities = activities;
-    }
 }

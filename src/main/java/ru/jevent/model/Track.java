@@ -1,7 +1,8 @@
-package ru.jevent.model.Event;
+package ru.jevent.model;
 
 import ru.jevent.model.NamedEntity;
-import ru.jevent.model.Visitor.Visitor;
+import ru.jevent.model.Slot;
+import ru.jevent.model.Visitor;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -15,6 +16,9 @@ public class Track extends NamedEntity {
     }
 
     public LinkedList<Slot> getOrder() {
+        if(slotOrder == null) {
+            slotOrder = new LinkedList<>();
+        }
         return slotOrder;
     }
 
@@ -23,6 +27,8 @@ public class Track extends NamedEntity {
     }
 
     public HashMap<Slot, Visitor> getApprovedSpeakers() {
+        if(approvedSpeakers == null)
+            approvedSpeakers = new HashMap<>();
         return approvedSpeakers;
     }
 

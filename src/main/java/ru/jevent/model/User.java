@@ -1,13 +1,12 @@
-package ru.jevent.model.Team;
+package ru.jevent.model;
 
-import ru.jevent.model.NamedEntity;
-import ru.jevent.model.Role;
+import ru.jevent.model.Enums.Role;
 
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Set;
 
-public class User extends NamedEntity{
+public class User extends Person {
     private String email;
 
     //  Length(min = 5)
@@ -21,7 +20,6 @@ public class User extends NamedEntity{
     }
 
     public User(String name, String email, String password, Role role, Role... roles) {
-        super(name);
         this.email = email;
         this.password = password;
         this.enabled = true;

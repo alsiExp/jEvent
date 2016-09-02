@@ -1,6 +1,6 @@
 package ru.jevent.repository;
 
-import ru.jevent.model.Visitor.Visitor;
+import ru.jevent.model.Visitor;
 
 public interface VisitorRepository {
 

@@ -1,9 +1,9 @@
-package ru.jevent.model.Event;
+package ru.jevent.model;
 
+import ru.jevent.model.Enums.RateType;
 import ru.jevent.model.NamedEntity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class Rate extends NamedEntity {
     // tariffs for events:
@@ -19,14 +19,6 @@ public class Rate extends NamedEntity {
     private LocalDate end;
     private double cost;
 
-    public enum RateType {
-        ONLINE_LITE,
-        ONLINE_STANDART,
-        ONLINE_BUSINESS,
-        PERSOONAL_LITE,
-        PERSOONAL_STANDART,
-        PERSOONAL_BUSINESS
-    }
 
     public RateType getRateType() {
         return rateType;

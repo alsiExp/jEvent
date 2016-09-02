@@ -1,5 +1,6 @@
-package ru.jevent.model.Event;
+package ru.jevent.model;
 
+import ru.jevent.model.Enums.SlotType;
 import ru.jevent.model.NamedEntity;
 
 import java.time.LocalDateTime;
@@ -11,13 +12,6 @@ public class Slot extends NamedEntity {
 
     private LocalDateTime start;
     private SlotType slotType;
-
-    public enum SlotType {
-        CHEK_IN,
-        KEYNOTE,
-        BREAK,
-        LECTURE
-    }
 
     public LocalDateTime getStart() {
         return start;

@@ -1,13 +1,12 @@
-package ru.jevent.model.Visitor;
+package ru.jevent.model.PersonParts;
 
 import ru.jevent.model.BaseEntity;
+import ru.jevent.model.Person;
 
 public class Phone extends BaseEntity {
 
+    private Person person;
     private String phone;
     private String note;
-
-    public boolean validatePhone(String newPhone) {
-        return true;
-    }
+    private boolean isPrimary;
 }

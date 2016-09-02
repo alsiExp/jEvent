@@ -5,6 +5,13 @@ public class BaseEntity {
 
     protected Long id;
 
+    public BaseEntity() {
+    }
+
+    public BaseEntity(Long id) {
+        this.id = id;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

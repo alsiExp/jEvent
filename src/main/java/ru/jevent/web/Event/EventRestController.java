@@ -2,7 +2,7 @@ package ru.jevent.web.Event;
 
 import ru.jevent.LoggedUser;
 import ru.jevent.LoggerWrapper;
-import ru.jevent.model.Event.Event;
+import ru.jevent.model.Event;
 import ru.jevent.service.EventService;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public class EventRestController {
 
     public void delete(long id) {
         long userId = LoggedUser.id();
-        LOG.info("delete Event {} for User {}", id, userId);
+        LOG.info("delete EventPac {} for User {}", id, userId);
         service.delete(id, userId);
     }
 }
