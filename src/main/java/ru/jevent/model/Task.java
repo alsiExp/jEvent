@@ -10,7 +10,7 @@ public class Task extends NamedEntity {
 
     private User autor;
     private Set<User> executors;
-    private ArrayList<User> target;
+    private Set<User> target;
 
     private LocalDateTime start;
     private LocalDateTime deadline;
@@ -18,7 +18,7 @@ public class Task extends NamedEntity {
     private String fullDescription;
 
     private ArrayList<TaskStatus> statusLog;        // actual status is lastest
-    private ArrayList<Attachable> attachList;       // from UC-1-1, can be Event, Partner or Visitor
+    private Set<Attachable> attachList;       // from UC-1-1, can be Event, Partner or Visitor
 
     public Task() {
     }
@@ -42,14 +42,14 @@ public class Task extends NamedEntity {
         this.executors = executors;
     }
 
-    public ArrayList<User> getTarget() {
+    public Set<User> getTarget() {
         if(target == null) {
-            target = new ArrayList<>();
+            target = new HashSet<User>();
         }
         return target;
     }
 
-    public void setTarget(ArrayList<User> target) {
+    public void setTarget(Set<User> target) {
         this.target = target;
     }
 
@@ -96,14 +96,14 @@ public class Task extends NamedEntity {
         this.statusLog = statusLog;
     }
 
-    public ArrayList<Attachable> getAttachList() {
+    public Set<Attachable> getAttachList() {
         if(attachList == null) {
-            attachList = new ArrayList<>();
+            attachList = new HashSet<>();
         }
         return attachList;
     }
 
-    public void setAttachList(ArrayList<Attachable> attachList) {
+    public void setAttachList(Set<Attachable> attachList) {
         this.attachList = attachList;
     }
 }

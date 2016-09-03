@@ -6,11 +6,12 @@ import ru.jevent.model.Visitor;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class Track extends NamedEntity {
 
     private LinkedList<Slot> slotOrder;
-    private HashMap<Slot, Visitor> approvedSpeakers;
+    private Map<Slot, Visitor> approvedSpeakers;
 
     public Track() {
     }
@@ -26,13 +27,13 @@ public class Track extends NamedEntity {
         this.slotOrder = slotOrder;
     }
 
-    public HashMap<Slot, Visitor> getApprovedSpeakers() {
+    public Map<Slot, Visitor> getApprovedSpeakers() {
         if(approvedSpeakers == null)
             approvedSpeakers = new HashMap<>();
         return approvedSpeakers;
     }
 
-    public void setApprovedSpeakers(HashMap<Slot, Visitor> approvedSpeakers) {
+    public void setApprovedSpeakers(Map<Slot, Visitor> approvedSpeakers) {
         this.approvedSpeakers = approvedSpeakers;
     }
 }

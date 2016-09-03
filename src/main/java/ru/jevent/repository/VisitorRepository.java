@@ -1,6 +1,7 @@
 package ru.jevent.repository;
 
 import ru.jevent.model.Visitor;
+import java.util.List;
 
 public interface VisitorRepository {
 
@@ -10,4 +11,7 @@ public interface VisitorRepository {
 
     Visitor get(long id);
 
+    Visitor getByEmail(String email);
+
+    List<Visitor> getAll();
 }
