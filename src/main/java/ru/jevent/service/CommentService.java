@@ -1,20 +1,16 @@
 package ru.jevent.service;
 
-import ru.jevent.util.exception.NotFoundException;
 import ru.jevent.model.Comment;
-
-import java.util.List;
+import ru.jevent.util.exception.NotFoundException;
 
 public interface CommentService {
 
-    public Comment save(Comment comment);
+    Comment save(Comment comment, long userId);
 
-    public void delete(long id) throws NotFoundException;
+    Comment update(Comment comment, long userId) throws NotFoundException;
 
-    public Comment get(long id) throws NotFoundException;
+    void delete(long id, long userId) throws NotFoundException;
 
-    public List<Comment> getAll();
-
-    public void update(Comment comment) throws NotFoundException;
+    Comment get(long id, long userId) throws NotFoundException;
 
 }

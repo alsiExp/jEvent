@@ -1,17 +1,20 @@
 package ru.jevent.service;
 
 import ru.jevent.model.Event;
+import ru.jevent.util.exception.NotFoundException;
 
 import java.util.List;
 
 public interface EventService {
 
-    Event save(Event event, long userId);
+    Event save(Event event);
 
-    void update(Event event, long userId);
+    void update(Event event) throws NotFoundException;
 
-    void delete(long id, long userId);
+    Event get(long id) throws NotFoundException;
 
-    List<Event> getAll(long userId);
+    void delete(long id) throws NotFoundException;
+
+    List<Event> getAll();
 
 }

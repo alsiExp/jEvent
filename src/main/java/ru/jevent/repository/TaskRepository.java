@@ -14,7 +14,9 @@ public interface TaskRepository {
     boolean delete(long id, long userId);
 
 
-    Task get(long id, long userId);
+    Task getCreated(long id, long userId);
+
+    Task getAssigned(long id, long userId);
 
 
     List<Task> getAll(long userId);
