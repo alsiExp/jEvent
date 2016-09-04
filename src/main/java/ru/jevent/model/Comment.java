@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 public class Comment extends BaseEntity {
     // simple linear comments
     private String content;
-    private User autor;
+    private User author;
     private LocalDateTime date;
 
     public String getContent() {
@@ -17,12 +17,12 @@ public class Comment extends BaseEntity {
         this.content = content;
     }
 
-    public User getAutor() {
-        return autor;
+    public User getAuthor() {
+        return author;
     }
 
-    public void setAutor(User autor) {
-        this.autor = autor;
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     public LocalDateTime getDate() {
@@ -31,5 +31,14 @@ public class Comment extends BaseEntity {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", author=" + author +
+                ", date=" + date +
+                '}';
     }
 }

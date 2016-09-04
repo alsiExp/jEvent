@@ -6,7 +6,7 @@ import java.util.LinkedList;
 
 public class Event extends NamedEntity  implements Attachable{
 
-    private User autor;
+    private User author;
 
     private String tagName;
     private String adress;
@@ -36,12 +36,12 @@ public class Event extends NamedEntity  implements Attachable{
         return this.getImage();
     }
 
-    public User getAutor() {
-        return autor;
+    public User getAuthor() {
+        return author;
     }
 
-    public void setAutor(User autor) {
-        this.autor = autor;
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     public String getTagName() {
@@ -121,5 +121,15 @@ public class Event extends NamedEntity  implements Attachable{
 
     public void setTracks(LinkedList<Track> tracks) {
         this.tracks = tracks;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id=" + id +
+                "name=" + name +
+                "author=" + author +
+                ", tagName='" + tagName + '\'' +
+                '}';
     }
 }

@@ -1,9 +1,5 @@
 package ru.jevent.model;
 
-import ru.jevent.model.BaseEntity;
-
-import java.util.ArrayList;
-
 public class Partner extends NamedEntity implements Attachable {
 
     private String description;
@@ -51,5 +47,13 @@ public class Partner extends NamedEntity implements Attachable {
 
     public void setContact(Person contact) {
         this.contact = contact;
+    }
+
+    @Override
+    public String toString() {
+        return "Partner{" +
+                "id=" + id +
+                "name=" + name +
+                '}';
     }
 }

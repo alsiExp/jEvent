@@ -12,27 +12,40 @@ public class EventRestController {
 
     private EventService service;
 
-    public List<Event> getAll() {
+    public Event create(Event event) {
         long userId = LoggedUser.id();
-        LOG.info("getAllEvent for User {}", userId);
-        return service.getAll(userId);
+        LOG.info("create {} by user {}", event, userId);
+        return service.save(event);
     }
 
     public void update(Event event) {
         long userId = LoggedUser.id();
-        LOG.info("update {} for User {}", event, userId);
-        service.update(event, userId);
+        LOG.info("update {} by user {}", event, userId);
+        service.update(event);
     }
 
-    public Event create(Event event) {
+    public Event get(long id) {
         long userId = LoggedUser.id();
-        LOG.info("create {} for User {}", event, userId);
-        return service.save(event, userId);
+        LOG.info("get event {} by user {}", id, userId);
+        return service.get(id);
     }
 
     public void delete(long id) {
         long userId = LoggedUser.id();
-        LOG.info("delete EventPac {} for User {}", id, userId);
-        service.delete(id, userId);
+        LOG.info("delete event {} by user {}", id, userId);
+        service.delete(id);
     }
+
+
+    public List<Event> getAll() {
+        long userId = LoggedUser.id();
+        LOG.info("getAll event by user {}", userId);
+        return service.getAll();
+    }
+
+
+
+
+
+
 }
