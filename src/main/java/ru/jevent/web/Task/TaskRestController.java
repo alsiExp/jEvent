@@ -4,13 +4,12 @@ import ru.jevent.LoggedUser;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Task;
 import ru.jevent.service.TaskService;
-import ru.jevent.web.Event.EventRestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class TaskRestController {
-    private static final LoggerWrapper LOG = LoggerWrapper.get(EventRestController.class);
+    private static final LoggerWrapper LOG = LoggerWrapper.get(TaskRestController.class);
 
     private TaskService service;
 

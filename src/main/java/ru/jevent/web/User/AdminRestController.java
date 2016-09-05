@@ -3,12 +3,11 @@ package ru.jevent.web.User;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.User;
 import ru.jevent.service.UserService;
-import ru.jevent.web.Event.EventRestController;
 
 import java.util.List;
 
 public class AdminRestController {
-    private static final LoggerWrapper LOG = LoggerWrapper.get(EventRestController.class);
+    private static final LoggerWrapper LOG = LoggerWrapper.get(AdminRestController.class);
 
     private UserService service;
 

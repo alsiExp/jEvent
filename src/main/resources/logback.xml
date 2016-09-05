@@ -9,7 +9,7 @@
     <jmxConfigurator/>
 
     <appender name="file" class="ch.qos.logback.core.FileAppender">
-        <file>E:/!Java/jEvent_files/jEvent/log/jevent.log</file>
+        <file>log/jevent.log</file>
 
         <encoder>
             <charset>UTF-8</charset>

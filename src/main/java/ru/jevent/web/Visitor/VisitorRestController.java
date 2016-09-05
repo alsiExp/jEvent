@@ -4,12 +4,11 @@ import ru.jevent.LoggedUser;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Visitor;
 import ru.jevent.service.VisitorService;
-import ru.jevent.web.Event.EventRestController;
 
 import java.util.List;
 
 public class VisitorRestController {
-    private static final LoggerWrapper LOG = LoggerWrapper.get(EventRestController.class);
+    private static final LoggerWrapper LOG = LoggerWrapper.get(VisitorRestController.class);
 
     private VisitorService service;
 

@@ -1,15 +1,22 @@
 package ru.jevent.web.Comment;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import ru.jevent.LoggedUser;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Comment;
 import ru.jevent.service.CommentService;
-import ru.jevent.web.Event.EventRestController;
 
+@Controller
 public class CommentRestController {
-    private static final LoggerWrapper LOG = LoggerWrapper.get(EventRestController.class);
+    private static final LoggerWrapper LOG = LoggerWrapper.get(CommentRestController.class);
 
-    private CommentService service;
+    private final CommentService service;
+
+    @Autowired
+    public CommentRestController(CommentService service) {
+        this.service = service;
+    }
 
     public Comment create(Comment comment) {
         long userId = LoggedUser.id();
