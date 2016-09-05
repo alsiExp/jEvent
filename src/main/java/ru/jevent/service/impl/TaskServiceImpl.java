@@ -25,13 +25,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task getCreated(long id, long userId) throws NotFoundException {
-        return ExceptionUtil.check(repository.getCreated(id, userId), id);
-    }
-
-    @Override
-    public Task getAssigned(long id, long userId) throws NotFoundException {
-        return ExceptionUtil.check(repository.getAssigned(id, userId), id);
+    public Task get(long id, long userId) throws NotFoundException {
+        return ExceptionUtil.check(repository.get(id, userId), id);
     }
 
     @Override
@@ -39,13 +34,19 @@ public class TaskServiceImpl implements TaskService {
         ExceptionUtil.check(repository.delete(id, userId), id);
     }
 
-    @Override
-    public List<Task> getAll(long userId) {
-        return repository.getAll(userId);
-    }
 
     @Override
     public List<Task> getByInterval(LocalDateTime start, LocalDateTime end, long userId) {
         return repository.getByInterval(start, end.plus(1, ChronoUnit.DAYS), userId);
+    }
+
+    @Override
+    public List<Task> getAllCreated(long userId) throws NotFoundException {
+        return repository.getAllCreated(userId);
+    }
+
+    @Override
+    public List<Task> getAllAssigned(long userId) throws NotFoundException {
+        return repository.getAllAssigned(userId);
     }
 }

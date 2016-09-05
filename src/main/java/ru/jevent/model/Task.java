@@ -8,8 +8,7 @@ import java.util.Set;
 
 public class Task extends NamedEntity {
 
-    private User autor;
-    private Set<User> executors;
+    private User author;
     private Set<User> target;
 
     private LocalDateTime start;
@@ -23,23 +22,12 @@ public class Task extends NamedEntity {
     public Task() {
     }
 
-    public User getAutor() {
-        return autor;
+    public User getAuthor() {
+        return author;
     }
 
-    public void setAutor(User autor) {
-        this.autor = autor;
-    }
-
-    public Set<User> getExecutors() {
-        if(executors == null) {
-            executors = new HashSet<User>();
-        }
-        return executors;
-    }
-
-    public void setExecutors(Set<User> executors) {
-        this.executors = executors;
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     public Set<User> getTarget() {
@@ -105,5 +93,16 @@ public class Task extends NamedEntity {
 
     public void setAttachList(Set<Attachable> attachList) {
         this.attachList = attachList;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                "name=" + name +
+                "author=" + author +
+                ", deadline=" + deadline +
+                ", status=" + getStatusLog().get(statusLog.size()) +
+                '}';
     }
 }

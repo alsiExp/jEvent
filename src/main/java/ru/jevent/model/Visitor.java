@@ -5,7 +5,6 @@ import ru.jevent.model.PersonParts.Email;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Visitor extends Person implements Attachable{
 
@@ -148,5 +147,14 @@ public class Visitor extends Person implements Attachable{
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Visitor{" +
+                "id=" + id +
+                ", firstName=" + firstName +
+                ", lastName=" + lastName +
+                '}';
     }
 }
