@@ -1,5 +1,0 @@
-2016-09-06 00:15:43,124 INFO  ClassPathXmlApplicationContext [AbstractApplicationContext.java:581] Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@50f8360d: startup date [Tue Sep 06 00:15:43 FET 2016]; root of context hierarchy
-2016-09-06 00:15:43,163 INFO  XmlBeanDefinitionReader [XmlBeanDefinitionReader.java:317] Loading XML bean definitions from class path resource [spring/spring-app.xml]
-2016-09-06 00:15:43,499 INFO  CommentRestController [LoggerWrapper.java:28] delete 2 by user 0
-2016-09-06 00:15:43,500 INFO  MockCommentRepositoryImpl [LoggerWrapper.java:28] delete2
-2016-09-06 00:15:43,501 INFO  ClassPathXmlApplicationContext [AbstractApplicationContext.java:982] Closing org.springframework.context.support.ClassPathXmlApplicationContext@50f8360d: startup date [Tue Sep 06 00:15:43 FET 2016]; root of context hierarchy

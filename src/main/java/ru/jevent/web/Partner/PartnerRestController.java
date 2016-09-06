@@ -1,5 +1,7 @@
 package ru.jevent.web.Partner;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import ru.jevent.LoggedUser;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Partner;
@@ -7,10 +9,16 @@ import ru.jevent.service.PartnerService;
 
 import java.util.List;
 
+@Controller
 public class PartnerRestController {
     private static final LoggerWrapper LOG = LoggerWrapper.get(PartnerRestController.class);
 
     private PartnerService service;
+
+    @Autowired
+    public PartnerRestController(PartnerService service) {
+        this.service = service;
+    }
 
     public Partner create(Partner partner) {
         long userId = LoggedUser.id();

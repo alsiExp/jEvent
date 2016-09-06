@@ -10,6 +10,10 @@ public class Partner extends NamedEntity implements Attachable {
     public Partner() {
     }
 
+    public Partner(long id, String name) {
+        super(id, name);
+    }
+
     @Override
     public String getAttachName() {
         return this.getName();

@@ -19,7 +19,19 @@ public class Event extends NamedEntity  implements Attachable{
     private LinkedList<Rate> rates;
     private LinkedList<Track> tracks;
 
+    public Event() {
+    }
 
+    public Event(long id, String name) {
+        super(id, name);
+    }
+
+    public Event(long id, String name, User author, String tagName, String description) {
+        super(id, name);
+        this.author = author;
+        this.tagName = tagName;
+        this.description = description;
+    }
 
     @Override
     public String getAttachName() {
@@ -127,8 +139,8 @@ public class Event extends NamedEntity  implements Attachable{
     public String toString() {
         return "Event{" +
                 "id=" + id +
-                "name=" + name +
-                "author=" + author +
+                ", name=" + name +
+                ", author=" + author +
                 ", tagName='" + tagName + '\'' +
                 '}';
     }

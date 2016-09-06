@@ -1,5 +1,7 @@
 package ru.jevent.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.jevent.model.Task;
 import ru.jevent.repository.TaskRepository;
 import ru.jevent.service.TaskService;
@@ -10,9 +12,15 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+@Service
 public class TaskServiceImpl implements TaskService {
 
     private TaskRepository repository;
+
+    @Autowired
+    public TaskServiceImpl(TaskRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public Task save(Task task, long userId) {

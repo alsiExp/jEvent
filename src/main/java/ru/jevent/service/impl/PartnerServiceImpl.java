@@ -1,5 +1,7 @@
 package ru.jevent.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.jevent.model.Partner;
 import ru.jevent.repository.PartnerRepository;
 import ru.jevent.service.PartnerService;
@@ -8,9 +10,15 @@ import ru.jevent.util.exception.NotFoundException;
 
 import java.util.List;
 
+@Service
 public class PartnerServiceImpl implements PartnerService {
 
     private PartnerRepository repository;
+
+    @Autowired
+    public PartnerServiceImpl(PartnerRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public Partner save(Partner partner) {

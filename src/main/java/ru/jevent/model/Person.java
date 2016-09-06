@@ -20,6 +20,22 @@ public class Person extends BaseEntity {
     public Person() {
     }
 
+    public Person(Long id, String firstName, String lastName) {
+        super(id);
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public Person(Long id, String firstName, Sex sex, String lastName, LinkedList<Phone> phones, LinkedList<Email> emails, byte[] photo) {
+        super(id);
+        this.firstName = firstName;
+        this.sex = sex;
+        this.lastName = lastName;
+        this.phones = phones;
+        this.emails = emails;
+        this.photo = photo;
+    }
+
     public String getFullName() {
         return this.firstName + " " + this.getLastName();
     }

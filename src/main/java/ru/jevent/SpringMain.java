@@ -15,6 +15,10 @@ public class SpringMain {
             }
             CommentRestController commClr = appCtx.getBean(CommentRestController.class);
             commClr.delete(2);
+            //commClr.get(2);
+        }
+        catch (Throwable t) {
+            t.printStackTrace();
         }
     }
 

@@ -5,8 +5,13 @@ public class NamedEntity extends BaseEntity {
     protected String name;
 
     public NamedEntity() {
-        super();
     }
+
+    public NamedEntity(long id, String name) {
+        super(id);
+        this.name = name;
+    }
+
 
     protected NamedEntity(String name) {
         this.name = name;

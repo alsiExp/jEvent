@@ -28,6 +28,11 @@ public class Visitor extends Person implements Attachable{
     public Visitor() {
     }
 
+    public Visitor(Long id, String firstName, String lastName, LocalDate registered) {
+        super(id, firstName, lastName);
+        this.registered = registered;
+    }
+
     @Override
     public String getAttachName() {
         return this.getFullName();

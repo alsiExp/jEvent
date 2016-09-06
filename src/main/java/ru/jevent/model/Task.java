@@ -22,6 +22,17 @@ public class Task extends NamedEntity {
     public Task() {
     }
 
+    public Task(long id, String name, LocalDateTime start, LocalDateTime deadline, User author, String shortDescription,
+                TaskStatus statusLog, Set<Attachable> attachList) {
+        super(id, name);
+        this.start = start;
+        this.deadline = deadline;
+        this.author = author;
+        this.shortDescription = shortDescription;
+        this.getStatusLog().add(statusLog);
+        this.getAttachList().addAll(attachList);
+    }
+
     public User getAuthor() {
         return author;
     }
@@ -102,7 +113,6 @@ public class Task extends NamedEntity {
                 "name=" + name +
                 "author=" + author +
                 ", deadline=" + deadline +
-                ", status=" + getStatusLog().get(statusLog.size()) +
                 '}';
     }
 }

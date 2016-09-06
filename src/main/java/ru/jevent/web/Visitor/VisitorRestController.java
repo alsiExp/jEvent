@@ -1,5 +1,7 @@
 package ru.jevent.web.Visitor;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import ru.jevent.LoggedUser;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Visitor;
@@ -7,10 +9,16 @@ import ru.jevent.service.VisitorService;
 
 import java.util.List;
 
+@Controller
 public class VisitorRestController {
     private static final LoggerWrapper LOG = LoggerWrapper.get(VisitorRestController.class);
 
     private VisitorService service;
+
+    @Autowired
+    public VisitorRestController(VisitorService service) {
+        this.service = service;
+    }
 
     public Visitor create(Visitor visitor) {
         long userId = LoggedUser.id();

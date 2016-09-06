@@ -19,7 +19,9 @@ public class User extends Person {
     public User() {
     }
 
-    public User(String name, String email, String password, Role role, Role... roles) {
+
+    public User(long id, String firstName, String lastName, String email, String password, Role role, Role... roles) {
+        super(id, firstName, lastName);
         this.email = email;
         this.password = password;
         this.enabled = true;

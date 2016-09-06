@@ -9,6 +9,23 @@ public class Comment extends BaseEntity {
     private User author;
     private LocalDateTime date;
 
+    public Comment() {
+    }
+
+    public Comment(String content, User author, LocalDateTime date) {
+        this.content = content;
+        this.author = author;
+        this.date = date;
+    }
+
+
+    public Comment(long id, String content, User author, LocalDateTime date) {
+        super(id);
+        this.content = content;
+        this.author = author;
+        this.date = date;
+    }
+
     public String getContent() {
         return content;
     }

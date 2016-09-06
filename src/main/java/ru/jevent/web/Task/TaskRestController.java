@@ -1,5 +1,7 @@
 package ru.jevent.web.Task;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import ru.jevent.LoggedUser;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Task;
@@ -8,10 +10,16 @@ import ru.jevent.service.TaskService;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Controller
 public class TaskRestController {
     private static final LoggerWrapper LOG = LoggerWrapper.get(TaskRestController.class);
 
     private TaskService service;
+
+    @Autowired
+    public TaskRestController(TaskService service) {
+        this.service = service;
+    }
 
     public Task create(Task task) {
         long userId = LoggedUser.id();

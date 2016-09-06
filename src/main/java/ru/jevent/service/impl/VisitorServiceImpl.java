@@ -1,5 +1,7 @@
 package ru.jevent.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.jevent.model.Visitor;
 import ru.jevent.repository.VisitorRepository;
 import ru.jevent.service.VisitorService;
@@ -8,9 +10,15 @@ import ru.jevent.util.exception.NotFoundException;
 
 import java.util.List;
 
+@Service
 public class VisitorServiceImpl implements VisitorService{
 
     private VisitorRepository repository;
+
+    @Autowired
+    public VisitorServiceImpl(VisitorRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public Visitor save(Visitor visitor) {

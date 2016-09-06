@@ -1,5 +1,7 @@
 package ru.jevent.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.jevent.model.User;
 import ru.jevent.repository.UserRepository;
 import ru.jevent.service.UserService;
@@ -8,9 +10,15 @@ import ru.jevent.util.exception.NotFoundException;
 
 import java.util.List;
 
+@Service
 public class UserServiceImpl implements UserService{
 
     private UserRepository repository;
+
+    @Autowired
+    public UserServiceImpl(UserRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public User save(User user) {

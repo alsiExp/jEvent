@@ -1,5 +1,7 @@
 package ru.jevent.web.Event;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import ru.jevent.LoggedUser;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Event;
@@ -7,10 +9,17 @@ import ru.jevent.service.EventService;
 
 import java.util.List;
 
+@Controller
 public class EventRestController {
     private static final LoggerWrapper LOG = LoggerWrapper.get(EventRestController.class);
 
+
     private EventService service;
+
+    @Autowired
+    public EventRestController(EventService service) {
+        this.service = service;
+    }
 
     public Event create(Event event) {
         long userId = LoggedUser.id();
