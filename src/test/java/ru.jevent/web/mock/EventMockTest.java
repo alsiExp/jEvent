@@ -23,17 +23,17 @@ public class EventMockTest {
     }
 
     @AfterClass
-    public static void afterClass() {
+    public static void afterClass() throws Exception {
         appCtx.close();
     }
 
     @Test
-    public void testCreate() {
+    public void testCreate() throws Exception {
         controller.create(new Event());
     }
 
     @Test
-    public void testUpdate() {
+    public void testUpdate() throws Exception {
         controller.update(new Event(8, "Event"));
     }
 
@@ -48,7 +48,7 @@ public class EventMockTest {
     }
 
     @Test
-    public void testGetAll() {
+    public void testGetAll() throws Exception {
         List<Event> l = controller.getAll();
         l.get(0);
     }

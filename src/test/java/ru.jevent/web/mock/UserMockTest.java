@@ -23,7 +23,12 @@ public class UserMockTest {
     }
 
     @Test
-    public void testGet() {
+    public void testGet() throws Exception {
         controller.get(1);
+    }
+
+    @Test
+    public void testGetAll() throws Exception {
+        controller.getAll();
     }
 }

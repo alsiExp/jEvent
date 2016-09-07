@@ -1,15 +1,23 @@
 package ru.jevent.web.User;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.User;
 import ru.jevent.service.UserService;
 
 import java.util.List;
 
+@Service
 public class AdminRestController {
     private static final LoggerWrapper LOG = LoggerWrapper.get(AdminRestController.class);
 
     private UserService service;
+
+    @Autowired
+    public AdminRestController(UserService service) {
+        this.service = service;
+    }
 
     public User create(User user) {
         LOG.info("create user {} by admin", user);

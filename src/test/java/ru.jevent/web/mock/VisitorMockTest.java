@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.jevent.model.Visitor;
+import ru.jevent.util.exception.NotFoundException;
 import ru.jevent.web.Visitor.VisitorRestController;
 
 public class VisitorMockTest {
@@ -24,7 +25,29 @@ public class VisitorMockTest {
     }
 
     @Test
-    public void testCreate() {
+    public void testCreate() throws Exception {
         controller.create(new Visitor());
     }
+
+    @Test
+    public void testUpdate() throws Exception {
+        controller.update(controller.get(1));
+    }
+
+    @Test
+    public void testDelete() throws Exception {
+        controller.delete(42);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testDeleteNotFound() throws Exception {
+        controller.delete(2);
+    }
+
+    @Test
+    public void testAll() throws Exception {
+        controller.getAll();
+    }
+
+
 }

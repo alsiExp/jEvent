@@ -25,37 +25,37 @@ public class PartnerMockTest {
     }
 
     @Test
-    public void testCreate() {
+    public void testCreate() throws Exception {
         controller.create(new Partner());
     }
 
     @Test
-    public void testUpdate() {
+    public void testUpdate() throws Exception {
         controller.create(new Partner(5, "Somebody"));
     }
 
     @Test
-    public void testDelete() {
+    public void testDelete() throws Exception {
         controller.delete(13);
     }
 
     @Test
-    public void testGet() {
+    public void testGet() throws Exception {
         controller.get(13);
     }
 
     @Test(expected = NotFoundException.class)
-    public void testGetNotFound() {
+    public void testGetNotFound() throws Exception {
         controller.get(2);
     }
 
     @Test(expected = NotFoundException.class)
-    public void testDeleteNotFound() {
+    public void testDeleteNotFound() throws Exception {
         controller.delete(0);
     }
 
     @Test
-    public void getAll() {
+    public void getAll() throws Exception {
         controller.getAll();
     }
 

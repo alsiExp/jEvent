@@ -38,7 +38,7 @@ public class MockTaskRepositoryImpl implements TaskRepository {
 
     @Override
     public boolean delete(long id, long userId) {
-        return true;
+        return id != 0;
     }
 
     @Override

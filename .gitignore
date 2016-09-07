@@ -10,6 +10,7 @@
 .idea/vcs.xml
 .idea/jsLibraryMappings.xml
 jEvent.iml
+*.log
 
 # Sensitive or high-churn files:
 .idea/dataSources.ids
