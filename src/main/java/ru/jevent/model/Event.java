@@ -1,9 +1,7 @@
 package ru.jevent.model;
 
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 
 public class Event extends NamedEntity  implements Attachable{
@@ -15,7 +13,7 @@ public class Event extends NamedEntity  implements Attachable{
     private String description;
     private String logoURL;
 
-    private LinkedList<Visitor> probableSpeakers;
+    private Set<Visitor> probableSpeakers;
     //    notes for Event
     private ArrayList<Comment> commentList;
 
@@ -93,14 +91,15 @@ public class Event extends NamedEntity  implements Attachable{
         this.logoURL = logoURL;
     }
 
-    public LinkedList<Visitor> getProbableSpeakers() {
-        if(probableSpeakers == null){
-            probableSpeakers = new LinkedList<>();
+    public Set<Visitor> getProbableSpeakers() {
+        if(probableSpeakers == null) {
+           probableSpeakers = new HashSet<>();
         }
+
         return probableSpeakers;
     }
 
-    public void setProbableSpeakers(LinkedList<Visitor> probableSpeakers) {
+    public void setProbableSpeakers(Set<Visitor> probableSpeakers) {
         this.probableSpeakers = probableSpeakers;
     }
 
@@ -122,7 +121,7 @@ public class Event extends NamedEntity  implements Attachable{
         return rates;
     }
 
-    public void setRates(LinkedList<Rate> rates) {
+    public void setRates(List<Rate> rates) {
         this.rates = rates;
     }
 
@@ -133,9 +132,11 @@ public class Event extends NamedEntity  implements Attachable{
         return tracks;
     }
 
-    public void setTracks(LinkedList<Track> tracks) {
+    public void setTracks(List<Track> tracks) {
         this.tracks = tracks;
     }
+
+
 
     @Override
     public String toString() {
