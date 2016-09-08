@@ -3,6 +3,7 @@ package ru.jevent.model;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -13,22 +14,24 @@ public class Task extends NamedEntity {
 
     private LocalDateTime start;
     private LocalDateTime deadline;
-    private String shortDescription;
+
     private String fullDescription;
 
-    private ArrayList<TaskStatus> statusLog;        // actual status is lastest
-    private Set<Attachable> attachList;       // from UC-1-1, can be Event, Partner or Visitor
+    //    actual status is lastest
+    private List<TaskStatus> statusLog;
+
+    //    can be Event, Partner or Visitor
+    private Set<Attachable> attachList;
 
     public Task() {
     }
 
-    public Task(long id, String name, LocalDateTime start, LocalDateTime deadline, User author, String shortDescription,
+    public Task(long id, String name, LocalDateTime start, LocalDateTime deadline, User author,
                 TaskStatus statusLog, Set<Attachable> attachList) {
         super(id, name);
         this.start = start;
         this.deadline = deadline;
         this.author = author;
-        this.shortDescription = shortDescription;
         this.getStatusLog().add(statusLog);
         this.getAttachList().addAll(attachList);
     }
@@ -68,13 +71,6 @@ public class Task extends NamedEntity {
         this.deadline = deadline;
     }
 
-    public String getShortDescription() {
-        return shortDescription;
-    }
-
-    public void setShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
-    }
 
     public String getFullDescription() {
         return fullDescription;
@@ -84,7 +80,7 @@ public class Task extends NamedEntity {
         this.fullDescription = fullDescription;
     }
 
-    public ArrayList<TaskStatus> getStatusLog() {
+    public List<TaskStatus> getStatusLog() {
         if(statusLog == null) {
             statusLog = new ArrayList<>();
         }

@@ -1,21 +1,18 @@
 package ru.jevent.model;
 
 import ru.jevent.model.Enums.Sex;
-import ru.jevent.model.PersonParts.Email;
-import ru.jevent.model.PersonParts.Phone;
-
-import java.util.LinkedList;
 
 public class Person extends BaseEntity {
 
     protected String firstName;
-    protected Sex sex;
     protected String lastName;
+    protected Sex sex;
 
-    protected LinkedList<Phone> phones;
-    protected LinkedList<Email> emails;
+    protected boolean enabled;
 
-    protected byte[] photo;          // to store in DB
+    //    store images in directory:
+    //    src/main/webapp/resources/images/person/
+    protected String photoURL;
 
     public Person() {
     }
@@ -26,14 +23,12 @@ public class Person extends BaseEntity {
         this.lastName = lastName;
     }
 
-    public Person(Long id, String firstName, Sex sex, String lastName, LinkedList<Phone> phones, LinkedList<Email> emails, byte[] photo) {
+    public Person(Long id, String firstName, String lastName, Sex sex, String photoURL) {
         super(id);
         this.firstName = firstName;
         this.sex = sex;
         this.lastName = lastName;
-        this.phones = phones;
-        this.emails = emails;
-        this.photo = photo;
+        this.photoURL = photoURL;
     }
 
     public String getFullName() {
@@ -64,33 +59,19 @@ public class Person extends BaseEntity {
         this.lastName = lastName;
     }
 
-    public LinkedList<Phone> getPhones() {
-        if(phones == null) {
-            phones = new LinkedList<>();
-        }
-        return phones;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public void setPhones(LinkedList<Phone> phones) {
-        this.phones = phones;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
-    public LinkedList<Email> getEmails() {
-        if(emails == null) {
-            emails = new LinkedList<>();
-        }
-        return emails;
+    public String getPhotoURL() {
+        return photoURL;
     }
 
-    public void setEmails(LinkedList<Email> emails) {
-        this.emails = emails;
-    }
-
-    public byte[] getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(byte[] photo) {
-        this.photo = photo;
+    public void setPhotoURL(String photo) {
+        this.photoURL = photo;
     }
 }

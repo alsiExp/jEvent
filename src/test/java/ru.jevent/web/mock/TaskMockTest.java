@@ -1,10 +1,10 @@
 package ru.jevent.web.mock;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.model.Task;
 import ru.jevent.util.exception.NotFoundException;
 import ru.jevent.web.Task.TaskRestController;
@@ -12,20 +12,11 @@ import ru.jevent.web.Task.TaskRestController;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+@ContextConfiguration("classpath:spring/spring-app.xml")
+@RunWith(SpringJUnit4ClassRunner.class)
 public class TaskMockTest {
-    private static ConfigurableApplicationContext appCtx;
-    private static TaskRestController controller;
-
-    @BeforeClass
-    public static void beforeClass() {
-        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
-        controller = appCtx.getBean(TaskRestController.class);
-    }
-
-    @AfterClass
-    public static void afterClass() {
-        appCtx.close();
-    }
+    @Autowired
+    private  TaskRestController controller;
 
     @Test
     public void testCreate() throws Exception {

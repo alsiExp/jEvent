@@ -3,21 +3,26 @@ package ru.jevent.model;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
+
 
 public class Event extends NamedEntity  implements Attachable{
 
     private User author;
 
     private String tagName;
-    private String adress;
+    private String address;
     private String description;
-    private byte[] image;
+    private String logoURL;
 
     private LinkedList<Visitor> probableSpeakers;
-    private ArrayList<Comment> commentList;             // notes for events
+    //    notes for Event
+    private ArrayList<Comment> commentList;
 
-    private LinkedList<Rate> rates;
-    private LinkedList<Track> tracks;
+    //    ticket prices
+    private List<Rate> rates;
+    //    tracks with slots (in list)
+    private List<Track> tracks;
 
     public Event() {
     }
@@ -44,8 +49,8 @@ public class Event extends NamedEntity  implements Attachable{
     }
 
     @Override
-    public byte[] getAttachImage() {
-        return this.getImage();
+    public String getAttachImageURL() {
+        return this.getLogoURL();
     }
 
     public User getAuthor() {
@@ -64,12 +69,12 @@ public class Event extends NamedEntity  implements Attachable{
         this.tagName = tagName;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getDescription() {
@@ -80,15 +85,12 @@ public class Event extends NamedEntity  implements Attachable{
         this.description = description;
     }
 
-    public byte[] getImage() {
-        if(image == null) {
-            image = new byte[0];
-        }
-        return image;
+    public String getLogoURL() {
+        return logoURL;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setLogoURL(String logoURL) {
+        this.logoURL = logoURL;
     }
 
     public LinkedList<Visitor> getProbableSpeakers() {
@@ -113,7 +115,7 @@ public class Event extends NamedEntity  implements Attachable{
         this.commentList = commentList;
     }
 
-    public LinkedList<Rate> getRates() {
+    public List<Rate> getRates() {
         if(rates == null) {
             rates = new LinkedList<>();
         }
@@ -124,7 +126,7 @@ public class Event extends NamedEntity  implements Attachable{
         this.rates = rates;
     }
 
-    public LinkedList<Track> getTracks() {
+    public List<Track> getTracks() {
         if(tracks == null) {
             tracks = new LinkedList<>();
         }

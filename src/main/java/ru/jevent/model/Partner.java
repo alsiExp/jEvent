@@ -2,9 +2,14 @@ package ru.jevent.model;
 
 public class Partner extends NamedEntity implements Attachable {
 
+    //    connection info
+    private String email;
+    private String phone;
+
     private String description;
-    private byte[] image;
-    private Person contact;
+
+    //    logo
+    private String logoURL;
 
 
     public Partner() {
@@ -25,9 +30,27 @@ public class Partner extends NamedEntity implements Attachable {
     }
 
     @Override
-    public byte[] getAttachImage() {
-        return this.getImage();
+    public String getAttachImageURL() {
+        return null;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+
 
     public String getDescription() {
         return description;
@@ -37,20 +60,12 @@ public class Partner extends NamedEntity implements Attachable {
         this.description = description;
     }
 
-    public byte[] getImage() {
-        return image;
+    public String getLogoURL() {
+        return logoURL;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
-
-    public Person getContact() {
-        return contact;
-    }
-
-    public void setContact(Person contact) {
-        this.contact = contact;
+    public void setLogoURL(String logoURL) {
+        this.logoURL = logoURL;
     }
 
     @Override

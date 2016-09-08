@@ -1,39 +1,38 @@
 package ru.jevent.model;
 
-import ru.jevent.model.NamedEntity;
-import ru.jevent.model.Slot;
-import ru.jevent.model.Visitor;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.ArrayList;
 
 public class Track extends NamedEntity {
 
-    private LinkedList<Slot> slotOrder;
-    private Map<Slot, Visitor> approvedSpeakers;
+    private String description;
+    private ArrayList<Slot> slotOrder;
+
 
     public Track() {
     }
 
-    public LinkedList<Slot> getOrder() {
+    public Track(long id, String name, String description) {
+        super(id, name);
+        this.description = description;
+    }
+
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public ArrayList<Slot> getSlotOrder() {
         if(slotOrder == null) {
-            slotOrder = new LinkedList<>();
+            slotOrder = new ArrayList<>();
         }
         return slotOrder;
     }
 
-    public void setOrder(LinkedList<Slot> slotOrder) {
+    public void setSlotOrder(ArrayList<Slot> slotOrder) {
         this.slotOrder = slotOrder;
-    }
-
-    public Map<Slot, Visitor> getApprovedSpeakers() {
-        if(approvedSpeakers == null)
-            approvedSpeakers = new HashMap<>();
-        return approvedSpeakers;
-    }
-
-    public void setApprovedSpeakers(Map<Slot, Visitor> approvedSpeakers) {
-        this.approvedSpeakers = approvedSpeakers;
     }
 }

@@ -1,31 +1,21 @@
 package ru.jevent.web.mock;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.model.Event;
 import ru.jevent.util.exception.NotFoundException;
 import ru.jevent.web.Event.EventRestController;
 
 import java.util.List;
 
+@ContextConfiguration("classpath:spring/spring-app.xml")
+@RunWith(SpringJUnit4ClassRunner.class)
 public class EventMockTest {
-
-    private static ConfigurableApplicationContext appCtx;
-    private static EventRestController controller;
-
-    @BeforeClass
-    public static void beforeClass() {
-        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
-        controller = appCtx.getBean(EventRestController.class);
-    }
-
-    @AfterClass
-    public static void afterClass() throws Exception {
-        appCtx.close();
-    }
+    @Autowired
+    private EventRestController controller;
 
     @Test
     public void testCreate() throws Exception {

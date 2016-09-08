@@ -1,30 +1,61 @@
 package ru.jevent.model;
 
-import ru.jevent.model.PersonParts.Email;
+import ru.jevent.model.Enums.Sex;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
-public class Visitor extends Person implements Attachable{
+public class Visitor extends Person implements Attachable {
 
+    //    Dates
     private LocalDateTime birthDay;
-    private String gitHubProfile;                   // from UC-3-1
-    private String linkedInProfile;                 // from UC-3-1
     private LocalDate registered;
+
+    //    connection info
+    private String email;
+    private String phone;
+
+    //    Social Networks
+    private String gitHubAccount;
+    private String linkedInAccount;
+    private String twitterAccount;
+
+    //    Visitor description
+    private String employer;
+    private String biography;
     private String description;
 
-    private ArrayList<Event> eventsList;            // from UC-3-1, initialized from DB
-    private ArrayList<Event> speakerEventsList;     // from UC-3-1, initialized from DB
-    private double cost;                            //from UC-3-1  quantity of money, that will be received or payed
-
-    private ArrayList<Task> visitorTasks;           // from UC-3-1, initialized from DB
-    private ArrayList<Email> visitorLetter;         // from UC-3-1, initialized from DB
-
-    private ArrayList<Comment> commentList;         // like notes for visitor
+    //    quantity of money, that will be received or payed
+    private double cost;
 
 
-    //    constructors
+    //    Our events
+    //    only visitor
+    //    not include speakerEventList
+    private List<Event> visitorEventList;
+
+    //    events, where Visitor was speaker
+    //
+    private List<Event> speakerEventList;
+
+
+
+    //     related Tasks
+    private List<Task> visitorTasks;
+
+    //    notes from all Users about Visitor
+    private List<Comment> commentList;
+
+    /*
+    After version 0.9:
+        - add storage for Emails
+        - additional phones and emails list ??
+
+     */
+
+
     public Visitor() {
     }
 
@@ -32,6 +63,12 @@ public class Visitor extends Person implements Attachable{
         super(id, firstName, lastName);
         this.registered = registered;
     }
+
+    public Visitor(Long id, String firstName, String lastName, Sex sex, String photoURL, LocalDate registered) {
+        super(id, firstName, lastName, sex, photoURL);
+        this.registered = registered;
+    }
+
 
     @Override
     public String getAttachName() {
@@ -44,12 +81,9 @@ public class Visitor extends Person implements Attachable{
     }
 
     @Override
-    public byte[] getAttachImage() {
-        return this.getPhoto();
+    public String getAttachImageURL() {
+        return this.getPhotoURL();
     }
-
-
-    // getters and setters
 
     public LocalDateTime getBirthDay() {
         return birthDay;
@@ -57,22 +91,6 @@ public class Visitor extends Person implements Attachable{
 
     public void setBirthDay(LocalDateTime birthDay) {
         this.birthDay = birthDay;
-    }
-
-    public String getGitHubProfile() {
-        return gitHubProfile;
-    }
-
-    public void setGitHubProfile(String gitHubProfile) {
-        this.gitHubProfile = gitHubProfile;
-    }
-
-    public String getLinkedInProfile() {
-        return linkedInProfile;
-    }
-
-    public void setLinkedInProfile(String linkedInProfile) {
-        this.linkedInProfile = linkedInProfile;
     }
 
     public LocalDate getRegistered() {
@@ -83,67 +101,66 @@ public class Visitor extends Person implements Attachable{
         this.registered = registered;
     }
 
-    public ArrayList<Event> getEventsList() {
-        if( eventsList == null) {
-            eventsList = new ArrayList<>();
-        }
-        return eventsList;
+
+
+    public String getEmail() {
+        return email;
     }
 
-    public void setEventsList(ArrayList<Event> eventsList) {
-        this.eventsList = eventsList;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public ArrayList<Event> getSpeakerEventsList() {
-        if(speakerEventsList == null) {
-            speakerEventsList = new ArrayList<>();
-        }
-        return speakerEventsList;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setSpeakerEventsList(ArrayList<Event> speakerEventsList) {
-        this.speakerEventsList = speakerEventsList;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public double getCost() {
-        return cost;
+
+
+    public String getGitHubAccount() {
+        return gitHubAccount;
     }
 
-    public void setCost(double cost) {
-        this.cost = cost;
+    public void setGitHubAccount(String gitHubAccount) {
+        this.gitHubAccount = gitHubAccount;
     }
 
-    public ArrayList<Task> getVisitorTasks() {
-        if(visitorTasks == null) {
-            visitorTasks = new ArrayList<>();
-        }
-        return visitorTasks;
+    public String getLinkedInAccount() {
+        return linkedInAccount;
     }
 
-    public void setVisitorTasks(ArrayList<Task> visitorTasks) {
-        this.visitorTasks = visitorTasks;
+    public void setLinkedInAccount(String linkedInAccount) {
+        this.linkedInAccount = linkedInAccount;
     }
 
-    public ArrayList<Email> getVisitorLetter() {
-        if (visitorLetter == null) {
-            visitorLetter = new ArrayList<>();
-        }
-        return visitorLetter;
+    public String getTwitterAccount() {
+        return twitterAccount;
     }
 
-    public void setVisitorLetter(ArrayList<Email> visitorLetter) {
-        this.visitorLetter = visitorLetter;
+    public void setTwitterAccount(String twitterAccount) {
+        this.twitterAccount = twitterAccount;
     }
 
-    public ArrayList<Comment> getCommentList() {
-        if(commentList == null) {
-            commentList = new ArrayList<>();
-        }
-        return commentList;
+
+
+    public String getEmployer() {
+        return employer;
     }
 
-    public void setCommentList(ArrayList<Comment> commentList) {
-        this.commentList = commentList;
+    public void setEmployer(String employer) {
+        this.employer = employer;
+    }
+
+    public String getBiography() {
+        return biography;
+    }
+
+    public void setBiography(String biography) {
+        this.biography = biography;
     }
 
     public String getDescription() {
@@ -153,6 +170,68 @@ public class Visitor extends Person implements Attachable{
     public void setDescription(String description) {
         this.description = description;
     }
+
+
+
+    public double getCost() {
+        return cost;
+    }
+
+    public void setCost(double cost) {
+        this.cost = cost;
+    }
+
+
+
+    public List<Event> getVisitorEventList() {
+        if (visitorEventList == null) {
+            visitorEventList = new ArrayList<>();
+        }
+        return visitorEventList;
+    }
+
+    public void setVisitorEventList(ArrayList<Event> visitorEventList) {
+        this.visitorEventList = visitorEventList;
+    }
+
+    public List<Event> getSpeakerEventList() {
+        if (speakerEventList == null) {
+            speakerEventList = new ArrayList<>();
+        }
+        return speakerEventList;
+    }
+
+    public void setSpeakerEventList(ArrayList<Event> speakerEventList) {
+        this.speakerEventList = speakerEventList;
+    }
+
+
+
+    public List<Task> getVisitorTasks() {
+        if (visitorTasks == null) {
+            visitorTasks = new ArrayList<>();
+        }
+        return visitorTasks;
+    }
+
+    public void setVisitorTasks(ArrayList<Task> visitorTasks) {
+        this.visitorTasks = visitorTasks;
+    }
+
+
+
+    public List<Comment> getCommentList() {
+        if (commentList == null) {
+            commentList = new ArrayList<>();
+        }
+        return commentList;
+    }
+
+    public void setCommentList(ArrayList<Comment> commentList) {
+        this.commentList = commentList;
+    }
+
+
 
     @Override
     public String toString() {

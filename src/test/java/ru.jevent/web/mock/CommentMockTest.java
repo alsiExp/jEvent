@@ -1,10 +1,10 @@
 package ru.jevent.web.mock;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.model.Comment;
 import ru.jevent.model.User;
 import ru.jevent.util.exception.NotFoundException;
@@ -12,20 +12,11 @@ import ru.jevent.web.Comment.CommentRestController;
 
 import java.time.LocalDateTime;
 
+@ContextConfiguration("classpath:spring/spring-app.xml")
+@RunWith(SpringJUnit4ClassRunner.class)
 public class CommentMockTest {
-    private static ConfigurableApplicationContext appCtx;
-    private static CommentRestController controller;
-
-    @BeforeClass
-    public static void beforeClass() {
-        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
-        controller = appCtx.getBean(CommentRestController.class);
-    }
-
-    @AfterClass
-    public static void afterClass() {
-        appCtx.close();
-    }
+    @Autowired
+    private CommentRestController controller;
 
     @Test
     public void testCreate() throws Exception {
