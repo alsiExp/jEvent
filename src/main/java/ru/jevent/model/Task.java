@@ -15,9 +15,10 @@ public class Task extends NamedEntity {
     private LocalDateTime start;
     private LocalDateTime deadline;
 
-    private String fullDescription;
+    private String description;
 
     //    actual status is lastest
+    //    sort by creationTime in DB
     private List<TaskStatus> statusLog;
 
     //    can be Event, Partner or Visitor
@@ -72,12 +73,12 @@ public class Task extends NamedEntity {
     }
 
 
-    public String getFullDescription() {
-        return fullDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setFullDescription(String fullDescription) {
-        this.fullDescription = fullDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<TaskStatus> getStatusLog() {

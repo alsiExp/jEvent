@@ -6,6 +6,15 @@ import java.time.LocalDateTime;
 
 public class Slot extends NamedEntity {
 
+    //    can be null
+    private Visitor approvedSpeaker;
+    private LocalDateTime start;
+    private SlotType slotType;
+    //    will be set after Event (by Visitors votes)
+    private int grade;
+    //    invitation costs
+    private int price;
+
     public Slot() {
     }
 
@@ -22,12 +31,6 @@ public class Slot extends NamedEntity {
         this.slotType = slotType;
     }
 
-    //    can be null
-    private Visitor approvedSpeaker;
-    private LocalDateTime start;
-    private SlotType slotType;
-    //    set after Event by Visitors votes
-    private int grade;
 
     public Visitor getApprovedSpeaker() {
         return approvedSpeaker;
@@ -53,5 +56,19 @@ public class Slot extends NamedEntity {
         this.slotType = slotType;
     }
 
+    public int getGrade() {
+        return grade;
+    }
 
+    public void setGrade(int grade) {
+        this.grade = grade;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
 }

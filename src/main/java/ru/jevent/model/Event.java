@@ -15,11 +15,14 @@ public class Event extends NamedEntity  implements Attachable{
 
     private Set<Visitor> probableSpeakers;
     //    notes for Event
-    private ArrayList<Comment> commentList;
+    //    sort by date
+    private List<Comment> commentList;
 
     //    ticket prices
+    //    sort by LocalDate start
     private List<Rate> rates;
     //    tracks with slots (in list)
+    //    sort by field position in DB
     private List<Track> tracks;
 
     public Event() {
@@ -103,7 +106,7 @@ public class Event extends NamedEntity  implements Attachable{
         this.probableSpeakers = probableSpeakers;
     }
 
-    public ArrayList<Comment> getCommentList() {
+    public List<Comment> getCommentList() {
         if(commentList == null) {
             commentList = new ArrayList<>();
         }

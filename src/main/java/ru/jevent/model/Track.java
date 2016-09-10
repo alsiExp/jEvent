@@ -1,11 +1,13 @@
 package ru.jevent.model;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Track extends NamedEntity {
 
     private String description;
-    private ArrayList<Slot> slotOrder;
+    // sort by LocalDateTime start
+    private List<Slot> slotOrder;
 
 
     public Track() {
@@ -25,14 +27,14 @@ public class Track extends NamedEntity {
         this.description = description;
     }
 
-    public ArrayList<Slot> getSlotOrder() {
+    public List<Slot> getSlotOrder() {
         if(slotOrder == null) {
-            slotOrder = new ArrayList<>();
+            slotOrder = new LinkedList<>();
         }
         return slotOrder;
     }
 
-    public void setSlotOrder(ArrayList<Slot> slotOrder) {
+    public void setSlotOrder(LinkedList<Slot> slotOrder) {
         this.slotOrder = slotOrder;
     }
 }
