@@ -32,8 +32,8 @@ public class Visitor extends Person implements Attachable {
 
 
     //    Our events
-    //    only visitor
-    //    not include speakerEventList
+    //    only visitor, not include speakerEventList
+    //    TODO: later create object to store in DB date of buy and maybe something else
     private List<Event> visitorEventList;
 
     //    events, where Visitor was speaker

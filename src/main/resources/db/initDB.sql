@@ -8,6 +8,8 @@ DROP TABLE IF EXISTS task_statuses;
 DROP TABLE IF EXISTS task_user_target;
 DROP TABLE IF EXISTS task_attach;
 DROP TABLE IF EXISTS events_comments;
+DROP TABLE IF EXISTS visitors_comments;
+DROP TABLE IF EXISTS tasks_comments;
 DROP TABLE IF EXISTS rates;
 
 DROP TABLE IF EXISTS tasks;
@@ -84,27 +86,27 @@ CREATE TABLE users
 CREATE TABLE visitors
 (
   --   person
-  id         BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  first_name VARCHAR,
-  last_name  VARCHAR,
-  sex        BIGINT,
-  enabled    BOOL               DEFAULT FALSE,
-  photo_URL  VARCHAR,
+  id               BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  first_name       VARCHAR,
+  last_name        VARCHAR,
+  sex              BIGINT,
+  enabled          BOOL               DEFAULT FALSE,
+  photo_URL        VARCHAR,
   --   visitor
-  birthday    TIMESTAMP,
-  registered_date    TIMESTAMP NOT NULL DEFAULT now(),
-  email VARCHAR,
-  phone VARCHAR,
+  birthday         TIMESTAMP,
+  registered_date  TIMESTAMP NOT NULL DEFAULT now(),
+  email            VARCHAR,
+  phone            VARCHAR,
 
-  github_account VARCHAR,
+  github_account   VARCHAR,
   linkedin_account VARCHAR,
-  twitter_account VARCHAR,
+  twitter_account  VARCHAR,
 
-  employer VARCHAR,
-  biography VARCHAR,
-  description VARCHAR,
+  employer         VARCHAR,
+  biography        VARCHAR,
+  description      VARCHAR,
 
-  cost MONEY,
+  cost             MONEY,
 
 
   FOREIGN KEY (sex) REFERENCES person_sex (id)
@@ -112,12 +114,12 @@ CREATE TABLE visitors
 
 CREATE TABLE partners
 (
-  id      BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name  VARCHAR,
-  email VARCHAR,
-  phone VARCHAR,
-  description        VARCHAR,
-  logo_URL           VARCHAR
+  id          BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  name        VARCHAR,
+  email       VARCHAR,
+  phone       VARCHAR,
+  description VARCHAR,
+  logo_URL    VARCHAR
 
 );
 
@@ -133,16 +135,15 @@ CREATE TABLE comments
 );
 
 
-
 CREATE TABLE events
 (
-  id                 BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name           VARCHAR,
-  author_id          BIGINT,
-  tag_name           VARCHAR,
-  address            VARCHAR,
-  description        VARCHAR,
-  logo_URL           VARCHAR,
+  id          BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  name        VARCHAR,
+  author_id   BIGINT,
+  tag_name    VARCHAR,
+  address     VARCHAR,
+  description VARCHAR,
+  logo_URL    VARCHAR,
 
   FOREIGN KEY (author_id) REFERENCES users (id)
 );
@@ -151,8 +152,8 @@ CREATE TABLE events
 CREATE TABLE rates
 (
   id         BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name VARCHAR,
-  event_id BIGINT,
+  name       VARCHAR,
+  event_id   BIGINT,
   rate_type  BIGINT,
   start_date TIMESTAMP NOT NULL,
   end_date   TIMESTAMP NOT NULL,
@@ -166,22 +167,21 @@ CREATE TABLE rates
 CREATE TABLE tracks
 (
   id          BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name                        VARCHAR,
-  event_id  BIGINT,
+  name        VARCHAR,
+  event_id    BIGINT,
   description VARCHAR,
-  position  INT,
+  position    INT,
 
   FOREIGN KEY (event_id) REFERENCES events (id)
 );
 
 
-
 CREATE TABLE visitors_events_speakers
 (
-  id                 BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  visitor_id   BIGINT,
-  event_id BIGINT,
-  price int,
+  id         BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  visitor_id BIGINT,
+  event_id   BIGINT,
+  price      INT,
 
   FOREIGN KEY (event_id) REFERENCES events (id),
   FOREIGN KEY (visitor_id) REFERENCES visitors (id)
@@ -189,8 +189,10 @@ CREATE TABLE visitors_events_speakers
 
 CREATE TABLE visitors_events_visits
 (
-  visitor_id   BIGINT,
-  event_id BIGINT,
+  id            BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  visitor_id    BIGINT,
+  event_id      BIGINT,
+  purchase_date TIMESTAMP NOT NULL,
 
   FOREIGN KEY (event_id) REFERENCES events (id),
   FOREIGN KEY (visitor_id) REFERENCES visitors (id)
@@ -198,13 +200,14 @@ CREATE TABLE visitors_events_visits
 
 CREATE TABLE slots
 (
-  id                          BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name                        VARCHAR,
-  track_id                    BIGINT,
-  start                       TIMESTAMP NOT NULL,
+  id                         BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  name                       VARCHAR,
+  track_id                   BIGINT,
+  start                      TIMESTAMP NOT NULL,
   visitors_events_speaker_id BIGINT,
-  slot_type                   BIGINT,
-  grade                       INT,
+  lecture_description        VARCHAR,
+  slot_type                  BIGINT,
+  grade                      INT,
 
   FOREIGN KEY (slot_type) REFERENCES slot_type (id),
   FOREIGN KEY (track_id) REFERENCES tracks (id),
@@ -216,18 +219,27 @@ CREATE TABLE slots
 CREATE TABLE events_comments
 (
   event_id   BIGINT,
-  comment_id BIGINT,
+  comment_id BIGINT UNIQUE,
 
   FOREIGN KEY (event_id) REFERENCES events (id),
   FOREIGN KEY (comment_id) REFERENCES comments (id)
 );
 
+CREATE TABLE visitors_comments
+(
+  visitor_id BIGINT,
+  comment_id BIGINT UNIQUE,
+
+  FOREIGN KEY (visitor_id) REFERENCES visitors (id),
+  FOREIGN KEY (comment_id) REFERENCES comments (id)
+);
 
 
 CREATE TABLE events_visitors
+  -- probableSpeakers
 (
-  visitor_id   BIGINT,
-  event_id BIGINT,
+  visitor_id BIGINT,
+  event_id   BIGINT,
 
   FOREIGN KEY (event_id) REFERENCES events (id),
   FOREIGN KEY (visitor_id) REFERENCES visitors (id)
@@ -235,11 +247,11 @@ CREATE TABLE events_visitors
 
 CREATE TABLE task_statuses
 (
-  id      BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  user_id BIGINT,
-  creation_time    TIMESTAMP NOT NULL DEFAULT now(),
+  id                     BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  user_id                BIGINT,
+  creation_time          TIMESTAMP NOT NULL DEFAULT now(),
   current_task_status_id BIGINT,
-  description VARCHAR NOT NULL,
+  description            VARCHAR   NOT NULL,
 
   FOREIGN KEY (user_id) REFERENCES users (id),
   FOREIGN KEY (current_task_status_id) REFERENCES current_task_status (id)
@@ -247,20 +259,29 @@ CREATE TABLE task_statuses
 
 CREATE TABLE tasks
 (
-  id      BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name VARCHAR,
-  user_id BIGINT,
-  start    TIMESTAMP NOT NULL DEFAULT now(),
+  id          BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  name        VARCHAR,
+  user_id     BIGINT,
+  start       TIMESTAMP NOT NULL DEFAULT now(),
   deadline    TIMESTAMP,
   description VARCHAR,
 
   FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
+CREATE TABLE tasks_comments
+(
+  task_id    BIGINT,
+  comment_id BIGINT UNIQUE,
+
+  FOREIGN KEY (task_id) REFERENCES tasks (id),
+  FOREIGN KEY (comment_id) REFERENCES comments (id)
+);
+
 CREATE TABLE task_statuses_tasks
 (
-  task_status_id BIGINT,
-  task_id BIGINT,
+  task_status_id BIGINT UNIQUE,
+  task_id        BIGINT,
 
   FOREIGN KEY (task_status_id) REFERENCES task_statuses (id),
   FOREIGN KEY (task_id) REFERENCES tasks (id)
@@ -277,7 +298,7 @@ CREATE TABLE task_user_target
 
 CREATE TABLE task_attach
 (
-  task_id BIGINT,
+  task_id   BIGINT,
   attach_id BIGINT,
 
   FOREIGN KEY (task_id) REFERENCES tasks (id)

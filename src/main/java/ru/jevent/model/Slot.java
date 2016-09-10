@@ -8,6 +8,7 @@ public class Slot extends NamedEntity {
 
     //    can be null
     private Visitor approvedSpeaker;
+    private String lectureDescription;
     private LocalDateTime start;
     private SlotType slotType;
     //    will be set after Event (by Visitors votes)
@@ -38,6 +39,14 @@ public class Slot extends NamedEntity {
 
     public void setApprovedSpeaker(Visitor approvedSpeaker) {
         this.approvedSpeaker = approvedSpeaker;
+    }
+
+    public String getLectureDescription() {
+        return lectureDescription;
+    }
+
+    public void setLectureDescription(String lectureDescription) {
+        this.lectureDescription = lectureDescription;
     }
 
     public LocalDateTime getStart() {
