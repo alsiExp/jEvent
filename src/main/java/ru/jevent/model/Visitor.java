@@ -59,16 +59,43 @@ public class Visitor extends Person implements Attachable {
     public Visitor() {
     }
 
-    public Visitor(Long id, String firstName, String lastName, LocalDate registered) {
-        super(id, firstName, lastName);
+    public Visitor(String firstName, String lastName, Sex sex, boolean enabled, String photoURL, LocalDateTime birthDay, LocalDate registered, String email, String phone, String gitHubAccount, String linkedInAccount, String twitterAccount, String employer, String biography, String description, double cost, List<Event> visitorEventList, List<Event> speakerEventList, List<Task> visitorTasks, List<Comment> commentList) {
+        super(firstName, lastName, sex, enabled, photoURL);
+        this.birthDay = birthDay;
         this.registered = registered;
+        this.email = email;
+        this.phone = phone;
+        this.gitHubAccount = gitHubAccount;
+        this.linkedInAccount = linkedInAccount;
+        this.twitterAccount = twitterAccount;
+        this.employer = employer;
+        this.biography = biography;
+        this.description = description;
+        this.cost = cost;
+        this.visitorEventList = visitorEventList;
+        this.speakerEventList = speakerEventList;
+        this.visitorTasks = visitorTasks;
+        this.commentList = commentList;
     }
 
-    public Visitor(Long id, String firstName, String lastName, Sex sex, String photoURL, LocalDate registered) {
+    public Visitor(Long id, String firstName, String lastName, Sex sex, String photoURL, LocalDateTime birthDay, LocalDate registered, String email, String phone, String gitHubAccount, String linkedInAccount, String twitterAccount, String employer, String biography, String description, double cost, List<Event> visitorEventList, List<Event> speakerEventList, List<Task> visitorTasks, List<Comment> commentList) {
         super(id, firstName, lastName, sex, photoURL);
+        this.birthDay = birthDay;
         this.registered = registered;
+        this.email = email;
+        this.phone = phone;
+        this.gitHubAccount = gitHubAccount;
+        this.linkedInAccount = linkedInAccount;
+        this.twitterAccount = twitterAccount;
+        this.employer = employer;
+        this.biography = biography;
+        this.description = description;
+        this.cost = cost;
+        this.visitorEventList = visitorEventList;
+        this.speakerEventList = speakerEventList;
+        this.visitorTasks = visitorTasks;
+        this.commentList = commentList;
     }
-
 
     @Override
     public String getAttachName() {
@@ -232,6 +259,60 @@ public class Visitor extends Person implements Attachable {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Visitor)) return false;
+        if (!super.equals(o)) return false;
+
+        Visitor visitor = (Visitor) o;
+
+        if (Double.compare(visitor.cost, cost) != 0) return false;
+        if (birthDay != null ? !birthDay.equals(visitor.birthDay) : visitor.birthDay != null) return false;
+        if (registered != null ? !registered.equals(visitor.registered) : visitor.registered != null) return false;
+        if (email != null ? !email.equals(visitor.email) : visitor.email != null) return false;
+        if (phone != null ? !phone.equals(visitor.phone) : visitor.phone != null) return false;
+        if (gitHubAccount != null ? !gitHubAccount.equals(visitor.gitHubAccount) : visitor.gitHubAccount != null)
+            return false;
+        if (linkedInAccount != null ? !linkedInAccount.equals(visitor.linkedInAccount) : visitor.linkedInAccount != null)
+            return false;
+        if (twitterAccount != null ? !twitterAccount.equals(visitor.twitterAccount) : visitor.twitterAccount != null)
+            return false;
+        if (employer != null ? !employer.equals(visitor.employer) : visitor.employer != null) return false;
+        if (biography != null ? !biography.equals(visitor.biography) : visitor.biography != null) return false;
+        if (description != null ? !description.equals(visitor.description) : visitor.description != null) return false;
+        if (visitorEventList != null ? !visitorEventList.equals(visitor.visitorEventList) : visitor.visitorEventList != null)
+            return false;
+        if (speakerEventList != null ? !speakerEventList.equals(visitor.speakerEventList) : visitor.speakerEventList != null)
+            return false;
+        if (visitorTasks != null ? !visitorTasks.equals(visitor.visitorTasks) : visitor.visitorTasks != null)
+            return false;
+        return commentList != null ? commentList.equals(visitor.commentList) : visitor.commentList == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        long temp;
+        result = 31 * result + (birthDay != null ? birthDay.hashCode() : 0);
+        result = 31 * result + (registered != null ? registered.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (gitHubAccount != null ? gitHubAccount.hashCode() : 0);
+        result = 31 * result + (linkedInAccount != null ? linkedInAccount.hashCode() : 0);
+        result = 31 * result + (twitterAccount != null ? twitterAccount.hashCode() : 0);
+        result = 31 * result + (employer != null ? employer.hashCode() : 0);
+        result = 31 * result + (biography != null ? biography.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        temp = Double.doubleToLongBits(cost);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (visitorEventList != null ? visitorEventList.hashCode() : 0);
+        result = 31 * result + (speakerEventList != null ? speakerEventList.hashCode() : 0);
+        result = 31 * result + (visitorTasks != null ? visitorTasks.hashCode() : 0);
+        result = 31 * result + (commentList != null ? commentList.hashCode() : 0);
+        return result;
+    }
 
     @Override
     public String toString() {

@@ -46,4 +46,8 @@ public class BaseEntity {
         return (id == null) ? 0 : Long.hashCode(id);
     }
 
+    @Override
+    public String toString() {
+        return "id=" + id;
+    }
 }

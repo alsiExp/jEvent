@@ -3,6 +3,7 @@ package ru.jevent.repository.mock;
 import org.springframework.stereotype.Repository;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Enums.Role;
+import ru.jevent.model.Enums.Sex;
 import ru.jevent.model.User;
 import ru.jevent.repository.UserRepository;
 
@@ -12,7 +13,7 @@ import java.util.List;
 @Repository
 public class MockUserRepositoryImpl implements UserRepository {
     private static final LoggerWrapper LOG = LoggerWrapper.get(MockUserRepositoryImpl.class);
-    private static User user = new User(1, "Екатерина", "Курилова", "partners@jugru.org", "jug", Role.ROLE_USER);
+    private static User user = new User(1L, "Екатерина", "Курилова", Sex.FEMALE, true,  null, "partners@jugru.org", "jug", Role.ROLE_USER);
 
     public static User getUser() {
         return user;

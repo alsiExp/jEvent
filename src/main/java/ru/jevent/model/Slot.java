@@ -19,19 +19,27 @@ public class Slot extends NamedEntity {
     public Slot() {
     }
 
-    public Slot(long id, String name, LocalDateTime start, SlotType slotType) {
-        super(id, name);
+    public Slot(String name, Visitor approvedSpeaker, String lectureDescription, LocalDateTime start,
+                SlotType slotType, int grade, int price) {
+        super(name);
+        this.approvedSpeaker = approvedSpeaker;
+        this.lectureDescription = lectureDescription;
         this.start = start;
         this.slotType = slotType;
+        this.grade = grade;
+        this.price = price;
     }
 
-    public Slot(long id, String name, Visitor speaker, LocalDateTime start, SlotType slotType) {
+    public Slot(long id, String name, Visitor approvedSpeaker, String lectureDescription, LocalDateTime start,
+                SlotType slotType, int grade, int price) {
         super(id, name);
-        this.approvedSpeaker = speaker;
+        this.approvedSpeaker = approvedSpeaker;
+        this.lectureDescription = lectureDescription;
         this.start = start;
         this.slotType = slotType;
+        this.grade = grade;
+        this.price = price;
     }
-
 
     public Visitor getApprovedSpeaker() {
         return approvedSpeaker;
@@ -79,5 +87,49 @@ public class Slot extends NamedEntity {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Slot)) return false;
+        if (!super.equals(o)) return false;
+
+        Slot slot = (Slot) o;
+
+        if (grade != slot.grade) return false;
+        if (price != slot.price) return false;
+        if (approvedSpeaker != null ? !approvedSpeaker.equals(slot.approvedSpeaker) : slot.approvedSpeaker != null)
+            return false;
+        if (lectureDescription != null ? !lectureDescription.equals(slot.lectureDescription) : slot.lectureDescription != null)
+            return false;
+        if (start != null ? !start.equals(slot.start) : slot.start != null) return false;
+        return slotType == slot.slotType;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (approvedSpeaker != null ? approvedSpeaker.hashCode() : 0);
+        result = 31 * result + (lectureDescription != null ? lectureDescription.hashCode() : 0);
+        result = 31 * result + (start != null ? start.hashCode() : 0);
+        result = 31 * result + (slotType != null ? slotType.hashCode() : 0);
+        result = 31 * result + grade;
+        result = 31 * result + price;
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Slot{" +
+                super.toString() +
+                ", approvedSpeakerId=" + approvedSpeaker.toString() +
+                ", lectureDescription='" + lectureDescription + '\'' +
+                ", start=" + start +
+                ", slotType=" + slotType +
+                ", grade=" + grade +
+                ", price=" + price +
+                "} ";
     }
 }

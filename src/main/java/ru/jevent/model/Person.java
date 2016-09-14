@@ -17,10 +17,12 @@ public class Person extends BaseEntity {
     public Person() {
     }
 
-    public Person(Long id, String firstName, String lastName) {
-        super(id);
+    public Person(String firstName, String lastName, Sex sex, boolean enabled, String photoURL) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.sex = sex;
+        this.enabled = enabled;
+        this.photoURL = photoURL;
     }
 
     public Person(Long id, String firstName, String lastName, Sex sex, String photoURL) {
@@ -32,7 +34,7 @@ public class Person extends BaseEntity {
     }
 
     public String getFullName() {
-        return this.firstName + " " + this.getLastName();
+        return this.getFirstName() + " " + this.getLastName();
     }
 
     public String getFirstName() {
@@ -74,4 +76,44 @@ public class Person extends BaseEntity {
     public void setPhotoURL(String photo) {
         this.photoURL = photo;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Person)) return false;
+        if (!super.equals(o)) return false;
+
+        Person person = (Person) o;
+
+        if (enabled != person.enabled) return false;
+        if (firstName != null ? !firstName.equals(person.firstName) : person.firstName != null) return false;
+        if (lastName != null ? !lastName.equals(person.lastName) : person.lastName != null) return false;
+        if (sex != person.sex) return false;
+        return photoURL != null ? photoURL.equals(person.photoURL) : person.photoURL == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        result = 31 * result + (sex != null ? sex.hashCode() : 0);
+        result = 31 * result + (enabled ? 1 : 0);
+        result = 31 * result + (photoURL != null ? photoURL.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", sex=" + sex +
+                ", enabled=" + enabled +
+                ", photoURL='" + photoURL + '\'' +
+                '}';
+    }
+
+
 }

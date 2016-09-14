@@ -28,15 +28,32 @@ public class Event extends NamedEntity  implements Attachable{
     public Event() {
     }
 
-    public Event(long id, String name) {
-        super(id, name);
+    public Event(String name, User author, String tagName, String address, String description, String logoURL,
+                 Set<Visitor> probableSpeakers, List<Comment> commentList, List<Rate> rates, List<Track> tracks) {
+        super(name);
+        this.author = author;
+        this.tagName = tagName;
+        this.address = address;
+        this.description = description;
+        this.logoURL = logoURL;
+        this.probableSpeakers = probableSpeakers;
+        this.commentList = commentList;
+        this.rates = rates;
+        this.tracks = tracks;
     }
 
-    public Event(long id, String name, User author, String tagName, String description) {
+    public Event(long id, String name, User author, String tagName, String address, String description, String logoURL,
+                 Set<Visitor> probableSpeakers, List<Comment> commentList, List<Rate> rates, List<Track> tracks) {
         super(id, name);
         this.author = author;
         this.tagName = tagName;
+        this.address = address;
         this.description = description;
+        this.logoURL = logoURL;
+        this.probableSpeakers = probableSpeakers;
+        this.commentList = commentList;
+        this.rates = rates;
+        this.tracks = tracks;
     }
 
     @Override
@@ -113,7 +130,7 @@ public class Event extends NamedEntity  implements Attachable{
         return commentList;
     }
 
-    public void setCommentList(ArrayList<Comment> commentList) {
+    public void setCommentList(List<Comment> commentList) {
         this.commentList = commentList;
     }
 
@@ -139,15 +156,53 @@ public class Event extends NamedEntity  implements Attachable{
         this.tracks = tracks;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Event)) return false;
+        if (!super.equals(o)) return false;
 
+        Event event = (Event) o;
+
+        if (author != null ? !author.equals(event.author) : event.author != null) return false;
+        if (tagName != null ? !tagName.equals(event.tagName) : event.tagName != null) return false;
+        if (address != null ? !address.equals(event.address) : event.address != null) return false;
+        if (description != null ? !description.equals(event.description) : event.description != null) return false;
+        if (logoURL != null ? !logoURL.equals(event.logoURL) : event.logoURL != null) return false;
+        if (probableSpeakers != null ? !probableSpeakers.equals(event.probableSpeakers) : event.probableSpeakers != null)
+            return false;
+        if (commentList != null ? !commentList.equals(event.commentList) : event.commentList != null) return false;
+        if (rates != null ? !rates.equals(event.rates) : event.rates != null) return false;
+        return tracks != null ? tracks.equals(event.tracks) : event.tracks == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (author != null ? author.hashCode() : 0);
+        result = 31 * result + (tagName != null ? tagName.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (logoURL != null ? logoURL.hashCode() : 0);
+        result = 31 * result + (probableSpeakers != null ? probableSpeakers.hashCode() : 0);
+        result = 31 * result + (commentList != null ? commentList.hashCode() : 0);
+        result = 31 * result + (rates != null ? rates.hashCode() : 0);
+        result = 31 * result + (tracks != null ? tracks.hashCode() : 0);
+        return result;
+    }
 
     @Override
     public String toString() {
         return "Event{" +
-                "id=" + id +
-                ", name=" + name +
-                ", author=" + author +
+                super.toString() +
+                ", logoURL='" + logoURL + '\'' +
+                ", authorId=" + author.toString() +
                 ", tagName='" + tagName + '\'' +
-                '}';
+                ", address='" + address + '\'' +
+                ", description='" + description + '\'' +
+                "} ";
     }
+
+
 }

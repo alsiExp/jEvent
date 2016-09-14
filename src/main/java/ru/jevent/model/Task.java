@@ -27,14 +27,28 @@ public class Task extends NamedEntity {
     public Task() {
     }
 
-    public Task(long id, String name, LocalDateTime start, LocalDateTime deadline, User author,
-                TaskStatus statusLog, Set<Attachable> attachList) {
-        super(id, name);
+    public Task(String name, User author, Set<User> target, LocalDateTime start, LocalDateTime deadline,
+                String description, TaskStatus taskStatus, Set<Attachable> attachList) {
+        super(name);
+        this.author = author;
+        this.target = target;
         this.start = start;
         this.deadline = deadline;
+        this.description = description;
+        this.statusLog.add(taskStatus);
+        this.attachList = attachList;
+    }
+
+    public Task(long id, String name, User author, Set<User> target, LocalDateTime start, LocalDateTime deadline,
+                String description, TaskStatus taskStatus, Set<Attachable> attachList) {
+        super(id, name);
         this.author = author;
-        this.getStatusLog().add(statusLog);
-        this.getAttachList().addAll(attachList);
+        this.target = target;
+        this.start = start;
+        this.deadline = deadline;
+        this.description = description;
+        this.statusLog.add(taskStatus);
+        this.attachList = attachList;
     }
 
     public User getAuthor() {
@@ -88,7 +102,7 @@ public class Task extends NamedEntity {
         return statusLog;
     }
 
-    public void setStatusLog(ArrayList<TaskStatus> statusLog) {
+    public void setStatusLog(List<TaskStatus> statusLog) {
         this.statusLog = statusLog;
     }
 
@@ -104,12 +118,77 @@ public class Task extends NamedEntity {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Task)) return false;
+        if (!super.equals(o)) return false;
+
+        Task task = (Task) o;
+
+        if (author != null ? !author.equals(task.author) : task.author != null) return false;
+        if (target != null ? !target.equals(task.target) : task.target != null) return false;
+        if (start != null ? !start.equals(task.start) : task.start != null) return false;
+        if (deadline != null ? !deadline.equals(task.deadline) : task.deadline != null) return false;
+        if (description != null ? !description.equals(task.description) : task.description != null) return false;
+        if (statusLog != null ? !statusLog.equals(task.statusLog) : task.statusLog != null) return false;
+        return attachList != null ? attachList.equals(task.attachList) : task.attachList == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (author != null ? author.hashCode() : 0);
+        result = 31 * result + (target != null ? target.hashCode() : 0);
+        result = 31 * result + (start != null ? start.hashCode() : 0);
+        result = 31 * result + (deadline != null ? deadline.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (statusLog != null ? statusLog.hashCode() : 0);
+        result = 31 * result + (attachList != null ? attachList.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
+        String prefix = "";
+        StringBuilder targetSB = new StringBuilder();
+        targetSB.append('[');
+        for(User u : target) {
+            targetSB.append(prefix);
+            prefix = ",";
+            targetSB.append(u.toString());
+        }
+        targetSB.append(']');
+        prefix = "";
+
+        StringBuilder logSB = new StringBuilder();
+        logSB.append('[');
+        for(TaskStatus s : statusLog) {
+            logSB.append(prefix);
+            prefix = ",";
+            logSB.append(s.toString());
+        }
+        logSB.append(']');
+        prefix = "";
+
+        StringBuilder attachSB = new StringBuilder();
+        attachSB.append('[');
+        for(Attachable a : attachList) {
+            attachSB.append(prefix);
+            prefix = ",";
+            attachSB.append(a.getAttachName());
+        }
+        attachSB.append(']');
+
         return "Task{" +
-                "id=" + id +
-                "name=" + name +
-                "author=" + author +
+                super.toString() +
+                ", author=" + author.toString() +
+                ", target=" + targetSB.toString() +
+                ", start=" + start +
                 ", deadline=" + deadline +
-                '}';
+                ", description='" + description + '\'' +
+                ", statusLog=" + logSB.toString() +
+                ", attachList=" + attachSB.toString() +
+                "} ";
     }
 }

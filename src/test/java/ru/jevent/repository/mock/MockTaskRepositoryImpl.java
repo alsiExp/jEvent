@@ -17,8 +17,8 @@ import java.util.List;
 public class MockTaskRepositoryImpl implements TaskRepository {
     private static final LoggerWrapper LOG = LoggerWrapper.get(MockTaskRepositoryImpl.class);
 
-    private Task task = new Task(1, "Сделать что-то", LocalDateTime.now(), LocalDateTime.now().plus(7, ChronoUnit.DAYS),
-            MockUserRepositoryImpl.getUser(), new TaskStatus(),
+    private Task task = new Task(1, "Сделать что-то", MockUserRepositoryImpl.getUser(), null, LocalDateTime.now(),
+            LocalDateTime.now().plus(7, ChronoUnit.DAYS), "Event description" , new TaskStatus(),
             new HashSet<>(Arrays.asList(
                     MockVisitorRepositoryImpl.getVisitor(),
                     MockPartnerRepositoryImpl.getPartner(),

@@ -7,13 +7,12 @@ public class NamedEntity extends BaseEntity {
     public NamedEntity() {
     }
 
-    public NamedEntity(long id, String name) {
-        super(id);
+    public NamedEntity(String name) {
         this.name = name;
     }
 
-
-    protected NamedEntity(String name) {
+    public NamedEntity(long id, String name) {
+        super(id);
         this.name = name;
     }
 
@@ -26,7 +25,27 @@ public class NamedEntity extends BaseEntity {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        NamedEntity that = (NamedEntity) o;
+
+        return name.equals(that.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + name.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
-        return name;
+        return  super.toString() +
+                "name='" + name + '\'';
     }
 }

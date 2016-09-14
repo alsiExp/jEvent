@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.model.Event;
+import ru.jevent.model.User;
 import ru.jevent.util.exception.NotFoundException;
 import ru.jevent.web.Event.EventRestController;
 
@@ -24,7 +25,8 @@ public class EventMockTest {
 
     @Test
     public void testUpdate() throws Exception {
-        controller.update(new Event(8, "Event"));
+        controller.update(new Event(8, "Конференция Joker", new User(), "joker16", "Conf address",
+                "Joker 2016 description", null, null, null, null, null));
     }
 
     @Test

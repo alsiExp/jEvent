@@ -9,8 +9,8 @@ public interface CommentService {
 
     Comment update(Comment comment, long userId) throws NotFoundException;
 
-    void delete(long id, long userId) throws NotFoundException;
+    void delete(long id) throws NotFoundException;
 
-    Comment get(long id, long userId) throws NotFoundException;
+    Comment get(long id) throws NotFoundException;
 
 }

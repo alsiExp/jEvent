@@ -6,7 +6,9 @@ DROP TABLE IF EXISTS visitors_events_visits;
 DROP TABLE IF EXISTS task_statuses_tasks;
 DROP TABLE IF EXISTS task_statuses;
 DROP TABLE IF EXISTS task_user_target;
-DROP TABLE IF EXISTS task_attach;
+DROP TABLE IF EXISTS task_attach_events;
+DROP TABLE IF EXISTS task_attach_visitors;
+DROP TABLE IF EXISTS task_attach_partners;
 DROP TABLE IF EXISTS events_comments;
 DROP TABLE IF EXISTS visitors_comments;
 DROP TABLE IF EXISTS tasks_comments;
@@ -139,13 +141,13 @@ CREATE TABLE events
 (
   id          BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
   name        VARCHAR,
-  author_id   BIGINT,
+  authorId   BIGINT,
   tag_name    VARCHAR,
   address     VARCHAR,
   description VARCHAR,
   logo_URL    VARCHAR,
 
-  FOREIGN KEY (author_id) REFERENCES users (id)
+  FOREIGN KEY (authorId) REFERENCES users (id)
 );
 
 
@@ -296,12 +298,31 @@ CREATE TABLE task_user_target
   FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE task_attach
+CREATE TABLE task_attach_events
 (
   task_id   BIGINT,
-  attach_id BIGINT,
+  event_id BIGINT,
 
-  FOREIGN KEY (task_id) REFERENCES tasks (id)
+  FOREIGN KEY (task_id) REFERENCES tasks (id),
+  FOREIGN KEY (event_id) REFERENCES events (id)
+);
+
+CREATE TABLE task_attach_visitors
+(
+  task_id   BIGINT,
+  visitor_id BIGINT,
+
+  FOREIGN KEY (task_id) REFERENCES tasks (id),
+  FOREIGN KEY (visitor_id) REFERENCES visitors (id)
+);
+
+CREATE TABLE task_attach_partners
+(
+  task_id   BIGINT,
+  partner_id BIGINT,
+
+  FOREIGN KEY (task_id) REFERENCES tasks (id),
+  FOREIGN KEY (partner_id) REFERENCES partners (id)
 );
 
 

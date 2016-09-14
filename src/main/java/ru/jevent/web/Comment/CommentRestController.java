@@ -33,13 +33,13 @@ public class CommentRestController {
     public void get(long id) {
         long userId = LoggedUser.id();
         LOG.info("get comment {} by user {}", id, userId);
-        service.get(id, userId);
+        service.get(id);
     }
 
     public void delete(long id) {
         long userId = LoggedUser.id();
         LOG.info("delete {} by user {}", id, userId);
-        service.delete(id, userId);
+        service.delete(id);
     }
 
 

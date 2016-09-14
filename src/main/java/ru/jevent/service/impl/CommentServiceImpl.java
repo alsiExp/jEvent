@@ -29,12 +29,12 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void delete(long id, long userId) throws NotFoundException {
-        ExceptionUtil.check(repository.delete(id, userId), id);
+    public void delete(long id) throws NotFoundException {
+        ExceptionUtil.check(repository.delete(id), id);
     }
 
     @Override
-    public Comment get(long id, long userId) throws NotFoundException {
-        return ExceptionUtil.check(repository.get(id, userId), id);
+    public Comment get(long id) throws NotFoundException {
+        return ExceptionUtil.check(repository.get(id), id);
     }
 }

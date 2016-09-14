@@ -23,13 +23,13 @@ public class MockCommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public boolean delete(long id, long userId) {
+    public boolean delete(long id) {
         LOG.info("delete " + id);
         return id != 0;
     }
 
     @Override
-    public Comment get(long id, long userId) {
+    public Comment get(long id) {
         LOG.info("get " + id);
         return comment;
     }

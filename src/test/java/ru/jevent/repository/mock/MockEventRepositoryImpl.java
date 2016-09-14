@@ -11,7 +11,8 @@ import java.util.List;
 @Repository
 public class MockEventRepositoryImpl implements EventRepository {
     private static final LoggerWrapper LOG = LoggerWrapper.get(MockEventRepositoryImpl.class);
-    private static Event event = new Event(2, "Конференция Joker", MockUserRepositoryImpl.getUser(), "Joker2016", "Conf description");
+    private static Event event = new Event(2, "Конференция Joker", MockUserRepositoryImpl.getUser(), "joker16", "Conf address",
+    "Joker 2016 description", null, null, null, null, null);
 
     public static Event getEvent() {
         return event;

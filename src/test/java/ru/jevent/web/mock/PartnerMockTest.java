@@ -22,7 +22,7 @@ public class PartnerMockTest {
 
     @Test
     public void testUpdate() throws Exception {
-        controller.create(new Partner(5, "Somebody"));
+        controller.create(new Partner(5, "T-Systems", "email", "+7-812-000-00-00", "Partner description", null));
     }
 
     @Test

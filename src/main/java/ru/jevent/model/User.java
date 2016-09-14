@@ -16,25 +16,20 @@ public class User extends Person {
     public User() {
     }
 
-    public User(long id, String firstName, String lastName, String login, String password, Role role, Role... roles) {
-        super(id, firstName, lastName);
+    public User(String firstName, String lastName, Sex sex, boolean enabled, String photoURL, String login,
+                String password, Role role) {
+        super(firstName, lastName, sex, enabled, photoURL);
         this.login = login;
         this.password = password;
-        this.roles = EnumSet.of(role, roles);
+        this.roles.add(role);
     }
 
-    public User(long id, String firstName, String lastName, Sex sex, String photoURL, String login, String password, Role role, Role... roles) {
-        super(id, firstName, lastName, sex, photoURL);
+    public User(Long id, String firstName, String lastName, Sex sex, boolean enabled, String photoURL, String login,
+                String password, Role role) {
+        super(firstName, lastName, sex, enabled, photoURL);
         this.login = login;
         this.password = password;
-        this.roles = EnumSet.of(role, roles);
-    }
-
-    public User(Long id, String firstName, String lastName, Sex sex, String photoURL, String login, String password, Set<Role> roles) {
-        super(id, firstName, lastName, sex, photoURL);
-        this.login = login;
-        this.password = password;
-        this.roles = roles;
+        this.roles.add(role);
     }
 
     public String getLogin() {
@@ -65,12 +60,47 @@ public class User extends Person {
         return roles;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        if (!super.equals(o)) return false;
+
+        User user = (User) o;
+
+        if (!login.equals(user.login)) return false;
+        if (password != null ? !password.equals(user.password) : user.password != null) return false;
+        return roles != null ? roles.equals(user.roles) : user.roles == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + login.hashCode();
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (roles != null ? roles.hashCode() : 0);
+        return result;
+    }
+
     @Override
     public String toString() {
+        String prefix = "";
+        StringBuilder roleSB = new StringBuilder();
+        roleSB.append('[');
+        for(Object o : roles.toArray()) {
+            roleSB.append(prefix);
+            prefix = ",";
+            roleSB.append(((Role) o).toString());
+        }
+        roleSB.append(']');
+
         return "User{" +
-                "id=" + id +
-                ", firstName=" + firstName +
-                ", lastName=" + lastName +
-                '}';
+                super.toString() +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roleSB.toString() +
+                "} " + super.toString();
     }
 }

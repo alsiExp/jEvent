@@ -6,7 +6,9 @@ DELETE FROM visitors_events_visits;
 DELETE FROM task_statuses_tasks;
 DELETE FROM task_statuses;
 DELETE FROM task_user_target;
-DELETE FROM task_attach;
+DELETE FROM task_attach_events;
+DELETE FROM task_attach_visitors;
+DELETE FROM task_attach_partners;
 DELETE FROM events_comments;
 DELETE FROM visitors_comments;
 DELETE FROM tasks_comments;
@@ -184,13 +186,19 @@ INSERT INTO tasks_comments (task_id, comment_id)
 VALUES
   (100025, 100048);
 
-INSERT INTO task_attach (task_id, attach_id)
+INSERT INTO task_attach_events (task_id, event_id)
+VALUES
+  (100025, 100012);
+
+INSERT INTO task_attach_visitors (task_id, visitor_id)
 VALUES
   (100025, 100003),
   (100025, 100005),
-  (100025, 100000),
-  (100025, 100012),
   (100026, 100004);
+
+INSERT INTO task_attach_partners (task_id, partner_id)
+VALUES
+  (100025, 100000);
 
 INSERT INTO task_user_target (task_id, user_id)
 VALUES
