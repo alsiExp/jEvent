@@ -48,7 +48,7 @@ public class User extends Person {
         this.password = password;
     }
 
-    public void addAuthority(Role authority) {
+    public void addRoles(Role authority) {
         if (roles == null) {
             roles = EnumSet.of(authority);
         } else {
@@ -86,21 +86,23 @@ public class User extends Person {
 
     @Override
     public String toString() {
-        String prefix = "";
         StringBuilder roleSB = new StringBuilder();
-        roleSB.append('[');
-        for(Object o : roles.toArray()) {
-            roleSB.append(prefix);
-            prefix = ",";
-            roleSB.append(((Role) o).toString());
+        if(!roles.isEmpty()) {
+            String prefix = "";
+            roleSB.append('[');
+            for (Object o : roles.toArray()) {
+                roleSB.append(prefix);
+                prefix = ",";
+                roleSB.append((o).toString());
+            }
+            roleSB.append(']');
         }
-        roleSB.append(']');
 
         return "User{" +
                 super.toString() +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", roles=" + roleSB.toString() +
-                "} " + super.toString();
+                "}";
     }
 }

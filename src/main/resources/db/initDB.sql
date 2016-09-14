@@ -141,13 +141,13 @@ CREATE TABLE events
 (
   id          BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
   name        VARCHAR,
-  authorId   BIGINT,
+  author_id   BIGINT,
   tag_name    VARCHAR,
   address     VARCHAR,
   description VARCHAR,
   logo_URL    VARCHAR,
 
-  FOREIGN KEY (authorId) REFERENCES users (id)
+  FOREIGN KEY (author_id) REFERENCES users (id)
 );
 
 

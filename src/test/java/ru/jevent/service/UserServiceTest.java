@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import ru.jevent.model.Comment;
 import ru.jevent.model.User;
 import ru.jevent.util.DbPopulator;
 
@@ -16,10 +15,10 @@ import ru.jevent.util.DbPopulator;
         "classpath:spring/spring-db.xml"
 })
 @RunWith(SpringJUnit4ClassRunner.class)
-public class CommentServiceTest {
+public class UserServiceTest {
 
     @Autowired
-    private CommentService service;
+    private UserService service;
     @Autowired
     private DbPopulator dbPopulator;
 
@@ -30,11 +29,12 @@ public class CommentServiceTest {
 
     @Test
     public void testGet() throws Exception {
-        Comment c = service.get(100014);
-        if (c.getId() == null ||
-                c.getContent() == null ||
-                c.getDate() == null) throw new Exception();
-        if(c.getAuthor().getClass() != new User().getClass()) throw new Exception();
-        if(c.getId() != 100014) throw new Exception();
+        User u = service.get(100006);
+        if(u.getId() == null ||
+                u.getLogin() == null ||
+                u.getFirstName() == null) throw new Exception();
+        if(u.getClass() != new User().getClass()) throw new Exception();
+        if(u.getId() != 100006) throw new Exception();
     }
+
 }

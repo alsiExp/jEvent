@@ -9,12 +9,13 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.jevent.model.Comment;
 import ru.jevent.repository.CommentRepository;
+import ru.jevent.repository.UserRepository;
 
 import javax.sql.DataSource;
 import java.sql.Timestamp;
 
 @Repository
-public class JdbcCommentRepositoryImpl implements CommentRepository{
+public class JdbcCommentRepositoryImpl implements CommentRepository {
 
     private static final BeanPropertyRowMapper<Comment> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Comment.class);
 
@@ -22,17 +23,21 @@ public class JdbcCommentRepositoryImpl implements CommentRepository{
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private SimpleJdbcInsert insertComment;
 
+    private UserRepository userRepository;
+
     @Autowired
     public JdbcCommentRepositoryImpl(JdbcTemplate jdbcTemplate,
                                      NamedParameterJdbcTemplate namedParameterJdbcTemplate,
-                                     DataSource dataSource) {
+                                     DataSource dataSource,
+                                     UserRepository userRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.insertComment = new SimpleJdbcInsert(dataSource)
                 .withTableName("comments")
                 .usingGeneratedKeyColumns("id");
-    }
 
+        this.userRepository = userRepository;
+    }
 
 
     @Override
@@ -42,7 +47,7 @@ public class JdbcCommentRepositoryImpl implements CommentRepository{
                 .addValue("content", comment.getContent())
                 .addValue("date", Timestamp.valueOf(comment.getDate()))
                 .addValue("user_id", userId);
-        if(comment.isNew()) {
+        if (comment.isNew()) {
             Number newKey = insertComment.executeAndReturnKey(map);
             comment.setId(newKey.longValue());
         } else {
@@ -53,13 +58,20 @@ public class JdbcCommentRepositoryImpl implements CommentRepository{
     }
 
     @Override
-    public boolean delete(long id, long userId) {
+    public boolean delete(long id) {
         return false;
     }
 
     @Override
-    public Comment get(long id, long userId) {
-
-        return jdbcTemplate.queryForObject("SELECT id, content, date, user_id FROM comments WHERE id = ?", ROW_MAPPER, id);
+    public Comment get(long id) {
+        String sql = "SELECT id, content, date, user_id FROM comments WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, (rs, i) -> {
+            Comment comment = new Comment();
+            comment.setId(rs.getLong("id"));
+            comment.setContent(rs.getString("content"));
+            comment.setDate(rs.getTimestamp("date").toLocalDateTime());
+            comment.setAuthor(userRepository.get(rs.getLong("user_id")));
+            return comment;
+        }, id);
     }
 }
