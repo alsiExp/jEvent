@@ -6,6 +6,7 @@ import ru.jevent.model.Comment;
 import ru.jevent.repository.CommentRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public class MockCommentRepositoryImpl implements CommentRepository {
@@ -32,5 +33,11 @@ public class MockCommentRepositoryImpl implements CommentRepository {
     public Comment get(long id) {
         LOG.info("get " + id);
         return comment;
+    }
+
+    @Override
+    public List<Comment> getAllByVisitorId(long id) {
+        LOG.info("get all comments by Visitor id = " + id);
+        return null;
     }
 }

@@ -8,6 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Visitor extends Person implements Attachable {
+    /*
+        Entity Visitor have not links for Event and Task.
+        To find Events, where Visitor was speaker, use getSpeakerEventList<Visitor>(long id) in EventRepository;
+        To find Events, where Visitor was only visitor, use getVisitorEventList<Visitor>(long id) in EventRepository;
+        TODO: later create object to store in DB date of buy and maybe something else
+        To find all Tasks for visitor use TaskRepository
+
+     */
 
     //    Dates
     private LocalDateTime birthDay;
@@ -30,21 +38,6 @@ public class Visitor extends Person implements Attachable {
     //    quantity of money, that will be received or payed
     private double cost;
 
-
-    //    Our events
-    //    only visitor, not include speakerEventList
-    //    TODO: later create object to store in DB date of buy and maybe something else
-    private List<Event> visitorEventList;
-
-    //    events, where Visitor was speaker
-    //
-    private List<Event> speakerEventList;
-
-
-
-    //     related Tasks
-    private List<Task> visitorTasks;
-
     //    notes from all Users about Visitor
     private List<Comment> commentList;
 
@@ -59,7 +52,7 @@ public class Visitor extends Person implements Attachable {
     public Visitor() {
     }
 
-    public Visitor(String firstName, String lastName, Sex sex, boolean enabled, String photoURL, LocalDateTime birthDay, LocalDate registered, String email, String phone, String gitHubAccount, String linkedInAccount, String twitterAccount, String employer, String biography, String description, double cost, List<Event> visitorEventList, List<Event> speakerEventList, List<Task> visitorTasks, List<Comment> commentList) {
+    public Visitor(String firstName, String lastName, Sex sex, boolean enabled, String photoURL, LocalDateTime birthDay, LocalDate registered, String email, String phone, String gitHubAccount, String linkedInAccount, String twitterAccount, String employer, String biography, String description, double cost, List<Comment> commentList) {
         super(firstName, lastName, sex, enabled, photoURL);
         this.birthDay = birthDay;
         this.registered = registered;
@@ -72,13 +65,10 @@ public class Visitor extends Person implements Attachable {
         this.biography = biography;
         this.description = description;
         this.cost = cost;
-        this.visitorEventList = visitorEventList;
-        this.speakerEventList = speakerEventList;
-        this.visitorTasks = visitorTasks;
         this.commentList = commentList;
     }
 
-    public Visitor(Long id, String firstName, String lastName, Sex sex, String photoURL, LocalDateTime birthDay, LocalDate registered, String email, String phone, String gitHubAccount, String linkedInAccount, String twitterAccount, String employer, String biography, String description, double cost, List<Event> visitorEventList, List<Event> speakerEventList, List<Task> visitorTasks, List<Comment> commentList) {
+    public Visitor(Long id, String firstName, String lastName, Sex sex, String photoURL, LocalDateTime birthDay, LocalDate registered, String email, String phone, String gitHubAccount, String linkedInAccount, String twitterAccount, String employer, String biography, String description, double cost, List<Comment> commentList) {
         super(id, firstName, lastName, sex, photoURL);
         this.birthDay = birthDay;
         this.registered = registered;
@@ -91,9 +81,6 @@ public class Visitor extends Person implements Attachable {
         this.biography = biography;
         this.description = description;
         this.cost = cost;
-        this.visitorEventList = visitorEventList;
-        this.speakerEventList = speakerEventList;
-        this.visitorTasks = visitorTasks;
         this.commentList = commentList;
     }
 
@@ -208,45 +195,6 @@ public class Visitor extends Person implements Attachable {
         this.cost = cost;
     }
 
-
-
-    public List<Event> getVisitorEventList() {
-        if (visitorEventList == null) {
-            visitorEventList = new ArrayList<>();
-        }
-        return visitorEventList;
-    }
-
-    public void setVisitorEventList(ArrayList<Event> visitorEventList) {
-        this.visitorEventList = visitorEventList;
-    }
-
-    public List<Event> getSpeakerEventList() {
-        if (speakerEventList == null) {
-            speakerEventList = new ArrayList<>();
-        }
-        return speakerEventList;
-    }
-
-    public void setSpeakerEventList(ArrayList<Event> speakerEventList) {
-        this.speakerEventList = speakerEventList;
-    }
-
-
-
-    public List<Task> getVisitorTasks() {
-        if (visitorTasks == null) {
-            visitorTasks = new ArrayList<>();
-        }
-        return visitorTasks;
-    }
-
-    public void setVisitorTasks(ArrayList<Task> visitorTasks) {
-        this.visitorTasks = visitorTasks;
-    }
-
-
-
     public List<Comment> getCommentList() {
         if (commentList == null) {
             commentList = new ArrayList<>();
@@ -254,7 +202,7 @@ public class Visitor extends Person implements Attachable {
         return commentList;
     }
 
-    public void setCommentList(ArrayList<Comment> commentList) {
+    public void setCommentList(List<Comment> commentList) {
         this.commentList = commentList;
     }
 
@@ -281,12 +229,6 @@ public class Visitor extends Person implements Attachable {
         if (employer != null ? !employer.equals(visitor.employer) : visitor.employer != null) return false;
         if (biography != null ? !biography.equals(visitor.biography) : visitor.biography != null) return false;
         if (description != null ? !description.equals(visitor.description) : visitor.description != null) return false;
-        if (visitorEventList != null ? !visitorEventList.equals(visitor.visitorEventList) : visitor.visitorEventList != null)
-            return false;
-        if (speakerEventList != null ? !speakerEventList.equals(visitor.speakerEventList) : visitor.speakerEventList != null)
-            return false;
-        if (visitorTasks != null ? !visitorTasks.equals(visitor.visitorTasks) : visitor.visitorTasks != null)
-            return false;
         return commentList != null ? commentList.equals(visitor.commentList) : visitor.commentList == null;
 
     }
@@ -307,19 +249,38 @@ public class Visitor extends Person implements Attachable {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         temp = Double.doubleToLongBits(cost);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (visitorEventList != null ? visitorEventList.hashCode() : 0);
-        result = 31 * result + (speakerEventList != null ? speakerEventList.hashCode() : 0);
-        result = 31 * result + (visitorTasks != null ? visitorTasks.hashCode() : 0);
         result = 31 * result + (commentList != null ? commentList.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
+        StringBuilder commentsSB = new StringBuilder();
+        if(!commentList.isEmpty()) {
+            String prefix = "";
+            commentsSB.append('[');
+            for (Comment c : commentList) {
+                commentsSB.append(prefix);
+                prefix = ",";
+                commentsSB.append((c).toString());
+            }
+            commentsSB.append(']');
+        }
+
         return "Visitor{" +
-                "id=" + id +
-                ", firstName=" + firstName +
-                ", lastName=" + lastName +
-                '}';
+                super.toString() +
+                "birthDay=" + birthDay +
+                ", registered=" + registered +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", gitHubAccount='" + gitHubAccount + '\'' +
+                ", linkedInAccount='" + linkedInAccount + '\'' +
+                ", twitterAccount='" + twitterAccount + '\'' +
+                ", employer='" + employer + '\'' +
+                ", biography='" + biography + '\'' +
+                ", description='" + description + '\'' +
+                ", cost=" + cost +
+                ", commentList=" + commentsSB.toString() +
+                "} ";
     }
 }

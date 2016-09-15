@@ -6,6 +6,11 @@ import java.util.*;
 
 public class Event extends NamedEntity  implements Attachable{
 
+    /*
+        In probableSpeakers stored Visitors, that sent request to be speaker at this event.
+        In confirmedVisitors stored Visitors, that already bought ticket.
+     */
+
     private User author;
 
     private String tagName;
@@ -14,22 +19,25 @@ public class Event extends NamedEntity  implements Attachable{
     private String logoURL;
 
     private Set<Visitor> probableSpeakers;
-    //    notes for Event
-    //    sort by date
-    private List<Comment> commentList;
+    private Set<Visitor> confirmedVisitors;
 
     //    ticket prices
     //    sort by LocalDate start
     private List<Rate> rates;
+
     //    tracks with slots (in list)
     //    sort by field position in DB
     private List<Track> tracks;
 
+    //    notes for Event
+    //    sort by date
+    private List<Comment> commentList;
+
+
     public Event() {
     }
 
-    public Event(String name, User author, String tagName, String address, String description, String logoURL,
-                 Set<Visitor> probableSpeakers, List<Comment> commentList, List<Rate> rates, List<Track> tracks) {
+    public Event(String name, User author, String tagName, String address, String description, String logoURL, Set<Visitor> probableSpeakers, Set<Visitor> confirmedVisitors, List<Rate> rates, List<Track> tracks, List<Comment> commentList) {
         super(name);
         this.author = author;
         this.tagName = tagName;
@@ -37,13 +45,13 @@ public class Event extends NamedEntity  implements Attachable{
         this.description = description;
         this.logoURL = logoURL;
         this.probableSpeakers = probableSpeakers;
-        this.commentList = commentList;
+        this.confirmedVisitors = confirmedVisitors;
         this.rates = rates;
         this.tracks = tracks;
+        this.commentList = commentList;
     }
 
-    public Event(long id, String name, User author, String tagName, String address, String description, String logoURL,
-                 Set<Visitor> probableSpeakers, List<Comment> commentList, List<Rate> rates, List<Track> tracks) {
+    public Event(long id, String name, User author, String tagName, String address, String description, String logoURL, Set<Visitor> probableSpeakers, Set<Visitor> confirmedVisitors, List<Rate> rates, List<Track> tracks, List<Comment> commentList) {
         super(id, name);
         this.author = author;
         this.tagName = tagName;
@@ -51,9 +59,10 @@ public class Event extends NamedEntity  implements Attachable{
         this.description = description;
         this.logoURL = logoURL;
         this.probableSpeakers = probableSpeakers;
-        this.commentList = commentList;
+        this.confirmedVisitors = confirmedVisitors;
         this.rates = rates;
         this.tracks = tracks;
+        this.commentList = commentList;
     }
 
     @Override
@@ -120,7 +129,18 @@ public class Event extends NamedEntity  implements Attachable{
     }
 
     public void setProbableSpeakers(Set<Visitor> probableSpeakers) {
-        this.probableSpeakers = probableSpeakers;
+        this.getProbableSpeakers().addAll(probableSpeakers);
+    }
+
+    public Set<Visitor> getConfirmedVisitors() {
+        if(confirmedVisitors == null) {
+            confirmedVisitors = new HashSet<>();
+        }
+        return confirmedVisitors;
+    }
+
+    public void setConfirmedVisitors(Set<Visitor> confirmedVisitors) {
+        this.getConfirmedVisitors().addAll(confirmedVisitors);
     }
 
     public List<Comment> getCommentList() {
@@ -171,6 +191,8 @@ public class Event extends NamedEntity  implements Attachable{
         if (logoURL != null ? !logoURL.equals(event.logoURL) : event.logoURL != null) return false;
         if (probableSpeakers != null ? !probableSpeakers.equals(event.probableSpeakers) : event.probableSpeakers != null)
             return false;
+        if (confirmedVisitors != null ? !confirmedVisitors.equals(event.confirmedVisitors) : event.confirmedVisitors != null)
+            return false;
         if (commentList != null ? !commentList.equals(event.commentList) : event.commentList != null) return false;
         if (rates != null ? !rates.equals(event.rates) : event.rates != null) return false;
         return tracks != null ? tracks.equals(event.tracks) : event.tracks == null;
@@ -186,6 +208,7 @@ public class Event extends NamedEntity  implements Attachable{
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (logoURL != null ? logoURL.hashCode() : 0);
         result = 31 * result + (probableSpeakers != null ? probableSpeakers.hashCode() : 0);
+        result = 31 * result + (confirmedVisitors != null ? confirmedVisitors.hashCode() : 0);
         result = 31 * result + (commentList != null ? commentList.hashCode() : 0);
         result = 31 * result + (rates != null ? rates.hashCode() : 0);
         result = 31 * result + (tracks != null ? tracks.hashCode() : 0);
@@ -196,13 +219,16 @@ public class Event extends NamedEntity  implements Attachable{
     public String toString() {
         return "Event{" +
                 super.toString() +
-                ", logoURL='" + logoURL + '\'' +
-                ", authorId=" + author.toString() +
+                "author=" + author +
                 ", tagName='" + tagName + '\'' +
                 ", address='" + address + '\'' +
                 ", description='" + description + '\'' +
+                ", logoURL='" + logoURL + '\'' +
+                ", probableSpeakers=" + probableSpeakers +
+                ", confirmedVisitors=" + confirmedVisitors +
+                ", rates=" + rates +
+                ", tracks=" + tracks +
+                ", commentList=" + commentList +
                 "} ";
     }
-
-
 }

@@ -108,7 +108,7 @@ CREATE TABLE visitors
   biography        VARCHAR,
   description      VARCHAR,
 
-  cost             MONEY,
+  cost             NUMERIC(20, 2),
 
 
   FOREIGN KEY (sex) REFERENCES person_sex (id)
@@ -159,7 +159,7 @@ CREATE TABLE rates
   rate_type  BIGINT,
   start_date TIMESTAMP NOT NULL,
   end_date   TIMESTAMP NOT NULL,
-  cost       MONEY,
+  cost       NUMERIC(20, 2),
 
   FOREIGN KEY (event_id) REFERENCES events (id),
   FOREIGN KEY (rate_type) REFERENCES rate_type (id)
