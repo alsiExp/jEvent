@@ -26,7 +26,7 @@ public class EventMockTest {
     @Test
     public void testUpdate() throws Exception {
         controller.update(new Event(8, "Конференция Joker", new User(), "joker16", "Conf address",
-                "Joker 2016 description", null, null, null, null, null));
+                "Joker 2016 description", null, null, null, null, null, null));
     }
 
     @Test

@@ -219,7 +219,7 @@ public class Event extends NamedEntity  implements Attachable{
     public String toString() {
         return "Event{" +
                 super.toString() +
-                "author=" + author +
+                ", author=" + author +
                 ", tagName='" + tagName + '\'' +
                 ", address='" + address + '\'' +
                 ", description='" + description + '\'' +

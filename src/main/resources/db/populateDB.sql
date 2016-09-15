@@ -256,11 +256,11 @@ INSERT INTO events_visitors (visitor_id, event_id)
 VALUES
   (100005, 100012);
 
-INSERT INTO tracks (name, event_id, description, position)
+INSERT INTO tracks (name, event_id, description)
 VALUES
-  ('Зал 1', 100012, 'Главный зал', 0),
-  ('Зал 2', 100012, 'Доп. зал', 1),
-  ('Основной зал', 100013, 'Самый главный трэк', 0);
+  ('Зал 1', 100012, 'Главный зал'),
+  ('Зал 2', 100012, 'Доп. зал'),
+  ('Основной зал', 100013, 'Самый главный трэк');
 
 INSERT INTO slots (name, track_id, start, visitors_events_speaker_id, lecture_description, slot_type, grade)
 VALUES

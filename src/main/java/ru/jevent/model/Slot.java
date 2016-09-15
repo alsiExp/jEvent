@@ -14,7 +14,7 @@ public class Slot extends NamedEntity {
     //    will be set after Event (by Visitors votes)
     private int grade;
     //    invitation costs
-    private int price;
+    private double price;
 
     public Slot() {
     }
@@ -81,11 +81,11 @@ public class Slot extends NamedEntity {
         this.grade = grade;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -111,12 +111,14 @@ public class Slot extends NamedEntity {
     @Override
     public int hashCode() {
         int result = super.hashCode();
+        long temp;
         result = 31 * result + (approvedSpeaker != null ? approvedSpeaker.hashCode() : 0);
         result = 31 * result + (lectureDescription != null ? lectureDescription.hashCode() : 0);
         result = 31 * result + (start != null ? start.hashCode() : 0);
         result = 31 * result + (slotType != null ? slotType.hashCode() : 0);
         result = 31 * result + grade;
-        result = 31 * result + price;
+        temp = Double.doubleToLongBits(price);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 

@@ -172,7 +172,6 @@ CREATE TABLE tracks
   name        VARCHAR,
   event_id    BIGINT,
   description VARCHAR,
-  position    INT,
 
   FOREIGN KEY (event_id) REFERENCES events (id)
 );

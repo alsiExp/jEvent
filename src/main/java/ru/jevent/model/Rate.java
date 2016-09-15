@@ -97,7 +97,7 @@ public class Rate extends NamedEntity {
     public String toString() {
         return "Rate{" +
                 super.toString() +
-                "rateType=" + rateType +
+                ", rateType=" + rateType +
                 ", start=" + start +
                 ", end=" + end +
                 ", cost=" + cost +

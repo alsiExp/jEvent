@@ -46,6 +46,6 @@ public class NamedEntity extends BaseEntity {
     @Override
     public String toString() {
         return  super.toString() +
-                "name='" + name + '\'';
+                ", name='" + name + '\'';
     }
 }
