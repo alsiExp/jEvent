@@ -85,6 +85,17 @@ public class JdbcCommentRepositoryImpl implements CommentRepository {
     public List<Comment> getAllByVisitorId(long id) {
         String sql = "select c.id, c.content, c.date, c.user_id from visitors_comments vc " +
                 "LEFT JOIN comments c on vc.comment_id = c.id WHERE vc.visitor_id = ?";
+        return getAllById(sql, id);
+    }
+
+    @Override
+    public List<Comment> getAllByEventId(long id) {
+        String sql = "SELECT c.id, c.content, c.date, c.user_id FROM events_comments ec " +
+                "LEFT JOIN comments c on ec.comment_id = c.id WHERE ec.event_id = ?";
+        return getAllById(sql, id);
+    }
+
+    private List<Comment> getAllById(String sql, long id) {
         return jdbcTemplate.query(sql, new Object[] {id}, (ResultSet rs) -> {
             Map<Long, User> userMap = new HashMap<>();
             List<Comment> commentList = new ArrayList<>();
@@ -93,14 +104,14 @@ public class JdbcCommentRepositoryImpl implements CommentRepository {
                 comment.setId(rs.getLong("id"));
                 comment.setContent(rs.getString("content"));
                 comment.setDate(rs.getTimestamp("date").toLocalDateTime());
-                Long autorId = rs.getLong("user_id");
+                Long userId = rs.getLong("user_id");
                 User author = null;
-                if(userMap.containsKey(autorId)) {
-                    author = userMap.get(autorId);
+                if(userMap.containsKey(userId)) {
+                    author = userMap.get(userId);
                 }
                 else {
-                    author = userRepository.get(autorId);
-                    userMap.put(autorId, author);
+                    author = userRepository.get(userId);
+                    userMap.put(userId, author);
                 }
                 comment.setAuthor(author);
                 commentList.add(comment);

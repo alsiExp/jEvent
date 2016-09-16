@@ -40,4 +40,10 @@ public class MockCommentRepositoryImpl implements CommentRepository {
         LOG.info("get all comments by Visitor id = " + id);
         return null;
     }
+
+    @Override
+    public List<Comment> getAllByEventId(long id) {
+        LOG.info("get all comments by Event id = " + id);
+        return null;
+    }
 }

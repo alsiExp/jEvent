@@ -13,5 +13,6 @@ public interface CommentRepository {
     Comment get(long id);
 
     List<Comment> getAllByVisitorId(long id);
+    List<Comment> getAllByEventId(long id);
 
 }
