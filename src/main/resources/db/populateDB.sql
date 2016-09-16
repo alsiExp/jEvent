@@ -1,8 +1,8 @@
 DELETE FROM slots;
 DELETE FROM tracks;
-DELETE FROM events_visitors;
+DELETE FROM events_probable_speakers;
 DELETE FROM visitors_events_speakers;
-DELETE FROM visitors_events_visits;
+DELETE FROM events_by_rate_confirmed_visitors;
 DELETE FROM task_statuses_tasks;
 DELETE FROM task_statuses;
 DELETE FROM task_user_target;
@@ -79,7 +79,7 @@ VALUES
    'Поскольку «религия не позволяет» быть евангелистом, Барух — developer advocate в компании JFrog и делает в жизни ровно 3 вещи: зависает с разработчиками Bintray и Artifactory, пописывает для них код, и рассказывает о впечатлениях в блогах и на конференциях, таких как JavaOne, Devoxx, OSCON, конечно же JPoint и Joker, да и многих других. И так более десяти лет подряд.',
    -90000),
   ('Яков', 'Файн', 90000, TRUE, 'yfain.jpg', TIMESTAMP '1960-07-01 00:00', TIMESTAMP '2016-10-15 12:36',
-           NULL,
+           'notlull@email.ru',
            NULL, NULL, 'yfain', 'yfain',
    'SuranceBay, Farata Systems',
    'Yakov is a partner and co-founder of two companies: Farata Systems (IT consultancy) and SuranceBay (software for the Insurance industry). Yakov leads various projects related to Web development of complex enterprise applications. In his spare time Yakov enjoys teaching software and writing books.',
@@ -98,7 +98,7 @@ VALUES
 INSERT INTO events (name, author_id, tag_name, address, description, logo_url)
 VALUES
   ('Joker 2016', 100006, 'joker16', '196140, Санкт-Петербург, Петербургское шоссе, 64/1',
-   'Спикеры - Барух Садогурский и Виктор Гамов, посетитель - Яков Файн. Главная Java-конференция в России. Санкт-Петербург, 14-15 октября 2016',
+   'Спикеры - Барух Садогурский и Виктор Гамов, посетитель - Яков Файн (также он возможный докладчик). Главная Java-конференция в России. Санкт-Петербург, 14-15 октября 2016',
    'joker_logo.png'),
   ('JPoint 2016', 100008, 'jpoint16', 'Москва, гостиница «Radisson Славянская» (площадь Европы, 2)',
    'Спикер - Барух Садогурский, посетители -  Виктор Гамов и Яков Файн. JPoint — Java-конференция только для опытных Java-разработчиков и только про разработку. Это будет уже четвертая по счету конференция JPoint: с каждым годом она получается еще больше, еще интереснее и еще хардкорнее!',
@@ -239,11 +239,19 @@ VALUES
   (100052, 100026),
   (100053, 100027);
 
-INSERT INTO visitors_events_visits (visitor_id, event_id, purchase_date)
+INSERT INTO rates (name, event_id, rate_type, start_date, end_date, cost)
 VALUES
-  (100005, 100012, TIMESTAMP '2016-07-15 15:53'),
-  (100005, 100013, TIMESTAMP '2016-01-29 07:48'),
-  (100003, 100012, TIMESTAMP '2016-08-15 16:00');
+  ('Личное присутствие Standart', 100013, 90032, TIMESTAMP '2016-04-01 00:00', TIMESTAMP '2016-04-20 23:59', 34000);
+
+
+
+INSERT INTO events_by_rate_confirmed_visitors (visitor_id, buy_date, rate_id)
+VALUES
+  (100005, TIMESTAMP '2016-07-15 15:53', 100034),
+  (100005, TIMESTAMP '2016-01-29 07:48', 100054),
+  (100003, TIMESTAMP '2016-08-15 16:00', 100054);
+
+
 
 INSERT INTO visitors_events_speakers (visitor_id, event_id, price)
     VALUES
@@ -252,9 +260,9 @@ INSERT INTO visitors_events_speakers (visitor_id, event_id, price)
       (100003, 100012, 30000);
 
 
-INSERT INTO events_visitors (visitor_id, event_id)
+INSERT INTO events_probable_speakers (visitor_id, event_id, send_date, speech_name, speech_description, wish_price)
 VALUES
-  (100005, 100012);
+  (100005, 100012, TIMESTAMP '2015-10-14 12:00', 'Название выступления', 'Описание выступления. Хочет 15 тысяч...', 15000);
 
 INSERT INTO tracks (name, event_id, description)
 VALUES
@@ -262,13 +270,17 @@ VALUES
   ('Зал 2', 100012, 'Доп. зал'),
   ('Основной зал', 100013, 'Самый главный трэк');
 
+
 INSERT INTO slots (name, track_id, start, visitors_events_speaker_id, lecture_description, slot_type, grade)
 VALUES
-  ('Регистрация + welcome кофе', 100060, TIMESTAMP '2016-10-14 08:30', NULL, NULL, 90050, NULL),
-  ('Мавен против Грейдла: На заре автоматизации', 100060, TIMESTAMP '2016-10-14 12:00', 100057,
+  ('Регистрация + welcome кофе', 100061, TIMESTAMP '2016-10-14 08:30', NULL, NULL, 90050, NULL),
+  ('Мавен против Грейдла: На заре автоматизации', 100061, TIMESTAMP '2016-10-14 12:00', 100058,
    'Ну, вы в курсе: монстр, мастадонт и владелец поляны Мавен против молодого, динамичного, изворотливого Грейдла! Битва до победного конца! А судьи — вы! Ведущие представят свои решения «классических» проблем автоматизации проекта с помощью обоих инструментов «живьём» на сцене, а вы проголосуете за тот инструмент, который лучше решает проблему.',
    90054, NULL),
-  ('Верхом на реактивных стримах', 100060, TIMESTAMP '2016-10-14 12:00', 100059,
+  ('Верхом на реактивных стримах', 100061, TIMESTAMP '2016-10-14 12:00', 100060,
    'Вы из тех, кто считает, что, распараллелив любой цикл, можно улучшить перформанс, и Collection.parallelStream() — ваш лучший друг? А как вам идея — вбросить ещё пачку машин и получить распределенную обработку? Интересно? Тогда для вас этот доклад обязателен к просмотру. ' ||
    'Виктор познакомит слушателей со своим другом, Ориентированным (Направленным) Ациклическим Графом (или Маркизом?!), и покажет, как с его помощью была организована распределенная высокопроизводительная система обработки информации в памяти поверх нашего знакомого Java 8 Stream API.',
    90054, NULL);
+
+
+

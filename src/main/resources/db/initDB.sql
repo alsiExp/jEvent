@@ -1,8 +1,12 @@
+-- old tables
+DROP TABLE IF EXISTS events_visitors;
+DROP TABLE IF EXISTS visitors_events_visits;
+
 DROP TABLE IF EXISTS slots;
 DROP TABLE IF EXISTS tracks;
-DROP TABLE IF EXISTS events_visitors;
+DROP TABLE IF EXISTS events_probable_speakers;
 DROP TABLE IF EXISTS visitors_events_speakers;
-DROP TABLE IF EXISTS visitors_events_visits;
+DROP TABLE IF EXISTS events_by_rate_confirmed_visitors;
 DROP TABLE IF EXISTS task_statuses_tasks;
 DROP TABLE IF EXISTS task_statuses;
 DROP TABLE IF EXISTS task_user_target;
@@ -89,7 +93,7 @@ CREATE TABLE visitors
 (
   --   person
   id               BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  first_name       VARCHAR,
+  first_name       VARCHAR NOT NULL,
   last_name        VARCHAR,
   sex              BIGINT,
   enabled          BOOL               DEFAULT FALSE,
@@ -97,7 +101,7 @@ CREATE TABLE visitors
   --   visitor
   birthday         TIMESTAMP,
   registered_date  TIMESTAMP NOT NULL DEFAULT now(),
-  email            VARCHAR,
+  email            VARCHAR NOT NULL,
   phone            VARCHAR,
 
   github_account   VARCHAR,
@@ -188,15 +192,15 @@ CREATE TABLE visitors_events_speakers
   FOREIGN KEY (visitor_id) REFERENCES visitors (id)
 );
 
-CREATE TABLE visitors_events_visits
+CREATE TABLE events_by_rate_confirmed_visitors
 (
-  id            BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  visitor_id    BIGINT,
-  event_id      BIGINT,
-  purchase_date TIMESTAMP NOT NULL,
+  id         BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  visitor_id BIGINT    NOT NULL,
+  buy_date   TIMESTAMP NOT NULL,
+  rate_id    BIGINT    NOT NULL,
 
-  FOREIGN KEY (event_id) REFERENCES events (id),
-  FOREIGN KEY (visitor_id) REFERENCES visitors (id)
+  FOREIGN KEY (visitor_id) REFERENCES visitors (id),
+  FOREIGN KEY (rate_id) REFERENCES rates (id)
 );
 
 CREATE TABLE slots
@@ -236,11 +240,15 @@ CREATE TABLE visitors_comments
 );
 
 
-CREATE TABLE events_visitors
+CREATE TABLE events_probable_speakers
   -- probableSpeakers
 (
-  visitor_id BIGINT,
-  event_id   BIGINT,
+  visitor_id         BIGINT,
+  event_id           BIGINT,
+  send_date          TIMESTAMP NOT NULL DEFAULT now(),
+  speech_name        VARCHAR,
+  speech_description VARCHAR,
+  wish_Price         NUMERIC(20, 2),
 
   FOREIGN KEY (event_id) REFERENCES events (id),
   FOREIGN KEY (visitor_id) REFERENCES visitors (id)
@@ -299,7 +307,7 @@ CREATE TABLE task_user_target
 
 CREATE TABLE task_attach_events
 (
-  task_id   BIGINT,
+  task_id  BIGINT,
   event_id BIGINT,
 
   FOREIGN KEY (task_id) REFERENCES tasks (id),
@@ -308,7 +316,7 @@ CREATE TABLE task_attach_events
 
 CREATE TABLE task_attach_visitors
 (
-  task_id   BIGINT,
+  task_id    BIGINT,
   visitor_id BIGINT,
 
   FOREIGN KEY (task_id) REFERENCES tasks (id),
@@ -317,7 +325,7 @@ CREATE TABLE task_attach_visitors
 
 CREATE TABLE task_attach_partners
 (
-  task_id   BIGINT,
+  task_id    BIGINT,
   partner_id BIGINT,
 
   FOREIGN KEY (task_id) REFERENCES tasks (id),

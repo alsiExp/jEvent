@@ -124,9 +124,13 @@ public class Slot extends NamedEntity {
 
     @Override
     public String toString() {
+        String speaker = "";
+        if(approvedSpeaker != null) {
+            speaker  = approvedSpeaker.toString();
+        }
         return "Slot{" +
                 super.toString() +
-                ", approvedSpeakerId=" + approvedSpeaker.toString() +
+                ", approvedSpeakerId=" + speaker +
                 ", lectureDescription='" + lectureDescription + '\'' +
                 ", start=" + start +
                 ", slotType=" + slotType +

@@ -12,7 +12,6 @@ public class Visitor extends Person implements Attachable {
         Entity Visitor have not links for Event and Task.
         To find Events, where Visitor was speaker, use getSpeakerEventList<Visitor>(long id) in EventRepository;
         To find Events, where Visitor was only visitor, use getVisitorEventList<Visitor>(long id) in EventRepository;
-        TODO: later create object to store in DB date of buy and maybe something else
         To find all Tasks for visitor use TaskRepository
 
      */
