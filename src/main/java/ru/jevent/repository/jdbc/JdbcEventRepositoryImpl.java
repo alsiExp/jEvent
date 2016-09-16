@@ -14,10 +14,14 @@ import ru.jevent.repository.CommentRepository;
 import ru.jevent.repository.EventRepository;
 import ru.jevent.repository.UserRepository;
 import ru.jevent.repository.VisitorRepository;
+import ru.jevent.util.exception.NotFoundException;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class JdbcEventRepositoryImpl implements EventRepository {
@@ -31,6 +35,9 @@ public class JdbcEventRepositoryImpl implements EventRepository {
     private UserRepository userRepository;
     private CommentRepository commentRepository;
     private VisitorRepository visitorRepository;
+
+    private HashMap<Long, Rate> rateMap;
+    private HashMap<Long, Visitor> visitorMap;
 
     @Autowired
     public JdbcEventRepositoryImpl(JdbcTemplate jdbcTemplate,
@@ -74,12 +81,12 @@ public class JdbcEventRepositoryImpl implements EventRepository {
             return e;
         }, id);
 
-        event.setRates(this.getRatesList(event.getId()));
-        event.setTracks(this.getTracksList(event.getId()));
-//        event.setProbableSpeakers(this.getSpeakersSet(event.getId()));
-//        event.setConfirmedVisitors(this.getConfirmedVisitorsSet(event.getId()));
-//        event.setCommentList(commentRepository.getAllByEventId(event.getId()));
-
+        event.setRates(this.fillRatesList(event.getId()));
+        event.setTracks(this.fillTracksList(event.getId()));
+        event.setConfirmedVisitors(this.fillConfirmedVisitorsMap(event.getId()));
+        event.setProbableSpeakers(this.fillProbableSpeakersMap(event.getId()));
+        event.setCommentList(commentRepository.getAllByEventId(event.getId()));
+        clearMaps();
         return event;
     }
 
@@ -89,9 +96,9 @@ public class JdbcEventRepositoryImpl implements EventRepository {
         return null;
     }
 
-    private List<Rate> getRatesList(long eventId) {
-        String sql = "SELECT r.id, r.name, rt.type, r.start_date, r.end_date, r.cost  from rates r LEFT JOIN rate_type rt on r.rate_type = rt.id WHERE r.event_id = ?";
-        return jdbcTemplate.query(sql, (rs, i) -> {
+    private List<Rate> fillRatesList(long eventId) {
+        String sql = "SELECT r.id, r.name, rt.type, r.start_date, r.end_date, r.cost  FROM rates r LEFT JOIN rate_type rt ON r.rate_type = rt.id WHERE r.event_id = ?";
+        List<Rate> listRate = jdbcTemplate.query(sql, (rs, i) -> {
             Rate r = new Rate();
             r.setId(rs.getLong("id"));
             r.setName(rs.getString("name"));
@@ -100,32 +107,41 @@ public class JdbcEventRepositoryImpl implements EventRepository {
             r.setEnd(rs.getTimestamp("end_date").toLocalDateTime().toLocalDate());
             r.setCost(rs.getDouble("cost"));
             return r;
-        } , eventId);
+        }, eventId);
+        for (Rate r : listRate) {
+            getRateMap().put(r.getId(), r);
+        }
+
+        return listRate;
+
     }
 
-    private List<Track> getTracksList(long eventId) {
-        String sql = "SELECT t.id as track_id, t.name, t.description, s.id as slot_id, s.name slot_name, s.start, ves.visitor_id as speaker_id, ves.price as speaker_price, s.lecture_description, st.type, s.grade from tracks t LEFT JOIN slots s ON t.id = s.track_id LEFT JOIN slot_type st ON s.slot_type = st.id LEFT JOIN visitors_events_speakers ves ON s.visitors_events_speaker_id = ves.id WHERE t.event_id = ? ORDER BY  s.start";
-        return jdbcTemplate.query(sql,  new Object[] {eventId}, (ResultSet rs) -> {
+    private List<Track> fillTracksList(long eventId) {
+        String sql = "SELECT t.id AS track_id, t.name, t.description, s.id AS slot_id, s.name slot_name, s.start, ves.visitor_id AS speaker_id, ves.price AS speaker_price, s.lecture_description, st.type, s.grade FROM tracks t LEFT JOIN slots s ON t.id = s.track_id LEFT JOIN slot_type st ON s.slot_type = st.id LEFT JOIN visitors_events_speakers ves ON s.visitors_events_speaker_id = ves.id WHERE t.event_id = ? ORDER BY  s.start";
+        return jdbcTemplate.query(sql, new Object[]{eventId}, (ResultSet rs) -> {
             Map<Long, Track> map = new HashMap<>();
             Track track = null;
             while (rs.next()) {
                 Long trackId = rs.getLong("track_id");
                 track = map.get(trackId);
-                if(track == null) {
+                if (track == null) {
                     track = new Track();
                     track.setId(trackId);
                     track.setName("name");
                     track.setDescription("description");
+                    map.put(trackId, track);
                 }
                 Long slotId = rs.getLong("slot_id");
-                if(slotId > 0) {
+                if (slotId > 0) {
                     Slot slot = new Slot();
                     slot.setId(slotId);
                     slot.setName(rs.getString("slot_name"));
                     slot.setStart(rs.getTimestamp("start").toLocalDateTime());
                     long speakerId = rs.getLong("speaker_id");
-                    if(speakerId > 0) {
-                        slot.setApprovedSpeaker(visitorRepository.get(speakerId));
+                    if (speakerId > 0) {
+                        Visitor v = visitorRepository.get(speakerId);
+                        getVisitorMap().put(v.getId(), v);
+                        slot.setApprovedSpeaker(v);
                     }
                     slot.setPrice(rs.getDouble("speaker_price"));
                     slot.setLectureDescription(rs.getString("lecture_description"));
@@ -133,18 +149,77 @@ public class JdbcEventRepositoryImpl implements EventRepository {
                     slot.setGrade(rs.getInt("grade"));
                     track.getSlotOrder().add(slot);
                 }
+
             }
 
-            return new ArrayList<Track>(map.values());
+            return new ArrayList<>(map.values());
         });
     }
 
-    private Set<Visitor> getConfirmedVisitorsSet(long eventId) {
-        return null;
+    private HashMap<Visitor, PayDetails> fillConfirmedVisitorsMap(long eventId) {
+        String sql = "SELECT vev.visitor_id, vev.buy_date, r.id AS rate_id FROM events_by_rate_confirmed_visitors vev LEFT JOIN rates r ON vev.rate_id = r.id WHERE r.event_id = ?";
+        return jdbcTemplate.query(sql, new Object[]{eventId}, (ResultSet rs) -> {
+            HashMap<Visitor, PayDetails> m = new HashMap<>();
+            while (rs.next()) {
+                Long visitorId = rs.getLong("visitor_id");
+                Visitor v = getVisitorMap().get(visitorId);
+                if (v == null) {
+                    v = visitorRepository.get(visitorId);
+                    getVisitorMap().put(visitorId, v);
+                }
+                PayDetails pd = new PayDetails();
+                pd.setDate(rs.getTimestamp("buy_date").toLocalDateTime());
+                Long rateId = rs.getLong("rate_id");
+                Rate r = getRateMap().get(rateId);
+                if (r == null) {
+                    throw new NotFoundException("Wrong Event parse, Rate with id = " + rateId + " is not exist");
+                }
+                pd.setRate(r);
+                m.put(v, pd);
+            }
+            return m;
+        });
     }
 
-    private Set<Visitor> getSpeakersSet(long eventId) {
-        return null;
+    private HashMap<Visitor, OfferDetails> fillProbableSpeakersMap(long eventId) {
+        String sql = "SELECT visitor_id, send_date, speech_name, speech_description, wish_price FROM events_probable_speakers WHERE event_id = ?";
+
+        return jdbcTemplate.query(sql, new Object[]{eventId}, (ResultSet rs) -> {
+            HashMap<Visitor, OfferDetails> m = new HashMap<>();
+            while (rs.next()) {
+                Long visitorId = rs.getLong("visitor_id");
+                Visitor v = getVisitorMap().get(visitorId);
+                if (v == null) {
+                    v = visitorRepository.get(visitorId);
+                    getVisitorMap().put(visitorId, v);
+                }
+                OfferDetails od = new OfferDetails();
+                od.setSendDate(rs.getTimestamp("send_date").toLocalDateTime());
+                od.setSpeechName(rs.getString("speech_name"));
+                od.setSpeechDescription(rs.getString("speech_description"));
+                od.setWishPrice(rs.getDouble("wish_price"));
+                m.put(v,od);
+            }
+            return m;
+        });
     }
 
+    private HashMap<Long, Rate> getRateMap() {
+        if (rateMap == null) {
+            rateMap = new HashMap<>();
+        }
+        return rateMap;
+    }
+
+    private HashMap<Long, Visitor> getVisitorMap() {
+        if (visitorMap == null) {
+            visitorMap = new HashMap<>();
+        }
+        return visitorMap;
+    }
+
+    private void clearMaps() {
+        getRateMap().clear();
+        getVisitorMap().clear();
+    }
 }

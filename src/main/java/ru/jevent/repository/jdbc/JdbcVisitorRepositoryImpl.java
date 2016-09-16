@@ -64,6 +64,7 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
             v.setFirstName(rs.getString("first_name"));
             v.setLastName(rs.getString("last_name"));
             v.setSex(Sex.valueOf(rs.getString("sex")));
+            v.setEnabled(rs.getBoolean("enabled"));
             v.setPhotoURL(rs.getString("photo_url"));
             Timestamp birthday =  rs.getTimestamp("birthday");
             if(birthday != null) {

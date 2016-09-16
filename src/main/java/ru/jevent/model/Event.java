@@ -7,8 +7,15 @@ import java.util.*;
 public class Event extends NamedEntity  implements Attachable{
 
     /*
-        In probableSpeakers stored Visitors, that sent request to be speaker at this event.
-        In confirmedVisitors stored Visitors, that already bought ticket.
+        In probableSpeakers stored map<Visitor, OfferDetails>.
+        Visitors are probable speakers, that sent request to be speaker at this event. DB table - events_probable_speakers.
+
+        In confirmedVisitors stored map<Visitor, PayDetails>.
+        Visitors are people, that already bought ticket.
+        DB table - (events_by_rate_confirmed_visitors left join rates on rate_id = id).
+
+        Approved speakers stored in they Slots (in Tracks).
+        DB tables - tracks, slots (with slot_type), visitors_events_speakers
      */
 
     private User author;
@@ -18,8 +25,8 @@ public class Event extends NamedEntity  implements Attachable{
     private String description;
     private String logoURL;
 
-    private Set<Visitor> probableSpeakers;
-    private Set<Visitor> confirmedVisitors;
+    private Map<Visitor, OfferDetails> probableSpeakers;
+    private Map<Visitor, PayDetails> confirmedVisitors;
 
     //    ticket prices
     //    sort by LocalDate start
@@ -37,7 +44,7 @@ public class Event extends NamedEntity  implements Attachable{
     public Event() {
     }
 
-    public Event(String name, User author, String tagName, String address, String description, String logoURL, Set<Visitor> probableSpeakers, Set<Visitor> confirmedVisitors, List<Rate> rates, List<Track> tracks, List<Comment> commentList) {
+    public Event(String name, User author, String tagName, String address, String description, String logoURL, Map<Visitor, OfferDetails> probableSpeakers, Map<Visitor, PayDetails> confirmedVisitors, List<Rate> rates, List<Track> tracks, List<Comment> commentList) {
         super(name);
         this.author = author;
         this.tagName = tagName;
@@ -51,7 +58,7 @@ public class Event extends NamedEntity  implements Attachable{
         this.commentList = commentList;
     }
 
-    public Event(long id, String name, User author, String tagName, String address, String description, String logoURL, Set<Visitor> probableSpeakers, Set<Visitor> confirmedVisitors, List<Rate> rates, List<Track> tracks, List<Comment> commentList) {
+    public Event(long id, String name, User author, String tagName, String address, String description, String logoURL, Map<Visitor, OfferDetails> probableSpeakers, HashMap<Visitor, PayDetails>confirmedVisitors, List<Rate> rates, List<Track> tracks, List<Comment> commentList) {
         super(id, name);
         this.author = author;
         this.tagName = tagName;
@@ -120,27 +127,27 @@ public class Event extends NamedEntity  implements Attachable{
         this.logoURL = logoURL;
     }
 
-    public Set<Visitor> getProbableSpeakers() {
+    public Map<Visitor, OfferDetails> getProbableSpeakers() {
         if(probableSpeakers == null) {
-           probableSpeakers = new HashSet<>();
+           probableSpeakers = new HashMap<>();
         }
 
         return probableSpeakers;
     }
 
-    public void setProbableSpeakers(Set<Visitor> probableSpeakers) {
-        this.getProbableSpeakers().addAll(probableSpeakers);
+    public void setProbableSpeakers(Map<Visitor, OfferDetails> probableSpeakers) {
+        this.getProbableSpeakers().putAll(probableSpeakers);
     }
 
-    public Set<Visitor> getConfirmedVisitors() {
+    public Map<Visitor, PayDetails> getConfirmedVisitors() {
         if(confirmedVisitors == null) {
-            confirmedVisitors = new HashSet<>();
+            confirmedVisitors = new HashMap<>();
         }
         return confirmedVisitors;
     }
 
-    public void setConfirmedVisitors(Set<Visitor> confirmedVisitors) {
-        this.getConfirmedVisitors().addAll(confirmedVisitors);
+    public void setConfirmedVisitors(Map<Visitor, PayDetails> confirmedVisitors) {
+        this.getConfirmedVisitors().putAll(confirmedVisitors);
     }
 
     public List<Comment> getCommentList() {
@@ -231,4 +238,5 @@ public class Event extends NamedEntity  implements Attachable{
                 ", commentList=" + commentList +
                 "} ";
     }
+
 }
