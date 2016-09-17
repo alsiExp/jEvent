@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface TaskService {
 
-    Task save(Task task, long userId);
+    Task save(Task task);
 
-    void update(Task task, long userId) throws NotFoundException;
+    void update(Task task) throws NotFoundException;
 
-    Task get(long id, long userId) throws NotFoundException;
+    Task get(long id) throws NotFoundException;
 
-    void delete(long id, long userId) throws NotFoundException;
+    void delete(long id) throws NotFoundException;
 
     List<Task> getByInterval(LocalDateTime start, LocalDateTime end, long userId);
 

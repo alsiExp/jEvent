@@ -23,23 +23,23 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task save(Task task, long userId) {
-        return repository.save(task, userId);
+    public Task save(Task task) {
+        return repository.save(task);
     }
 
     @Override
-    public void update(Task task, long userId) throws NotFoundException {
-        ExceptionUtil.check(repository.save(task, userId), task.getId());
+    public void update(Task task) throws NotFoundException {
+        ExceptionUtil.check(repository.save(task), task.getId());
     }
 
     @Override
-    public Task get(long id, long userId) throws NotFoundException {
-        return ExceptionUtil.check(repository.get(id, userId), id);
+    public Task get(long id) throws NotFoundException {
+        return ExceptionUtil.check(repository.get(id), id);
     }
 
     @Override
-    public void delete(long id, long userId) throws NotFoundException {
-        ExceptionUtil.check(repository.delete(id, userId), id);
+    public void delete(long id) throws NotFoundException {
+        ExceptionUtil.check(repository.delete(id), id);
     }
 
 

@@ -8,11 +8,11 @@ import java.util.List;
 public interface TaskRepository {
     // add archiv
 
-    Task save(Task task, long userId);
+    Task save(Task task);
 
-    Task get(long id, long userId);
+    Task get(long id);
 
-    boolean delete(long id, long userId);
+    boolean delete(long id);
 
     List<Task> getByInterval(LocalDateTime start, LocalDateTime end, long userId);
 

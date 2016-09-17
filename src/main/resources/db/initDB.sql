@@ -269,8 +269,8 @@ CREATE TABLE task_statuses
 CREATE TABLE tasks
 (
   id          BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name        VARCHAR,
-  user_id     BIGINT,
+  name        VARCHAR NOT NULL,
+  user_id     BIGINT NOT NULL,
   start       TIMESTAMP NOT NULL DEFAULT now(),
   deadline    TIMESTAMP,
   description VARCHAR,

@@ -9,8 +9,6 @@ import ru.jevent.repository.TaskRepository;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 @Repository
@@ -18,26 +16,20 @@ public class MockTaskRepositoryImpl implements TaskRepository {
     private static final LoggerWrapper LOG = LoggerWrapper.get(MockTaskRepositoryImpl.class);
 
     private Task task = new Task(1, "Сделать что-то", MockUserRepositoryImpl.getUser(), null, LocalDateTime.now(),
-            LocalDateTime.now().plus(7, ChronoUnit.DAYS), "Event description" , new TaskStatus(),
-            new HashSet<>(Arrays.asList(
-                    MockVisitorRepositoryImpl.getVisitor(),
-                    MockPartnerRepositoryImpl.getPartner(),
-                    MockEventRepositoryImpl.getEvent()
-            )
-            ));
+            LocalDateTime.now().plus(7, ChronoUnit.DAYS), "Event description" , new TaskStatus(), null, null);
 
     @Override
-    public Task save(Task task, long userId) {
+    public Task save(Task task) {
         return this.task;
     }
 
     @Override
-    public Task get(long id, long userId) {
+    public Task get(long id) {
         return task;
     }
 
     @Override
-    public boolean delete(long id, long userId) {
+    public boolean delete(long id) {
         return id != 0;
     }
 

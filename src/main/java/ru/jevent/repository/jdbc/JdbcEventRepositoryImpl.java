@@ -30,7 +30,7 @@ public class JdbcEventRepositoryImpl implements EventRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private SimpleJdbcInsert insertComment;
+    private SimpleJdbcInsert insertEvent;
 
     private UserRepository userRepository;
     private CommentRepository commentRepository;
@@ -48,7 +48,7 @@ public class JdbcEventRepositoryImpl implements EventRepository {
                                    VisitorRepository visitorRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-        this.insertComment = new SimpleJdbcInsert(dataSource)
+        this.insertEvent = new SimpleJdbcInsert(dataSource)
                 .withTableName("events")
                 .usingGeneratedKeyColumns("id");
         this.userRepository = userRepository;
@@ -97,7 +97,8 @@ public class JdbcEventRepositoryImpl implements EventRepository {
     }
 
     private List<Rate> fillRatesList(long eventId) {
-        String sql = "SELECT r.id, r.name, rt.type, r.start_date, r.end_date, r.cost  FROM rates r LEFT JOIN rate_type rt ON r.rate_type = rt.id WHERE r.event_id = ?";
+        String sql = "SELECT r.id, r.name, rt.type, r.start_date, r.end_date, r.cost  FROM rates r " +
+                "LEFT JOIN rate_type rt ON r.rate_type = rt.id WHERE r.event_id = ?";
         List<Rate> listRate = jdbcTemplate.query(sql, (rs, i) -> {
             Rate r = new Rate();
             r.setId(rs.getLong("id"));
@@ -117,7 +118,12 @@ public class JdbcEventRepositoryImpl implements EventRepository {
     }
 
     private List<Track> fillTracksList(long eventId) {
-        String sql = "SELECT t.id AS track_id, t.name, t.description, s.id AS slot_id, s.name slot_name, s.start, ves.visitor_id AS speaker_id, ves.price AS speaker_price, s.lecture_description, st.type, s.grade FROM tracks t LEFT JOIN slots s ON t.id = s.track_id LEFT JOIN slot_type st ON s.slot_type = st.id LEFT JOIN visitors_events_speakers ves ON s.visitors_events_speaker_id = ves.id WHERE t.event_id = ? ORDER BY  s.start";
+        String sql = "SELECT t.id AS track_id, t.name, t.description, s.id AS slot_id, s.name slot_name, s.start, " +
+                "ves.visitor_id AS speaker_id, ves.price AS speaker_price, s.lecture_description, st.type, s.grade FROM tracks t " +
+                "LEFT JOIN slots s ON t.id = s.track_id " +
+                "LEFT JOIN slot_type st ON s.slot_type = st.id " +
+                "LEFT JOIN visitors_events_speakers ves ON s.visitors_events_speaker_id = ves.id " +
+                "WHERE t.event_id = ? ORDER BY  s.start";
         return jdbcTemplate.query(sql, new Object[]{eventId}, (ResultSet rs) -> {
             Map<Long, Track> map = new HashMap<>();
             Track track = null;
@@ -157,7 +163,8 @@ public class JdbcEventRepositoryImpl implements EventRepository {
     }
 
     private HashMap<Visitor, PayDetails> fillConfirmedVisitorsMap(long eventId) {
-        String sql = "SELECT vev.visitor_id, vev.buy_date, r.id AS rate_id FROM events_by_rate_confirmed_visitors vev LEFT JOIN rates r ON vev.rate_id = r.id WHERE r.event_id = ?";
+        String sql = "SELECT vev.visitor_id, vev.buy_date, r.id AS rate_id FROM events_by_rate_confirmed_visitors vev " +
+                "LEFT JOIN rates r ON vev.rate_id = r.id WHERE r.event_id = ?";
         return jdbcTemplate.query(sql, new Object[]{eventId}, (ResultSet rs) -> {
             HashMap<Visitor, PayDetails> m = new HashMap<>();
             while (rs.next()) {
@@ -182,7 +189,8 @@ public class JdbcEventRepositoryImpl implements EventRepository {
     }
 
     private HashMap<Visitor, OfferDetails> fillProbableSpeakersMap(long eventId) {
-        String sql = "SELECT visitor_id, send_date, speech_name, speech_description, wish_price FROM events_probable_speakers WHERE event_id = ?";
+        String sql = "SELECT visitor_id, send_date, speech_name, speech_description, wish_price " +
+                "FROM events_probable_speakers WHERE event_id = ?";
 
         return jdbcTemplate.query(sql, new Object[]{eventId}, (ResultSet rs) -> {
             HashMap<Visitor, OfferDetails> m = new HashMap<>();

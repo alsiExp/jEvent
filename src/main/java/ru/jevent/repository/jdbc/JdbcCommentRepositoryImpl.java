@@ -95,6 +95,13 @@ public class JdbcCommentRepositoryImpl implements CommentRepository {
         return getAllById(sql, id);
     }
 
+    @Override
+    public List<Comment> getAllByTaskId(long id) {
+        String sql = "SELECT c.id, c.content, c.date, c.user_id FROM tasks_comments tc " +
+                "LEFT JOIN comments c on tc.comment_id = c.id WHERE tc.task_id = ?";
+        return getAllById(sql, id);
+    }
+
     private List<Comment> getAllById(String sql, long id) {
         return jdbcTemplate.query(sql, new Object[] {id}, (ResultSet rs) -> {
             Map<Long, User> userMap = new HashMap<>();

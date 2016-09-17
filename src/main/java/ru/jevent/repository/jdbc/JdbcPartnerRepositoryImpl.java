@@ -19,7 +19,7 @@ public class JdbcPartnerRepositoryImpl implements PartnerRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private SimpleJdbcInsert insertComment;
+    private SimpleJdbcInsert insertPartner;
 
     @Autowired
     public JdbcPartnerRepositoryImpl(JdbcTemplate jdbcTemplate,
@@ -27,7 +27,7 @@ public class JdbcPartnerRepositoryImpl implements PartnerRepository {
                                      DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-        this.insertComment = new SimpleJdbcInsert(dataSource)
+        this.insertPartner = new SimpleJdbcInsert(dataSource)
                 .withTableName("partners")
                 .usingGeneratedKeyColumns("id");
     }
@@ -44,11 +44,22 @@ public class JdbcPartnerRepositoryImpl implements PartnerRepository {
 
     @Override
     public Partner get(long id) {
-        return null;
+        String sql = "SELECT id, name, email, phone, description, logo_url FROM partners WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[] {id}, (rs, i) -> {
+           Partner p = new Partner();
+            p.setId(rs.getLong("id"));
+            p.setName(rs.getString("name"));
+            p.setEmail(rs.getString("email"));
+            p.setPhone(rs.getString("phone"));
+            p.setDescription(rs.getString("description"));
+            p.setLogoURL(rs.getString("logo_url"));
+            return p;
+        });
     }
 
     @Override
     public List<Partner> getAll() {
+        String sql = "SELECT id, name, email, phone, description, logo_url FROM partners";
         return null;
     }
 }

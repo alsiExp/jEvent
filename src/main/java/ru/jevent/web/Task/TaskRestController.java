@@ -24,25 +24,25 @@ public class TaskRestController {
     public Task create(Task task) {
         long userId = LoggedUser.id();
         LOG.info("create {} by user {}", task, userId);
-        return service.save(task, userId);
+        return service.save(task);
     }
 
     public void update(Task task) {
         long userId = LoggedUser.id();
         LOG.info("update {} by user {}", task, userId);
-        service.update(task, userId);
+        service.update(task);
     }
 
     public Task get(long id) {
         long userId = LoggedUser.id();
         LOG.info("get task {} by user {}", id, userId);
-        return service.get(id, userId);
+        return service.get(id);
     }
 
     public void delete(long id) {
         long userId = LoggedUser.id();
         LOG.info("delete task {} by user {}", id, userId);
-        service.delete(id, userId);
+        service.delete(id);
     }
 
     public List<Task> getByInterval(LocalDateTime start, LocalDateTime end) {

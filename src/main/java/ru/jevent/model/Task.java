@@ -24,11 +24,13 @@ public class Task extends NamedEntity {
     //    can be Event, Partner or Visitor
     private Set<Attachable> attachList;
 
+    private List<Comment> commentList;
+
     public Task() {
     }
 
     public Task(String name, User author, Set<User> target, LocalDateTime start, LocalDateTime deadline,
-                String description, TaskStatus taskStatus, Set<Attachable> attachList) {
+                String description, TaskStatus taskStatus, Set<Attachable> attachList, List<Comment> commentList) {
         super(name);
         this.author = author;
         this.target = target;
@@ -37,10 +39,11 @@ public class Task extends NamedEntity {
         this.description = description;
         this.statusLog.add(taskStatus);
         this.attachList = attachList;
+        this.commentList = commentList;
     }
 
     public Task(long id, String name, User author, Set<User> target, LocalDateTime start, LocalDateTime deadline,
-                String description, TaskStatus taskStatus, Set<Attachable> attachList) {
+                String description, TaskStatus taskStatus, Set<Attachable> attachList, List<Comment> commentList) {
         super(id, name);
         this.author = author;
         this.target = target;
@@ -49,6 +52,7 @@ public class Task extends NamedEntity {
         this.description = description;
         this.statusLog.add(taskStatus);
         this.attachList = attachList;
+        this.commentList = commentList;
     }
 
     public User getAuthor() {
@@ -117,6 +121,17 @@ public class Task extends NamedEntity {
         this.attachList = attachList;
     }
 
+    public List<Comment> getCommentList() {
+        if(commentList == null) {
+            commentList = new ArrayList<>();
+        }
+        return commentList;
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -125,26 +140,28 @@ public class Task extends NamedEntity {
 
         Task task = (Task) o;
 
-        if (author != null ? !author.equals(task.author) : task.author != null) return false;
+        if (!author.equals(task.author)) return false;
         if (target != null ? !target.equals(task.target) : task.target != null) return false;
-        if (start != null ? !start.equals(task.start) : task.start != null) return false;
+        if (!start.equals(task.start)) return false;
         if (deadline != null ? !deadline.equals(task.deadline) : task.deadline != null) return false;
         if (description != null ? !description.equals(task.description) : task.description != null) return false;
         if (statusLog != null ? !statusLog.equals(task.statusLog) : task.statusLog != null) return false;
-        return attachList != null ? attachList.equals(task.attachList) : task.attachList == null;
+        if (attachList != null ? !attachList.equals(task.attachList) : task.attachList != null) return false;
+        return commentList != null ? commentList.equals(task.commentList) : task.commentList == null;
 
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (author != null ? author.hashCode() : 0);
+        result = 31 * result + author.hashCode();
         result = 31 * result + (target != null ? target.hashCode() : 0);
-        result = 31 * result + (start != null ? start.hashCode() : 0);
+        result = 31 * result + start.hashCode();
         result = 31 * result + (deadline != null ? deadline.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (statusLog != null ? statusLog.hashCode() : 0);
         result = 31 * result + (attachList != null ? attachList.hashCode() : 0);
+        result = 31 * result + (commentList != null ? commentList.hashCode() : 0);
         return result;
     }
 
@@ -153,7 +170,7 @@ public class Task extends NamedEntity {
         String prefix = "";
         StringBuilder targetSB = new StringBuilder();
         targetSB.append('[');
-        for(User u : target) {
+        for(User u : getTarget()) {
             targetSB.append(prefix);
             prefix = ",";
             targetSB.append(u.toString());
@@ -163,7 +180,7 @@ public class Task extends NamedEntity {
 
         StringBuilder logSB = new StringBuilder();
         logSB.append('[');
-        for(TaskStatus s : statusLog) {
+        for(TaskStatus s : getStatusLog()) {
             logSB.append(prefix);
             prefix = ",";
             logSB.append(s.toString());
@@ -173,7 +190,7 @@ public class Task extends NamedEntity {
 
         StringBuilder attachSB = new StringBuilder();
         attachSB.append('[');
-        for(Attachable a : attachList) {
+        for(Attachable a : getAttachList()) {
             attachSB.append(prefix);
             prefix = ",";
             attachSB.append(a.getAttachName());
