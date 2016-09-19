@@ -86,14 +86,14 @@ VALUES
    NULL,
    65000);
 
-INSERT INTO users (first_name, last_name, sex, enabled, photo_url, login, password, role)
+INSERT INTO users (first_name, last_name, sex, enabled, photo_url, login, password)
 VALUES
-  ('Алексей', 'Фёдоров', 90000, TRUE, 'fedorov.jpg', 'alexey', 'user', 90070),
-  ('Андрей', 'Дмитриев', 90000, TRUE, 'dmitriev.jpg', 'andrey', 'admin', 90071),
-  ('Екатерина', 'Курилова', 90001, TRUE, 'kurilova.jpg', 'ekaterina', 'user', 90070),
-  ('Руслан', 'Ахметзянов', 90000, FALSE, 'ahmetzyanov.jpg', 'ruslan', 'user', 90070),
-  ('Максим', 'Зверев', 90000, TRUE, 'zverev.jpg', 'maxim', 'user', 90070),
-  ('Яна', 'Пилюгина', 90001, TRUE, 'pilugina.jpg', 'yana', 'user', 90070);
+  ('Алексей', 'Фёдоров', 90000, TRUE, 'fedorov.jpg', 'alexey', 'user'),
+  ('Андрей', 'Дмитриев', 90000, TRUE, 'dmitriev.jpg', 'andrey', 'admin'),
+  ('Екатерина', 'Курилова', 90001, TRUE, 'kurilova.jpg', 'ekaterina', 'user'),
+  ('Руслан', 'Ахметзянов', 90000, FALSE, 'ahmetzyanov.jpg', 'ruslan', 'user'),
+  ('Максим', 'Зверев', 90000, TRUE, 'zverev.jpg', 'maxim', 'user'),
+  ('Яна', 'Пилюгина', 90001, TRUE, 'pilugina.jpg', 'yana', 'user');
 
 INSERT INTO events (name, author_id, tag_name, address, description, logo_url)
 VALUES

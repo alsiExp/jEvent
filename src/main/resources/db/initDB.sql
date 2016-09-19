@@ -82,11 +82,9 @@ CREATE TABLE users
   --   user
   login      VARCHAR NOT NULL UNIQUE,
   password   VARCHAR NOT NULL,
-  --   for now just one
-  role       BIGINT,
 
-  FOREIGN KEY (sex) REFERENCES person_sex (id),
-  FOREIGN KEY (role) REFERENCES user_roles (id)
+
+  FOREIGN KEY (sex) REFERENCES person_sex (id)
 );
 
 CREATE TABLE visitors
@@ -137,7 +135,7 @@ CREATE TABLE comments
   date    TIMESTAMP NOT NULL DEFAULT now(),
   user_id BIGINT,
 
-  FOREIGN KEY (user_id) REFERENCES users (id)
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 
@@ -151,7 +149,7 @@ CREATE TABLE events
   description VARCHAR,
   logo_URL    VARCHAR,
 
-  FOREIGN KEY (author_id) REFERENCES users (id)
+  FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 
@@ -165,8 +163,8 @@ CREATE TABLE rates
   end_date   TIMESTAMP NOT NULL,
   cost       NUMERIC(20, 2),
 
-  FOREIGN KEY (event_id) REFERENCES events (id),
-  FOREIGN KEY (rate_type) REFERENCES rate_type (id)
+  FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE ,
+  FOREIGN KEY (rate_type) REFERENCES rate_type (id) ON DELETE CASCADE
 );
 
 
@@ -177,7 +175,7 @@ CREATE TABLE tracks
   event_id    BIGINT,
   description VARCHAR,
 
-  FOREIGN KEY (event_id) REFERENCES events (id)
+  FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE
 );
 
 
@@ -188,8 +186,8 @@ CREATE TABLE visitors_events_speakers
   event_id   BIGINT,
   price      INT,
 
-  FOREIGN KEY (event_id) REFERENCES events (id),
-  FOREIGN KEY (visitor_id) REFERENCES visitors (id)
+  FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
+  FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE
 );
 
 CREATE TABLE events_by_rate_confirmed_visitors
@@ -199,8 +197,8 @@ CREATE TABLE events_by_rate_confirmed_visitors
   buy_date   TIMESTAMP NOT NULL,
   rate_id    BIGINT    NOT NULL,
 
-  FOREIGN KEY (visitor_id) REFERENCES visitors (id),
-  FOREIGN KEY (rate_id) REFERENCES rates (id)
+  FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE,
+  FOREIGN KEY (rate_id) REFERENCES rates (id) ON DELETE CASCADE
 );
 
 CREATE TABLE slots
@@ -214,8 +212,8 @@ CREATE TABLE slots
   slot_type                  BIGINT,
   grade                      INT,
 
-  FOREIGN KEY (slot_type) REFERENCES slot_type (id),
-  FOREIGN KEY (track_id) REFERENCES tracks (id),
+  FOREIGN KEY (slot_type) REFERENCES slot_type (id) ON DELETE CASCADE,
+  FOREIGN KEY (track_id) REFERENCES tracks (id) ON DELETE CASCADE,
   FOREIGN KEY (visitors_events_speaker_id) REFERENCES visitors_events_speakers (id)
 
 );
@@ -250,8 +248,8 @@ CREATE TABLE events_probable_speakers
   speech_description VARCHAR,
   wish_Price         NUMERIC(20, 2),
 
-  FOREIGN KEY (event_id) REFERENCES events (id),
-  FOREIGN KEY (visitor_id) REFERENCES visitors (id)
+  FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
+  FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE
 );
 
 CREATE TABLE task_statuses
@@ -262,8 +260,8 @@ CREATE TABLE task_statuses
   current_task_status_id BIGINT,
   description            VARCHAR   NOT NULL,
 
-  FOREIGN KEY (user_id) REFERENCES users (id),
-  FOREIGN KEY (current_task_status_id) REFERENCES current_task_status (id)
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+  FOREIGN KEY (current_task_status_id) REFERENCES current_task_status (id) ON DELETE CASCADE
 );
 
 CREATE TABLE tasks
@@ -275,7 +273,7 @@ CREATE TABLE tasks
   deadline    TIMESTAMP,
   description VARCHAR,
 
-  FOREIGN KEY (user_id) REFERENCES users (id)
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 CREATE TABLE tasks_comments
@@ -292,8 +290,8 @@ CREATE TABLE task_statuses_tasks
   task_status_id BIGINT UNIQUE,
   task_id        BIGINT,
 
-  FOREIGN KEY (task_status_id) REFERENCES task_statuses (id),
-  FOREIGN KEY (task_id) REFERENCES tasks (id)
+  FOREIGN KEY (task_status_id) REFERENCES task_statuses (id) ON DELETE CASCADE,
+  FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE
 );
 
 CREATE TABLE task_user_target
@@ -301,8 +299,8 @@ CREATE TABLE task_user_target
   task_id BIGINT,
   user_id BIGINT,
 
-  FOREIGN KEY (task_id) REFERENCES tasks (id),
-  FOREIGN KEY (user_id) REFERENCES users (id)
+  FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 CREATE TABLE task_attach_events
@@ -310,8 +308,8 @@ CREATE TABLE task_attach_events
   task_id  BIGINT,
   event_id BIGINT,
 
-  FOREIGN KEY (task_id) REFERENCES tasks (id),
-  FOREIGN KEY (event_id) REFERENCES events (id)
+  FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
+  FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE
 );
 
 CREATE TABLE task_attach_visitors
@@ -319,8 +317,8 @@ CREATE TABLE task_attach_visitors
   task_id    BIGINT,
   visitor_id BIGINT,
 
-  FOREIGN KEY (task_id) REFERENCES tasks (id),
-  FOREIGN KEY (visitor_id) REFERENCES visitors (id)
+  FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
+  FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE
 );
 
 CREATE TABLE task_attach_partners
@@ -328,8 +326,8 @@ CREATE TABLE task_attach_partners
   task_id    BIGINT,
   partner_id BIGINT,
 
-  FOREIGN KEY (task_id) REFERENCES tasks (id),
-  FOREIGN KEY (partner_id) REFERENCES partners (id)
+  FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
+  FOREIGN KEY (partner_id) REFERENCES partners (id) ON DELETE CASCADE
 );
 
 

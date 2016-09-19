@@ -21,7 +21,7 @@ public class User extends Person {
         super(firstName, lastName, sex, enabled, photoURL);
         this.login = login;
         this.password = password;
-        this.roles.add(role);
+        this.addRoles(role);
     }
 
     public User(Long id, String firstName, String lastName, Sex sex, boolean enabled, String photoURL, String login,
@@ -29,7 +29,7 @@ public class User extends Person {
         super(firstName, lastName, sex, enabled, photoURL);
         this.login = login;
         this.password = password;
-        this.roles.add(role);
+        this.addRoles(role);
     }
 
     public String getLogin() {
