@@ -16,4 +16,6 @@ public interface CommentRepository {
     List<Comment> getAllByEventId(long id);
     List<Comment> getAllByTaskId(long id);
 
+    List<Comment> getAll();
+
 }

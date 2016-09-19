@@ -1,8 +1,8 @@
 package ru.jevent.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -14,6 +14,7 @@ import ru.jevent.repository.UserRepository;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,13 +24,12 @@ import java.util.Map;
 @Repository
 public class JdbcCommentRepositoryImpl implements CommentRepository {
 
-    private static final BeanPropertyRowMapper<Comment> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Comment.class);
-
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private SimpleJdbcInsert insertComment;
 
     private UserRepository userRepository;
+    private CommentMapper mapper = new CommentMapper();
 
     @Autowired
     public JdbcCommentRepositoryImpl(JdbcTemplate jdbcTemplate,
@@ -57,28 +57,23 @@ public class JdbcCommentRepositoryImpl implements CommentRepository {
             Number newKey = insertComment.executeAndReturnKey(map);
             comment.setId(newKey.longValue());
         } else {
-            namedParameterJdbcTemplate.update(
-                    "UPDATE comments SET content=:content, date=:date, user_id =: user_id WHERE id=:id", map);
+            if(namedParameterJdbcTemplate.update(
+                    "UPDATE comments SET content= :content, date= :date, user_id = :user_id WHERE id= :id", map) ==0) {
+                return null;
+            }
         }
         return comment;
     }
 
     @Override
     public boolean delete(long id) {
-        return false;
+        return jdbcTemplate.update("DELETE FROM comments WHERE id=?", id) != 0;
     }
 
     @Override
     public Comment get(long id) {
         String sql = "SELECT id, content, date, user_id FROM comments WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, (rs, i) -> {
-            Comment comment = new Comment();
-            comment.setId(rs.getLong("id"));
-            comment.setContent(rs.getString("content"));
-            comment.setDate(rs.getTimestamp("date").toLocalDateTime());
-            comment.setAuthor(userRepository.get(rs.getLong("user_id")));
-            return comment;
-        }, id);
+        return jdbcTemplate.queryForObject(sql, mapper, id);
     }
 
     @Override
@@ -100,6 +95,12 @@ public class JdbcCommentRepositoryImpl implements CommentRepository {
         String sql = "SELECT c.id, c.content, c.date, c.user_id FROM tasks_comments tc " +
                 "LEFT JOIN comments c on tc.comment_id = c.id WHERE tc.task_id = ?";
         return getAllById(sql, id);
+    }
+
+    @Override
+    public List<Comment> getAll() {
+        String sql = "SELECT id, content, date, user_id FROM comments";
+        return jdbcTemplate.query(sql, mapper);
     }
 
     private List<Comment> getAllById(String sql, long id) {
@@ -125,5 +126,17 @@ public class JdbcCommentRepositoryImpl implements CommentRepository {
             }
             return commentList;
         });
+    }
+
+    private final class CommentMapper implements RowMapper<Comment> {
+        @Override
+        public Comment mapRow(ResultSet resultSet, int i) throws SQLException {
+            Comment comment = new Comment();
+            comment.setId(resultSet.getLong("id"));
+            comment.setContent(resultSet.getString("content"));
+            comment.setDate(resultSet.getTimestamp("date").toLocalDateTime());
+            comment.setAuthor(userRepository.get(resultSet.getLong("user_id")));
+            return comment;
+        }
     }
 }

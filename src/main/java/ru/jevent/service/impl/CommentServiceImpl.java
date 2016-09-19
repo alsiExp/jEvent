@@ -8,6 +8,8 @@ import ru.jevent.service.CommentService;
 import ru.jevent.util.exception.ExceptionUtil;
 import ru.jevent.util.exception.NotFoundException;
 
+import java.util.List;
+
 @Service
 public class CommentServiceImpl implements CommentService {
 
@@ -36,5 +38,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment get(long id) throws NotFoundException {
         return ExceptionUtil.check(repository.get(id), id);
+    }
+
+    @Override
+    public List<Comment> getAll() {
+        return  repository.getAll();
     }
 }

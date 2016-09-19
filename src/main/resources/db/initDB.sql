@@ -226,8 +226,8 @@ CREATE TABLE events_comments
   event_id   BIGINT,
   comment_id BIGINT UNIQUE,
 
-  FOREIGN KEY (event_id) REFERENCES events (id),
-  FOREIGN KEY (comment_id) REFERENCES comments (id)
+  FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
+  FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE
 );
 
 CREATE TABLE visitors_comments
@@ -235,8 +235,8 @@ CREATE TABLE visitors_comments
   visitor_id BIGINT,
   comment_id BIGINT UNIQUE,
 
-  FOREIGN KEY (visitor_id) REFERENCES visitors (id),
-  FOREIGN KEY (comment_id) REFERENCES comments (id)
+  FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE,
+  FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE
 );
 
 
@@ -283,8 +283,8 @@ CREATE TABLE tasks_comments
   task_id    BIGINT,
   comment_id BIGINT UNIQUE,
 
-  FOREIGN KEY (task_id) REFERENCES tasks (id),
-  FOREIGN KEY (comment_id) REFERENCES comments (id)
+  FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
+  FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE
 );
 
 CREATE TABLE task_statuses_tasks

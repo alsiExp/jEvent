@@ -52,4 +52,10 @@ public class MockCommentRepositoryImpl implements CommentRepository {
         LOG.info("get all comments by Task id = " + id);
         return null;
     }
+
+    @Override
+    public List<Comment> getAll() {
+        LOG.info("get all comments");
+        return null;
+    }
 }

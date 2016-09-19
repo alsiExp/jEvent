@@ -3,6 +3,8 @@ package ru.jevent.service;
 import ru.jevent.model.Comment;
 import ru.jevent.util.exception.NotFoundException;
 
+import java.util.List;
+
 public interface CommentService {
 
     Comment save(Comment comment, long userId);
@@ -13,4 +15,5 @@ public interface CommentService {
 
     Comment get(long id) throws NotFoundException;
 
+    List<Comment> getAll();
 }
