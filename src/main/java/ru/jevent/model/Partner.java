@@ -44,7 +44,7 @@ public class Partner extends NamedEntity implements Attachable {
 
     @Override
     public String getAttachImageURL() {
-        return null;
+        return this.getLogoURL();
     }
 
     public String getEmail() {
