@@ -107,6 +107,9 @@ public class Visitor extends Person implements Attachable {
     }
 
     public LocalDate getRegistered() {
+        if(registered  == null) {
+            registered = LocalDate.now();
+        }
         return registered;
     }
 

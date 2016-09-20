@@ -14,9 +14,7 @@ import ru.jevent.repository.UserRepository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class JdbcUserRepositoryImpl implements UserRepository {
@@ -24,6 +22,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private SimpleJdbcInsert insertComment;
+    private JdbcHelper helper;
 
     private UserMapper mapper = new UserMapper();
 
@@ -36,6 +35,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
         this.insertComment = new SimpleJdbcInsert(dataSource)
                 .withTableName("users")
                 .usingGeneratedKeyColumns("id");
+        this.helper = new JdbcHelper(dataSource);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
         map.addValue("id", user.getId());
         map.addValue("first_name", user.getFirstName());
         map.addValue("last_name", user.getLastName());
-        map.addValue("sex", getSexMap().get(user.getSex()));
+        map.addValue("sex", helper.getSexMap().get(user.getSex()));
         map.addValue("enabled", user.isEnabled());
         map.addValue("photo_url", user.getPhotoURL());
         map.addValue("login", user.getLogin());
@@ -80,19 +80,6 @@ public class JdbcUserRepositoryImpl implements UserRepository {
         String sql = "SELECT  u.id, u.first_name, u.last_name, s.sex, u.enabled, u.photo_url, u.login, u.password " +
                 "FROM users u LEFT JOIN person_sex s on u.sex =s.id";
         return jdbcTemplate.query(sql, mapper);
-    }
-
-
-    private Map<Sex, Long> getSexMap() {
-        String sql = "SELECT sex, id FROM person_sex";
-
-        return jdbcTemplate.query(sql, (ResultSet rs) -> {
-            Map<Sex, Long> map = new HashMap<>();
-            while(rs.next()) {
-                map.put(Sex.valueOf(rs.getString("sex")), rs.getLong("id"));
-            }
-            return map;
-        });
     }
 
     private final class UserMapper implements RowMapper<User> {
