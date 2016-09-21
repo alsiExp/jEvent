@@ -7,16 +7,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import ru.jevent.TestData;
 import ru.jevent.model.Comment;
-import ru.jevent.model.Enums.Sex;
 import ru.jevent.model.User;
 import ru.jevent.model.Visitor;
 import ru.jevent.util.DbPopulator;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @ContextConfiguration({
@@ -29,7 +26,11 @@ public class VisitorServiceTest {
     @Autowired
     private VisitorService service;
     @Autowired
+    private UserService userService;
+    @Autowired
     private DbPopulator dbPopulator;
+
+    private TestData testData = new TestData();
 
     @Before
     public void setUp() throws Exception {
@@ -49,34 +50,29 @@ public class VisitorServiceTest {
 
     @Test
     public void testSave() throws Exception {
-        Visitor visitor = new Visitor();
-        visitor.setFirstName("Test");
-        visitor.setLastName("Visitor");
-        visitor.setSex(Sex.FEMALE);
-        visitor.setEnabled(true);
-        visitor.setPhotoURL("testvisitor.jpg");
-        visitor.setBirthDay(LocalDateTime.now().minus(39, ChronoUnit.YEARS));
-        visitor.setRegistered(LocalDate.now().minus(20, ChronoUnit.DAYS));
-        visitor.setEmail("test@visitor.com");
-        visitor.setPhone("+0-000-000-00-00");
-        visitor.setGitHubAccount("testgGithub");
-        //
-        visitor.setBiography("test biography");
-        visitor.setDescription("test description");
-        visitor.setCost(5000);
-        List<Comment> list = new ArrayList<>();
-        User u = new User();
-        u.setId(100009L);
-        Comment c = new Comment();
-        c.setContent("Insert new comment");
-        c.setDate(LocalDateTime.now());
-        c.setAuthor(u);
-        list.add(c);
+        Visitor visitor = testData.getNewVisitor();
+
+        User user = userService.get(100006L);
+        Comment comment1 = testData.getNewComment();
+        Comment comment2 = testData.getNewComment();
+        comment1.setAuthor(user);
+        comment2.setAuthor(user);
+        visitor.setCommentList(Arrays.asList(comment1, comment2));
+
         service.save(visitor);
+        Visitor savedVisitor = service.get(visitor.getId());
+        if(!savedVisitor.equals(visitor)) {
+            throw new Exception();
+        }
     }
 
     @Test
     public void testDeleteAndGetAll() throws Exception {
-
+        service.delete(100003L);
+        List<Visitor> list = service.getAll();
+        for(Visitor v : list) {
+            if(v.getId().equals(100003L))
+                throw new Exception();
+        }
     }
 }

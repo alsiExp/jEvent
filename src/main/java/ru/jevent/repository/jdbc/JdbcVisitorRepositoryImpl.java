@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.object.BatchSqlUpdate;
 import org.springframework.stereotype.Repository;
 import ru.jevent.model.Comment;
 import ru.jevent.model.Enums.Sex;
@@ -20,7 +22,10 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.Types;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class JdbcVisitorRepositoryImpl implements VisitorRepository {
@@ -32,10 +37,10 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
     private SimpleJdbcInsert insertVisitor;
 
     private JdbcHelper helper;
-
-    private VisitorMapper mapper = new VisitorMapper();
-
+        private VisitorMapper mapper = new VisitorMapper();
+    private InsertVisitorComments insertVisitorComments;
     private CommentRepository commentRepository;
+
 
     @Autowired
     public JdbcVisitorRepositoryImpl(JdbcTemplate jdbcTemplate,
@@ -49,6 +54,7 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
                 .usingGeneratedKeyColumns("id");
         this.commentRepository = commentRepository;
         this.helper = new JdbcHelper(dataSource);
+        this.insertVisitorComments = new InsertVisitorComments(dataSource);
     }
 
     @Override
@@ -61,7 +67,12 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
         map.addValue("enabled", visitor.isEnabled());
         map.addValue("photo_url", visitor.getPhotoURL());
         map.addValue("birthday", Timestamp.valueOf(visitor.getBirthDay()));
-        map.addValue("registered_date", visitor.getRegistered());
+        map.addValue("registered_date", Timestamp.valueOf(visitor.getRegistered().atTime(0, 0)));
+        map.addValue("email", visitor.getEmail());
+        map.addValue("phone", visitor.getPhone());
+        map.addValue("github_account", visitor.getGitHubAccount());
+        map.addValue("linkedin_account", visitor.getLinkedInAccount());
+        map.addValue("twitter_account", visitor.getTwitterAccount());
         map.addValue("employer", visitor.getEmployer());
         map.addValue("biography", visitor.getBiography());
         map.addValue("description", visitor.getDescription());
@@ -71,18 +82,22 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
             visitor.setId(newKey.longValue());
         } else {
             if(namedParameterJdbcTemplate.update("UPDATE visitors SET first_name = :first_name, last_name = :last_name, " +
-                    "sex = :sex, enabled = :enabled, photo_url = :photo_url, birthday = :birthday, employer = :employer, " +
-                    "biography = :biography, description = :description, cost = :cost", map) == 0) {
+                    "sex = :sex, enabled = :enabled, photo_url = :photo_url, birthday = :birthday, " +
+                    "registered_date = :registered_date, email = :email, phone = :phone, " +
+                    "github_account = :github_account, linkedin_account = :linkedin_account, twitter_account = :twitter_account" +
+                    "employer = :employer, biography = :biography, description = :description, cost = :cost", map) == 0) {
                 return null;
             }
         }
-        MapSqlParameterSource commentsMap = new MapSqlParameterSource();
-        for(Comment c : visitor.getCommentList()) {
-            Comment insertedComment = commentRepository.save(c, c.getAuthor().getId());
-            commentsMap.addValue("visitor_id", visitor.getId());
-            commentsMap.addValue("comment_id", insertedComment.getId());
-            if(namedParameterJdbcTemplate.update("UPDATE visitors_comments SET visitor_id = :visitor_id, comment_id = :comment_id", commentsMap) == 0) {
-                return null;
+        if(visitor.getCommentList() != null) {
+            Map<String, Object> commentsMap = new HashMap<>();
+            for (Comment c : visitor.getCommentList()) {
+                Comment insertedComment = commentRepository.save(c, c.getAuthor().getId());
+                commentsMap.put("visitor_id", visitor.getId());
+                commentsMap.put("comment_id", insertedComment.getId());
+                if (insertVisitorComments.updateByNamedParam(commentsMap) == 0) {
+                    return null;
+                }
             }
         }
         return visitor;
@@ -154,6 +169,19 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
             }
             visitor.setCommentList(commentRepository.getAllByVisitorId(visitor_id));
             return visitor;
+        }
+    }
+
+    private final class InsertVisitorComments extends BatchSqlUpdate {
+        private static final String SQL_INSERT_VISITORS_COMMENTS = "INSERT INTO visitors_comments (visitor_id, comment_id) values " +
+                "(:visitor_id, :comment_id)";
+        private static final int BATCH_SIZE = 10;
+
+        public InsertVisitorComments(DataSource ds) {
+            super(ds, SQL_INSERT_VISITORS_COMMENTS);
+            super.declareParameter(new SqlParameter("visitor_id", Types.BIGINT));
+            super.declareParameter(new SqlParameter("comment_id", Types.BIGINT));
+            super.setBatchSize(BATCH_SIZE);
         }
     }
 

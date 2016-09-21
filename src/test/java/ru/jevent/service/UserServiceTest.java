@@ -7,8 +7,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import ru.jevent.TestData;
 import ru.jevent.model.Enums.Role;
-import ru.jevent.model.Enums.Sex;
 import ru.jevent.model.User;
 import ru.jevent.util.DbPopulator;
 
@@ -25,10 +25,12 @@ public class UserServiceTest {
     private UserService service;
     @Autowired
     private DbPopulator dbPopulator;
+    private TestData testData;
 
     @Before
     public void setUp() throws Exception {
         dbPopulator.execute();
+        this.testData = new TestData();
     }
 
     @Test
@@ -42,7 +44,7 @@ public class UserServiceTest {
 
     @Test
     public void testSave() throws Exception {
-        User user = new User("Test", "User", Sex.MALE, true, "photo.jpg", "login", "pass", Role.ROLE_USER);
+        User user = testData.getNewUser();
         service.save(user);
         if (user.isNew())
             throw new Exception();

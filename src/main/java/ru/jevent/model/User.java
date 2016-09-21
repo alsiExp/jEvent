@@ -87,7 +87,7 @@ public class User extends Person {
     @Override
     public String toString() {
         StringBuilder roleSB = new StringBuilder();
-        if(!roles.isEmpty()) {
+        if(roles != null) {
             String prefix = "";
             roleSB.append('[');
             for (Object o : roles.toArray()) {

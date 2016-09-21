@@ -7,8 +7,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import ru.jevent.TestData;
 import ru.jevent.model.Comment;
-import ru.jevent.model.User;
 import ru.jevent.util.DbPopulator;
 import ru.jevent.util.exception.NotFoundException;
 
@@ -25,7 +25,11 @@ public class CommentServiceTest {
     @Autowired
     private CommentService service;
     @Autowired
+    UserService userService;
+    @Autowired
     private DbPopulator dbPopulator;
+
+    private TestData testData = new TestData();
 
     @Before
     public void setUp() throws Exception {
@@ -43,16 +47,14 @@ public class CommentServiceTest {
 
     @Test
     public void testUpdate() throws Exception {
-        Comment c = new Comment();
-        c.setId(100024L);
+        Comment c = service.get(100021L);
         c.setContent("Updated content");
         c.setDate(LocalDateTime.now());
-        service.update(c, 100009L);
+        service.update(c, c.getAuthor().getId());
 
-        Comment returnedComment = service.get(100024L);
-        if(!c.getId().equals(returnedComment.getId())) throw new Exception();
-        if(!c.getContent().equals(returnedComment.getContent())) throw new Exception();
-        if(c.getDate().compareTo(returnedComment.getDate()) < 0 ) throw new Exception();
+        Comment returnedComment = service.get(c.getId());
+        if(!c.equals(returnedComment))
+            throw new Exception();
     }
 
     @Test(expected = NotFoundException.class)
@@ -76,13 +78,9 @@ public class CommentServiceTest {
 
     @Test
     public void testSave()  throws Exception {
-        User u = new User();
-        u.setId(100009L);
-        Comment c = new Comment();
-        c.setContent("Insert new comment");
-        c.setDate(LocalDateTime.now());
-        c.setAuthor(u);
-        service.save(c, 100009L);
+        Comment c = testData.getNewComment();
+        c.setAuthor(userService.get(100006L));
+        service.save(c, c.getAuthor().getId());
         if(c.isNew())
             throw new Exception();
     }

@@ -80,7 +80,7 @@ CREATE TABLE users
   enabled    BOOL               DEFAULT FALSE,
   photo_URL  VARCHAR,
   --   user
-  login      VARCHAR NOT NULL UNIQUE,
+  login      VARCHAR NOT NULL,
   password   VARCHAR NOT NULL,
 
 
@@ -214,7 +214,7 @@ CREATE TABLE slots
 
   FOREIGN KEY (slot_type) REFERENCES slot_type (id) ON DELETE CASCADE,
   FOREIGN KEY (track_id) REFERENCES tracks (id) ON DELETE CASCADE,
-  FOREIGN KEY (visitors_events_speaker_id) REFERENCES visitors_events_speakers (id)
+  FOREIGN KEY (visitors_events_speaker_id) REFERENCES visitors_events_speakers (id) ON DELETE CASCADE
 
 );
 
@@ -222,7 +222,7 @@ CREATE TABLE slots
 CREATE TABLE events_comments
 (
   event_id   BIGINT,
-  comment_id BIGINT UNIQUE,
+  comment_id BIGINT,
 
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
   FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE
@@ -231,7 +231,7 @@ CREATE TABLE events_comments
 CREATE TABLE visitors_comments
 (
   visitor_id BIGINT,
-  comment_id BIGINT UNIQUE,
+  comment_id BIGINT,
 
   FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE,
   FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE
@@ -279,7 +279,7 @@ CREATE TABLE tasks
 CREATE TABLE tasks_comments
 (
   task_id    BIGINT,
-  comment_id BIGINT UNIQUE,
+  comment_id BIGINT,
 
   FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
   FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE
@@ -287,7 +287,7 @@ CREATE TABLE tasks_comments
 
 CREATE TABLE task_statuses_tasks
 (
-  task_status_id BIGINT UNIQUE,
+  task_status_id BIGINT,
   task_id        BIGINT,
 
   FOREIGN KEY (task_status_id) REFERENCES task_statuses (id) ON DELETE CASCADE,
