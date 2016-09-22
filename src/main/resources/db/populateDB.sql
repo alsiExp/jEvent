@@ -271,7 +271,7 @@ VALUES
   ('Основной зал', 100013, 'Самый главный трэк');
 
 
-INSERT INTO slots (name, track_id, start, visitors_events_speaker_id, lecture_description, slot_type, grade)
+INSERT INTO slots (name, track_id, start, visitors_events_speaker_id, slot_description, slot_type, grade)
 VALUES
   ('Регистрация + welcome кофе', 100058, TIMESTAMP '2016-10-14 08:30', NULL, NULL, 90050, NULL),
   ('Мавен против Грейдла: На заре автоматизации', 100058, TIMESTAMP '2016-10-14 12:00', 100055,

@@ -208,7 +208,7 @@ CREATE TABLE slots
   track_id                   BIGINT,
   start                      TIMESTAMP NOT NULL,
   visitors_events_speaker_id BIGINT,
-  lecture_description        VARCHAR,
+  slot_description        VARCHAR,
   slot_type                  BIGINT,
   grade                      INT,
 

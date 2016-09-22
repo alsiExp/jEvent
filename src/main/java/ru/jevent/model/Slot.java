@@ -8,7 +8,7 @@ public class Slot extends NamedEntity {
 
     //    can be null
     private Visitor approvedSpeaker;
-    private String lectureDescription;
+    private String slotDescription;
     private LocalDateTime start;
     private SlotType slotType;
     //    will be set after Event (by Visitors votes)
@@ -19,22 +19,22 @@ public class Slot extends NamedEntity {
     public Slot() {
     }
 
-    public Slot(String name, Visitor approvedSpeaker, String lectureDescription, LocalDateTime start,
+    public Slot(String name, Visitor approvedSpeaker, String slotDescription, LocalDateTime start,
                 SlotType slotType, int grade, int price) {
         super(name);
         this.approvedSpeaker = approvedSpeaker;
-        this.lectureDescription = lectureDescription;
+        this.slotDescription = slotDescription;
         this.start = start;
         this.slotType = slotType;
         this.grade = grade;
         this.price = price;
     }
 
-    public Slot(long id, String name, Visitor approvedSpeaker, String lectureDescription, LocalDateTime start,
+    public Slot(long id, String name, Visitor approvedSpeaker, String slotDescription, LocalDateTime start,
                 SlotType slotType, int grade, int price) {
         super(id, name);
         this.approvedSpeaker = approvedSpeaker;
-        this.lectureDescription = lectureDescription;
+        this.slotDescription = slotDescription;
         this.start = start;
         this.slotType = slotType;
         this.grade = grade;
@@ -49,12 +49,12 @@ public class Slot extends NamedEntity {
         this.approvedSpeaker = approvedSpeaker;
     }
 
-    public String getLectureDescription() {
-        return lectureDescription;
+    public String getSlotDescription() {
+        return slotDescription;
     }
 
-    public void setLectureDescription(String lectureDescription) {
-        this.lectureDescription = lectureDescription;
+    public void setSlotDescription(String slotDescription) {
+        this.slotDescription = slotDescription;
     }
 
     public LocalDateTime getStart() {
@@ -101,7 +101,7 @@ public class Slot extends NamedEntity {
         if (price != slot.price) return false;
         if (approvedSpeaker != null ? !approvedSpeaker.equals(slot.approvedSpeaker) : slot.approvedSpeaker != null)
             return false;
-        if (lectureDescription != null ? !lectureDescription.equals(slot.lectureDescription) : slot.lectureDescription != null)
+        if (slotDescription != null ? !slotDescription.equals(slot.slotDescription) : slot.slotDescription != null)
             return false;
         if (start != null ? !start.equals(slot.start) : slot.start != null) return false;
         return slotType == slot.slotType;
@@ -113,7 +113,7 @@ public class Slot extends NamedEntity {
         int result = super.hashCode();
         long temp;
         result = 31 * result + (approvedSpeaker != null ? approvedSpeaker.hashCode() : 0);
-        result = 31 * result + (lectureDescription != null ? lectureDescription.hashCode() : 0);
+        result = 31 * result + (slotDescription != null ? slotDescription.hashCode() : 0);
         result = 31 * result + (start != null ? start.hashCode() : 0);
         result = 31 * result + (slotType != null ? slotType.hashCode() : 0);
         result = 31 * result + grade;
@@ -131,7 +131,7 @@ public class Slot extends NamedEntity {
         return "Slot{" +
                 super.toString() +
                 ", approvedSpeakerId=" + speaker +
-                ", lectureDescription='" + lectureDescription + '\'' +
+                ", slotDescription='" + slotDescription + '\'' +
                 ", start=" + start +
                 ", slotType=" + slotType +
                 ", grade=" + grade +

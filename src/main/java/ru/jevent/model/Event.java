@@ -201,7 +201,20 @@ public class Event extends NamedEntity  implements Attachable{
         if (confirmedVisitors != null ? !confirmedVisitors.equals(event.confirmedVisitors) : event.confirmedVisitors != null)
             return false;
         if (commentList != null ? !commentList.equals(event.commentList) : event.commentList != null) return false;
-        if (rates != null ? !rates.equals(event.rates) : event.rates != null) return false;
+        if (this.getRates().isEmpty()) {
+            if(!event.getRates().isEmpty()) {
+                return false;
+            }
+            if(this.getRates().size() != event.getRates().size()) {
+                return false;
+            }
+            Set<Rate> set = new HashSet<>();
+            set.addAll(this.getRates());
+            set.addAll(event.getRates());
+            if(set.size() != this.getRates().size()) {
+                return false;
+            }
+        }
         return tracks != null ? tracks.equals(event.tracks) : event.tracks == null;
 
     }

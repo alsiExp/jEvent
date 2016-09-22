@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.object.BatchSqlUpdate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.jevent.model.Enums.RateType;
 import ru.jevent.model.Enums.SlotType;
@@ -34,8 +36,11 @@ public class JdbcEventRepositoryImpl implements EventRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private SimpleJdbcInsert insertEvent;
     private InsertProbableSpeakers insertProbableSpeaker;
-    private InsertConfirmedVisitors insertConfirmedVisitors;
+    private InsertConfirmedVisitors insertConfirmedVisitor;
+    private InsertVisitorsEventsSpeakers insertVisitorsEventsSpeakers;
     private SimpleJdbcInsert insertRate;
+    private SimpleJdbcInsert insertTrack;
+    private SimpleJdbcInsert insertSlot;
 
     private UserRepository userRepository;
     private CommentRepository commentRepository;
@@ -54,13 +59,24 @@ public class JdbcEventRepositoryImpl implements EventRepository {
                                    VisitorRepository visitorRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+
         this.insertEvent = new SimpleJdbcInsert(dataSource)
                 .withTableName("events")
                 .usingGeneratedKeyColumns("id");
-        this.insertProbableSpeaker = new InsertProbableSpeakers(dataSource);
-        this.insertConfirmedVisitors = new InsertConfirmedVisitors(dataSource);
         this.insertRate = new SimpleJdbcInsert(dataSource)
-                .withTableName("rates");
+                .withTableName("rates")
+                .usingGeneratedKeyColumns("id");
+        this.insertTrack = new SimpleJdbcInsert(dataSource)
+                .withTableName("tracks")
+                .usingGeneratedKeyColumns("id");
+        this.insertSlot = new SimpleJdbcInsert(dataSource)
+                .withTableName("slots")
+                .usingGeneratedKeyColumns("id");
+
+        this.insertProbableSpeaker = new InsertProbableSpeakers(dataSource);
+        this.insertConfirmedVisitor = new InsertConfirmedVisitors(dataSource);
+        this.insertVisitorsEventsSpeakers = new InsertVisitorsEventsSpeakers(dataSource);
+
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
         this.visitorRepository = visitorRepository;
@@ -131,15 +147,69 @@ public class JdbcEventRepositoryImpl implements EventRepository {
                 cvMap.put("visitor_id", entry.getKey().getId());
                 cvMap.put("buy_date", Timestamp.valueOf(entry.getValue().getDate()));
                 cvMap.put("rate_id", entry.getValue().getRate().getId());
-                if (insertConfirmedVisitors.updateByNamedParam(cvMap) == 0) {
+                if (insertConfirmedVisitor.updateByNamedParam(cvMap) == 0) {
                     return null;
                 }
             }
-            insertConfirmedVisitors.flush();
+            insertConfirmedVisitor.flush();
         }
 
         if (!event.getTracks().isEmpty()) {
+            MapSqlParameterSource trackMap = new MapSqlParameterSource();
+            MapSqlParameterSource slotMap = new MapSqlParameterSource();
+            Map<String, Object> visitorEventSpeakerMap = new HashMap<>();
 
+            for(Track track : event.getTracks()) {
+                trackMap.addValue("id", track.getId());
+                trackMap.addValue("name", track.getName());
+                trackMap.addValue("event_id", event.getId());
+                trackMap.addValue("description", track.getDescription());
+                if(track.isNew()) {
+                    Number newKey = insertTrack.executeAndReturnKey(trackMap);
+                    track.setId(newKey.longValue());
+                } else {
+                    if(namedParameterJdbcTemplate.update("UPDATE tracks SET name = :name, event_id = :event_id, " +
+                            "description = :description WHERE id = :id", trackMap) == 0) {
+                        return null;
+                    }
+                }
+                if(!track.getSlotOrder().isEmpty()) {
+                    for(Slot slot : track.getSlotOrder()) {
+                        slotMap.addValue("id", slot.getId());
+                        slotMap.addValue("name", slot.getName());
+                        slotMap.addValue("track_id", track.getId());
+                        slotMap.addValue("start", Timestamp.valueOf(slot.getStart()));
+                        slotMap.addValue("slot_type", helper.getSlotTypeMap().get(slot.getSlotType()));
+                        slotMap.addValue("slot_description", slot.getSlotDescription());
+                        slotMap.addValue("grade", slot.getGrade());
+                        if(slot.getApprovedSpeaker() != null) {
+                            Visitor speaker = slot.getApprovedSpeaker();
+                            if(speaker.isNew()) {
+                                visitorRepository.save(speaker);
+                            }
+                            visitorEventSpeakerMap.put("visitor_id", speaker.getId());
+                            visitorEventSpeakerMap.put("event_id", event.getId());
+                            visitorEventSpeakerMap.put("price", slot.getPrice());
+                            KeyHolder vesKeyHolder = new GeneratedKeyHolder();
+                            insertVisitorsEventsSpeakers.updateByNamedParam(visitorEventSpeakerMap, vesKeyHolder);
+                            insertVisitorsEventsSpeakers.flush();
+
+                            slotMap.addValue("visitors_events_speaker_id", vesKeyHolder.getKey().longValue());
+                        }
+                        if(slot.isNew()) {
+                            Number newKey = insertSlot.executeAndReturnKey(slotMap);
+                            slot.setId(newKey.longValue());
+                        } else {
+                            if(namedParameterJdbcTemplate.update("UPDATE slots SET name = :name, track_id = :track_id, " +
+                                    "start = :start, visitors_events_speaker_id = :visitors_events_speaker_id, " +
+                                    "slot_description = :slot_description, slot_type = :slot_type, grade = :grade " +
+                                    "WHERE id = :id", slotMap) == 0) {
+                                return null;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         if (!event.getCommentList().isEmpty()) {
@@ -208,7 +278,7 @@ public class JdbcEventRepositoryImpl implements EventRepository {
 
     private List<Track> fillTracksList(long eventId) {
         String sql = "SELECT t.id AS track_id, t.name, t.description, s.id AS slot_id, s.name slot_name, s.start, " +
-                "ves.visitor_id AS speaker_id, ves.price AS speaker_price, s.lecture_description, st.type, s.grade FROM tracks t " +
+                "ves.visitor_id AS speaker_id, ves.price AS speaker_price, s.slot_description, st.type, s.grade FROM tracks t " +
                 "LEFT JOIN slots s ON t.id = s.track_id " +
                 "LEFT JOIN slot_type st ON s.slot_type = st.id " +
                 "LEFT JOIN visitors_events_speakers ves ON s.visitors_events_speaker_id = ves.id " +
@@ -239,7 +309,7 @@ public class JdbcEventRepositoryImpl implements EventRepository {
                         slot.setApprovedSpeaker(v);
                     }
                     slot.setPrice(rs.getDouble("speaker_price"));
-                    slot.setLectureDescription(rs.getString("lecture_description"));
+                    slot.setSlotDescription(rs.getString("lecture_description"));
                     slot.setSlotType(SlotType.valueOf(rs.getString("type")));
                     slot.setGrade(rs.getInt("grade"));
                     track.getSlotOrder().add(slot);
@@ -352,6 +422,19 @@ public class JdbcEventRepositoryImpl implements EventRepository {
             super.declareParameter(new SqlParameter("visitor_id", Types.BIGINT));
             super.declareParameter(new SqlParameter("buy_date", Types.TIMESTAMP));
             super.declareParameter(new SqlParameter("rate_id", Types.BIGINT));
+            super.setBatchSize(BATCH_SIZE);
+        }
+    }
+
+    private final class InsertVisitorsEventsSpeakers extends BatchSqlUpdate {
+        private static final String SQL_INSERT_VES = "INSERT INTO visitors_events_speakers (visitor_id, event_id, price) " +
+                "VALUES (:visitor_id, :event_id, :price)";
+        private static final int BATCH_SIZE = 5;
+        public InsertVisitorsEventsSpeakers(DataSource ds) {
+            super(ds, SQL_INSERT_VES);
+            super.declareParameter(new SqlParameter("visitor_id", Types.BIGINT));
+            super.declareParameter(new SqlParameter("event_id", Types.BIGINT));
+            super.declareParameter(new SqlParameter("price", Types.NUMERIC));
             super.setBatchSize(BATCH_SIZE);
         }
     }
