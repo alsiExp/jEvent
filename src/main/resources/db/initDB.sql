@@ -192,11 +192,11 @@ CREATE TABLE visitors_events_speakers
 
 CREATE TABLE events_by_rate_confirmed_visitors
 (
-  id         BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
   visitor_id BIGINT    NOT NULL,
   buy_date   TIMESTAMP NOT NULL,
   rate_id    BIGINT    NOT NULL,
 
+  PRIMARY KEY (visitor_id, buy_date, rate_id),
   FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE,
   FOREIGN KEY (rate_id) REFERENCES rates (id) ON DELETE CASCADE
 );
@@ -233,6 +233,7 @@ CREATE TABLE visitors_comments
   visitor_id BIGINT,
   comment_id BIGINT,
 
+  PRIMARY KEY (visitor_id, comment_id),
   FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE,
   FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE
 );
@@ -248,6 +249,7 @@ CREATE TABLE events_probable_speakers
   speech_description VARCHAR,
   wish_Price         NUMERIC(20, 2),
 
+  PRIMARY KEY (visitor_id, event_id, speech_name),
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
   FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE
 );
@@ -281,6 +283,7 @@ CREATE TABLE tasks_comments
   task_id    BIGINT,
   comment_id BIGINT,
 
+  PRIMARY KEY (task_id, comment_id),
   FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
   FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE
 );

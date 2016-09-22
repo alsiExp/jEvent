@@ -1,7 +1,6 @@
 package ru.jevent;
 
 import ru.jevent.model.Comment;
-import ru.jevent.model.Enums.Role;
 import ru.jevent.model.Enums.Sex;
 import ru.jevent.model.User;
 import ru.jevent.model.Visitor;
@@ -15,7 +14,7 @@ import java.util.List;
 public class TestData {
 
     public User getNewUser() {
-        User user = new User("Test", "User", Sex.MALE, true, "photo.jpg", "login", "pass", Role.ROLE_USER);
+        User user = new User("Test", "User", Sex.MALE, true, "photo.jpg", "login", "pass");
         return user;
     }
 

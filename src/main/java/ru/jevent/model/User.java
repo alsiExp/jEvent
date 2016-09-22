@@ -17,19 +17,17 @@ public class User extends Person {
     }
 
     public User(String firstName, String lastName, Sex sex, boolean enabled, String photoURL, String login,
-                String password, Role role) {
+                String password) {
         super(firstName, lastName, sex, enabled, photoURL);
         this.login = login;
         this.password = password;
-        this.addRoles(role);
     }
 
     public User(Long id, String firstName, String lastName, Sex sex, boolean enabled, String photoURL, String login,
-                String password, Role role) {
+                String password) {
         super(firstName, lastName, sex, enabled, photoURL);
         this.login = login;
         this.password = password;
-        this.addRoles(role);
     }
 
     public String getLogin() {

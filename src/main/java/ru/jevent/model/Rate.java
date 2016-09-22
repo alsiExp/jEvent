@@ -2,7 +2,7 @@ package ru.jevent.model;
 
 import ru.jevent.model.Enums.RateType;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Rate extends NamedEntity {
     // tariffs for events:
@@ -10,15 +10,15 @@ public class Rate extends NamedEntity {
     // lite / standart / business
 
     private RateType rateType;
-    private LocalDate start;
-    private LocalDate end;
+    private LocalDateTime start;
+    private LocalDateTime end;
     private double cost;
 
 
     public Rate() {
     }
 
-    public Rate(String name, RateType rateType, LocalDate start, LocalDate end, double cost) {
+    public Rate(String name, RateType rateType, LocalDateTime start, LocalDateTime end, double cost) {
         super(name);
         this.rateType = rateType;
         this.start = start;
@@ -26,7 +26,7 @@ public class Rate extends NamedEntity {
         this.cost = cost;
     }
 
-    public Rate(long id, String name, RateType rateType, LocalDate start, LocalDate end, double cost) {
+    public Rate(long id, String name, RateType rateType, LocalDateTime start, LocalDateTime end, double cost) {
         super(id, name);
         this.rateType = rateType;
         this.start = start;
@@ -42,19 +42,19 @@ public class Rate extends NamedEntity {
         this.rateType = rateType;
     }
 
-    public LocalDate getStart() {
+    public LocalDateTime getStart() {
         return start;
     }
 
-    public void setStart(LocalDate start) {
+    public void setStart(LocalDateTime start) {
         this.start = start;
     }
 
-    public LocalDate getEnd() {
+    public LocalDateTime getEnd() {
         return end;
     }
 
-    public void setEnd(LocalDate end) {
+    public void setEnd(LocalDateTime end) {
         this.end = end;
     }
 
