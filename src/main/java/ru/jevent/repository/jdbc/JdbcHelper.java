@@ -1,6 +1,7 @@
 package ru.jevent.repository.jdbc;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import ru.jevent.model.Enums.RateType;
 import ru.jevent.model.Enums.Sex;
 
 import javax.sql.DataSource;
@@ -23,6 +24,18 @@ public class JdbcHelper {
             Map<Sex, Long> map = new HashMap<>();
             while(rs.next()) {
                 map.put(Sex.valueOf(rs.getString("sex")), rs.getLong("id"));
+            }
+            return map;
+        });
+    }
+
+    public Map<RateType, Long> getRateTypeMap() {
+        String sql = "SELECT type, id FROM rate_type";
+
+        return jdbcTemplate.query(sql, (ResultSet rs) -> {
+            Map<RateType, Long> map = new HashMap<>();
+            while(rs.next()) {
+                map.put(RateType.valueOf(rs.getString("type")), rs.getLong("id"));
             }
             return map;
         });

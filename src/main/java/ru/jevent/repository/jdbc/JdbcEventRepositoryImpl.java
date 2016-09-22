@@ -2,10 +2,12 @@ package ru.jevent.repository.jdbc;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.SqlParameter;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.object.BatchSqlUpdate;
 import org.springframework.stereotype.Repository;
 import ru.jevent.model.Enums.RateType;
 import ru.jevent.model.Enums.SlotType;
@@ -18,6 +20,8 @@ import ru.jevent.util.exception.NotFoundException;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,15 +30,17 @@ import java.util.Map;
 @Repository
 public class JdbcEventRepositoryImpl implements EventRepository {
 
-    private static final BeanPropertyRowMapper<Event> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Event.class);
-
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private SimpleJdbcInsert insertEvent;
+    private InsertProbableSpeakers insertProbableSpeaker;
+    private InsertConfirmedVisitors insertConfirmedVisitors;
+    private SimpleJdbcInsert insertRate;
 
     private UserRepository userRepository;
     private CommentRepository commentRepository;
     private VisitorRepository visitorRepository;
+    private JdbcHelper helper;
 
     private HashMap<Long, Rate> rateMap;
     private HashMap<Long, Visitor> visitorMap;
@@ -51,14 +57,96 @@ public class JdbcEventRepositoryImpl implements EventRepository {
         this.insertEvent = new SimpleJdbcInsert(dataSource)
                 .withTableName("events")
                 .usingGeneratedKeyColumns("id");
+        this.insertProbableSpeaker = new InsertProbableSpeakers(dataSource);
+        this.insertConfirmedVisitors = new InsertConfirmedVisitors(dataSource);
+        this.insertRate = new SimpleJdbcInsert(dataSource)
+                .withTableName("rates");
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
         this.visitorRepository = visitorRepository;
+        this.helper = new JdbcHelper(dataSource);
     }
 
     @Override
     public Event save(Event event) {
-        return null;
+        MapSqlParameterSource map = new MapSqlParameterSource();
+        map.addValue("id", event.getId());
+        map.addValue("name", event.getName());
+        map.addValue("author_id", event.getAuthor().getId());
+        map.addValue("tag_name", event.getTagName());
+        map.addValue("address", event.getAddress());
+        map.addValue("description", event.getDescription());
+        map.addValue("logo_url", event.getLogoURL());
+        if (event.isNew()) {
+            Number newKey = insertEvent.executeAndReturnKey(map);
+            event.setId(newKey.longValue());
+        } else {
+            if (namedParameterJdbcTemplate.update("UPDATE events SET name = :name, author_id = :author_id, tag_name = :tag_name, " +
+                    "address = :address, description = :description, logo_url = :logo_url WHERE id = :id", map) == 0) {
+                return null;
+            }
+        }
+        if (!event.getProbableSpeakers().isEmpty()) {
+            Map<String, Object> psMap = new HashMap<>();
+            for (Map.Entry<Visitor, OfferDetails> entry : event.getProbableSpeakers().entrySet()) {
+                psMap.put("visitor_id", entry.getKey().getId());
+                psMap.put("event_id", event.getId());
+                psMap.put("send_date", Timestamp.valueOf(entry.getValue().getSendDate()));
+                psMap.put("speech_name", entry.getValue().getSpeechName());
+                psMap.put("speech_description", entry.getValue().getSpeechDescription());
+                psMap.put("wish_price", entry.getValue().getWishPrice());
+                if (insertProbableSpeaker.updateByNamedParam(psMap) == 0) {
+                    return null;
+                }
+            }
+            insertProbableSpeaker.flush();
+        }
+
+        if (!event.getRates().isEmpty()) {
+            MapSqlParameterSource ratesParamMap = new MapSqlParameterSource();
+            for (Rate rate : event.getRates()) {
+                ratesParamMap.addValue("id", rate.getId());
+                ratesParamMap.addValue("name", rate.getName());
+                ratesParamMap.addValue("event_id", event.getId());
+                ratesParamMap.addValue("rate_type", helper.getRateTypeMap().get(rate.getRateType()));
+                ratesParamMap.addValue("start_date", Timestamp.valueOf(rate.getStart()));
+                ratesParamMap.addValue("end_date", Timestamp.valueOf(rate.getEnd()));
+                ratesParamMap.addValue("cost", rate.getCost());
+                if (rate.isNew()) {
+                    Number newKey = insertRate.executeAndReturnKey(ratesParamMap);
+                    rate.setId(newKey.longValue());
+                } else {
+                    if (namedParameterJdbcTemplate.update("UPDATE rates SET name = :name, event_id = :event_id, " +
+                            "rate_type = :rate_type, start_date = :start_date, end_date = :end_date, cost = :cost " +
+                            "WHERE id = :id", ratesParamMap) == 0) {
+                        return null;
+                    }
+                }
+            }
+        }
+
+        if (!event.getConfirmedVisitors().isEmpty()) {
+            Map<String, Object> cvMap = new HashMap<>();
+            for (Map.Entry<Visitor, PayDetails> entry : event.getConfirmedVisitors().entrySet()) {
+                cvMap.put("visitor_id", entry.getKey().getId());
+                cvMap.put("buy_date", Timestamp.valueOf(entry.getValue().getDate()));
+                cvMap.put("rate_id", entry.getValue().getRate().getId());
+                if (insertConfirmedVisitors.updateByNamedParam(cvMap) == 0) {
+                    return null;
+                }
+            }
+            insertConfirmedVisitors.flush();
+        }
+
+        if (!event.getTracks().isEmpty()) {
+
+        }
+
+        if (!event.getCommentList().isEmpty()) {
+
+        }
+
+        return event;
     }
 
     @Override
@@ -92,7 +180,8 @@ public class JdbcEventRepositoryImpl implements EventRepository {
 
     @Override
     public List<Event> getAll() {
-        String sqlAllEventsWithRates = "select e.id, e.name, e.author_id, e.tag_name, e.description, e.logo_url, r.id, r.name, rt.type, r.start_date, r.end_date, r.cost from events e LEFT JOIN rates r on e.id = r.event_id LEFT JOIN rate_type rt on r.rate_type = rt.id";
+        String sqlAllEventsWithRates = "select e.id, e.name, e.author_id, e.tag_name, e.description, e.logo_url, r.id, " +
+                "r.name, rt.type, r.start_date, r.end_date, r.cost from events e LEFT JOIN rates r on e.id = r.event_id LEFT JOIN rate_type rt on r.rate_type = rt.id";
         return null;
     }
 
@@ -104,8 +193,8 @@ public class JdbcEventRepositoryImpl implements EventRepository {
             r.setId(rs.getLong("id"));
             r.setName(rs.getString("name"));
             r.setRateType(RateType.valueOf(rs.getString("type")));
-            r.setStart(rs.getTimestamp("start_date").toLocalDateTime().toLocalDate());
-            r.setEnd(rs.getTimestamp("end_date").toLocalDateTime().toLocalDate());
+            r.setStart(rs.getTimestamp("start_date").toLocalDateTime());
+            r.setEnd(rs.getTimestamp("end_date").toLocalDateTime());
             r.setCost(rs.getDouble("cost"));
             return r;
         }, eventId);
@@ -206,7 +295,7 @@ public class JdbcEventRepositoryImpl implements EventRepository {
                 od.setSpeechName(rs.getString("speech_name"));
                 od.setSpeechDescription(rs.getString("speech_description"));
                 od.setWishPrice(rs.getDouble("wish_price"));
-                m.put(v,od);
+                m.put(v, od);
             }
             return m;
         });
@@ -230,4 +319,41 @@ public class JdbcEventRepositoryImpl implements EventRepository {
         getRateMap().clear();
         getVisitorMap().clear();
     }
+
+
+    private final class InsertProbableSpeakers extends BatchSqlUpdate {
+        private static final String SQL_INSERT_PROBABLE_SPEAKERS = "INSERT INTO events_probable_speakers " +
+                "(visitor_id, event_id, send_date, speech_name, speech_description, wish_price) " +
+                "VALUES (:visitor_id, :event_id, :send_date, :speech_name, :speech_description, :wish_price) " +
+                "ON CONFLICT (visitor_id, event_id, speech_name) DO UPDATE SET " +
+                "send_date = :send_date, speech_description = :speech_description, wish_price = :wish_price ";
+        private static final int BATCH_SIZE = 10;
+
+        public InsertProbableSpeakers(DataSource ds) {
+            super(ds, SQL_INSERT_PROBABLE_SPEAKERS);
+            super.declareParameter(new SqlParameter("visitor_id", Types.BIGINT));
+            super.declareParameter(new SqlParameter("event_id", Types.BIGINT));
+            super.declareParameter(new SqlParameter("send_date", Types.TIMESTAMP));
+            super.declareParameter(new SqlParameter("speech_name", Types.VARCHAR));
+            super.declareParameter(new SqlParameter("speech_description", Types.VARCHAR));
+            super.declareParameter(new SqlParameter("wish_price", Types.NUMERIC));
+            super.setBatchSize(BATCH_SIZE);
+        }
+    }
+
+    private final class InsertConfirmedVisitors extends BatchSqlUpdate {
+        private static final String SQL_INSERT_CONFIRMED_VISITORS = "INSERT INTO events_by_rate_confirmed_visitors " +
+                "(visitor_id, buy_date, rate_id) VALUES (:visitor_id, :buy_date, :rate_id) " +
+                "ON CONFLICT (:visitor_id, :buy_date, :rate_id) DO NOTHING ";
+        private static final int BATCH_SIZE = 10;
+
+        public InsertConfirmedVisitors(DataSource ds) {
+            super(ds, SQL_INSERT_CONFIRMED_VISITORS);
+            super.declareParameter(new SqlParameter("visitor_id", Types.BIGINT));
+            super.declareParameter(new SqlParameter("buy_date", Types.TIMESTAMP));
+            super.declareParameter(new SqlParameter("rate_id", Types.BIGINT));
+            super.setBatchSize(BATCH_SIZE);
+        }
+    }
+
 }

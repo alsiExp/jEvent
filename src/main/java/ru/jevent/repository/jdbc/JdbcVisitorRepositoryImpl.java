@@ -2,7 +2,6 @@ package ru.jevent.repository.jdbc;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
@@ -13,7 +12,6 @@ import org.springframework.jdbc.object.BatchSqlUpdate;
 import org.springframework.stereotype.Repository;
 import ru.jevent.model.Comment;
 import ru.jevent.model.Enums.Sex;
-import ru.jevent.model.User;
 import ru.jevent.model.Visitor;
 import ru.jevent.repository.CommentRepository;
 import ru.jevent.repository.VisitorRepository;
@@ -30,14 +28,12 @@ import java.util.Map;
 @Repository
 public class JdbcVisitorRepositoryImpl implements VisitorRepository {
 
-    private static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
-
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private SimpleJdbcInsert insertVisitor;
 
     private JdbcHelper helper;
-        private VisitorMapper mapper = new VisitorMapper();
+    private VisitorMapper mapper = new VisitorMapper();
     private InsertVisitorComments insertVisitorComments;
     private CommentRepository commentRepository;
 
@@ -85,11 +81,11 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
                     "sex = :sex, enabled = :enabled, photo_url = :photo_url, birthday = :birthday, " +
                     "registered_date = :registered_date, email = :email, phone = :phone, " +
                     "github_account = :github_account, linkedin_account = :linkedin_account, twitter_account = :twitter_account" +
-                    "employer = :employer, biography = :biography, description = :description, cost = :cost", map) == 0) {
+                    "employer = :employer, biography = :biography, description = :description, cost = :cost WHERE id= :id", map) == 0) {
                 return null;
             }
         }
-        if(visitor.getCommentList() != null) {
+        if(!visitor.getCommentList().isEmpty()) {
             Map<String, Object> commentsMap = new HashMap<>();
             for (Comment c : visitor.getCommentList()) {
                 Comment insertedComment = commentRepository.save(c, c.getAuthor().getId());
@@ -99,6 +95,7 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
                     return null;
                 }
             }
+            insertVisitorComments.flush();
         }
         return visitor;
     }
@@ -174,7 +171,7 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
 
     private final class InsertVisitorComments extends BatchSqlUpdate {
         private static final String SQL_INSERT_VISITORS_COMMENTS = "INSERT INTO visitors_comments (visitor_id, comment_id) values " +
-                "(:visitor_id, :comment_id)";
+                "(:visitor_id, :comment_id) ON CONFLICT (visitor_id, comment_id) DO NOTHING";
         private static final int BATCH_SIZE = 10;
 
         public InsertVisitorComments(DataSource ds) {
