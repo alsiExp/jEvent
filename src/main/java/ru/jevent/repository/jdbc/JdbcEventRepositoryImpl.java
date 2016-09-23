@@ -105,6 +105,9 @@ public class JdbcEventRepositoryImpl implements EventRepository {
         if (!event.getProbableSpeakers().isEmpty()) {
             Map<String, Object> psMap = new HashMap<>();
             for (Map.Entry<Visitor, OfferDetails> entry : event.getProbableSpeakers().entrySet()) {
+                if(entry.getKey().isNew()) {
+                    visitorRepository.save(entry.getKey());
+                }
                 psMap.put("visitor_id", entry.getKey().getId());
                 psMap.put("event_id", event.getId());
                 psMap.put("send_date", Timestamp.valueOf(entry.getValue().getSendDate()));
@@ -309,7 +312,7 @@ public class JdbcEventRepositoryImpl implements EventRepository {
                         slot.setApprovedSpeaker(v);
                     }
                     slot.setPrice(rs.getDouble("speaker_price"));
-                    slot.setSlotDescription(rs.getString("lecture_description"));
+                    slot.setSlotDescription(rs.getString("slot_description"));
                     slot.setSlotType(SlotType.valueOf(rs.getString("type")));
                     slot.setGrade(rs.getInt("grade"));
                     track.getSlotOrder().add(slot);

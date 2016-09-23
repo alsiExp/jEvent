@@ -18,6 +18,16 @@ public class OfferDetails {
     String speechDescription;
     double wishPrice;
 
+    public OfferDetails() {
+    }
+
+    public OfferDetails(LocalDateTime sendDate, String speechName, String speechDescription, double wishPrice) {
+        this.sendDate = sendDate;
+        this.speechName = speechName;
+        this.speechDescription = speechDescription;
+        this.wishPrice = wishPrice;
+    }
+
     public LocalDateTime getSendDate() {
         return sendDate;
     }

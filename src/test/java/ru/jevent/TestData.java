@@ -69,4 +69,11 @@ public class TestData {
         return event;
     }
 
+    public List<OfferDetails> getOfferDetails() {
+        OfferDetails details1 = new OfferDetails(LocalDateTime.now().minusDays(12), "First speech", "Test description", 25000.00);
+        OfferDetails details2 = new OfferDetails(LocalDateTime.now().minusDays(10), "Second speech", "Test description", 20000.00);
+        OfferDetails details3 = new OfferDetails(LocalDateTime.now().minusDays(10), "Third speech", "Test description", 50000.00);
+        return Arrays.asList(details1, details2, details3);
+    }
+
 }

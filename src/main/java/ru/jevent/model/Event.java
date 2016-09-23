@@ -4,7 +4,7 @@ package ru.jevent.model;
 import java.util.*;
 
 
-public class Event extends NamedEntity  implements Attachable{
+public class Event extends NamedEntity implements Attachable {
 
     /*
         In probableSpeakers stored map<Visitor, OfferDetails>.
@@ -58,7 +58,7 @@ public class Event extends NamedEntity  implements Attachable{
         this.commentList = commentList;
     }
 
-    public Event(long id, String name, User author, String tagName, String address, String description, String logoURL, Map<Visitor, OfferDetails> probableSpeakers, HashMap<Visitor, PayDetails>confirmedVisitors, List<Rate> rates, List<Track> tracks, List<Comment> commentList) {
+    public Event(long id, String name, User author, String tagName, String address, String description, String logoURL, Map<Visitor, OfferDetails> probableSpeakers, HashMap<Visitor, PayDetails> confirmedVisitors, List<Rate> rates, List<Track> tracks, List<Comment> commentList) {
         super(id, name);
         this.author = author;
         this.tagName = tagName;
@@ -128,8 +128,8 @@ public class Event extends NamedEntity  implements Attachable{
     }
 
     public Map<Visitor, OfferDetails> getProbableSpeakers() {
-        if(probableSpeakers == null) {
-           probableSpeakers = new HashMap<>();
+        if (probableSpeakers == null) {
+            probableSpeakers = new HashMap<>();
         }
 
         return probableSpeakers;
@@ -140,7 +140,7 @@ public class Event extends NamedEntity  implements Attachable{
     }
 
     public Map<Visitor, PayDetails> getConfirmedVisitors() {
-        if(confirmedVisitors == null) {
+        if (confirmedVisitors == null) {
             confirmedVisitors = new HashMap<>();
         }
         return confirmedVisitors;
@@ -151,7 +151,7 @@ public class Event extends NamedEntity  implements Attachable{
     }
 
     public List<Comment> getCommentList() {
-        if(commentList == null) {
+        if (commentList == null) {
             commentList = new ArrayList<>();
         }
         return commentList;
@@ -162,7 +162,7 @@ public class Event extends NamedEntity  implements Attachable{
     }
 
     public List<Rate> getRates() {
-        if(rates == null) {
+        if (rates == null) {
             rates = new LinkedList<>();
         }
         return rates;
@@ -173,7 +173,7 @@ public class Event extends NamedEntity  implements Attachable{
     }
 
     public List<Track> getTracks() {
-        if(tracks == null) {
+        if (tracks == null) {
             tracks = new LinkedList<>();
         }
         return tracks;
@@ -196,28 +196,36 @@ public class Event extends NamedEntity  implements Attachable{
         if (address != null ? !address.equals(event.address) : event.address != null) return false;
         if (description != null ? !description.equals(event.description) : event.description != null) return false;
         if (logoURL != null ? !logoURL.equals(event.logoURL) : event.logoURL != null) return false;
-        if (probableSpeakers != null ? !probableSpeakers.equals(event.probableSpeakers) : event.probableSpeakers != null)
+        if(this.getProbableSpeakers().isEmpty() && !event.getProbableSpeakers().isEmpty() ||
+                !this.getProbableSpeakers().isEmpty() && event.getProbableSpeakers().isEmpty()) {
+            return  false;
+        }
+        if(this.getProbableSpeakers().size() != event.getProbableSpeakers().size()) {
             return false;
+        }
+        if(this.getProbableSpeakers().hashCode() != event.getProbableSpeakers().hashCode()) {
+            return false;
+        }
+
         if (confirmedVisitors != null ? !confirmedVisitors.equals(event.confirmedVisitors) : event.confirmedVisitors != null)
             return false;
         if (commentList != null ? !commentList.equals(event.commentList) : event.commentList != null) return false;
-        if (this.getRates().isEmpty()) {
-            if(!event.getRates().isEmpty()) {
-                return false;
-            }
-            if(this.getRates().size() != event.getRates().size()) {
-                return false;
-            }
-            Set<Rate> set = new HashSet<>();
-            set.addAll(this.getRates());
-            set.addAll(event.getRates());
-            if(set.size() != this.getRates().size()) {
-                return false;
-            }
+        if (this.getRates().isEmpty() && !event.getRates().isEmpty() ||
+                !this.getRates().isEmpty() && event.getRates().isEmpty()) {
+            return false;
         }
+        if (this.getRates().size() != event.getRates().size()) {
+            return false;
+        }
+        // fast order independent compare
+        if (this.getRates().hashCode() != event.getRates().hashCode()) {
+            return false;
+        }
+
         return tracks != null ? tracks.equals(event.tracks) : event.tracks == null;
 
     }
+
 
     @Override
     public int hashCode() {
