@@ -9,7 +9,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.TestData;
 import ru.jevent.model.Comment;
-import ru.jevent.model.User;
 import ru.jevent.util.DbPopulator;
 import ru.jevent.util.exception.NotFoundException;
 
@@ -18,7 +17,8 @@ import java.util.List;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml"
+        "classpath:spring/spring-db.xml",
+        "classpath:spring/service.xml"
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CommentServiceTest {
@@ -26,15 +26,9 @@ public class CommentServiceTest {
     @Autowired
     private CommentService service;
     @Autowired
-    UserService userService;
+    private TestData testData;
     @Autowired
     private DbPopulator dbPopulator;
-
-    private User getExistingUser() {
-        return userService.get(100006L);
-    }
-
-    private TestData testData = new TestData();
 
     @Before
     public void setUp() throws Exception {
@@ -43,11 +37,11 @@ public class CommentServiceTest {
 
     @Test
     public void testGet() throws Exception {
-        Comment c = service.get(100014);
+        Comment c = service.get(100014L);
         if (c.getId() == null ||
                 c.getContent() == null ||
                 c.getDate() == null) throw new Exception();
-        if(c.getId() != 100014) throw new Exception();
+        if(!c.getId().equals(100014L)) throw new Exception();
     }
 
     @Test
@@ -64,11 +58,8 @@ public class CommentServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void testUpdateWithException() throws Exception {
-        Comment c = new Comment();
+        Comment c = testData.getExistingComment();
         c.setId(1L);
-        c.setAuthor(getExistingUser());
-        c.setContent("Updated content");
-        c.setDate(LocalDateTime.now());
         service.update(c);
     }
 
@@ -83,11 +74,11 @@ public class CommentServiceTest {
     }
 
     @Test
-    public void testSave()  throws Exception {
+    public void testSave() throws Exception {
         Comment c = testData.getNewComment();
-        c.setAuthor(getExistingUser());
         service.save(c);
-        if(c.isNew())
+        Comment returnedComment = service.get(c.getId());
+        if(!c.equals(returnedComment))
             throw new Exception();
     }
 }

@@ -16,7 +16,7 @@ public class ExceptionUtil {
     }
 
     public static <T> T check(T obj, String msg) {
-        if(obj == null) throw LOG.getNotFoundException("Not found Entity with " + msg);
+        check(obj != null, msg);
         return obj;
     }
 

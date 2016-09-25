@@ -6,14 +6,17 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import ru.jevent.TestData;
 import ru.jevent.model.Partner;
 import ru.jevent.util.DbPopulator;
+import ru.jevent.util.exception.NotFoundException;
 
 import java.util.List;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml"
+        "classpath:spring/spring-db.xml",
+        "classpath:spring/service.xml"
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class PartnerServiceTest {
@@ -22,6 +25,8 @@ public class PartnerServiceTest {
     private PartnerService service;
     @Autowired
     private DbPopulator dbPopulator;
+    @Autowired
+    private TestData testData;
 
     @Before
     public void setUp() throws Exception {
@@ -31,15 +36,16 @@ public class PartnerServiceTest {
     @Test
     public void testGet() throws Exception {
         Partner p = service.get(100000L);
-        System.out.println(p);
+        if (p.getId() == null ||
+                p.getName() == null ||
+                p.getEmail() == null) throw new Exception();
+        if(!p.getId().equals(100000L)) throw new Exception();
     }
 
     @Test
     public void testSave() throws Exception {
-        Partner partner = new Partner("Test partner", "test@email.com", "+7-999-000-00-00", "Test partner description", "testpartner.jpg");
+        Partner partner = testData.getNewPartner();
         service.save(partner);
-        if(partner.isNew())
-            throw new Exception();
         Partner savedPartner = service.get(partner.getId());
         if(!savedPartner.equals(partner))
             throw new Exception();
@@ -53,6 +59,23 @@ public class PartnerServiceTest {
             if(p.getId().equals(100001L))
                 throw new Exception();
         }
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        Partner partner = testData.getExistingPartner();
+        partner.setName("New CompanyTest name");
+        service.update(partner);
+        Partner savedPartner = service.get(partner.getId());
+        if(!savedPartner.equals(partner))
+            throw new Exception();
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testUpdateWithException() throws Exception {
+        Partner p = testData.getExistingPartner();
+        p.setId(45L);
+        service.update(p);
     }
 
 }

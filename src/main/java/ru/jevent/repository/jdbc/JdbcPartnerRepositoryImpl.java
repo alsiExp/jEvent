@@ -51,9 +51,8 @@ public class JdbcPartnerRepositoryImpl implements PartnerRepository {
             Number newKey = insertPartner.executeAndReturnKey(map);
             partner.setId(newKey.longValue());
         } else {
-            if(namedParameterJdbcTemplate.update(
-                    "UPDATE partners SET name = :name, email = :email, phone = :phone, description = :description, logo_url = :logo_url WHERE id = :id", map
-            ) == 0) {
+            if(namedParameterJdbcTemplate.update("UPDATE partners SET name = :name, email = :email, phone = :phone, " +
+                    "description = :description, logo_url = :logo_url WHERE id = :id", map) == 0) {
                 return null;
             }
         }

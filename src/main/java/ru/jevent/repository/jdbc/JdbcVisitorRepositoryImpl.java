@@ -80,7 +80,7 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
             if(namedParameterJdbcTemplate.update("UPDATE visitors SET first_name = :first_name, last_name = :last_name, " +
                     "sex = :sex, enabled = :enabled, photo_url = :photo_url, birthday = :birthday, " +
                     "registered_date = :registered_date, email = :email, phone = :phone, " +
-                    "github_account = :github_account, linkedin_account = :linkedin_account, twitter_account = :twitter_account" +
+                    "github_account = :github_account, linkedin_account = :linkedin_account, twitter_account = :twitter_account, " +
                     "employer = :employer, biography = :biography, description = :description, cost = :cost WHERE id= :id", map) == 0) {
                 return null;
             }
@@ -88,7 +88,7 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
         if(!visitor.getCommentList().isEmpty()) {
             Map<String, Object> commentsMap = new HashMap<>();
             for (Comment c : visitor.getCommentList()) {
-                Comment insertedComment = commentRepository.save(c, c.getAuthor().getId());
+                Comment insertedComment = commentRepository.save(c);
                 commentsMap.put("visitor_id", visitor.getId());
                 commentsMap.put("comment_id", insertedComment.getId());
                 if (insertVisitorComments.updateByNamedParam(commentsMap) == 0) {

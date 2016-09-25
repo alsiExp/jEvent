@@ -231,8 +231,10 @@ public class Visitor extends Person implements Attachable {
         if (employer != null ? !employer.equals(visitor.employer) : visitor.employer != null) return false;
         if (biography != null ? !biography.equals(visitor.biography) : visitor.biography != null) return false;
         if (description != null ? !description.equals(visitor.description) : visitor.description != null) return false;
-        return commentList != null ? commentList.equals(visitor.commentList) : visitor.commentList == null;
-
+        if(!this.getCommentList().containsAll(visitor.getCommentList()) || !visitor.getCommentList().containsAll(this.getCommentList())) {
+            return false;
+        }
+        return true;
     }
 
     @Override

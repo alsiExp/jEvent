@@ -37,7 +37,9 @@ public class Task extends NamedEntity {
         this.start = start;
         this.deadline = deadline;
         this.description = description;
-        this.getStatusLog().add(taskStatus);
+        if (taskStatus != null) {
+            this.getStatusLog().add(taskStatus);
+        }
         this.attachList = attachList;
         this.commentList = commentList;
     }
@@ -50,7 +52,9 @@ public class Task extends NamedEntity {
         this.start = start;
         this.deadline = deadline;
         this.description = description;
-        this.getStatusLog().add(taskStatus);
+        if (taskStatus != null) {
+            this.getStatusLog().add(taskStatus);
+        }
         this.attachList = attachList;
         this.commentList = commentList;
     }

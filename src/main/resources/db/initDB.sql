@@ -80,8 +80,8 @@ CREATE TABLE users
   enabled    BOOL               DEFAULT FALSE,
   photo_URL  VARCHAR,
   --   user
-  login      VARCHAR NOT NULL,
-  password   VARCHAR NOT NULL,
+  login      VARCHAR NOT NULL CHECK (login <> ''),
+  password   VARCHAR NOT NULL CHECK (password <> ''),
 
 
   FOREIGN KEY (sex) REFERENCES person_sex (id)

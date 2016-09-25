@@ -92,7 +92,7 @@ public class TaskStatus extends BaseEntity{
         return "TaskStatus{"
                 + super.toString() +
                 ", description='" + description + '\'' +
-                ", autor=" + author.toString() +
+                ", author=" + author +
                 ", creationTime=" + creationTime +
                 ", status=" + status +
                 "} " ;
