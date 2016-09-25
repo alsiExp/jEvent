@@ -10,9 +10,7 @@ import ru.jevent.service.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class TestData {
@@ -60,7 +58,7 @@ public class TestData {
     }
 
     public List<Comment> getMixedCommentsList() {
-        return Arrays.asList(getNewComment(), getExistingComment(), getNewComment());
+        return Arrays.asList(getExistingComment(), getNewComment(), getNewComment());
     }
 
     public Partner getNewPartner() {
@@ -102,10 +100,18 @@ public class TestData {
         return visitorService.get(100004L);
     }
 
+    public List<Visitor> getMixedVisitorsList() {
+        Visitor v1 = visitorService.save(getNewVisitor());
+        Visitor v2 = visitorService.get(100005L);
+        Visitor v3 = getNewVisitor();
+        return Arrays.asList(v1, v2, v3);
+    }
+
     public Event getSimpleEvent() {
         Event event = new Event();
         event.setName("Test Event");
         event.setTagName("test");
+        event.setAuthor(userService.get(100006L));
         event.setAddress("test adress");
         event.setDescription("Test description");
         event.setLogoURL("testevent.jpg");
@@ -115,6 +121,31 @@ public class TestData {
     public Event getEventWithRates() {
         Event event = getSimpleEvent();
         event.setRates(getRates());
+        return event;
+    }
+
+    public Event getEventWithRPs() {
+        Event event = getEventWithRates();
+
+        Map<Visitor, OfferDetails> probableSpeakers = new HashMap<>();
+        probableSpeakers.put(getMixedVisitorsList().get(0), getOfferDetails().get(0));
+        probableSpeakers.put(getMixedVisitorsList().get(1), getOfferDetails().get(1));
+        probableSpeakers.put(getMixedVisitorsList().get(2), getOfferDetails().get(2));
+
+        event.setProbableSpeakers(probableSpeakers);
+
+        return event;
+    }
+
+    public Event getEventWithRPsCv() {
+        Event event = getEventWithRPs();
+
+        Map<Visitor, PayDetails> confirmedVisitors = new HashMap<>();
+        confirmedVisitors.put(getMixedVisitorsList().get(0), getPayDetails(event.getRates()).get(0));
+        confirmedVisitors.put(getMixedVisitorsList().get(1), getPayDetails(event.getRates()).get(1));
+        confirmedVisitors.put(getMixedVisitorsList().get(2), getPayDetails(event.getRates()).get(2));
+
+        event.setConfirmedVisitors(confirmedVisitors);
 
         return event;
     }
@@ -122,7 +153,7 @@ public class TestData {
     public List<Rate> getRates() {
         Rate r1 = new Rate("Личное присутствие Standart", RateType.PERSOONAL_STANDART, LocalDateTime.of(2016, 4, 1, 0, 0), LocalDateTime.of(2016, 7, 1, 23, 59), 12000);
         Rate r2 = new Rate("Онлайн-Трансляция Standart", RateType.ONLINE_STANDART, LocalDateTime.of(2016, 4, 1, 0, 0), LocalDateTime.of(2016, 7, 1, 23, 59), 8000);
-        return Arrays.asList(r1, r2);
+        return Arrays.asList(r2, r1);
     }
 
     public List<OfferDetails> getOfferDetails() {
@@ -132,8 +163,7 @@ public class TestData {
         return Arrays.asList(details1, details2, details3);
     }
 
-    public List<PayDetails> getPayDetails(Event event) {
-        List<Rate> rates = event.getRates();
+    public List<PayDetails> getPayDetails(List<Rate> rates) {
         PayDetails details1 = new PayDetails(LocalDateTime.now().minusWeeks(3), rates.get(0));
         PayDetails details2 = new PayDetails(LocalDateTime.now().minusWeeks(2), rates.get(1));
         PayDetails details3 = new PayDetails(LocalDateTime.now().minusWeeks(1), rates.get(0));

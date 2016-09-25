@@ -83,21 +83,21 @@ public class JdbcCommentRepositoryImpl implements CommentRepository {
     @Override
     public List<Comment> getAllByVisitorId(long id) {
         String sql = "select c.id, c.content, c.date, c.user_id from visitors_comments vc " +
-                "LEFT JOIN comments c on vc.comment_id = c.id WHERE vc.visitor_id = ?";
+                "LEFT JOIN comments c on vc.comment_id = c.id WHERE vc.visitor_id = ? ORDER BY c.date";
         return getAllById(sql, id);
     }
 
     @Override
     public List<Comment> getAllByEventId(long id) {
         String sql = "SELECT c.id, c.content, c.date, c.user_id FROM events_comments ec " +
-                "LEFT JOIN comments c on ec.comment_id = c.id WHERE ec.event_id = ?";
+                "LEFT JOIN comments c on ec.comment_id = c.id WHERE ec.event_id = ? ORDER BY c.date";
         return getAllById(sql, id);
     }
 
     @Override
     public List<Comment> getAllByTaskId(long id) {
         String sql = "SELECT c.id, c.content, c.date, c.user_id FROM tasks_comments tc " +
-                "LEFT JOIN comments c on tc.comment_id = c.id WHERE tc.task_id = ?";
+                "LEFT JOIN comments c on tc.comment_id = c.id WHERE tc.task_id = ? ORDER BY c.date";
         return getAllById(sql, id);
     }
 

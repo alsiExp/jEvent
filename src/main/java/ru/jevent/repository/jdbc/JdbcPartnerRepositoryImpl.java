@@ -72,7 +72,7 @@ public class JdbcPartnerRepositoryImpl implements PartnerRepository {
 
     @Override
     public List<Partner> getAll() {
-        String sql = "SELECT id, name, email, phone, description, logo_url FROM partners";
+        String sql = "SELECT id, name, email, phone, description, logo_url FROM partners ORDER BY id";
         return jdbcTemplate.query(sql, mapper);
     }
 

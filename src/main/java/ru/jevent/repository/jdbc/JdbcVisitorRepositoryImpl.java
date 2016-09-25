@@ -128,7 +128,7 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
         String sql = "SELECT v.id, v.first_name, v.last_name, s.sex, v.enabled, v.photo_url, v.birthday, " +
                 "v.registered_date, v.email, v.phone, v.github_account, v.linkedin_account, v.twitter_account, " +
                 "v.employer, v.biography, v.description, v.cost " +
-                "from visitors v LEFT JOIN person_sex s  on v.sex =s.id";
+                "from visitors v LEFT JOIN person_sex s  on v.sex =s.id ORDER BY v.registered_date";
         return jdbcTemplate.query(sql, mapper);
     }
 

@@ -147,6 +147,9 @@ public class JdbcEventRepositoryImpl implements EventRepository {
         if (!event.getConfirmedVisitors().isEmpty()) {
             Map<String, Object> cvMap = new HashMap<>();
             for (Map.Entry<Visitor, PayDetails> entry : event.getConfirmedVisitors().entrySet()) {
+                if(entry.getKey().isNew()) {
+                    visitorRepository.save(entry.getKey());
+                }
                 cvMap.put("visitor_id", entry.getKey().getId());
                 cvMap.put("buy_date", Timestamp.valueOf(entry.getValue().getDate()));
                 cvMap.put("rate_id", entry.getValue().getRate().getId());
@@ -260,7 +263,7 @@ public class JdbcEventRepositoryImpl implements EventRepository {
 
     private List<Rate> fillRatesList(long eventId) {
         String sql = "SELECT r.id, r.name, rt.type, r.start_date, r.end_date, r.cost  FROM rates r " +
-                "LEFT JOIN rate_type rt ON r.rate_type = rt.id WHERE r.event_id = ?";
+                "LEFT JOIN rate_type rt ON r.rate_type = rt.id WHERE r.event_id = ? ORDER BY r.start_date, cost";
         List<Rate> listRate = jdbcTemplate.query(sql, (rs, i) -> {
             Rate r = new Rate();
             r.setId(rs.getLong("id"));
@@ -417,7 +420,7 @@ public class JdbcEventRepositoryImpl implements EventRepository {
     private final class InsertConfirmedVisitors extends BatchSqlUpdate {
         private static final String SQL_INSERT_CONFIRMED_VISITORS = "INSERT INTO events_by_rate_confirmed_visitors " +
                 "(visitor_id, buy_date, rate_id) VALUES (:visitor_id, :buy_date, :rate_id) " +
-                "ON CONFLICT (:visitor_id, :buy_date, :rate_id) DO NOTHING ";
+                "ON CONFLICT (visitor_id, buy_date, rate_id) DO NOTHING";
         private static final int BATCH_SIZE = 10;
 
         public InsertConfirmedVisitors(DataSource ds) {

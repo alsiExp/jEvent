@@ -78,7 +78,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
     @Override
     public List<User> getAll() {
         String sql = "SELECT  u.id, u.first_name, u.last_name, s.sex, u.enabled, u.photo_url, u.login, u.password " +
-                "FROM users u LEFT JOIN person_sex s on u.sex =s.id";
+                "FROM users u LEFT JOIN person_sex s on u.sex =s.id ORDER BY u.id";
         return jdbcTemplate.query(sql, mapper);
     }
 
