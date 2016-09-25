@@ -206,9 +206,17 @@ public class Event extends NamedEntity implements Attachable {
         if(this.getProbableSpeakers().hashCode() != event.getProbableSpeakers().hashCode()) {
             return false;
         }
-
-        if (confirmedVisitors != null ? !confirmedVisitors.equals(event.confirmedVisitors) : event.confirmedVisitors != null)
+        if(this.getConfirmedVisitors().isEmpty() && !event.getConfirmedVisitors().isEmpty() ||
+                !this.getConfirmedVisitors().isEmpty() && event.getConfirmedVisitors().isEmpty()) {
+            return  false;
+        }
+        if(this.getConfirmedVisitors().size() != event.getConfirmedVisitors().size()) {
             return false;
+        }
+        if(this.getConfirmedVisitors().hashCode() != event.getConfirmedVisitors().hashCode()) {
+            return false;
+        }
+
         if (commentList != null ? !commentList.equals(event.commentList) : event.commentList != null) return false;
         if (this.getRates().isEmpty() && !event.getRates().isEmpty() ||
                 !this.getRates().isEmpty() && event.getRates().isEmpty()) {
@@ -217,8 +225,7 @@ public class Event extends NamedEntity implements Attachable {
         if (this.getRates().size() != event.getRates().size()) {
             return false;
         }
-        // fast order independent compare
-        if (this.getRates().hashCode() != event.getRates().hashCode()) {
+        if(!this.getRates().containsAll(event.getRates()) || !event.getRates().containsAll(this.getRates())) {
             return false;
         }
 

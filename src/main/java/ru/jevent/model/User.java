@@ -4,6 +4,7 @@ import ru.jevent.model.Enums.Role;
 import ru.jevent.model.Enums.Sex;
 
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Set;
 
 public class User extends Person {
@@ -26,6 +27,7 @@ public class User extends Person {
     public User(Long id, String firstName, String lastName, Sex sex, boolean enabled, String photoURL, String login,
                 String password) {
         super(firstName, lastName, sex, enabled, photoURL);
+        this.id = id;
         this.login = login;
         this.password = password;
     }
@@ -55,6 +57,9 @@ public class User extends Person {
     }
 
     public Set<Role> getRoles() {
+        if(roles == null) {
+            roles = new HashSet<>();
+        }
         return roles;
     }
 
@@ -85,10 +90,10 @@ public class User extends Person {
     @Override
     public String toString() {
         StringBuilder roleSB = new StringBuilder();
-        if(roles != null) {
+        if(!this.getRoles().isEmpty()) {
             String prefix = "";
             roleSB.append('[');
-            for (Object o : roles.toArray()) {
+            for (Object o : this.getRoles().toArray()) {
                 roleSB.append(prefix);
                 prefix = ",";
                 roleSB.append((o).toString());

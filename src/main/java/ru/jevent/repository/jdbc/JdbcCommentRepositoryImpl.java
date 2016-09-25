@@ -47,18 +47,22 @@ public class JdbcCommentRepositoryImpl implements CommentRepository {
 
 
     @Override
-    public Comment save(Comment comment, long userId) {
+    public Comment save(Comment comment) {
         MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("id", comment.getId())
                 .addValue("content", comment.getContent())
-                .addValue("date", Timestamp.valueOf(comment.getDate()))
-                .addValue("user_id", userId);
+                .addValue("date", Timestamp.valueOf(comment.getDate()));
+        if (!comment.getAuthor().isNew()) {
+            map.addValue("user_id", comment.getAuthor().getId());
+        } else {
+            return null;
+        }
         if (comment.isNew()) {
             Number newKey = insertComment.executeAndReturnKey(map);
             comment.setId(newKey.longValue());
         } else {
             if(namedParameterJdbcTemplate.update(
-                    "UPDATE comments SET content= :content, date= :date, user_id = :user_id WHERE id= :id", map) ==0) {
+                    "UPDATE comments SET content= :content, date= :date, user_id = :user_id WHERE id= :id", map) == 0) {
                 return null;
             }
         }
@@ -104,20 +108,19 @@ public class JdbcCommentRepositoryImpl implements CommentRepository {
     }
 
     private List<Comment> getAllById(String sql, long id) {
-        return jdbcTemplate.query(sql, new Object[] {id}, (ResultSet rs) -> {
+        return jdbcTemplate.query(sql, new Object[]{id}, (ResultSet rs) -> {
             Map<Long, User> userMap = new HashMap<>();
             List<Comment> commentList = new ArrayList<>();
-            while(rs.next()) {
+            while (rs.next()) {
                 Comment comment = new Comment();
                 comment.setId(rs.getLong("id"));
                 comment.setContent(rs.getString("content"));
                 comment.setDate(rs.getTimestamp("date").toLocalDateTime());
                 Long userId = rs.getLong("user_id");
                 User author = null;
-                if(userMap.containsKey(userId)) {
+                if (userMap.containsKey(userId)) {
                     author = userMap.get(userId);
-                }
-                else {
+                } else {
                     author = userRepository.get(userId);
                     userMap.put(userId, author);
                 }

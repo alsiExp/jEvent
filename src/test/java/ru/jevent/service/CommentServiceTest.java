@@ -9,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.TestData;
 import ru.jevent.model.Comment;
+import ru.jevent.model.User;
 import ru.jevent.util.DbPopulator;
 import ru.jevent.util.exception.NotFoundException;
 
@@ -28,6 +29,10 @@ public class CommentServiceTest {
     UserService userService;
     @Autowired
     private DbPopulator dbPopulator;
+
+    private User getExistingUser() {
+        return userService.get(100006L);
+    }
 
     private TestData testData = new TestData();
 
@@ -50,7 +55,7 @@ public class CommentServiceTest {
         Comment c = service.get(100021L);
         c.setContent("Updated content");
         c.setDate(LocalDateTime.now());
-        service.update(c, c.getAuthor().getId());
+        service.update(c);
 
         Comment returnedComment = service.get(c.getId());
         if(!c.equals(returnedComment))
@@ -61,9 +66,10 @@ public class CommentServiceTest {
     public void testUpdateWithException() throws Exception {
         Comment c = new Comment();
         c.setId(1L);
+        c.setAuthor(getExistingUser());
         c.setContent("Updated content");
         c.setDate(LocalDateTime.now());
-        service.update(c, 100009L);
+        service.update(c);
     }
 
     @Test
@@ -79,10 +85,9 @@ public class CommentServiceTest {
     @Test
     public void testSave()  throws Exception {
         Comment c = testData.getNewComment();
-        c.setAuthor(userService.get(100006L));
-        service.save(c, c.getAuthor().getId());
+        c.setAuthor(getExistingUser());
+        service.save(c);
         if(c.isNew())
             throw new Exception();
     }
-
 }

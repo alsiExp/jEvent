@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface CommentService {
 
-    Comment save(Comment comment, long userId);
+    Comment save(Comment comment);
 
-    Comment update(Comment comment, long userId) throws NotFoundException;
+    Comment update(Comment comment) throws NotFoundException;
 
     void delete(long id) throws NotFoundException;
 

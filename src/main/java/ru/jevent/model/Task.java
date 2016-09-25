@@ -37,7 +37,7 @@ public class Task extends NamedEntity {
         this.start = start;
         this.deadline = deadline;
         this.description = description;
-        this.statusLog.add(taskStatus);
+        this.getStatusLog().add(taskStatus);
         this.attachList = attachList;
         this.commentList = commentList;
     }
@@ -50,7 +50,7 @@ public class Task extends NamedEntity {
         this.start = start;
         this.deadline = deadline;
         this.description = description;
-        this.statusLog.add(taskStatus);
+        this.getStatusLog().add(taskStatus);
         this.attachList = attachList;
         this.commentList = commentList;
     }
@@ -169,37 +169,42 @@ public class Task extends NamedEntity {
     public String toString() {
         String prefix = "";
         StringBuilder targetSB = new StringBuilder();
-        targetSB.append('[');
-        for(User u : getTarget()) {
-            targetSB.append(prefix);
-            prefix = ",";
-            targetSB.append(u.toString());
+        if(!this.getTarget().isEmpty()) {
+            targetSB.append('[');
+            for (User u : getTarget()) {
+                targetSB.append(prefix);
+                prefix = ",";
+                targetSB.append(u.toString());
+            }
+            targetSB.append(']');
+            prefix = "";
         }
-        targetSB.append(']');
-        prefix = "";
 
         StringBuilder logSB = new StringBuilder();
-        logSB.append('[');
-        for(TaskStatus s : getStatusLog()) {
-            logSB.append(prefix);
-            prefix = ",";
-            logSB.append(s.toString());
+        if(!getStatusLog().isEmpty()) {
+            logSB.append('[');
+            for (TaskStatus s : getStatusLog()) {
+                logSB.append(prefix);
+                prefix = ",";
+                logSB.append(s.toString());
+            }
+            logSB.append(']');
+            prefix = "";
         }
-        logSB.append(']');
-        prefix = "";
 
         StringBuilder attachSB = new StringBuilder();
-        attachSB.append('[');
-        for(Attachable a : getAttachList()) {
-            attachSB.append(prefix);
-            prefix = ",";
-            attachSB.append(a.getAttachName());
+        if(!this.getAttachList().isEmpty()) {
+            attachSB.append('[');
+            for (Attachable a : getAttachList()) {
+                attachSB.append(prefix);
+                prefix = ",";
+                attachSB.append(a.getAttachName());
+            }
+            attachSB.append(']');
         }
-        attachSB.append(']');
-
         return "Task{" +
                 super.toString() +
-                ", author=" + author.toString() +
+                ", author=" + author +
                 ", target=" + targetSB.toString() +
                 ", start=" + start +
                 ", deadline=" + deadline +

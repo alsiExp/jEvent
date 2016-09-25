@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CommentRepository {
 
-    Comment save(Comment comment, long userId);
+    Comment save(Comment comment);
 
     boolean delete(long id);
 

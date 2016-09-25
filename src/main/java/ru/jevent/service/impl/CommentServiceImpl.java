@@ -21,13 +21,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment save(Comment comment, long userId) {
-        return repository.save(comment, userId);
+    public Comment save(Comment comment) {
+        return repository.save(comment);
     }
 
     @Override
-    public Comment update(Comment comment, long userId) throws NotFoundException {
-        return ExceptionUtil.check(repository.save(comment, userId), comment.getId());
+    public Comment update(Comment comment) throws NotFoundException {
+        return ExceptionUtil.check(repository.save(comment), comment.getId());
     }
 
     @Override

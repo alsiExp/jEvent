@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.TestData;
-import ru.jevent.model.Enums.Role;
 import ru.jevent.model.User;
 import ru.jevent.util.DbPopulator;
 
@@ -49,7 +48,6 @@ public class UserServiceTest {
         if (user.isNew())
             throw new Exception();
         User savedUser = service.get(user.getId());
-        savedUser.addRoles(Role.ROLE_USER);
         if (!savedUser.equals(user))
             throw new Exception();
 

@@ -21,13 +21,13 @@ public class CommentRestController {
     public Comment create(Comment comment) {
         long userId = LoggedUser.id();
         LOG.info("create {} by user {}", comment, userId);
-        return service.save(comment, userId);
+        return service.save(comment);
     }
 
     public Comment update(Comment comment) {
         long userId = LoggedUser.id();
         LOG.info("update {} by user {}", comment, userId);
-        return service.update(comment, userId);
+        return service.update(comment);
     }
 
     public void get(long id) {
