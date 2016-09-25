@@ -1,19 +1,34 @@
 package ru.jevent.web.mock;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.jevent.model.Partner;
 import ru.jevent.util.exception.NotFoundException;
 import ru.jevent.web.Partner.PartnerRestController;
 
-@ContextConfiguration("classpath:spring/spring-app.xml")
-@RunWith(SpringJUnit4ClassRunner.class)
+import java.util.Arrays;
+
+
 public class PartnerMockTest {
-    @Autowired
-    private  PartnerRestController controller;
+
+    private static ConfigurableApplicationContext appCtx;
+    private static PartnerRestController controller;
+
+    @BeforeClass
+    public static void beforeClass() {
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/mock.xml");
+        System.out.println("\n" + Arrays.toString(appCtx.getBeanDefinitionNames()) + "\n");
+        controller = appCtx.getBean(PartnerRestController.class);
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        appCtx.close();
+    }
+
 
     @Test
     public void testCreate() throws Exception {

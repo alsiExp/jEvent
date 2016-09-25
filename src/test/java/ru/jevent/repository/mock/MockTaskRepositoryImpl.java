@@ -3,7 +3,7 @@ package ru.jevent.repository.mock;
 import org.springframework.stereotype.Repository;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Task;
-import ru.jevent.model.TaskStatus;
+import ru.jevent.model.User;
 import ru.jevent.repository.TaskRepository;
 
 import java.time.LocalDateTime;
@@ -15,8 +15,9 @@ import java.util.List;
 public class MockTaskRepositoryImpl implements TaskRepository {
     private static final LoggerWrapper LOG = LoggerWrapper.get(MockTaskRepositoryImpl.class);
 
-    private Task task = new Task(1, "Сделать что-то", MockUserRepositoryImpl.getUser(), null, LocalDateTime.now(),
-            LocalDateTime.now().plus(7, ChronoUnit.DAYS), "Event description" , new TaskStatus(), null, null);
+
+    private Task task = new Task(1, "Сделать что-то", new User(), null, LocalDateTime.now(),
+            LocalDateTime.now().plus(7, ChronoUnit.DAYS), "task description" , null, null, null);
 
     @Override
     public Task save(Task task) {

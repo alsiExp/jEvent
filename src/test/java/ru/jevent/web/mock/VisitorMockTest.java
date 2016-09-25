@@ -1,19 +1,34 @@
 package ru.jevent.web.mock;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.jevent.model.Visitor;
 import ru.jevent.util.exception.NotFoundException;
 import ru.jevent.web.Visitor.VisitorRestController;
 
-@ContextConfiguration("classpath:spring/spring-app.xml")
-@RunWith(SpringJUnit4ClassRunner.class)
+import java.util.Arrays;
+
+
 public class VisitorMockTest {
-    @Autowired
-    private VisitorRestController controller;
+
+    private static ConfigurableApplicationContext appCtx;
+    private static VisitorRestController controller;
+
+    @BeforeClass
+    public static void beforeClass() {
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/mock.xml");
+        System.out.println("\n" + Arrays.toString(appCtx.getBeanDefinitionNames()) + "\n");
+        controller = appCtx.getBean(VisitorRestController.class);
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        appCtx.close();
+    }
+
 
     @Test
     public void testCreate() throws Exception {

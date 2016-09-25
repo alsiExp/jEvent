@@ -18,7 +18,7 @@ public class MockCommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public Comment save(Comment comment, long userId) {
+    public Comment save(Comment comment) {
         LOG.info("save " + comment);
         return comment;
     }
