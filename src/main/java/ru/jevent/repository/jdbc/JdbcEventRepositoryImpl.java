@@ -11,9 +11,9 @@ import org.springframework.jdbc.object.BatchSqlUpdate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.jevent.model.*;
 import ru.jevent.model.Enums.RateType;
 import ru.jevent.model.Enums.SlotType;
-import ru.jevent.model.*;
 import ru.jevent.repository.CommentRepository;
 import ru.jevent.repository.EventRepository;
 import ru.jevent.repository.UserRepository;
@@ -38,6 +38,7 @@ public class JdbcEventRepositoryImpl implements EventRepository {
     private InsertProbableSpeakers insertProbableSpeaker;
     private InsertConfirmedVisitors insertConfirmedVisitor;
     private InsertVisitorsEventsSpeakers insertVisitorsEventsSpeakers;
+    private InsertEventsComments insertEventsComments;
     private SimpleJdbcInsert insertRate;
     private SimpleJdbcInsert insertTrack;
     private SimpleJdbcInsert insertSlot;
@@ -76,6 +77,7 @@ public class JdbcEventRepositoryImpl implements EventRepository {
         this.insertProbableSpeaker = new InsertProbableSpeakers(dataSource);
         this.insertConfirmedVisitor = new InsertConfirmedVisitors(dataSource);
         this.insertVisitorsEventsSpeakers = new InsertVisitorsEventsSpeakers(dataSource);
+        this.insertEventsComments = new InsertEventsComments(dataSource);
 
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
@@ -188,6 +190,7 @@ public class JdbcEventRepositoryImpl implements EventRepository {
                         slotMap.addValue("slot_type", helper.getSlotTypeMap().get(slot.getSlotType()));
                         slotMap.addValue("slot_description", slot.getSlotDescription());
                         slotMap.addValue("grade", slot.getGrade());
+                        slotMap.addValue("visitors_events_speaker_id", null);
                         if(slot.getApprovedSpeaker() != null) {
                             Visitor speaker = slot.getApprovedSpeaker();
                             if(speaker.isNew()) {
@@ -199,8 +202,9 @@ public class JdbcEventRepositoryImpl implements EventRepository {
                             KeyHolder vesKeyHolder = new GeneratedKeyHolder();
                             insertVisitorsEventsSpeakers.updateByNamedParam(visitorEventSpeakerMap, vesKeyHolder);
                             insertVisitorsEventsSpeakers.flush();
-
-                            slotMap.addValue("visitors_events_speaker_id", vesKeyHolder.getKey().longValue());
+                            if (vesKeyHolder.getKey() != null) {
+                                slotMap.addValue("visitors_events_speaker_id", vesKeyHolder.getKey().longValue());
+                            }
                         }
                         if(slot.isNew()) {
                             Number newKey = insertSlot.executeAndReturnKey(slotMap);
@@ -219,7 +223,16 @@ public class JdbcEventRepositoryImpl implements EventRepository {
         }
 
         if (!event.getCommentList().isEmpty()) {
-
+            Map<String, Object> commentsMap = new HashMap<>();
+            for (Comment c : event.getCommentList()) {
+                Comment insertedComment = commentRepository.save(c);
+                commentsMap.put("event_id", event.getId());
+                commentsMap.put("comment_id", insertedComment.getId());
+                if(insertEventsComments.updateByNamedParam(commentsMap) == 0) {
+                    return null;
+                }
+            }
+            insertEventsComments.flush();
         }
 
         return event;
@@ -420,7 +433,8 @@ public class JdbcEventRepositoryImpl implements EventRepository {
     private final class InsertConfirmedVisitors extends BatchSqlUpdate {
         private static final String SQL_INSERT_CONFIRMED_VISITORS = "INSERT INTO events_by_rate_confirmed_visitors " +
                 "(visitor_id, buy_date, rate_id) VALUES (:visitor_id, :buy_date, :rate_id) " +
-                "ON CONFLICT (visitor_id, buy_date, rate_id) DO NOTHING";
+                "ON CONFLICT (visitor_id, buy_date, rate_id) DO UPDATE SET " +
+                "visitor_id = :visitor_id, buy_date = :buy_date, rate_id = :rate_id";
         private static final int BATCH_SIZE = 10;
 
         public InsertConfirmedVisitors(DataSource ds) {
@@ -445,4 +459,17 @@ public class JdbcEventRepositoryImpl implements EventRepository {
         }
     }
 
+    private final class InsertEventsComments extends BatchSqlUpdate {
+        private static final String SQL_INSERT_EVENTS_COMMENTS = "INSERT INTO events_comments(event_id, comment_id) " +
+                "VALUES (:event_id, :comment_id) ON CONFLICT (event_id, comment_id) DO UPDATE SET " +
+                "event_id = :event_id, comment_id = :comment_id";
+        private static final int BATCH_SIZE = 10;
+
+        public InsertEventsComments(DataSource ds) {
+            super(ds, SQL_INSERT_EVENTS_COMMENTS);
+            super.declareParameter(new SqlParameter("event_id", Types.BIGINT));
+            super.declareParameter(new SqlParameter("comment_id", Types.BIGINT));
+            super.setBatchSize(BATCH_SIZE);
+        }
+    }
 }

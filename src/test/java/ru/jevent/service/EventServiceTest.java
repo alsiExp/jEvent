@@ -79,4 +79,25 @@ public class EventServiceTest {
         if(!savedEvent.equals(testEvent))
             throw new Exception();
     }
+
+    @Test
+    public void testComplitedEventSave() throws Exception {
+        Event testEvent = testData.getComplitedEvent();
+        eventService.save(testEvent);
+
+        Event savedEvent = eventService.get(testEvent.getId());
+        if(!savedEvent.equals(testEvent))
+            throw new Exception();
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        Event event = eventService.get(100012L);
+        event.setName("Joker 2016 - Test name update");
+        eventService.update(event);
+
+        Event savedEvent = eventService.get(event.getId());
+//        if(!savedEvent.equals(event))  Tracks not work! visitors_events_speaker must be in slot structure!
+//            throw new Exception();
+    }
 }

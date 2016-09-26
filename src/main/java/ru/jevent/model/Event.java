@@ -191,11 +191,21 @@ public class Event extends NamedEntity implements Attachable {
 
         Event event = (Event) o;
 
-        if (author != null ? !author.equals(event.author) : event.author != null) return false;
-        if (tagName != null ? !tagName.equals(event.tagName) : event.tagName != null) return false;
-        if (address != null ? !address.equals(event.address) : event.address != null) return false;
-        if (description != null ? !description.equals(event.description) : event.description != null) return false;
-        if (logoURL != null ? !logoURL.equals(event.logoURL) : event.logoURL != null) return false;
+        if (author != null ? !author.equals(event.author) : event.author != null) {
+            return false;
+        }
+        if (tagName != null ? !tagName.equals(event.tagName) : event.tagName != null) {
+            return false;
+        }
+        if (address != null ? !address.equals(event.address) : event.address != null) {
+            return false;
+        }
+        if (description != null ? !description.equals(event.description) : event.description != null) {
+            return false;
+        }
+        if (logoURL != null ? !logoURL.equals(event.logoURL) : event.logoURL != null) {
+            return false;
+        }
         if(this.getProbableSpeakers().isEmpty() && !event.getProbableSpeakers().isEmpty() ||
                 !this.getProbableSpeakers().isEmpty() && event.getProbableSpeakers().isEmpty()) {
             return  false;
@@ -217,7 +227,9 @@ public class Event extends NamedEntity implements Attachable {
             return false;
         }
 
-        if (commentList != null ? !commentList.equals(event.commentList) : event.commentList != null) return false;
+        if (commentList != null ? !commentList.equals(event.commentList) : event.commentList != null) {
+            return false;
+        }
         if (this.getRates().isEmpty() && !event.getRates().isEmpty() ||
                 !this.getRates().isEmpty() && event.getRates().isEmpty()) {
             return false;
@@ -229,8 +241,25 @@ public class Event extends NamedEntity implements Attachable {
             return false;
         }
 
-        return tracks != null ? tracks.equals(event.tracks) : event.tracks == null;
+        if (this.getTracks().isEmpty() && !event.getTracks().isEmpty() ||
+                !this.getTracks().isEmpty() && event.getTracks().isEmpty()) {
+            return false;
+        }
+        if(this.getTracks().size() != event.getTracks().size()) {
+            return false;
+        }
+        if(!this.getTracks().containsAll(event.getTracks()) || !event.getTracks().containsAll(this.getTracks())) {
+            return false;
+        }
+        for(int i = 0; i < this.getTracks().size(); i++) {
+            Track thisTrack = this.getTracks().get(i);
+            Track eventTrack = event.getTracks().get(i);
+            if(!thisTrack.equals(eventTrack)) {
+                return false;
+            }
+        }
 
+        return true;
     }
 
 

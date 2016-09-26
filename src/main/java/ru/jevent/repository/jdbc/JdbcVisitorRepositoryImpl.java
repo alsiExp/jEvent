@@ -171,7 +171,8 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
 
     private final class InsertVisitorComments extends BatchSqlUpdate {
         private static final String SQL_INSERT_VISITORS_COMMENTS = "INSERT INTO visitors_comments (visitor_id, comment_id) values " +
-                "(:visitor_id, :comment_id) ON CONFLICT (visitor_id, comment_id) DO NOTHING";
+                "(:visitor_id, :comment_id) ON CONFLICT (visitor_id, comment_id) DO UPDATE SET " +
+                "visitor_id = :visitor_id, comment_id = :comment_id";
         private static final int BATCH_SIZE = 10;
 
         public InsertVisitorComments(DataSource ds) {

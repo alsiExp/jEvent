@@ -10,7 +10,10 @@ import ru.jevent.service.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class TestData {
@@ -150,6 +153,12 @@ public class TestData {
         return event;
     }
 
+    public Event getComplitedEvent() {
+        Event event = getEventWithRPsCv();
+        event.setCommentList(getMixedCommentsList());
+        return event;
+    }
+
     public List<Rate> getRates() {
         Rate r1 = new Rate("Личное присутствие Standart", RateType.PERSOONAL_STANDART, LocalDateTime.of(2016, 4, 1, 0, 0), LocalDateTime.of(2016, 7, 1, 23, 59), 12000);
         Rate r2 = new Rate("Онлайн-Трансляция Standart", RateType.ONLINE_STANDART, LocalDateTime.of(2016, 4, 1, 0, 0), LocalDateTime.of(2016, 7, 1, 23, 59), 8000);
@@ -169,14 +178,4 @@ public class TestData {
         PayDetails details3 = new PayDetails(LocalDateTime.now().minusWeeks(1), rates.get(0));
         return Arrays.asList(details1, details2, details3);
     }
-
-    public List<Track> getTrackList(List<Visitor> visitors) {
-        List<Track> trackList = new ArrayList<>();
-
-
-        return trackList;
-    }
-
-
-
 }

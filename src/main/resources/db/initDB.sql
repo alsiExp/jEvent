@@ -224,6 +224,7 @@ CREATE TABLE events_comments
   event_id   BIGINT,
   comment_id BIGINT,
 
+  PRIMARY KEY (event_id, comment_id),
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
   FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE
 );

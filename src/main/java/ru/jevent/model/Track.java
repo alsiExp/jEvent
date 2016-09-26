@@ -53,8 +53,18 @@ public class Track extends NamedEntity {
         Track track = (Track) o;
 
         if (description != null ? !description.equals(track.description) : track.description != null) return false;
-        return slotOrder != null ? slotOrder.equals(track.slotOrder) : track.slotOrder == null;
+        if (this.getSlotOrder().isEmpty() && !track.getSlotOrder().isEmpty() ||
+                !this.getSlotOrder().isEmpty() && track.getSlotOrder().isEmpty()) {
+            return false;
+        }
+        if(this.getSlotOrder().size() != track.getSlotOrder().size()) {
+            return false;
+        }
+        if(!this.getSlotOrder().containsAll(track.getSlotOrder()) || !track.getSlotOrder().containsAll(this.getSlotOrder())) {
+            return false;
+        }
 
+        return true;
     }
 
     @Override
