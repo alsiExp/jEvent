@@ -5,15 +5,13 @@ import org.springframework.stereotype.Component;
 import ru.jevent.model.*;
 import ru.jevent.model.Enums.RateType;
 import ru.jevent.model.Enums.Sex;
+import ru.jevent.model.Enums.SlotType;
 import ru.jevent.service.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class TestData {
@@ -153,15 +151,18 @@ public class TestData {
         return event;
     }
 
-    public Event getComplitedEvent() {
+
+
+    public Event getCompletedEvent() {
         Event event = getEventWithRPsCv();
         event.setCommentList(getMixedCommentsList());
+        event.setTracks(getTrackList());
         return event;
     }
 
     public List<Rate> getRates() {
-        Rate r1 = new Rate("Личное присутствие Standart", RateType.PERSOONAL_STANDART, LocalDateTime.of(2016, 4, 1, 0, 0), LocalDateTime.of(2016, 7, 1, 23, 59), 12000);
-        Rate r2 = new Rate("Онлайн-Трансляция Standart", RateType.ONLINE_STANDART, LocalDateTime.of(2016, 4, 1, 0, 0), LocalDateTime.of(2016, 7, 1, 23, 59), 8000);
+        Rate r1 = new Rate("Личное присутствие Standard", RateType.PERSONAL_STANDARD, LocalDateTime.of(2016, 4, 1, 0, 0), LocalDateTime.of(2016, 7, 1, 23, 59), 12000);
+        Rate r2 = new Rate("Онлайн-Трансляция Standard", RateType.ONLINE_STANDARD, LocalDateTime.of(2016, 4, 1, 0, 0), LocalDateTime.of(2016, 7, 1, 23, 59), 8000);
         return Arrays.asList(r2, r1);
     }
 
@@ -177,5 +178,63 @@ public class TestData {
         PayDetails details2 = new PayDetails(LocalDateTime.now().minusWeeks(2), rates.get(1));
         PayDetails details3 = new PayDetails(LocalDateTime.now().minusWeeks(1), rates.get(0));
         return Arrays.asList(details1, details2, details3);
+    }
+
+    public Set<Track> getTrackList() {
+        Track t1 = new Track();
+        t1.setName("First track");
+        t1.setDescription("First track description");
+
+        Track t2 = new Track();
+        t2.setName("Second track");
+
+        Track t3 = new Track();
+        t3.setName("Third track");
+
+        Slot s1 = new Slot();
+        s1.setSlotType(SlotType.CHECK_IN);
+        s1.setName("Check in");
+        s1.setSlotDescription("Just check in");
+        s1.setStart(LocalDateTime.now().plusDays(30));
+
+
+        Slot s2 = new Slot();
+        s2.setSlotType(SlotType.LECTURE);
+        s2.setName("Some lecture with visitor");
+        s2.setSlotDescription("Lecture");
+        s2.setStart(LocalDateTime.now().plusDays(30).plusHours(1));
+        s2.setApprovedSpeaker(getExistingVisitor());
+        s2.setPrice(70000);
+
+        Slot s3 = new Slot();
+        s3.setSlotType(SlotType.BREAK);
+        s3.setName("just break");
+        s3.setStart(LocalDateTime.now().plusDays(30).plusHours(2));
+
+        Slot s4 = new Slot();
+        s4.setSlotType(SlotType.LECTURE);
+        s4.setName("Some lecture with new visitor");
+        s4.setSlotDescription("Lecture");
+        s4.setStart(LocalDateTime.now().plusDays(30).plusHours(3));
+        s4.setApprovedSpeaker(getNewVisitor());
+        s4.setPrice(50000);
+
+        Slot s5 = new Slot();
+        s5.setSlotType(SlotType.CHECK_IN);
+        s5.setName("Check in");
+        s5.setSlotDescription("Just check in");
+        s5.setStart(LocalDateTime.now().plusDays(30));
+
+        Slot s6 = new Slot();
+        s6.setSlotType(SlotType.LECTURE);
+        s6.setName("Some lecture with new visitor");
+        s6.setSlotDescription("Lecture");
+        s6.setStart(LocalDateTime.now().plusDays(30).plusHours(3));
+        s6.setApprovedSpeaker(getNewVisitor());
+        s6.setPrice(50000);
+
+        t1.setSlotOrder(Arrays.asList(s1, s2, s3, s4));
+        t2.setSlotOrder(Arrays.asList(s5, s6));
+        return new HashSet<>(Arrays.asList(t1, t2, t3));
     }
 }

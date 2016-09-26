@@ -1,7 +1,6 @@
 DELETE FROM slots;
 DELETE FROM tracks;
 DELETE FROM events_probable_speakers;
-DELETE FROM visitors_events_speakers;
 DELETE FROM events_by_rate_confirmed_visitors;
 DELETE FROM task_statuses_tasks;
 DELETE FROM task_statuses;
@@ -37,12 +36,12 @@ INSERT INTO current_task_status (id, status)
 VALUES (90010, 'NEW'), (90011, 'PAUSED'), (90013, 'IN_WORK'), (90014, 'DONE'), (90015, 'FAILED');
 
 INSERT INTO rate_type (id, type)
-VALUES (90030, 'ONLINE_LITE'), (90031, 'ONLINE_STANDART'), (90032, 'ONLINE_BUSINESS'),
-  (90033, 'PERSOONAL_LITE'), (90034, 'PERSOONAL_STANDART'), (90035, 'PERSOONAL_BUSINESS');
+VALUES (90030, 'ONLINE_LITE'), (90031, 'ONLINE_STANDARD'), (90032, 'ONLINE_BUSINESS'),
+  (90033, 'PERSONAL_LITE'), (90034, 'PERSONAL_STANDARD'), (90035, 'PERSONAL_BUSINESS');
 
 
 INSERT INTO slot_type (id, type)
-VALUES (90050, 'CHEK_IN'), (90051, 'KEYNOTE'), (90053, 'BREAK'), (90054, 'LECTURE');
+VALUES (90050, 'CHECK_IN'), (90051, 'KEYNOTE'), (90053, 'BREAK'), (90054, 'LECTURE');
 
 INSERT INTO user_roles (id, role)
 VALUES (90070, 'ROLE_USER'), (90071, 'ROLE_ADMIN');
@@ -251,15 +250,6 @@ VALUES
   (100005, TIMESTAMP '2016-01-29 07:48', 100054),
   (100003, TIMESTAMP '2016-08-15 16:00', 100054);
 
-
-
-INSERT INTO visitors_events_speakers (visitor_id, event_id, price)
-    VALUES
-      (100004, 100012, 40000),
-      (100004, 100013, 40000),
-      (100003, 100012, 30000);
-
-
 INSERT INTO events_probable_speakers (visitor_id, event_id, send_date, speech_name, speech_description, wish_price)
 VALUES
   (100005, 100012, TIMESTAMP '2015-10-14 12:00', 'Название выступления', 'Описание выступления. Хочет 15 тысяч...', 15000);
@@ -271,16 +261,16 @@ VALUES
   ('Основной зал', 100013, 'Самый главный трэк');
 
 
-INSERT INTO slots (name, track_id, start, visitors_events_speaker_id, slot_description, slot_type, grade)
+INSERT INTO slots (name, track_id, start, visitor_id, slot_description, slot_type, grade, price)
 VALUES
-  ('Регистрация + welcome кофе', 100058, TIMESTAMP '2016-10-14 08:30', NULL, NULL, 90050, NULL),
-  ('Мавен против Грейдла: На заре автоматизации', 100058, TIMESTAMP '2016-10-14 12:00', 100055,
+  ('Регистрация + welcome кофе', 100055, TIMESTAMP '2016-10-14 08:30', 100004, NULL, 90050, NULL, 40000),
+  ('Мавен против Грейдла: На заре автоматизации', 100055, TIMESTAMP '2016-10-14 12:00', 100004,
    'Ну, вы в курсе: монстр, мастадонт и владелец поляны Мавен против молодого, динамичного, изворотливого Грейдла! Битва до победного конца! А судьи — вы! Ведущие представят свои решения «классических» проблем автоматизации проекта с помощью обоих инструментов «живьём» на сцене, а вы проголосуете за тот инструмент, который лучше решает проблему.',
-   90054, NULL),
-  ('Верхом на реактивных стримах', 100058, TIMESTAMP '2016-10-14 12:00', 100057,
+   90054, NULL, 40000),
+  ('Верхом на реактивных стримах', 100055, TIMESTAMP '2016-10-14 12:00', 100003,
    'Вы из тех, кто считает, что, распараллелив любой цикл, можно улучшить перформанс, и Collection.parallelStream() — ваш лучший друг? А как вам идея — вбросить ещё пачку машин и получить распределенную обработку? Интересно? Тогда для вас этот доклад обязателен к просмотру. ' ||
    'Виктор познакомит слушателей со своим другом, Ориентированным (Направленным) Ациклическим Графом (или Маркизом?!), и покажет, как с его помощью была организована распределенная высокопроизводительная система обработки информации в памяти поверх нашего знакомого Java 8 Stream API.',
-   90054, NULL);
+   90054, NULL, 30000);
 
 
 

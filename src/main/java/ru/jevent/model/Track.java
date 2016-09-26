@@ -40,7 +40,7 @@ public class Track extends NamedEntity {
         return slotOrder;
     }
 
-    public void setSlotOrder(LinkedList<Slot> slotOrder) {
+    public void setSlotOrder(List<Slot> slotOrder) {
         this.slotOrder = slotOrder;
     }
 

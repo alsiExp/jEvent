@@ -81,8 +81,8 @@ public class EventServiceTest {
     }
 
     @Test
-    public void testComplitedEventSave() throws Exception {
-        Event testEvent = testData.getComplitedEvent();
+    public void testCompletedEventSave() throws Exception {
+        Event testEvent = testData.getCompletedEvent();
         eventService.save(testEvent);
 
         Event savedEvent = eventService.get(testEvent.getId());
@@ -97,7 +97,7 @@ public class EventServiceTest {
         eventService.update(event);
 
         Event savedEvent = eventService.get(event.getId());
-//        if(!savedEvent.equals(event))  Tracks not work! visitors_events_speaker must be in slot structure!
-//            throw new Exception();
+        if(!savedEvent.equals(event))
+            throw new Exception();
     }
 }

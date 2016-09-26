@@ -1,11 +1,11 @@
 -- old tables
 DROP TABLE IF EXISTS events_visitors;
 DROP TABLE IF EXISTS visitors_events_visits;
+DROP TABLE IF EXISTS visitors_events_speakers;
 
 DROP TABLE IF EXISTS slots;
 DROP TABLE IF EXISTS tracks;
 DROP TABLE IF EXISTS events_probable_speakers;
-DROP TABLE IF EXISTS visitors_events_speakers;
 DROP TABLE IF EXISTS events_by_rate_confirmed_visitors;
 DROP TABLE IF EXISTS task_statuses_tasks;
 DROP TABLE IF EXISTS task_statuses;
@@ -91,7 +91,7 @@ CREATE TABLE visitors
 (
   --   person
   id               BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  first_name       VARCHAR NOT NULL,
+  first_name       VARCHAR   NOT NULL,
   last_name        VARCHAR,
   sex              BIGINT,
   enabled          BOOL               DEFAULT FALSE,
@@ -99,7 +99,7 @@ CREATE TABLE visitors
   --   visitor
   birthday         TIMESTAMP,
   registered_date  TIMESTAMP NOT NULL DEFAULT now(),
-  email            VARCHAR NOT NULL,
+  email            VARCHAR   NOT NULL,
   phone            VARCHAR,
 
   github_account   VARCHAR,
@@ -163,7 +163,7 @@ CREATE TABLE rates
   end_date   TIMESTAMP NOT NULL,
   cost       NUMERIC(20, 2),
 
-  FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE ,
+  FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
   FOREIGN KEY (rate_type) REFERENCES rate_type (id) ON DELETE CASCADE
 );
 
@@ -176,18 +176,6 @@ CREATE TABLE tracks
   description VARCHAR,
 
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE
-);
-
-
-CREATE TABLE visitors_events_speakers
-(
-  id         BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  visitor_id BIGINT,
-  event_id   BIGINT,
-  price      INT,
-
-  FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
-  FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE
 );
 
 CREATE TABLE events_by_rate_confirmed_visitors
@@ -203,18 +191,19 @@ CREATE TABLE events_by_rate_confirmed_visitors
 
 CREATE TABLE slots
 (
-  id                         BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name                       VARCHAR,
-  track_id                   BIGINT,
-  start                      TIMESTAMP NOT NULL,
-  visitors_events_speaker_id BIGINT,
-  slot_description        VARCHAR,
-  slot_type                  BIGINT,
-  grade                      INT,
+  id               BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  name             VARCHAR,
+  track_id         BIGINT,
+  start            TIMESTAMP NOT NULL,
+  visitor_id       BIGINT,
+  slot_description VARCHAR,
+  slot_type        BIGINT,
+  grade            INT,
+  price            INT,
 
+  FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE,
   FOREIGN KEY (slot_type) REFERENCES slot_type (id) ON DELETE CASCADE,
-  FOREIGN KEY (track_id) REFERENCES tracks (id) ON DELETE CASCADE,
-  FOREIGN KEY (visitors_events_speaker_id) REFERENCES visitors_events_speakers (id) ON DELETE CASCADE
+  FOREIGN KEY (track_id) REFERENCES tracks (id) ON DELETE CASCADE
 
 );
 
@@ -270,8 +259,8 @@ CREATE TABLE task_statuses
 CREATE TABLE tasks
 (
   id          BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name        VARCHAR NOT NULL,
-  user_id     BIGINT NOT NULL,
+  name        VARCHAR   NOT NULL,
+  user_id     BIGINT    NOT NULL,
   start       TIMESTAMP NOT NULL DEFAULT now(),
   deadline    TIMESTAMP,
   description VARCHAR,

@@ -34,7 +34,7 @@ public class Event extends NamedEntity implements Attachable {
 
     //    tracks with slots (in list)
     //    sort by field position in DB
-    private List<Track> tracks;
+    private Set<Track> tracks;
 
     //    notes for Event
     //    sort by date
@@ -44,7 +44,7 @@ public class Event extends NamedEntity implements Attachable {
     public Event() {
     }
 
-    public Event(String name, User author, String tagName, String address, String description, String logoURL, Map<Visitor, OfferDetails> probableSpeakers, Map<Visitor, PayDetails> confirmedVisitors, List<Rate> rates, List<Track> tracks, List<Comment> commentList) {
+    public Event(String name, User author, String tagName, String address, String description, String logoURL, Map<Visitor, OfferDetails> probableSpeakers, Map<Visitor, PayDetails> confirmedVisitors, List<Rate> rates, Set<Track> tracks, List<Comment> commentList) {
         super(name);
         this.author = author;
         this.tagName = tagName;
@@ -58,7 +58,7 @@ public class Event extends NamedEntity implements Attachable {
         this.commentList = commentList;
     }
 
-    public Event(long id, String name, User author, String tagName, String address, String description, String logoURL, Map<Visitor, OfferDetails> probableSpeakers, HashMap<Visitor, PayDetails> confirmedVisitors, List<Rate> rates, List<Track> tracks, List<Comment> commentList) {
+    public Event(long id, String name, User author, String tagName, String address, String description, String logoURL, Map<Visitor, OfferDetails> probableSpeakers, HashMap<Visitor, PayDetails> confirmedVisitors, List<Rate> rates, Set<Track> tracks, List<Comment> commentList) {
         super(id, name);
         this.author = author;
         this.tagName = tagName;
@@ -172,14 +172,14 @@ public class Event extends NamedEntity implements Attachable {
         this.rates = rates;
     }
 
-    public List<Track> getTracks() {
+    public Set<Track> getTracks() {
         if (tracks == null) {
-            tracks = new LinkedList<>();
+            tracks = new HashSet<>();
         }
         return tracks;
     }
 
-    public void setTracks(List<Track> tracks) {
+    public void setTracks(Set<Track> tracks) {
         this.tracks = tracks;
     }
 
@@ -248,16 +248,20 @@ public class Event extends NamedEntity implements Attachable {
         if(this.getTracks().size() != event.getTracks().size()) {
             return false;
         }
-        if(!this.getTracks().containsAll(event.getTracks()) || !event.getTracks().containsAll(this.getTracks())) {
+
+        Set<Track> summ = new HashSet<>();
+        summ.addAll(this.getTracks());
+        summ.addAll(event.getTracks());
+        if(summ.size() != this.getTracks().size()) {
             return false;
         }
-        for(int i = 0; i < this.getTracks().size(); i++) {
-            Track thisTrack = this.getTracks().get(i);
-            Track eventTrack = event.getTracks().get(i);
-            if(!thisTrack.equals(eventTrack)) {
-                return false;
-            }
-        }
+
+//        TODO: understand this:
+//        if(!this.getTracks().containsAll(event.getTracks()) || !event.getTracks().containsAll(this.getTracks())) {
+//            boolean th = this.getTracks().containsAll(event.getTracks());  //true
+//            boolean ev = event.getTracks().containsAll(this.getTracks());  //false --- why??
+//            return false;
+//        }
 
         return true;
     }
