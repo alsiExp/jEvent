@@ -3,6 +3,7 @@ package ru.jevent.repository.jdbc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -15,8 +16,11 @@ import ru.jevent.repository.*;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Repository
 public class JdbcTaskRepositoryImpl implements TaskRepository {
@@ -33,6 +37,7 @@ public class JdbcTaskRepositoryImpl implements TaskRepository {
     private PartnerRepository partnerRepository;
     private CommentRepository commentRepository;
 
+    private TaskMapper taskMapper = new TaskMapper();
 
     @Autowired
     public JdbcTaskRepositoryImpl(JdbcTemplate jdbcTemplate,
@@ -62,21 +67,8 @@ public class JdbcTaskRepositoryImpl implements TaskRepository {
 
     @Override
     public Task get(long id) {
-        String sql = "SELECT t.id, t.name, t.user_id, t.start, t.deadline, t.description FROM tasks t WHERE t.id = ?";
-        return jdbcTemplate.queryForObject(sql, (rs, i) -> {
-            Task t = new Task();
-            t.setId(rs.getLong("id"));
-            t.setName(rs.getString("name"));
-            t.setAuthor(userRepository.get(rs.getLong("user_id")));
-            t.setStart(rs.getTimestamp("start").toLocalDateTime());
-            t.setDeadline(rs.getTimestamp("deadline").toLocalDateTime());
-            t.setDescription(rs.getString("description"));
-            t.setStatusLog(fillStatuses(t.getId()));
-            t.setTarget(fillTargetUsers(t.getId()));
-            t.setAttachList(fillAttachList(t.getId()));
-            t.setCommentList(commentRepository.getAllByTaskId(t.getId()));
-            return t;
-        }, id);
+        String sql = "SELECT t.id, t.name, t.user_id, t.start, t.deadline, t.description, t.active FROM tasks t WHERE t.id = ?";
+        return jdbcTemplate.queryForObject(sql, taskMapper, id);
     }
 
     @Override
@@ -99,50 +91,34 @@ public class JdbcTaskRepositoryImpl implements TaskRepository {
         return null;
     }
 
-    private List<Task> getAll(long id) {
-        String sql = "SELECT t.id, t.name, t.user_id, t.start, t.deadline, t.description, ts.id AS task_status_id, " +
-                "ts.user_id AS status_author, ts.creation_time, ts.description AS task_status_description, cts.status FROM tasks t " +
-                "LEFT JOIN task_statuses_tasks tst ON t.id = tst.task_id " +
-                "LEFT JOIN task_statuses ts ON tst.task_status_id = ts.id " +
-                "LEFT JOIN  current_task_status cts ON ts.current_task_status_id = cts.id " +
-                "ORDER BY  ts.creation_time";
+    private List<Task> getAll() {
+        String sql = "SELECT t.id, t.name, t.user_id, t.start, t.deadline, t.description, t.active FROM tasks t ORDER BY t.start";
+        return jdbcTemplate.query(sql, taskMapper);
+    }
 
-        return jdbcTemplate.query(sql, new Object[]{id}, (ResultSet rs) -> {
-            HashMap<Long, Task> map = new HashMap<>();
-            Task t = null;
-            while (rs.next()) {
-                Long taskId = rs.getLong("id");
-                t = map.get(taskId);
-                if (t == null) {
-                    t = new Task();
-                    t.setId(taskId);
-                    t.setName(rs.getString("name"));
-                    t.setAuthor(userRepository.get(rs.getLong("user_id")));
-                    t.setStart(rs.getTimestamp("start").toLocalDateTime());
-                    t.setDeadline(rs.getTimestamp("deadline").toLocalDateTime());
-                    t.setDescription(rs.getString("description"));
-                    map.put(taskId, t);
-                }
-                Long statusId = rs.getLong("task_status_id");
-                if (statusId > 0) {
-                    TaskStatus ts = new TaskStatus();
-                    ts.setId(statusId);
-                    ts.setAutor(userRepository.get(rs.getLong("status_author")));
-                    ts.setCreationTime(rs.getTimestamp("creation_time").toLocalDateTime());
-                    ts.setDescription(rs.getString("task_status_description"));
-                    ts.setStatus(CurrentTaskStatus.valueOf(rs.getString("status")));
-                    t.getStatusLog().add(ts);
-                }
-            }
-            return new ArrayList<Task>(map.values());
-        });
+    private final class TaskMapper implements RowMapper<Task> {
+        @Override
+        public Task mapRow(ResultSet rs, int i) throws SQLException {
+            Task task = new Task();
+            task.setId(rs.getLong("id"));
+            task.setName(rs.getString("name"));
+            task.setAuthor(userRepository.get(rs.getLong("user_id")));
+            task.setStart(rs.getTimestamp("start").toLocalDateTime());
+            task.setDeadline(rs.getTimestamp("deadline").toLocalDateTime());
+            task.setDescription(rs.getString("description"));
+            task.setActive(rs.getBoolean("active"));
+            task.setStatusLog(fillStatuses(task.getId()));
+            task.setTarget(fillTargetUsers(task.getId()));
+            task.setAttachList(fillAttachList(task.getId()));
+            task.setCommentList(commentRepository.getAllByTaskId(task.getId()));
+            return task;
+        }
     }
 
     private List<TaskStatus> fillStatuses(Long id) {
-        String sql = "SELECT ts.id , ts.user_id, ts.creation_time, ts.description, cts.status from task_statuses_tasks tst " +
-                "LEFT JOIN task_statuses ts ON tst.task_status_id = ts.id " +
+        String sql = "SELECT ts.id , ts.user_id, ts.task_id, ts.creation_time, ts.description, cts.status from task_statuses ts " +
                 "LEFT JOIN  current_task_status cts ON ts.current_task_status_id = cts.id " +
-                "WHERE tst.task_id = ? ORDER BY  ts.creation_time";
+                "WHERE ts.task_id = ? ORDER BY  ts.creation_time";
         return jdbcTemplate.query(sql, (rs, i) -> {
             TaskStatus ts = new TaskStatus();
             ts.setId(rs.getLong("id"));

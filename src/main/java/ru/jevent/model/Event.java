@@ -1,6 +1,7 @@
 package ru.jevent.model;
 
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -24,6 +25,7 @@ public class Event extends NamedEntity implements Attachable {
     private String address;
     private String description;
     private String logoURL;
+    private LocalDateTime startDate;
 
     private Map<Visitor, OfferDetails> probableSpeakers;
     private Map<Visitor, PayDetails> confirmedVisitors;
@@ -44,13 +46,14 @@ public class Event extends NamedEntity implements Attachable {
     public Event() {
     }
 
-    public Event(String name, User author, String tagName, String address, String description, String logoURL, Map<Visitor, OfferDetails> probableSpeakers, Map<Visitor, PayDetails> confirmedVisitors, List<Rate> rates, Set<Track> tracks, List<Comment> commentList) {
+    public Event(String name, User author, String tagName, String address, String description, String logoURL, LocalDateTime startDate, Map<Visitor, OfferDetails> probableSpeakers, Map<Visitor, PayDetails> confirmedVisitors, List<Rate> rates, Set<Track> tracks, List<Comment> commentList) {
         super(name);
         this.author = author;
         this.tagName = tagName;
         this.address = address;
         this.description = description;
         this.logoURL = logoURL;
+        this.startDate = startDate;
         this.probableSpeakers = probableSpeakers;
         this.confirmedVisitors = confirmedVisitors;
         this.rates = rates;
@@ -58,13 +61,14 @@ public class Event extends NamedEntity implements Attachable {
         this.commentList = commentList;
     }
 
-    public Event(long id, String name, User author, String tagName, String address, String description, String logoURL, Map<Visitor, OfferDetails> probableSpeakers, HashMap<Visitor, PayDetails> confirmedVisitors, List<Rate> rates, Set<Track> tracks, List<Comment> commentList) {
+    public Event(long id, String name, User author, String tagName, String address, String description, String logoURL, LocalDateTime startDate, Map<Visitor, OfferDetails> probableSpeakers, HashMap<Visitor, PayDetails> confirmedVisitors, List<Rate> rates, Set<Track> tracks, List<Comment> commentList) {
         super(id, name);
         this.author = author;
         this.tagName = tagName;
         this.address = address;
         this.description = description;
         this.logoURL = logoURL;
+        this.startDate = startDate;
         this.probableSpeakers = probableSpeakers;
         this.confirmedVisitors = confirmedVisitors;
         this.rates = rates;
@@ -125,6 +129,14 @@ public class Event extends NamedEntity implements Attachable {
 
     public void setLogoURL(String logoURL) {
         this.logoURL = logoURL;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
     }
 
     public Map<Visitor, OfferDetails> getProbableSpeakers() {
@@ -206,6 +218,10 @@ public class Event extends NamedEntity implements Attachable {
         if (logoURL != null ? !logoURL.equals(event.logoURL) : event.logoURL != null) {
             return false;
         }
+        if (startDate != null ? !startDate.equals(event.startDate) : event.startDate != null) {
+            return false;
+        }
+
         if(this.getProbableSpeakers().isEmpty() && !event.getProbableSpeakers().isEmpty() ||
                 !this.getProbableSpeakers().isEmpty() && event.getProbableSpeakers().isEmpty()) {
             return  false;
@@ -275,6 +291,7 @@ public class Event extends NamedEntity implements Attachable {
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (logoURL != null ? logoURL.hashCode() : 0);
+        result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
         result = 31 * result + (probableSpeakers != null ? probableSpeakers.hashCode() : 0);
         result = 31 * result + (confirmedVisitors != null ? confirmedVisitors.hashCode() : 0);
         result = 31 * result + (commentList != null ? commentList.hashCode() : 0);
@@ -292,6 +309,7 @@ public class Event extends NamedEntity implements Attachable {
                 ", address='" + address + '\'' +
                 ", description='" + description + '\'' +
                 ", logoURL='" + logoURL + '\'' +
+                ", startDate=" + startDate +
                 ", probableSpeakers=" + probableSpeakers +
                 ", confirmedVisitors=" + confirmedVisitors +
                 ", rates=" + rates +

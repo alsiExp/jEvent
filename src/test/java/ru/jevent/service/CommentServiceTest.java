@@ -67,6 +67,7 @@ public class CommentServiceTest {
     public void testDeleteAndGetAll() throws Exception {
         service.delete(100017L);
         List<Comment> list = service.getAll();
+        if(list.isEmpty()) throw new Exception();
         for(Comment c : list) {
             if(c.getId().equals(100017L))
                 throw new Exception();

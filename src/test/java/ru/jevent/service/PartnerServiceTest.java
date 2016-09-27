@@ -55,6 +55,7 @@ public class PartnerServiceTest {
     public void testDeleteAndGetAll() throws Exception {
         service.delete(100001L);
         List<Partner> list = service.getAll();
+        if(list.isEmpty()) throw new Exception();
         for(Partner p : list) {
             if(p.getId().equals(100001L))
                 throw new Exception();

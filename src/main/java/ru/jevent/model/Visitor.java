@@ -260,7 +260,7 @@ public class Visitor extends Person implements Attachable {
     @Override
     public String toString() {
         StringBuilder commentsSB = new StringBuilder();
-        if(!commentList.isEmpty()) {
+        if(!this.getCommentList().isEmpty()) {
             String prefix = "";
             commentsSB.append('[');
             for (Comment c : commentList) {

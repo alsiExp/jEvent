@@ -16,8 +16,9 @@ public class Task extends NamedEntity {
     private LocalDateTime deadline;
 
     private String description;
+    private boolean active;
 
-    //    actual status is lastest
+    //    actual status is last
     //    sort by creationTime in DB
     private List<TaskStatus> statusLog;
 
@@ -30,13 +31,14 @@ public class Task extends NamedEntity {
     }
 
     public Task(String name, User author, Set<User> target, LocalDateTime start, LocalDateTime deadline,
-                String description, TaskStatus taskStatus, Set<Attachable> attachList, List<Comment> commentList) {
+                String description, boolean active, TaskStatus taskStatus, Set<Attachable> attachList, List<Comment> commentList) {
         super(name);
         this.author = author;
         this.target = target;
         this.start = start;
         this.deadline = deadline;
         this.description = description;
+        this.active = active;
         if (taskStatus != null) {
             this.getStatusLog().add(taskStatus);
         }
@@ -45,13 +47,14 @@ public class Task extends NamedEntity {
     }
 
     public Task(long id, String name, User author, Set<User> target, LocalDateTime start, LocalDateTime deadline,
-                String description, TaskStatus taskStatus, Set<Attachable> attachList, List<Comment> commentList) {
+                String description, boolean active, TaskStatus taskStatus, Set<Attachable> attachList, List<Comment> commentList) {
         super(id, name);
         this.author = author;
         this.target = target;
         this.start = start;
         this.deadline = deadline;
         this.description = description;
+        this.active = active;
         if (taskStatus != null) {
             this.getStatusLog().add(taskStatus);
         }
@@ -103,6 +106,14 @@ public class Task extends NamedEntity {
         this.description = description;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public List<TaskStatus> getStatusLog() {
         if(statusLog == null) {
             statusLog = new ArrayList<>();
@@ -139,14 +150,15 @@ public class Task extends NamedEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Task)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
         Task task = (Task) o;
 
-        if (!author.equals(task.author)) return false;
+        if (active != task.active) return false;
+        if (author != null ? !author.equals(task.author) : task.author != null) return false;
         if (target != null ? !target.equals(task.target) : task.target != null) return false;
-        if (!start.equals(task.start)) return false;
+        if (start != null ? !start.equals(task.start) : task.start != null) return false;
         if (deadline != null ? !deadline.equals(task.deadline) : task.deadline != null) return false;
         if (description != null ? !description.equals(task.description) : task.description != null) return false;
         if (statusLog != null ? !statusLog.equals(task.statusLog) : task.statusLog != null) return false;
@@ -213,6 +225,7 @@ public class Task extends NamedEntity {
                 ", start=" + start +
                 ", deadline=" + deadline +
                 ", description='" + description + '\'' +
+                ", active=" + active +
                 ", statusLog=" + logSB.toString() +
                 ", attachList=" + attachSB.toString() +
                 "} ";

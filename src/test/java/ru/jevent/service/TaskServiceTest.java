@@ -28,6 +28,10 @@ public class TaskServiceTest {
 
     @Test
     public void testGet() throws Exception {
-        Task t = taskService.get(100025);
+        Task task = taskService.get(100025);
+        if(task.isNew() ||
+                task.getAttachList().size() != 4 ||
+                task.getTarget().size() != 6)
+            throw new Exception();
     }
 }

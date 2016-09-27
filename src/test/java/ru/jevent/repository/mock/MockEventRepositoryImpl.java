@@ -5,6 +5,7 @@ import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Event;
 import ru.jevent.repository.EventRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public class MockEventRepositoryImpl implements EventRepository {
     private static final LoggerWrapper LOG = LoggerWrapper.get(MockEventRepositoryImpl.class);
     private static Event event = new Event(2, "Конференция Joker", MockUserRepositoryImpl.getUser(), "joker16", "Conf address",
-    "Joker 2016 description", null, null, null, null, null, null);
+    "Joker 2016 description", null, LocalDateTime.now(), null, null, null, null, null);
 
     public static Event getEvent() {
         return event;

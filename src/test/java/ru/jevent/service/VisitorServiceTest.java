@@ -70,6 +70,7 @@ public class VisitorServiceTest {
     public void testDeleteAndGetAll() throws Exception {
         service.delete(100003L);
         List<Visitor> list = service.getAll();
+        if(list.isEmpty()) throw new Exception();
         for(Visitor v : list) {
             if(v.getId().equals(100003L))
                 throw new Exception();

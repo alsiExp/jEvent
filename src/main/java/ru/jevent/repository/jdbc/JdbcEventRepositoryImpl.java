@@ -3,6 +3,7 @@ package ru.jevent.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -20,6 +21,7 @@ import ru.jevent.util.exception.NotFoundException;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.*;
@@ -44,6 +46,8 @@ public class JdbcEventRepositoryImpl implements EventRepository {
 
     private HashMap<Long, Rate> rateMap;
     private HashMap<Long, Visitor> visitorMap;
+
+    private EventMapper eventMapper = new EventMapper();
 
     @Autowired
     public JdbcEventRepositoryImpl(JdbcTemplate jdbcTemplate,
@@ -83,7 +87,11 @@ public class JdbcEventRepositoryImpl implements EventRepository {
         MapSqlParameterSource map = new MapSqlParameterSource();
         map.addValue("id", event.getId());
         map.addValue("name", event.getName());
-        map.addValue("author_id", event.getAuthor().getId());
+        if(event.getAuthor() != null) {
+            map.addValue("author_id", event.getAuthor().getId());
+        } else {
+            map.addValue("author_id", null);
+        }
         map.addValue("tag_name", event.getTagName());
         map.addValue("address", event.getAddress());
         map.addValue("description", event.getDescription());
@@ -225,38 +233,42 @@ public class JdbcEventRepositoryImpl implements EventRepository {
 
     @Override
     public boolean delete(long id) {
-        return false;
+        return jdbcTemplate.update("DELETE FROM events WHERE id = ?", id) != 0;
     }
 
     @Override
     public Event get(long id) {
         String sql = "SELECT id, name, author_id, tag_name, address, description, logo_url FROM events WHERE id = ?";
-        Event event = jdbcTemplate.queryForObject(sql, (rs, i) -> {
-            Event e = new Event();
-            e.setId(rs.getLong("id"));
-            e.setName(rs.getString("name"));
-            e.setAuthor(userRepository.get(rs.getLong("author_id")));
-            e.setTagName(rs.getString("tag_name"));
-            e.setAddress(rs.getString("address"));
-            e.setDescription(rs.getString("description"));
-            e.setLogoURL(rs.getString("logo_url"));
-            return e;
-        }, id);
-
-        event.setRates(this.fillRatesList(event.getId()));
-        event.setTracks(this.fillTracks(event.getId()));
-        event.setConfirmedVisitors(this.fillConfirmedVisitorsMap(event.getId()));
-        event.setProbableSpeakers(this.fillProbableSpeakersMap(event.getId()));
-        event.setCommentList(commentRepository.getAllByEventId(event.getId()));
-        clearMaps();
-        return event;
+        return jdbcTemplate.queryForObject(sql, eventMapper, id);
     }
 
     @Override
     public List<Event> getAll() {
-        String sqlAllEventsWithRates = "select e.id, e.name, e.author_id, e.tag_name, e.description, e.logo_url, r.id, " +
-                "r.name, rt.type, r.start_date, r.end_date, r.cost from events e LEFT JOIN rates r on e.id = r.event_id LEFT JOIN rate_type rt on r.rate_type = rt.id";
-        return null;
+        String sql = "SELECT id, name, author_id, tag_name, address, description, logo_url FROM events ORDER BY id";
+        return jdbcTemplate.query(sql, eventMapper);
+    }
+
+    private final class EventMapper implements RowMapper<Event> {
+        @Override
+        public Event mapRow(ResultSet rs, int i) throws SQLException {
+            Event event = new Event();
+            event.setId(rs.getLong("id"));
+            event.setName(rs.getString("name"));
+            event.setAuthor(userRepository.get(rs.getLong("author_id")));
+            event.setTagName(rs.getString("tag_name"));
+            event.setAddress(rs.getString("address"));
+            event.setDescription(rs.getString("description"));
+            event.setLogoURL(rs.getString("logo_url"));
+
+            event.setRates(fillRatesList(event.getId()));
+            event.setTracks(fillTracks(event.getId()));
+            event.setConfirmedVisitors(fillConfirmedVisitorsMap(event.getId()));
+            event.setProbableSpeakers(fillProbableSpeakersMap(event.getId()));
+            event.setCommentList(commentRepository.getAllByEventId(event.getId()));
+            clearMaps();
+
+            return event;
+        }
     }
 
     private List<Rate> fillRatesList(long eventId) {

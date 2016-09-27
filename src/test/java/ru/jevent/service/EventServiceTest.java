@@ -5,11 +5,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.TestData;
 import ru.jevent.model.Event;
 import ru.jevent.util.DbPopulator;
+import ru.jevent.util.exception.NotFoundException;
+
+import java.util.List;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -99,5 +103,58 @@ public class EventServiceTest {
         Event savedEvent = eventService.get(event.getId());
         if(!savedEvent.equals(event))
             throw new Exception();
+    }
+
+    @Test
+    public void testDeleteAndGetAll() throws Exception {
+        eventService.delete(100012L);
+
+        List<Event> list = eventService.getAll();
+        if(list.isEmpty()) throw new Exception();
+        for(Event e : list) {
+            if(e.getId().equals(100012L))
+                throw new Exception();
+        }
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testUpdateWithException() throws Exception {
+        Event e = testData.getExistingEvent();
+        e.setId(9L);
+        eventService.update(e);
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    public void testSaveWrongData() throws Exception {
+        boolean check = false;
+        Event e = testData.getSimpleEvent();
+        e.setName(null);
+        try {
+            eventService.save(e);
+        } catch (DataIntegrityViolationException ex) {
+            e.setName("name");
+            check = true;
+        }
+        if(!check) {
+            throw new Exception();
+        } else {
+            check = false;
+        }
+        e.setAuthor(null);
+        try {
+            eventService.update(e);
+        }
+        catch (DataIntegrityViolationException ex) {
+            e.setAuthor(testData.getExistingUser());
+            check = true;
+        }
+
+        if(!check) {
+            throw new Exception();
+        }
+
+        e.setTagName("");
+        eventService.update(e);
+
     }
 }

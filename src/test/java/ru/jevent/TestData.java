@@ -151,7 +151,9 @@ public class TestData {
         return event;
     }
 
-
+    public Event getExistingEvent() {
+        return eventService.get(100012L);
+    }
 
     public Event getCompletedEvent() {
         Event event = getEventWithRPsCv();

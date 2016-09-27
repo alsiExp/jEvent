@@ -89,6 +89,7 @@ public class UserServiceTest {
     public void testDeleteAndGetAll() throws Exception {
         service.delete(100006L);
         List<User> list = service.getAll();
+        if(list.isEmpty()) throw new Exception();
         for(User u : list) {
             if(u.getId().equals(100006L))
                 throw new Exception();

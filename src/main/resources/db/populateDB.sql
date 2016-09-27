@@ -2,7 +2,6 @@ DELETE FROM slots;
 DELETE FROM tracks;
 DELETE FROM events_probable_speakers;
 DELETE FROM events_by_rate_confirmed_visitors;
-DELETE FROM task_statuses_tasks;
 DELETE FROM task_statuses;
 DELETE FROM task_user_target;
 DELETE FROM task_attach_events;
@@ -94,12 +93,12 @@ VALUES
   ('Максим', 'Зверев', 90000, TRUE, 'zverev.jpg', 'maxim', 'user'),
   ('Яна', 'Пилюгина', 90001, TRUE, 'pilugina.jpg', 'yana', 'user');
 
-INSERT INTO events (name, author_id, tag_name, address, description, logo_url)
+INSERT INTO events (name, author_id, tag_name, start, address, description, logo_url)
 VALUES
-  ('Joker 2016', 100006, 'joker16', '196140, Санкт-Петербург, Петербургское шоссе, 64/1',
+  ('Joker 2016', 100006, 'joker16', TIMESTAMP '2016-10-14 00:00' ,'196140, Санкт-Петербург, Петербургское шоссе, 64/1',
    'Спикеры - Барух Садогурский и Виктор Гамов, посетитель - Яков Файн (также он возможный докладчик). Главная Java-конференция в России. Санкт-Петербург, 14-15 октября 2016',
    'joker_logo.png'),
-  ('JPoint 2016', 100008, 'jpoint16', 'Москва, гостиница «Radisson Славянская» (площадь Европы, 2)',
+  ('JPoint 2016', 100008, 'jpoint16', TIMESTAMP '2016-04-23 00:00' , 'Москва, гостиница «Radisson Славянская» (площадь Европы, 2)',
    'Спикер - Барух Садогурский, посетители -  Виктор Гамов и Яков Файн. JPoint — Java-конференция только для опытных Java-разработчиков и только про разработку. Это будет уже четвертая по счету конференция JPoint: с каждым годом она получается еще больше, еще интереснее и еще хардкорнее!',
    'jpoint_logo.png');
 
@@ -123,13 +122,13 @@ VALUES
   ('Комментарий про Якова Файна #1', TIMESTAMP '2016-09-21 12:48', 100006);
 
 
-INSERT INTO tasks (name, user_id, start, deadline, description)
+INSERT INTO tasks (name, user_id, start, deadline, description, active)
 VALUES
-  ('Задача для joker16 #1', 100006, now(), (now() + (5 * INTERVAL '1 day')), 'Задача для всех (в т.ч. автора), приложен Виктор Гамов, Яков Файн, Одноклассники и Joker 2016'),
+  ('Задача для joker16 #1', 100006, now(), (now() + (5 * INTERVAL '1 day')), 'Задача для всех (в т.ч. автора), приложен Виктор Гамов, Яков Файн, Одноклассники и Joker 2016', TRUE ),
   ('Задача для joker16 #2', 100006, (now() - (5 * INTERVAL '1 day')), (now() + (1 * INTERVAL '1 day')),
-   'Задача для Екатерины, Руслана, Максима и Яны, дэдлайн через сутки, приложен Барух Садогурский'),
+   'Задача для Екатерины, Руслана, Максима и Яны, дэдлайн через сутки, приложен Барух Садогурский', TRUE ),
   ('Задача для joker16 #3', 100006, (now() - (7 * INTERVAL '1 day')), (now() + (179 * INTERVAL '1 minute')),
-   'Задача для всех, дэдлайн через 3 часа (или час, если я еще не разобрался с таймзоой). Никто не приложен.');
+   'Задача для всех, дэдлайн через 3 часа (или час, если я еще не разобрался с таймзоой). Никто не приложен.', TRUE );
 
 
 INSERT INTO rates (name, event_id, rate_type, start_date, end_date, cost)
@@ -220,23 +219,15 @@ VALUES
   (100027, 100010),
   (100027, 100011);
 
-INSERT INTO task_statuses (user_id, creation_time, current_task_status_id, description)
+INSERT INTO task_statuses (user_id, task_id, creation_time, current_task_status_id, description)
 VALUES
-  (100006, (SELECT start FROM tasks WHERE id = 100025), 90010, 'Создал новую тестовую задачу для всех!'),
-  (100008, ((SELECT start FROM tasks WHERE id = 100025) + (26 * INTERVAL '1 minute')), 90013, 'Взяла в работу'),
-  (100011, ((SELECT start FROM tasks WHERE id = 100025) + (112 * INTERVAL '1 minute')), 90013, 'Я тоже помогу'),
+  (100006, 100025, (SELECT start FROM tasks WHERE id = 100025), 90010, 'Создал новую тестовую задачу для всех!'),
+  (100008, 100025, ((SELECT start FROM tasks WHERE id = 100025) + (26 * INTERVAL '1 minute')), 90013, 'Взяла в работу'),
+  (100011, 100025, ((SELECT start FROM tasks WHERE id = 100025) + (112 * INTERVAL '1 minute')), 90013, 'Я тоже помогу'),
 
-  (100006, (SELECT start FROM tasks WHERE id = 100026), 90010, 'Новая задача'),
+  (100006, 100026, (SELECT start FROM tasks WHERE id = 100026), 90010, 'Новая задача'),
 
-  (100006, (SELECT start FROM tasks WHERE id = 100027), 90010, 'Новая задача');
-
-INSERT INTO task_statuses_tasks (task_status_id, task_id)
-VALUES
-  (100049, 100025),
-  (100050, 100025),
-  (100051, 100025),
-  (100052, 100026),
-  (100053, 100027);
+  (100006, 100027, (SELECT start FROM tasks WHERE id = 100027), 90010, 'Новая задача');
 
 INSERT INTO rates (name, event_id, rate_type, start_date, end_date, cost)
 VALUES

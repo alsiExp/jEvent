@@ -10,6 +10,7 @@ import ru.jevent.model.User;
 import ru.jevent.util.exception.NotFoundException;
 import ru.jevent.web.Event.EventRestController;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class EventMockTest {
     @Test
     public void testUpdate() throws Exception {
         controller.update(new Event(8, "Конференция Joker", new User(), "joker16", "Conf address",
-                "Joker 2016 description", null, null, null, null, null, null));
+                "Joker 2016 description", null, LocalDateTime.now(), null, null, null, null, null));
     }
 
     @Test
