@@ -116,6 +116,7 @@ public class TestData {
         event.setAddress("test adress");
         event.setDescription("Test description");
         event.setLogoURL("testevent.jpg");
+        event.setStartDate(LocalDateTime.now().plusDays(25));
         return event;
     }
 

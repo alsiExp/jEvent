@@ -93,6 +93,7 @@ public class JdbcEventRepositoryImpl implements EventRepository {
             map.addValue("author_id", null);
         }
         map.addValue("tag_name", event.getTagName());
+        map.addValue("start", Timestamp.valueOf(event.getStartDate()));
         map.addValue("address", event.getAddress());
         map.addValue("description", event.getDescription());
         map.addValue("logo_url", event.getLogoURL());
@@ -101,7 +102,7 @@ public class JdbcEventRepositoryImpl implements EventRepository {
             event.setId(newKey.longValue());
         } else {
             if (namedParameterJdbcTemplate.update("UPDATE events SET name = :name, author_id = :author_id, tag_name = :tag_name, " +
-                    "address = :address, description = :description, logo_url = :logo_url WHERE id = :id", map) == 0) {
+                    "start = :start, address = :address, description = :description, logo_url = :logo_url WHERE id = :id", map) == 0) {
                 return null;
             }
         }
@@ -238,13 +239,13 @@ public class JdbcEventRepositoryImpl implements EventRepository {
 
     @Override
     public Event get(long id) {
-        String sql = "SELECT id, name, author_id, tag_name, address, description, logo_url FROM events WHERE id = ?";
+        String sql = "SELECT id, name, author_id, tag_name, start, address, description, logo_url FROM events WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, eventMapper, id);
     }
 
     @Override
     public List<Event> getAll() {
-        String sql = "SELECT id, name, author_id, tag_name, address, description, logo_url FROM events ORDER BY id";
+        String sql = "SELECT id, name, author_id, tag_name, start, address, description, logo_url FROM events ORDER BY id";
         return jdbcTemplate.query(sql, eventMapper);
     }
 
@@ -256,6 +257,7 @@ public class JdbcEventRepositoryImpl implements EventRepository {
             event.setName(rs.getString("name"));
             event.setAuthor(userRepository.get(rs.getLong("author_id")));
             event.setTagName(rs.getString("tag_name"));
+            event.setStartDate(rs.getTimestamp("start").toLocalDateTime());
             event.setAddress(rs.getString("address"));
             event.setDescription(rs.getString("description"));
             event.setLogoURL(rs.getString("logo_url"));

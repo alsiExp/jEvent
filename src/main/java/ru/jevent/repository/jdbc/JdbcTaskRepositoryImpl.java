@@ -4,19 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import ru.jevent.model.Attachable;
+import ru.jevent.model.*;
 import ru.jevent.model.Enums.CurrentTaskStatus;
-import ru.jevent.model.Task;
-import ru.jevent.model.TaskStatus;
-import ru.jevent.model.User;
 import ru.jevent.repository.*;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -62,6 +61,49 @@ public class JdbcTaskRepositoryImpl implements TaskRepository {
 
     @Override
     public Task save(Task task) {
+        MapSqlParameterSource map = new MapSqlParameterSource();
+        map.addValue("id", task.getId());
+        map.addValue("name", task.getName());
+        if(task.getAuthor() != null) {
+            map.addValue("author_id", task.getAuthor().getId());
+        } else {
+            map.addValue("author_id", null);
+        }
+        map.addValue("start", Timestamp.valueOf(task.getStart()));
+        map.addValue("deadline", Timestamp.valueOf(task.getDeadline()));
+        map.addValue("description", task.getDescription());
+        map.addValue("active", task.isActive());
+
+        if(task.isNew()) {
+            Number newKey = insertTask.executeAndReturnKey(map);
+            task.setId(newKey.longValue());
+        } else {
+            if(namedParameterJdbcTemplate.update("UPDATE tasks SET name = :name, user_id = :author_id, start = :start, " +
+                    "deadline = :deadline, description = :description, active = :active WHERE id = :id", map) == 0) {
+                return null;
+            }
+        }
+
+        if(!task.getAttachList().isEmpty()) {
+            for(Attachable att : task.getAttachList()) {
+                if(att instanceof Visitor){
+                    Visitor v = (Visitor) att;
+                    visitorRepository.save(v);
+                }
+
+                if(att instanceof Partner) {
+                    Partner p = (Partner) att;
+                    partnerRepository.save(p);
+
+                }
+
+                if(att instanceof Event) {
+                    Event e = (Event) att;
+                    eventRepository.save(e);
+                }
+            }
+        }
+
         return null;
     }
 
