@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.object.BatchSqlUpdate;
 import org.springframework.stereotype.Repository;
 import ru.jevent.model.*;
 import ru.jevent.model.Enums.CurrentTaskStatus;
@@ -16,10 +18,9 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Repository
 public class JdbcTaskRepositoryImpl implements TaskRepository {
@@ -29,13 +30,19 @@ public class JdbcTaskRepositoryImpl implements TaskRepository {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private SimpleJdbcInsert insertTask;
+    private SimpleJdbcInsert insertTaskStatus;
+    private InsertTaskEvents insertTaskEvents;
+    private InsertTaskVisitors insertTaskVisitors;
+    private InsertTaskPartners insertTaskPartners;
+    private InsertTaskUserTarget insertTaskUserTarget;
+    private InsertTasksComments insertTasksComments;
 
     private UserRepository userRepository;
     private EventRepository eventRepository;
     private VisitorRepository visitorRepository;
     private PartnerRepository partnerRepository;
     private CommentRepository commentRepository;
-
+    private JdbcHelper helper;
     private TaskMapper taskMapper = new TaskMapper();
 
     @Autowired
@@ -52,11 +59,20 @@ public class JdbcTaskRepositoryImpl implements TaskRepository {
         this.insertTask = new SimpleJdbcInsert(dataSource)
                 .withTableName("tasks")
                 .usingGeneratedKeyColumns("id");
+        this.insertTaskStatus = new SimpleJdbcInsert(dataSource)
+                .withTableName("task_statuses")
+                .usingGeneratedKeyColumns("id");
         this.userRepository = userRepository;
         this.eventRepository = eventRepository;
         this.visitorRepository = visitorRepository;
         this.partnerRepository = partnerRepository;
         this.commentRepository = commentRepository;
+        this.insertTaskEvents = new InsertTaskEvents(dataSource);
+        this.insertTaskVisitors = new InsertTaskVisitors(dataSource);
+        this.insertTaskPartners = new InsertTaskPartners(dataSource);
+        this.insertTaskUserTarget = new InsertTaskUserTarget(dataSource);
+        this.insertTasksComments = new InsertTasksComments(dataSource);
+        this.helper = new JdbcHelper(dataSource);
     }
 
     @Override
@@ -65,9 +81,9 @@ public class JdbcTaskRepositoryImpl implements TaskRepository {
         map.addValue("id", task.getId());
         map.addValue("name", task.getName());
         if(task.getAuthor() != null) {
-            map.addValue("author_id", task.getAuthor().getId());
+            map.addValue("user_id", task.getAuthor().getId());
         } else {
-            map.addValue("author_id", null);
+            map.addValue("user_id", null);
         }
         map.addValue("start", Timestamp.valueOf(task.getStart()));
         map.addValue("deadline", Timestamp.valueOf(task.getDeadline()));
@@ -85,26 +101,99 @@ public class JdbcTaskRepositoryImpl implements TaskRepository {
         }
 
         if(!task.getAttachList().isEmpty()) {
+            Map<String, Object> visitorsMap = new HashMap<>();
+            visitorsMap.put("task_id", task.getId());
+            Map<String, Object> partnersMap = new HashMap<>();
+            partnersMap.put("task_id", task.getId());
+            Map<String, Object> eventsMap = new HashMap<>();
+            eventsMap.put("task_id", task.getId());
             for(Attachable att : task.getAttachList()) {
                 if(att instanceof Visitor){
                     Visitor v = (Visitor) att;
                     visitorRepository.save(v);
+                    visitorsMap.put("visitor_id", v.getId());
+                    if(insertTaskVisitors.updateByNamedParam(visitorsMap) == 0) {
+                        return null;
+                    }
                 }
 
                 if(att instanceof Partner) {
                     Partner p = (Partner) att;
                     partnerRepository.save(p);
-
+                    partnersMap.put("partner_id", p.getId());
+                    if(insertTaskPartners.updateByNamedParam(partnersMap) == 0) {
+                        return null;
+                    }
                 }
 
                 if(att instanceof Event) {
                     Event e = (Event) att;
                     eventRepository.save(e);
+                    eventsMap.put("event_id", e.getId());
+                    if(insertTaskEvents.updateByNamedParam(eventsMap) == 0) {
+                        return null;
+                    }
+                }
+            }
+            insertTaskVisitors.flush();
+            insertTaskPartners.flush();
+            insertTaskPartners.flush();
+        }
+
+        if(!task.getTarget().isEmpty()) {
+            Map<String, Object> userTargetMap = new HashMap<>();
+            userTargetMap.put("task_id", task.getId());
+            for(User u : task.getTarget()) {
+                if(u.isNew()) {
+                    return null;
+                }
+                userTargetMap.put("user_id", u.getId());
+                if(insertTaskUserTarget.updateByNamedParam(userTargetMap) == 0) {
+                    return null;
+                }
+            }
+        }
+        insertTaskUserTarget.flush();
+
+        if(!task.getStatusLog().isEmpty()) {
+            MapSqlParameterSource taskStatusParamMap = new MapSqlParameterSource();
+            taskStatusParamMap.addValue("task_id", task.getId());
+            Map<CurrentTaskStatus, Long> currentTaskStatusMap= helper.getCurrentTaskStatusMap();
+            for(TaskStatus status : task.getStatusLog()) {
+                taskStatusParamMap.addValue("id", status.getId());
+                if(status.getAuthor() == null) {
+                    return null;
+                }
+                taskStatusParamMap.addValue("user_id", status.getAuthor().getId());
+                taskStatusParamMap.addValue("creation_time", Timestamp.valueOf(status.getCreationTime()));
+                taskStatusParamMap.addValue("current_task_status_id", currentTaskStatusMap.get(status.getStatus()));
+                taskStatusParamMap.addValue("description", status.getDescription());
+                if(status.isNew()) {
+                    Number newKey = insertTaskStatus.executeAndReturnKey(taskStatusParamMap);
+                    status.setId(newKey.longValue());
+                } else {
+                    if(namedParameterJdbcTemplate.update("UPDATE task_statuses SET user_id = :user_id, task_id = :task_id, " +
+                            "creation_time  = :creation_time, current_task_status_id = :current_task_status_id, " +
+                            "description = :description  WHERE id = :id", map) == 0) {
+                        return null;
+                    }
                 }
             }
         }
 
-        return null;
+        if(!task.getCommentList().isEmpty()) {
+            Map<String, Object> commentsMap = new HashMap<>();
+            commentsMap.put("task_id", task.getId());
+            for (Comment c : task.getCommentList()) {
+                Comment insertedComment = commentRepository.save(c);
+                commentsMap.put("comment_id", insertedComment.getId());
+                if(insertTasksComments.updateByNamedParam(commentsMap) == 0) {
+                    return null;
+                }
+            }
+            insertTasksComments.flush();
+        }
+        return task;
     }
 
     @Override
@@ -164,7 +253,7 @@ public class JdbcTaskRepositoryImpl implements TaskRepository {
         return jdbcTemplate.query(sql, (rs, i) -> {
             TaskStatus ts = new TaskStatus();
             ts.setId(rs.getLong("id"));
-            ts.setAutor(userRepository.get(rs.getLong("user_id")));
+            ts.setAuthor(userRepository.get(rs.getLong("user_id")));
             ts.setCreationTime(rs.getTimestamp("creation_time").toLocalDateTime());
             ts.setDescription(rs.getString("description"));
             ts.setStatus(CurrentTaskStatus.valueOf(rs.getString("status")));
@@ -189,18 +278,78 @@ public class JdbcTaskRepositoryImpl implements TaskRepository {
         String visitorSql = "SELECT visitor_id FROM task_attach_visitors WHERE task_id = ?";
         String partnerSql = "SELECT partner_id FROM task_attach_partners WHERE task_id = ?";
         HashSet<Attachable> set = new HashSet<>();
-        set.addAll(jdbcTemplate.query(eventSql, (rs, i) -> {
-            return eventRepository.get(rs.getLong("event_id"));
-        }, id));
-        set.addAll(jdbcTemplate.query(visitorSql, (rs, i) -> {
-            return visitorRepository.get(rs.getLong("visitor_id"));
-        }, id));
-        set.addAll(jdbcTemplate.query(partnerSql, (rs, i) -> {
-            return partnerRepository.get(rs.getLong("partner_id"));
-        }, id));
+        set.addAll(jdbcTemplate.query(eventSql, (rs, i) -> eventRepository.get(rs.getLong("event_id")), id));
+        set.addAll(jdbcTemplate.query(visitorSql, (rs, i) -> visitorRepository.get(rs.getLong("visitor_id")), id));
+        set.addAll(jdbcTemplate.query(partnerSql, (rs, i) -> partnerRepository.get(rs.getLong("partner_id")), id));
 
         return set;
     }
 
+    private final class InsertTaskEvents extends BatchSqlUpdate {
+        private static final String SQL_INSERT_TASK_ATTACH_EVENTS = "INSERT INTO task_attach_events(task_id, event_id) " +
+                "VALUES (:task_id, :event_id) ON CONFLICT(task_id, event_id) DO UPDATE " +
+                "SET task_id = :task_id, event_id = :event_id";
+        private static final int BATCH_SIZE = 10;
 
+        InsertTaskEvents(DataSource ds) {
+            super(ds, SQL_INSERT_TASK_ATTACH_EVENTS);
+            super.declareParameter(new SqlParameter("task_id", Types.BIGINT));
+            super.declareParameter(new SqlParameter("event_id", Types.BIGINT));
+            super.setBatchSize(BATCH_SIZE);
+        }
+    }
+
+    private final class InsertTaskPartners extends BatchSqlUpdate {
+        private static final String SQL_INSERT_TASK_ATTACH_PARTNERS = "INSERT INTO task_attach_partners(task_id, partner_id) " +
+                "VALUES (:task_id, :partner_id) ON CONFLICT(task_id, partner_id) DO UPDATE " +
+                "SET task_id = :task_id, partner_id = :partner_id";
+        private static final int BATCH_SIZE = 10;
+
+        InsertTaskPartners(DataSource ds) {
+            super(ds, SQL_INSERT_TASK_ATTACH_PARTNERS);
+            super.declareParameter(new SqlParameter("task_id", Types.BIGINT));
+            super.declareParameter(new SqlParameter("partner_id", Types.BIGINT));
+            super.setBatchSize(BATCH_SIZE);
+        }
+    }
+
+    private final class InsertTaskVisitors extends BatchSqlUpdate {
+        private static final String SQL_INSERT_TASK_ATTACH_VISITORS = "INSERT INTO task_attach_visitors(task_id, visitor_id) " +
+                "VALUES (:task_id, :visitor_id) ON CONFLICT(task_id, visitor_id) DO UPDATE " +
+                "SET task_id = :task_id, visitor_id = :visitor_id";
+        private static final int BATCH_SIZE = 10;
+
+        InsertTaskVisitors(DataSource ds) {
+            super(ds, SQL_INSERT_TASK_ATTACH_VISITORS);
+            super.declareParameter(new SqlParameter("task_id", Types.BIGINT));
+            super.declareParameter(new SqlParameter("visitor_id", Types.BIGINT));
+            super.setBatchSize(BATCH_SIZE);
+        }
+    }
+
+    private final class InsertTaskUserTarget extends BatchSqlUpdate {
+        private static final String SQL_INSERT_USER_TARGET = "INSERT INTO task_user_target(task_id, user_id) VALUES " +
+                "(:task_id, :user_id) ON CONFLICT(task_id, user_id) DO UPDATE SET task_id = :task_id, user_id = :user_id";
+        private static final int BATCH_SIZE = 10;
+        InsertTaskUserTarget(DataSource ds) {
+            super(ds, SQL_INSERT_USER_TARGET);
+            super.declareParameter(new SqlParameter("task_id", Types.BIGINT));
+            super.declareParameter(new SqlParameter("user_id", Types.BIGINT));
+            super.setBatchSize(BATCH_SIZE);
+        }
+    }
+
+    private final class InsertTasksComments extends BatchSqlUpdate {
+        private static final String SQL_INSERT_TASKS_COMMENTS = "INSERT INTO tasks_comments(task_id, comment_id) " +
+                "VALUES (:task_id, :comment_id) ON CONFLICT (task_id, comment_id) DO UPDATE SET " +
+                "task_id = :task_id, comment_id = :comment_id";
+        private static final int BATCH_SIZE = 10;
+
+        public InsertTasksComments(DataSource ds) {
+            super(ds, SQL_INSERT_TASKS_COMMENTS);
+            super.declareParameter(new SqlParameter("task_id", Types.BIGINT));
+            super.declareParameter(new SqlParameter("comment_id", Types.BIGINT));
+            super.setBatchSize(BATCH_SIZE);
+        }
+    }
 }

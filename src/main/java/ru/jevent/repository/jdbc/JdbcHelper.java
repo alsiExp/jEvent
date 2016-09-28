@@ -1,6 +1,7 @@
 package ru.jevent.repository.jdbc;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import ru.jevent.model.Enums.CurrentTaskStatus;
 import ru.jevent.model.Enums.RateType;
 import ru.jevent.model.Enums.Sex;
 import ru.jevent.model.Enums.SlotType;
@@ -53,4 +54,17 @@ class JdbcHelper {
             return map;
         });
     }
+
+    Map<CurrentTaskStatus, Long> getCurrentTaskStatusMap() {
+        String sql = "SELECT status, id FROM current_task_status";
+
+        return jdbcTemplate.query(sql, (ResultSet rs) -> {
+            Map<CurrentTaskStatus, Long> map = new HashMap<>();
+            while(rs.next()) {
+                map.put(CurrentTaskStatus.valueOf(rs.getString("status")), rs.getLong("id"));
+            }
+            return map;
+        });
+    }
+
 }

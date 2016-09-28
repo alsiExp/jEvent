@@ -127,11 +127,12 @@ public class JdbcEventRepositoryImpl implements EventRepository {
 
         if (!event.getRates().isEmpty()) {
             MapSqlParameterSource ratesParamMap = new MapSqlParameterSource();
+            Map<RateType, Long> rateTypeMap = helper.getRateTypeMap();
             for (Rate rate : event.getRates()) {
                 ratesParamMap.addValue("id", rate.getId());
                 ratesParamMap.addValue("name", rate.getName());
                 ratesParamMap.addValue("event_id", event.getId());
-                ratesParamMap.addValue("rate_type", helper.getRateTypeMap().get(rate.getRateType()));
+                ratesParamMap.addValue("rate_type", rateTypeMap.get(rate.getRateType()));
                 ratesParamMap.addValue("start_date", Timestamp.valueOf(rate.getStart()));
                 ratesParamMap.addValue("end_date", Timestamp.valueOf(rate.getEnd()));
                 ratesParamMap.addValue("cost", rate.getCost());
@@ -167,8 +168,7 @@ public class JdbcEventRepositoryImpl implements EventRepository {
         if (!event.getTracks().isEmpty()) {
             MapSqlParameterSource trackMap = new MapSqlParameterSource();
             MapSqlParameterSource slotMap = new MapSqlParameterSource();
-            Map<String, Object> visitorEventSpeakerMap = new HashMap<>();
-
+            Map<SlotType, Long> slotTypeMap =  helper.getSlotTypeMap();
             for(Track track : event.getTracks()) {
                 trackMap.addValue("id", track.getId());
                 trackMap.addValue("name", track.getName());
@@ -197,7 +197,7 @@ public class JdbcEventRepositoryImpl implements EventRepository {
                             slotMap.addValue("visitor_id", slot.getApprovedSpeaker().getId());
                         }
                         slotMap.addValue("slot_description", slot.getSlotDescription());
-                        slotMap.addValue("slot_type", helper.getSlotTypeMap().get(slot.getSlotType()));
+                        slotMap.addValue("slot_type", slotTypeMap.get(slot.getSlotType()));
                         slotMap.addValue("grade", slot.getGrade());
                         slotMap.addValue("price", slot.getPrice());
                         if(slot.isNew()) {

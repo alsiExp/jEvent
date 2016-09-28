@@ -240,4 +240,19 @@ public class TestData {
         t2.setSlotOrder(Arrays.asList(s5, s6));
         return new HashSet<>(Arrays.asList(t1, t2, t3));
     }
+
+    public Task getSimpleTask() {
+        Task task = new Task();
+        task.setName("Test task");
+        task.setAuthor(this.getExistingUser());
+        task.setTarget(new HashSet<>(getExistingUsersList()));
+
+        task.setStart(LocalDateTime.now().minusDays(7));
+        task.setDeadline(LocalDateTime.now().plusWeeks(4));
+
+        task.setDescription("Test task description");
+        task.setActive(true);
+
+        return task;
+    }
 }

@@ -38,11 +38,11 @@ public class TaskStatus extends BaseEntity{
         this.description = description;
     }
 
-    public User getAutor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAutor(User autor) {
+    public void setAuthor(User autor) {
         this.author = autor;
     }
 

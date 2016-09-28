@@ -284,6 +284,7 @@ CREATE TABLE task_user_target
   task_id BIGINT,
   user_id BIGINT,
 
+  PRIMARY KEY (task_id, user_id),
   FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
@@ -293,6 +294,7 @@ CREATE TABLE task_attach_events
   task_id  BIGINT,
   event_id BIGINT,
 
+  PRIMARY KEY (task_id, event_id),
   FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE
 );
@@ -302,6 +304,7 @@ CREATE TABLE task_attach_visitors
   task_id    BIGINT,
   visitor_id BIGINT,
 
+  PRIMARY KEY (task_id, visitor_id),
   FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
   FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE
 );
@@ -311,6 +314,7 @@ CREATE TABLE task_attach_partners
   task_id    BIGINT,
   partner_id BIGINT,
 
+  PRIMARY KEY (task_id, partner_id),
   FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
   FOREIGN KEY (partner_id) REFERENCES partners (id) ON DELETE CASCADE
 );
