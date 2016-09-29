@@ -243,7 +243,14 @@ public class Event extends NamedEntity implements Attachable {
             return false;
         }
 
-        if (commentList != null ? !commentList.equals(event.commentList) : event.commentList != null) {
+        if(!this.getCommentList().isEmpty() && event.getCommentList().isEmpty() ||
+                this.getCommentList().isEmpty() && !event.getCommentList().isEmpty()) {
+            return false;
+        }
+        if(this.getCommentList().size() != event.getCommentList().size()) {
+            return false;
+        }
+        if(!this.getCommentList().containsAll(event.getCommentList()) || !event.getCommentList().containsAll(this.getCommentList())) {
             return false;
         }
         if (this.getRates().isEmpty() && !event.getRates().isEmpty() ||

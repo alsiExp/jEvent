@@ -157,13 +157,36 @@ public class Task extends NamedEntity {
 
         if (active != task.active) return false;
         if (author != null ? !author.equals(task.author) : task.author != null) return false;
-        if (target != null ? !target.equals(task.target) : task.target != null) return false;
+        if (target != null ? !target.equals(task.target) : task.target != null) {
+            return false;
+        }
         if (start != null ? !start.equals(task.start) : task.start != null) return false;
         if (deadline != null ? !deadline.equals(task.deadline) : task.deadline != null) return false;
         if (description != null ? !description.equals(task.description) : task.description != null) return false;
-        if (statusLog != null ? !statusLog.equals(task.statusLog) : task.statusLog != null) return false;
-        if (attachList != null ? !attachList.equals(task.attachList) : task.attachList != null) return false;
-        return commentList != null ? commentList.equals(task.commentList) : task.commentList == null;
+        if (statusLog != null ? !statusLog.equals(task.statusLog) : task.statusLog != null) {
+            return false;
+        }
+        if(!this.getAttachList().isEmpty() && task.getAttachList().isEmpty() ||
+                this.getAttachList().isEmpty() && !task.getAttachList().isEmpty()) {
+            return false;
+        }
+        if(this.getAttachList().size() != task.getAttachList().size()) {
+            return false;
+        }
+        if(!this.getAttachList().containsAll(task.getAttachList()) || !task.getAttachList().containsAll(this.getAttachList())) {
+            return false;
+        }
+        if(!this.getCommentList().isEmpty() && task.getCommentList().isEmpty() ||
+                this.getCommentList().isEmpty() && !task.getCommentList().isEmpty()) {
+            return false;
+        }
+        if(this.getCommentList().size() != task.getCommentList().size()) {
+            return false;
+        }
+        if(!this.getCommentList().containsAll(task.getCommentList()) || !task.getCommentList().containsAll(this.getCommentList())) {
+            return false;
+        }
+        return true;
 
     }
 

@@ -231,9 +231,19 @@ public class Visitor extends Person implements Attachable {
         if (employer != null ? !employer.equals(visitor.employer) : visitor.employer != null) return false;
         if (biography != null ? !biography.equals(visitor.biography) : visitor.biography != null) return false;
         if (description != null ? !description.equals(visitor.description) : visitor.description != null) return false;
+        if(!this.getCommentList().isEmpty() && visitor.getCommentList().isEmpty() ||
+                this.getCommentList().isEmpty() && !visitor.getCommentList().isEmpty()) {
+            return false;
+        }
+        if(this.getCommentList().size() != visitor.getCommentList().size()) {
+            return false;
+        }
         if(!this.getCommentList().containsAll(visitor.getCommentList()) || !visitor.getCommentList().containsAll(this.getCommentList())) {
             return false;
         }
+//        if(!this.getCommentList().equals(visitor.getCommentList())) {
+//            return false;
+//        }
         return true;
     }
 

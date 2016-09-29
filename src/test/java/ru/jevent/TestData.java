@@ -16,8 +16,8 @@ import java.util.*;
 @Component
 public class TestData {
 
-    private UserService userService;
     private CommentService commentService;
+    private UserService userService;
     private PartnerService partnerService;
     private VisitorService visitorService;
     private EventService eventService;
@@ -30,8 +30,8 @@ public class TestData {
     public TestData(UserService userService, CommentService commentService,
                     PartnerService partnerService, VisitorService visitorService,
                     EventService eventService, TaskService taskService) {
-        this.userService = userService;
         this.commentService = commentService;
+        this.userService = userService;
         this.partnerService = partnerService;
         this.visitorService = visitorService;
         this.eventService = eventService;
@@ -43,10 +43,50 @@ public class TestData {
     }
 
     public User getExistingUser() {
+//        User exUser = new User();
+//        exUser.setLogin("ekaterina");
+//        exUser.setPassword("user");
+//        exUser.getRoles();
+//        exUser.setFirstName("Екатерина");
+//        exUser.setLastName("Курилова");
+//        exUser.setSex(Sex.FEMALE);
+//        exUser.setEnabled(true);
+//        exUser.setPhotoURL("kurilova.jpg");
+//        exUser.setId(100008L);
+//        return exUser;
         return userService.get(100008L);
     }
 
+    public User getUser06() {
+        User u = new User();
+        u.setLogin("alexey");
+        u.setPassword("user");
+        u.getRoles();
+        u.setFirstName("Алексей");
+        u.setLastName("Фёдоров");
+        u.setSex(Sex.MALE);
+        u.setEnabled(true);
+        u.setPhotoURL("fedorov.jpg");
+        u.setId(100006L);
+        return u;
+    }
+
+    public User getUser11() {
+        User u = new User();
+        u.setLogin("yana");
+        u.setPassword("user");
+        u.getRoles();
+        u.setFirstName("Яна");
+        u.setLastName("Пилюгина");
+        u.setSex(Sex.FEMALE);
+        u.setEnabled(true);
+        u.setPhotoURL("pilugina.jpg");
+        u.setId(100011L);
+        return u;
+    }
+
     public List<User> getExistingUsersList() {
+
         return userService.getAll();
     }
 
@@ -55,7 +95,12 @@ public class TestData {
     }
 
     public Comment getExistingComment() {
+//        return new Comment(100014L, "Комментарий про jpoint16 #1", getUser06(), LocalDateTime.of(2016,4,13,13,23,0,0));
         return commentService.get(100014L);
+    }
+
+    public Comment getExistingComment23() {
+        return new Comment(100023L, "Комментарий про Баруха #1", getUser11(), LocalDateTime.of(2016,9,19,7,0,0,0));
     }
 
     public List<Comment> getMixedCommentsList() {
@@ -98,6 +143,25 @@ public class TestData {
     }
 
     public Visitor getExistingVisitor() {
+//        Visitor exVisitor = new Visitor();
+//        exVisitor.setBirthDay(LocalDateTime.of(1970, 11, 25, 0, 0, 0, 0));
+//        exVisitor.setRegistered(LocalDate.of(2016, 10, 10));
+//        exVisitor.setEmail("jbaruch@gmail.com");
+//        exVisitor.setPhone("+7-000-000-00-00");
+//        exVisitor.setGitHubAccount("jbaruch");
+//        exVisitor.setTwitterAccount("jbaruch");
+//        exVisitor.setEmployer("JFrog");
+//        exVisitor.setBiography("Developer advocate в компании JFrog, и делает в жизни ровно 3 вещи: зависает с разработчиками Bintray и Artifactory, пописывает для них код, и рассказывает о впечатлениях в блогах и на конференциях. И так несколько лет подряд, ни минуты об этом не жалея.");
+//        exVisitor.setDescription("Поскольку «религия не позволяет» быть евангелистом, Барух — developer advocate в компании JFrog и делает в жизни ровно 3 вещи: зависает с разработчиками Bintray и Artifactory, пописывает для них код, и рассказывает о впечатлениях в блогах и на конференциях, таких как JavaOne, Devoxx, OSCON, конечно же JPoint и Joker, да и многих других. И так более десяти лет подряд.");
+//        exVisitor.setCost(-90000.0);
+//        exVisitor.setCommentList(Arrays.asList(getExistingComment23()));
+//        exVisitor.setFirstName("Барух");
+//        exVisitor.setLastName("Садогурский");
+//        exVisitor.setSex(Sex.MALE);
+//        exVisitor.setEnabled(true);
+//        exVisitor.setPhotoURL("bsadogursky.jpg");
+//        exVisitor.setId(100004L);
+//        return exVisitor;
         return visitorService.get(100004L);
     }
 
@@ -112,7 +176,7 @@ public class TestData {
         Event event = new Event();
         event.setName("Test Event");
         event.setTagName("test");
-        event.setAuthor(userService.get(100006L));
+        event.setAuthor(this.getUser06());
         event.setAddress("test adress");
         event.setDescription("Test description");
         event.setLogoURL("testevent.jpg");

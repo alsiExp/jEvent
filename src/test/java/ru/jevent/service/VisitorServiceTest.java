@@ -36,13 +36,10 @@ public class VisitorServiceTest {
 
     @Test
     public void testGet() throws Exception {
-        Visitor v = service.get(100003);
-        if(v.getId() == null ||
-                v.getEmail() == null ||
-                v.getFirstName() == null) throw new Exception();
-        if(v.getClass() != new Visitor().getClass()) throw new Exception();
-        if(v.getId() != 100003) throw new Exception();
-        if(v.getCommentList().size() == 0) throw new Exception();
+        Visitor v = service.get(100004L);
+        if(!v.equals(testData.getExistingVisitor())) {
+            throw new Exception();
+        }
     }
 
     @Test

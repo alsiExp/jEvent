@@ -38,10 +38,9 @@ public class CommentServiceTest {
     @Test
     public void testGet() throws Exception {
         Comment c = service.get(100014L);
-        if (c.getId() == null ||
-                c.getContent() == null ||
-                c.getDate() == null) throw new Exception();
-        if(!c.getId().equals(100014L)) throw new Exception();
+        if(!c.equals(testData.getExistingComment())) {
+            throw new Exception();
+        }
     }
 
     @Test
@@ -52,7 +51,7 @@ public class CommentServiceTest {
         service.update(c);
 
         Comment returnedComment = service.get(c.getId());
-        if(!c.equals(returnedComment))
+        if (!c.equals(returnedComment))
             throw new Exception();
     }
 
@@ -67,9 +66,9 @@ public class CommentServiceTest {
     public void testDeleteAndGetAll() throws Exception {
         service.delete(100017L);
         List<Comment> list = service.getAll();
-        if(list.isEmpty()) throw new Exception();
-        for(Comment c : list) {
-            if(c.getId().equals(100017L))
+        if (list.isEmpty()) throw new Exception();
+        for (Comment c : list) {
+            if (c.getId().equals(100017L))
                 throw new Exception();
         }
     }
@@ -79,7 +78,7 @@ public class CommentServiceTest {
         Comment c = testData.getNewComment();
         service.save(c);
         Comment returnedComment = service.get(c.getId());
-        if(!c.equals(returnedComment))
+        if (!c.equals(returnedComment))
             throw new Exception();
     }
 }

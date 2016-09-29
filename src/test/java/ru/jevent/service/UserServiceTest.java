@@ -37,11 +37,10 @@ public class UserServiceTest {
 
     @Test
     public void testGet() throws Exception {
-        User u = service.get(100006L);
-        if(u.getId() == null ||
-                u.getLogin() == null ||
-                u.getFirstName() == null) throw new Exception();
-        if(!u.getId().equals(100006L)) throw new Exception();
+        User u = service.get(100008L);
+        if(!u.equals(testData.getExistingUser())) {
+            throw new Exception();
+        }
     }
 
     @Test

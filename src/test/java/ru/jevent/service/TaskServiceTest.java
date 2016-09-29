@@ -45,7 +45,7 @@ public class TaskServiceTest {
         taskService.save(testTask);
 
         Task savedTask = taskService.get(testTask.getId());
-        if(testTask.equals(savedTask)) {
+        if(!testTask.equals(savedTask)) {
             throw new Exception();
         }
     }
