@@ -3,6 +3,7 @@ package ru.jevent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.jevent.model.*;
+import ru.jevent.model.Enums.CurrentTaskStatus;
 import ru.jevent.model.Enums.RateType;
 import ru.jevent.model.Enums.Sex;
 import ru.jevent.model.Enums.SlotType;
@@ -318,5 +319,20 @@ public class TestData {
         task.setActive(true);
 
         return task;
+    }
+
+    public Task getCompletedTask() {
+        Task task = getSimpleTask();
+        task.setTarget(new HashSet<>(getExistingUsersList()));
+        task.setAttachList(new HashSet<>(Arrays.asList(getExistingPartner(), getExistingVisitor())));
+        task.setStatusLog(getStatusList());
+        task.setCommentList(getMixedCommentsList());
+        return task;
+    }
+
+    public List<TaskStatus> getStatusList() {
+        TaskStatus st1 = new TaskStatus("Status is new", getExistingUser(), LocalDateTime.now().minusDays(5), CurrentTaskStatus.NEW);
+        TaskStatus st2 = new TaskStatus("Status is in work", getExistingUser(), LocalDateTime.now().minusDays(4), CurrentTaskStatus.IN_WORK);
+        return Arrays.asList(st1, st2);
     }
 }

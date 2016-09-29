@@ -44,8 +44,8 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
-    public List<Task> getByInterval(LocalDateTime start, LocalDateTime end, long userId) {
-        return repository.getByInterval(start, end.plus(1, ChronoUnit.DAYS), userId);
+    public List<Task> getAssignedByInterval(LocalDateTime start, LocalDateTime end, long userId) {
+        return repository.getAssignedByInterval(start, end.plus(1, ChronoUnit.DAYS), userId);
     }
 
     @Override

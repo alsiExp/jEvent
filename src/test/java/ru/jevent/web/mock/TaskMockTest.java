@@ -54,7 +54,7 @@ public class TaskMockTest {
 
     @Test
     public void testGetByInterval() throws Exception {
-        controller.getByInterval(LocalDateTime.now(), LocalDateTime.now().plus(5, ChronoUnit.DAYS));
+        controller.getAssignedByInterval(LocalDateTime.now(), LocalDateTime.now().plus(5, ChronoUnit.DAYS));
     }
 
     @Test

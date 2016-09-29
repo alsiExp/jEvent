@@ -45,10 +45,10 @@ public class TaskRestController {
         service.delete(id);
     }
 
-    public List<Task> getByInterval(LocalDateTime start, LocalDateTime end) {
+    public List<Task> getAssignedByInterval(LocalDateTime start, LocalDateTime end) {
         long userId = LoggedUser.id();
         LOG.info("get task by interval ({} - {}) by user {}", start, end, userId);
-        return service.getByInterval(start, end, userId);
+        return service.getAssignedByInterval(start, end, userId);
     }
 
     public List<Task> getAllCreated() {

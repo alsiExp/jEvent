@@ -35,7 +35,7 @@ public class MockTaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public List<Task> getByInterval(LocalDateTime start, LocalDateTime end, long userId) {
+    public List<Task> getAssignedByInterval(LocalDateTime start, LocalDateTime end, long userId) {
         return new ArrayList<Task>(){{add(task);}};
     }
 

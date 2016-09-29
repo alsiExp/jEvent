@@ -166,6 +166,10 @@ public class Task extends NamedEntity {
         if (statusLog != null ? !statusLog.equals(task.statusLog) : task.statusLog != null) {
             return false;
         }
+        if(!this.getAttachList().equals(task.getAttachList())) {
+            return false;
+        }
+
         if(!this.getAttachList().isEmpty() && task.getAttachList().isEmpty() ||
                 this.getAttachList().isEmpty() && !task.getAttachList().isEmpty()) {
             return false;

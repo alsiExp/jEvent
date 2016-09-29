@@ -204,26 +204,33 @@ public class JdbcTaskRepositoryImpl implements TaskRepository {
 
     @Override
     public boolean delete(long id) {
-        return false;
+        return jdbcTemplate.update("DELETE FROM tasks WHERE id = ?", id) != 0;
     }
 
     @Override
-    public List<Task> getByInterval(LocalDateTime start, LocalDateTime end, long userId) {
-        return null;
+    public List<Task> getAssignedByInterval(LocalDateTime start, LocalDateTime end, long userId) {
+        String sql = "SELECT t.id, t.name, t.user_id, t.start, t.deadline, t.description, t.active " +
+                "FROM task_user_target ut LEFT JOIN tasks t ON ut.task_id = t.id " +
+                "WHERE  t.deadline >= ? AND t.deadline < ? AND ut.user_id = ? ORDER BY t.deadline";
+        return jdbcTemplate.query(sql, taskMapper, Timestamp.valueOf(start), Timestamp.valueOf(end), userId);
     }
 
     @Override
     public List<Task> getAllCreated(long userId) {
-        return null;
+        String sql = "SELECT t.id, t.name, t.user_id, t.start, t.deadline, t.description, t.active FROM tasks t " +
+                "WHERE t.user_id = ? ORDER BY t.deadline";
+        return jdbcTemplate.query(sql, taskMapper, userId);
     }
 
     @Override
     public List<Task> getAllAssigned(long userId) {
-        return null;
+        String sql = "SELECT t.id, t.name, t.user_id, t.start, t.deadline, t.description, t.active " +
+                "FROM task_user_target ut LEFT JOIN tasks t ON ut.task_id = t.id WHERE  ut.user_id = ? ORDER BY t.deadline";
+        return jdbcTemplate.query(sql, taskMapper, userId);
     }
 
     private List<Task> getAll() {
-        String sql = "SELECT t.id, t.name, t.user_id, t.start, t.deadline, t.description, t.active FROM tasks t ORDER BY t.start";
+        String sql = "SELECT t.id, t.name, t.user_id, t.start, t.deadline, t.description, t.active FROM tasks t ORDER BY t.deadline";
         return jdbcTemplate.query(sql, taskMapper);
     }
 

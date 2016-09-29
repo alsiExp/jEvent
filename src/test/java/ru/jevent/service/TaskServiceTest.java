@@ -49,4 +49,17 @@ public class TaskServiceTest {
             throw new Exception();
         }
     }
+
+    @Test
+    public void testCompletedTaskSave() throws Exception {
+        Task testTask = testData.getCompletedTask();
+        taskService.save(testTask);
+
+        Task savedTask = taskService.get(testTask.getId());
+        if(!testTask.equals(testTask)) {
+            throw new Exception();
+        }
+    }
+
+
 }

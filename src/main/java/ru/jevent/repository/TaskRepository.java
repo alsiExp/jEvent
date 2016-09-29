@@ -14,7 +14,7 @@ public interface TaskRepository {
 
     boolean delete(long id);
 
-    List<Task> getByInterval(LocalDateTime start, LocalDateTime end, long userId);
+    List<Task> getAssignedByInterval(LocalDateTime start, LocalDateTime end, long userId);
 
     List<Task> getAllCreated(long userId);
 
