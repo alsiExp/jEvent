@@ -100,14 +100,14 @@ public class JdbcTaskRepositoryImpl implements TaskRepository {
             }
         }
 
-        if(!task.getAttachList().isEmpty()) {
+        if(!task.getAttachSet().isEmpty()) {
             Map<String, Object> visitorsMap = new HashMap<>();
             visitorsMap.put("task_id", task.getId());
             Map<String, Object> partnersMap = new HashMap<>();
             partnersMap.put("task_id", task.getId());
             Map<String, Object> eventsMap = new HashMap<>();
             eventsMap.put("task_id", task.getId());
-            for(Attachable att : task.getAttachList()) {
+            for(Attachable att : task.getAttachSet()) {
                 if(att instanceof Visitor){
                     Visitor v = (Visitor) att;
                     visitorRepository.save(v);
@@ -247,7 +247,7 @@ public class JdbcTaskRepositoryImpl implements TaskRepository {
             task.setActive(rs.getBoolean("active"));
             task.setStatusLog(fillStatuses(task.getId()));
             task.setTarget(fillTargetUsers(task.getId()));
-            task.setAttachList(fillAttachList(task.getId()));
+            task.setAttachSet(fillAttachList(task.getId()));
             task.setCommentList(commentRepository.getAllByTaskId(task.getId()));
             return task;
         }

@@ -34,7 +34,7 @@ public class TaskServiceTest {
     public void testGet() throws Exception {
         Task task = taskService.get(100025);
         if(task.isNew() ||
-                task.getAttachList().size() != 4 ||
+                task.getAttachSet().size() != 4 ||
                 task.getTarget().size() != 6)
             throw new Exception();
     }
@@ -56,7 +56,7 @@ public class TaskServiceTest {
         taskService.save(testTask);
 
         Task savedTask = taskService.get(testTask.getId());
-        if(!testTask.equals(testTask)) {
+        if(!testTask.equals(savedTask)) {
             throw new Exception();
         }
     }

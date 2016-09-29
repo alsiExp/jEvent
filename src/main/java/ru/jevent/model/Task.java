@@ -23,7 +23,7 @@ public class Task extends NamedEntity {
     private List<TaskStatus> statusLog;
 
     //    can be Event, Partner or Visitor
-    private Set<Attachable> attachList;
+    private Set<Attachable> attachSet;
 
     private List<Comment> commentList;
 
@@ -31,7 +31,7 @@ public class Task extends NamedEntity {
     }
 
     public Task(String name, User author, Set<User> target, LocalDateTime start, LocalDateTime deadline,
-                String description, boolean active, TaskStatus taskStatus, Set<Attachable> attachList, List<Comment> commentList) {
+                String description, boolean active, TaskStatus taskStatus, Set<Attachable> attachSet, List<Comment> commentList) {
         super(name);
         this.author = author;
         this.target = target;
@@ -42,12 +42,12 @@ public class Task extends NamedEntity {
         if (taskStatus != null) {
             this.getStatusLog().add(taskStatus);
         }
-        this.attachList = attachList;
+        this.attachSet = attachSet;
         this.commentList = commentList;
     }
 
     public Task(long id, String name, User author, Set<User> target, LocalDateTime start, LocalDateTime deadline,
-                String description, boolean active, TaskStatus taskStatus, Set<Attachable> attachList, List<Comment> commentList) {
+                String description, boolean active, TaskStatus taskStatus, Set<Attachable> attachSet, List<Comment> commentList) {
         super(id, name);
         this.author = author;
         this.target = target;
@@ -58,7 +58,7 @@ public class Task extends NamedEntity {
         if (taskStatus != null) {
             this.getStatusLog().add(taskStatus);
         }
-        this.attachList = attachList;
+        this.attachSet = attachSet;
         this.commentList = commentList;
     }
 
@@ -125,15 +125,15 @@ public class Task extends NamedEntity {
         this.statusLog = statusLog;
     }
 
-    public Set<Attachable> getAttachList() {
-        if(attachList == null) {
-            attachList = new HashSet<>();
+    public Set<Attachable> getAttachSet() {
+        if(attachSet == null) {
+            attachSet = new HashSet<>();
         }
-        return attachList;
+        return attachSet;
     }
 
-    public void setAttachList(Set<Attachable> attachList) {
-        this.attachList = attachList;
+    public void setAttachSet(Set<Attachable> attachSet) {
+        this.attachSet = attachSet;
     }
 
     public List<Comment> getCommentList() {
@@ -163,31 +163,13 @@ public class Task extends NamedEntity {
         if (start != null ? !start.equals(task.start) : task.start != null) return false;
         if (deadline != null ? !deadline.equals(task.deadline) : task.deadline != null) return false;
         if (description != null ? !description.equals(task.description) : task.description != null) return false;
-        if (statusLog != null ? !statusLog.equals(task.statusLog) : task.statusLog != null) {
+        if (!isEquals(this.getStatusLog(), task.getStatusLog())) {
             return false;
         }
-        if(!this.getAttachList().equals(task.getAttachList())) {
+        if(!isEquals(this.getAttachSet(), task.getAttachSet())) {
             return false;
         }
-
-        if(!this.getAttachList().isEmpty() && task.getAttachList().isEmpty() ||
-                this.getAttachList().isEmpty() && !task.getAttachList().isEmpty()) {
-            return false;
-        }
-        if(this.getAttachList().size() != task.getAttachList().size()) {
-            return false;
-        }
-        if(!this.getAttachList().containsAll(task.getAttachList()) || !task.getAttachList().containsAll(this.getAttachList())) {
-            return false;
-        }
-        if(!this.getCommentList().isEmpty() && task.getCommentList().isEmpty() ||
-                this.getCommentList().isEmpty() && !task.getCommentList().isEmpty()) {
-            return false;
-        }
-        if(this.getCommentList().size() != task.getCommentList().size()) {
-            return false;
-        }
-        if(!this.getCommentList().containsAll(task.getCommentList()) || !task.getCommentList().containsAll(this.getCommentList())) {
+        if(!isEquals(this.getCommentList(), task.getCommentList())) {
             return false;
         }
         return true;
@@ -203,7 +185,7 @@ public class Task extends NamedEntity {
         result = 31 * result + (deadline != null ? deadline.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (statusLog != null ? statusLog.hashCode() : 0);
-        result = 31 * result + (attachList != null ? attachList.hashCode() : 0);
+        result = 31 * result + (attachSet != null ? attachSet.hashCode() : 0);
         result = 31 * result + (commentList != null ? commentList.hashCode() : 0);
         return result;
     }
@@ -236,9 +218,9 @@ public class Task extends NamedEntity {
         }
 
         StringBuilder attachSB = new StringBuilder();
-        if(!this.getAttachList().isEmpty()) {
+        if(!this.getAttachSet().isEmpty()) {
             attachSB.append('[');
-            for (Attachable a : getAttachList()) {
+            for (Attachable a : getAttachSet()) {
                 attachSB.append(prefix);
                 prefix = ",";
                 attachSB.append(a.getAttachName());
@@ -254,7 +236,7 @@ public class Task extends NamedEntity {
                 ", description='" + description + '\'' +
                 ", active=" + active +
                 ", statusLog=" + logSB.toString() +
-                ", attachList=" + attachSB.toString() +
+                ", attachSet=" + attachSB.toString() +
                 "} ";
     }
 }

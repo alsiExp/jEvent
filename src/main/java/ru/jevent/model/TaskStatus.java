@@ -70,11 +70,20 @@ public class TaskStatus extends BaseEntity{
 
         TaskStatus that = (TaskStatus) o;
 
-        if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        if (author != null ? !author.equals(that.author) : that.author != null) return false;
-        if (creationTime != null ? !creationTime.equals(that.creationTime) : that.creationTime != null) return false;
-        return status == that.status;
+        if (description != null ? !description.equals(that.description) : that.description != null) {
+            return false;
+        }
+        if (author != null ? !author.equals(that.author) : that.author != null) {
+            return false;
+        }
+        if (creationTime != null ? !creationTime.equals(that.creationTime) : that.creationTime != null) {
+            return false;
+        }
+         if(status != that.status) {
+             return false;
+         }
 
+        return true;
     }
 
     @Override
