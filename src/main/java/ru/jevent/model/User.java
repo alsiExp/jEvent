@@ -1,17 +1,31 @@
 package ru.jevent.model;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 import ru.jevent.model.Enums.Role;
 import ru.jevent.model.Enums.Sex;
 
+import javax.persistence.*;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "login", name = "unique_login")})
 public class User extends Person {
-
+    @Column(name = "login", nullable = false, unique = true)
     private String login;
-    //  Length(min = 5)
+
+    @Column(name = "password", nullable = false)
+    @NotEmpty
+    @Length(min = 4)
     private String password;
+
+
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
     public User() {

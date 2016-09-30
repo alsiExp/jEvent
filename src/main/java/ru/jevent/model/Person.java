@@ -1,17 +1,31 @@
 package ru.jevent.model;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import ru.jevent.model.Enums.Sex;
 
+import javax.persistence.*;
+
+
+@MappedSuperclass
 public class Person extends BaseEntity {
 
+    @NotEmpty
+    @Column(name = "first_name", nullable = false)
     protected String firstName;
+    @Column(name = "last_name")
     protected String lastName;
+
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "person_sex", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "sex")
     protected Sex sex;
 
+    @Column(name = "enabled")
     protected boolean enabled;
 
     //    store images in directory:
     //    src/main/webapp/resources/images/person/
+    @Column(name = "photo_url")
     protected String photoURL;
 
     public Person() {

@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS visitors_events_visits;
 DROP TABLE IF EXISTS visitors_events_speakers;
 DROP TABLE IF EXISTS task_statuses_tasks;
 
+
 DROP TABLE IF EXISTS slots;
 DROP TABLE IF EXISTS tracks;
 DROP TABLE IF EXISTS events_probable_speakers;
@@ -17,6 +18,7 @@ DROP TABLE IF EXISTS events_comments;
 DROP TABLE IF EXISTS visitors_comments;
 DROP TABLE IF EXISTS tasks_comments;
 DROP TABLE IF EXISTS rates;
+DROP TABLE IF EXISTS user_roles;
 
 DROP TABLE IF EXISTS tasks;
 DROP TABLE IF EXISTS comments;
@@ -30,7 +32,7 @@ DROP TABLE IF EXISTS person_sex;
 DROP TABLE IF EXISTS current_task_status;
 DROP TABLE IF EXISTS rate_type;
 DROP TABLE IF EXISTS slot_type;
-DROP TABLE IF EXISTS user_roles;
+
 
 
 DROP SEQUENCE IF EXISTS GLOBAL_SEQ;
@@ -61,13 +63,6 @@ CREATE TABLE slot_type
   type VARCHAR UNIQUE
 );
 
-CREATE TABLE user_roles
-(
-  id   BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  role VARCHAR UNIQUE
-);
-
-
 CREATE TABLE users
 (
   --   person
@@ -81,8 +76,15 @@ CREATE TABLE users
   login      VARCHAR NOT NULL CHECK (login <> ''),
   password   VARCHAR NOT NULL CHECK (password <> ''),
 
-
   FOREIGN KEY (sex) REFERENCES person_sex (id)
+);
+
+CREATE TABLE user_roles
+(
+  user_id INTEGER NOT NULL,
+  role    VARCHAR,
+  CONSTRAINT user_roles_idx UNIQUE (user_id, role),
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 CREATE TABLE visitors

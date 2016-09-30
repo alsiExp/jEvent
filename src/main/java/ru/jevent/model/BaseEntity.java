@@ -3,12 +3,18 @@ package ru.jevent.model;
 
 import ru.jevent.LoggerWrapper;
 
+import javax.persistence.*;
 import java.util.*;
 
+@MappedSuperclass
+@Access(AccessType.FIELD)
 public class BaseEntity {
 
     protected static final LoggerWrapper LOG = LoggerWrapper.get(BaseEntity.class);
 
+    @Id
+    @SequenceGenerator(name = "global_seq", sequenceName = "global_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "global_seq")
     protected Long id;
 
     public BaseEntity() {

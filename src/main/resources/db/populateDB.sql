@@ -42,8 +42,10 @@ VALUES (90030, 'ONLINE_LITE'), (90031, 'ONLINE_STANDARD'), (90032, 'ONLINE_BUSIN
 INSERT INTO slot_type (id, type)
 VALUES (90050, 'CHECK_IN'), (90051, 'KEYNOTE'), (90053, 'BREAK'), (90054, 'LECTURE');
 
+/*
 INSERT INTO user_roles (id, role)
 VALUES (90070, 'ROLE_USER'), (90071, 'ROLE_ADMIN');
+*/
 
 
 INSERT INTO partners (name, email, phone, description, logo_url)
