@@ -1,12 +1,23 @@
 package ru.jevent.model;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "comments")
+@NamedQueries({
 
+})
 public class Comment extends BaseEntity {
     // simple linear comments
+    @Column(name = "content", nullable = false)
     private String content;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User author;
+
+    @Column(name = "date", nullable = false)
     private LocalDateTime date;
 
     public Comment() {

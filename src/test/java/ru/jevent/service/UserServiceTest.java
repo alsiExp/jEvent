@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.TestData;
 import ru.jevent.model.User;
 import ru.jevent.util.DbPopulator;
-import ru.jevent.util.exception.NotFoundException;
 
 import java.util.List;
 
@@ -60,14 +59,6 @@ public class UserServiceTest {
         User savedUser = service.get(user.getId());
         if (!savedUser.equals(user))
             throw new Exception();
-    }
-
-
-    @Test(expected = NotFoundException.class)
-    public void testUpdateWithException() throws Exception {
-        User user = testData.getExistingUser();
-        user.setId(55L);
-        service.update(user);
     }
 
     @Test(expected = DataIntegrityViolationException.class)

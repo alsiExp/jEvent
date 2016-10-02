@@ -42,11 +42,6 @@ VALUES (90030, 'ONLINE_LITE'), (90031, 'ONLINE_STANDARD'), (90032, 'ONLINE_BUSIN
 INSERT INTO slot_type (id, type)
 VALUES (90050, 'CHECK_IN'), (90051, 'KEYNOTE'), (90053, 'BREAK'), (90054, 'LECTURE');
 
-/*
-INSERT INTO user_roles (id, role)
-VALUES (90070, 'ROLE_USER'), (90071, 'ROLE_ADMIN');
-*/
-
 
 INSERT INTO partners (name, email, phone, description, logo_url)
 VALUES
@@ -264,6 +259,18 @@ VALUES
    'Вы из тех, кто считает, что, распараллелив любой цикл, можно улучшить перформанс, и Collection.parallelStream() — ваш лучший друг? А как вам идея — вбросить ещё пачку машин и получить распределенную обработку? Интересно? Тогда для вас этот доклад обязателен к просмотру. ' ||
    'Виктор познакомит слушателей со своим другом, Ориентированным (Направленным) Ациклическим Графом (или Маркизом?!), и покажет, как с его помощью была организована распределенная высокопроизводительная система обработки информации в памяти поверх нашего знакомого Java 8 Stream API.',
    90054, NULL, 30000);
+
+INSERT INTO user_roles(user_id, role)
+VALUES
+  (100006, 'ROLE_USER'),
+  (100006, 'ROLE_ADMIN'),
+  (100007, 'ROLE_USER'),
+  (100007, 'ROLE_ADMIN'),
+  (100008, 'ROLE_USER'),
+  (100008, 'ROLE_ADMIN'),
+  (100009, 'ROLE_USER'),
+  (100010, 'ROLE_USER'),
+  (100011, 'ROLE_USER');
 
 
 

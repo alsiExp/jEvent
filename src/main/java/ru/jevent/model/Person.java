@@ -2,8 +2,11 @@ package ru.jevent.model;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import ru.jevent.model.Enums.Sex;
+import ru.jevent.model.converter.SexConverter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.MappedSuperclass;
 
 
 @MappedSuperclass
@@ -15,9 +18,9 @@ public class Person extends BaseEntity {
     @Column(name = "last_name")
     protected String lastName;
 
-    @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "person_sex", joinColumns = @JoinColumn(name = "id"))
+    // see http://stackoverflow.com/questions/5596518/read-enum-and-its-fields-from-a-database-jpa
     @Column(name = "sex")
+    @Convert(converter = SexConverter.class)
     protected Sex sex;
 
     @Column(name = "enabled")
