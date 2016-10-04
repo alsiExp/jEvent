@@ -1,14 +1,30 @@
 package ru.jevent.model;
 
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "partners")
+@NamedQueries({
+        @NamedQuery(name = "Partner.delete", query = "DELETE from Partner p where p.id = :id"),
+        @NamedQuery(name = "Partner.getAllSorted", query = "SELECT p FROM Partner p ORDER BY p.id")
+})
 public class Partner extends NamedEntity implements Attachable {
 
+    public static final String DELETE = "Partner.delete";
+    public static final String ALL_SORTED = "Partner.getAllSorted";
+
     //    connection info
+    @Column(name = "email")
     private String email;
+    @Column(name = "phone")
     private String phone;
 
+    @Column(name = "description")
     private String description;
 
     //    logo
+    @Column(name = "logo_url")
     private String logoURL;
 
 

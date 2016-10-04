@@ -1,16 +1,31 @@
 package ru.jevent.model;
 
 import ru.jevent.model.Enums.CurrentTaskStatus;
+import ru.jevent.model.converter.StatusConverter;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "task_statuses")
 public class TaskStatus extends BaseEntity{
     // TaskStatus stored status of task with creation time, description and creators name
 
+    @Column(name = "description")
     private String description;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
     private User author;
+    @Column(name = "creation_time")
     private LocalDateTime creationTime;
+
+    @Column(name = "current_task_status_id")
+    @Convert(converter = StatusConverter.class)
     private CurrentTaskStatus status;
+
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="task_id")
+    private Task task;
 
     public TaskStatus() {
     }
@@ -62,6 +77,14 @@ public class TaskStatus extends BaseEntity{
         this.status = status;
     }
 
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -80,6 +103,10 @@ public class TaskStatus extends BaseEntity{
             return false;
         }
          if(status != that.status) {
+             return false;
+         }
+
+         if(this.task.getId().equals(that.task.getId())) {
              return false;
          }
 
@@ -104,6 +131,7 @@ public class TaskStatus extends BaseEntity{
                 ", author=" + author +
                 ", creationTime=" + creationTime +
                 ", status=" + status +
+                ", task=" + task.getName() + '(' + task.getId() + ')' +
                 "} " ;
     }
 }

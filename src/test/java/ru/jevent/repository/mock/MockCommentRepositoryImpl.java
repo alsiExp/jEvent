@@ -36,24 +36,6 @@ public class MockCommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public List<Comment> getAllByVisitorId(long id) {
-        LOG.info("get all comments by Visitor id = " + id);
-        return null;
-    }
-
-    @Override
-    public List<Comment> getAllByEventId(long id) {
-        LOG.info("get all comments by Event id = " + id);
-        return null;
-    }
-
-    @Override
-    public List<Comment> getAllByTaskId(long id) {
-        LOG.info("get all comments by Task id = " + id);
-        return null;
-    }
-
-    @Override
     public List<Comment> getAll() {
         LOG.info("get all comments");
         return null;

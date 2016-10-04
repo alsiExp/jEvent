@@ -1,30 +1,52 @@
 package ru.jevent.model;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
+@Entity
+@Table(name = "tasks")
 public class Task extends NamedEntity {
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
     private User author;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id")
     private Set<User> target;
 
+    @Column(name = "start")
     private LocalDateTime start;
+    @Column(name = "deadline")
     private LocalDateTime deadline;
 
+    @Column(name = "description")
     private String description;
+    @Column(name = "active")
     private boolean active;
 
     //    actual status is last
     //    sort by creationTime in DB
+    @OneToMany(mappedBy = "task")
     private List<TaskStatus> statusLog;
 
     //    can be Event, Partner or Visitor
+    @Transient
     private Set<Attachable> attachSet;
 
+    @ManyToMany
+    @JoinTable(name = "task_attach_partners",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "partner_id"))
+    private Set<Partner> attachPartners;
+
+    @ManyToMany
+    @JoinTable(name = "tasks_comments",
+    joinColumns = @JoinColumn(name = "task_id"),
+    inverseJoinColumns = @JoinColumn(name = "comment_id"))
     private List<Comment> commentList;
 
     public Task() {

@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.TestData;
@@ -75,8 +76,13 @@ public class PartnerServiceTest {
     @Test(expected = NotFoundException.class)
     public void testUpdateWithException() throws Exception {
         Partner p = testData.getExistingPartner();
-        p.setId(45L);
-        service.update(p);
+        p.setName(null);
+        try {
+            service.update(p);
+        }
+        catch (DataIntegrityViolationException dve) {
+            throw new NotFoundException("DataIntegrityViolationException");
+        }
     }
 
 }
