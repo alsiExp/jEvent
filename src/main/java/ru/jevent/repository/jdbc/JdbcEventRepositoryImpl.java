@@ -266,7 +266,7 @@ public class JdbcEventRepositoryImpl implements EventRepository {
             event.setTracks(fillTracks(event.getId()));
             event.setConfirmedVisitors(fillConfirmedVisitorsMap(event.getId()));
             event.setProbableSpeakers(fillProbableSpeakersMap(event.getId()));
-            event.setCommentList(commentRepository.getAllByEventId(event.getId()));
+            event.setCommentList(helper.getAllByEventId(event.getId()));
             clearMaps();
 
             return event;

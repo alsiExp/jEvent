@@ -248,7 +248,7 @@ public class JdbcTaskRepositoryImpl implements TaskRepository {
             task.setStatusLog(fillStatuses(task.getId()));
             task.setTarget(fillTargetUsers(task.getId()));
             task.setAttachSet(fillAttachList(task.getId()));
-            task.setCommentList(commentRepository.getAllByTaskId(task.getId()));
+            task.setCommentList(helper.getAllByTaskId(task.getId()));
             return task;
         }
     }

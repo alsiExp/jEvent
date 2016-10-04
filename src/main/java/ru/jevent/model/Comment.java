@@ -6,14 +6,19 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "comments")
 @NamedQueries({
-
+        @NamedQuery(name = "Comment.delete", query = "DELETE from Comment c where c.id = :id"),
+        @NamedQuery(name = "Comment.getAllSorted", query = "SELECT c FROM Comment c ORDER BY c.date"),
+        @NamedQuery(name = "Comment.getAllByVisitorId", query = "SELECT c FROM Comment c ORDER BY c.date")
 })
 public class Comment extends BaseEntity {
     // simple linear comments
+    public static final String DELETE = "Comment.delete";
+    public static final String GET_ALL_SORTED = "Comment.getAllSorted";
+
     @Column(name = "content", nullable = false)
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User author;
 
@@ -66,7 +71,7 @@ public class Comment extends BaseEntity {
         return "Comment{"
                 + super.toString() +
                 ", content='" + content + '\'' +
-                ", author=" + author.toString() +
+                ", author=" + this.getAuthor().toString() +
                 ", date=" + date +
                 "} ";
     }
@@ -82,7 +87,7 @@ public class Comment extends BaseEntity {
         if (content != null ? !content.equals(comment.content) : comment.content != null) {
             return false;
         }
-        if (!author.equals(comment.author)) {
+        if (!this.getAuthor().equals(comment.getAuthor())) {
             return false;
         }
         if(!date.equals(comment.date)) {

@@ -28,32 +28,18 @@ public class JpaCommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
+    @Transactional
     public boolean delete(long id) {
-        return false;
+        return em.createNamedQuery(Comment.DELETE).setParameter("id", id).executeUpdate() != 0;
     }
 
     @Override
     public Comment get(long id) {
-        return null;
-    }
-
-    @Override
-    public List<Comment> getAllByVisitorId(long id) {
-        return null;
-    }
-
-    @Override
-    public List<Comment> getAllByEventId(long id) {
-        return null;
-    }
-
-    @Override
-    public List<Comment> getAllByTaskId(long id) {
-        return null;
+        return em.find(Comment.class, id);
     }
 
     @Override
     public List<Comment> getAll() {
-        return null;
+        return em.createNamedQuery(Comment.GET_ALL_SORTED, Comment.class).getResultList();
     }
 }

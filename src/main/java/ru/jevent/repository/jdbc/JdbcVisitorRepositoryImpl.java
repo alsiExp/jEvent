@@ -164,7 +164,7 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
             if(!stringCost.isEmpty()) {
                 visitor.setCost(Double.parseDouble(stringCost));
             }
-            visitor.setCommentList(commentRepository.getAllByVisitorId(visitor_id));
+            visitor.setCommentList(helper.getAllByVisitorId(visitor_id));
             return visitor;
         }
     }

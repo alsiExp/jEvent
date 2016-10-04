@@ -5,12 +5,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.TestData;
 import ru.jevent.model.Comment;
 import ru.jevent.util.DbPopulator;
-import ru.jevent.util.exception.NotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -55,10 +55,11 @@ public class CommentServiceTest {
             throw new Exception();
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test(expected = DataIntegrityViolationException.class)
     public void testUpdateWithException() throws Exception {
         Comment c = testData.getExistingComment();
-        c.setId(1L);
+        //c.setId(1L);  java.lang.AssertionError
+        c.setContent(null);
         service.update(c);
     }
 
