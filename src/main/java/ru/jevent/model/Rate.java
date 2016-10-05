@@ -1,17 +1,29 @@
 package ru.jevent.model;
 
 import ru.jevent.model.Enums.RateType;
+import ru.jevent.model.converter.RateConverter;
 
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "rates")
 public class Rate extends NamedEntity {
     // tariffs for events:
     // online / personal
     // lite / standart / business
 
+    @Column(name = "rate_type")
+    @Convert(converter = RateConverter.class)
     private RateType rateType;
+    @Column(name = "start_date")
     private LocalDateTime start;
+    @Column(name = "end_date")
     private LocalDateTime end;
+    @Column(name = "cost")
     private double cost;
 
 

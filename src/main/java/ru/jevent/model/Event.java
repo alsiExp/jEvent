@@ -1,10 +1,12 @@
 package ru.jevent.model;
 
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-
+@Entity
+@Table(name = "events")
 public class Event extends NamedEntity {
 
     /*
@@ -19,27 +21,42 @@ public class Event extends NamedEntity {
         DB tables - tracks, slots (with slot_type), visitors_events_speakers
      */
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
+    @Column(name = "tag_name")
     private String tagName;
+    @Column(name = "address")
     private String address;
+    @Column(name ="description")
     private String description;
+    @Column(name = "logo_url")
     private String logoURL;
+    @Column(name = "start")
     private LocalDateTime startDate;
 
+    @Transient
     private Map<Visitor, OfferDetails> probableSpeakers;
+    @Transient
     private Map<Visitor, PayDetails> confirmedVisitors;
 
     //    ticket prices
     //    sort by LocalDate start
+    @Transient
     private List<Rate> rates;
 
     //    tracks with slots (in list)
     //    sort by field position in DB
+    @Transient
     private Set<Track> tracks;
 
     //    notes for Event
     //    sort by date
+    @ManyToMany
+    @JoinTable(name = "events_comments",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "comment_id"))
     private List<Comment> commentList;
 
 

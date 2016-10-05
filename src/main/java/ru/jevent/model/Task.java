@@ -30,7 +30,7 @@ public class Task extends NamedEntity {
 
     //    actual status is last
     //    sort by creationTime in DB
-    @OneToMany(mappedBy = "task")
+    @OneToMany(mappedBy = "task", fetch = FetchType.EAGER)
     private List<TaskStatus> statusLog;
 
     /*
@@ -43,12 +43,12 @@ public class Task extends NamedEntity {
 //                joinColumns = @JoinColumn(name = "task_id"),
 //                inverseJoinColumns = @JoinColumn(name = "event_id"))
 //    private Set<Event> attachEvents;
-//
-//    @ManyToMany
-//    @JoinTable(name = "task_attach_visitors",
-//                joinColumns = @JoinColumn(name = "task_id"),
-//                inverseJoinColumns = @JoinColumn(name = "visitor_id"))
-//    private Set<Visitor> attachVisitors;
+
+    @ManyToMany
+    @JoinTable(name = "task_attach_visitors",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "visitor_id"))
+    private Set<Visitor> attachVisitors;
 
     @ManyToMany
     @JoinTable(name = "task_attach_partners",
@@ -59,8 +59,8 @@ public class Task extends NamedEntity {
 
     @ManyToMany
     @JoinTable(name = "tasks_comments",
-    joinColumns = @JoinColumn(name = "task_id"),
-    inverseJoinColumns = @JoinColumn(name = "comment_id"))
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "comment_id"))
     private List<Comment> commentList;
 
     public Task() {
@@ -105,7 +105,7 @@ public class Task extends NamedEntity {
     }
 
     public Set<User> getTarget() {
-        if(target == null) {
+        if (target == null) {
             target = new HashSet<User>();
         }
         return target;
@@ -149,7 +149,7 @@ public class Task extends NamedEntity {
     }
 
     public List<TaskStatus> getStatusLog() {
-        if(statusLog == null) {
+        if (statusLog == null) {
             statusLog = new ArrayList<>();
         }
         return statusLog;
@@ -160,7 +160,7 @@ public class Task extends NamedEntity {
     }
 
     public List<Comment> getCommentList() {
-        if(commentList == null) {
+        if (commentList == null) {
             commentList = new ArrayList<>();
         }
         return commentList;
@@ -189,7 +189,7 @@ public class Task extends NamedEntity {
         if (!isEquals(this.getStatusLog(), task.getStatusLog())) {
             return false;
         }
-        if(!isEquals(this.getCommentList(), task.getCommentList())) {
+        if (!isEquals(this.getCommentList(), task.getCommentList())) {
             return false;
         }
         return true;
@@ -213,7 +213,7 @@ public class Task extends NamedEntity {
     public String toString() {
         String prefix = "";
         StringBuilder targetSB = new StringBuilder();
-        if(!this.getTarget().isEmpty()) {
+        if (!this.getTarget().isEmpty()) {
             targetSB.append('[');
             for (User u : getTarget()) {
                 targetSB.append(prefix);
@@ -225,7 +225,7 @@ public class Task extends NamedEntity {
         }
 
         StringBuilder logSB = new StringBuilder();
-        if(!getStatusLog().isEmpty()) {
+        if (!getStatusLog().isEmpty()) {
             logSB.append('[');
             for (TaskStatus s : getStatusLog()) {
                 logSB.append(prefix);

@@ -2,11 +2,14 @@ package ru.jevent.model;
 
 import ru.jevent.model.Enums.Sex;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "visitors")
 public class Visitor extends Person {
     /*
         Entity Visitor have not links for Event and Task.
@@ -17,27 +20,42 @@ public class Visitor extends Person {
      */
 
     //    Dates
+    @Column(name = "birthday")
     private LocalDateTime birthDay;
+    @Column(name = "registered_date", nullable = false)
     private LocalDate registered;
 
     //    connection info
+    @Column(name = "email")
     private String email;
+    @Column(name = "phone")
     private String phone;
 
     //    Social Networks
+    @Column(name = "github_account")
     private String gitHubAccount;
+    @Column(name = "linkedin_account")
     private String linkedInAccount;
+    @Column(name = "twitter_account")
     private String twitterAccount;
 
     //    Visitor description
+    @Column(name = "employer")
     private String employer;
+    @Column(name = "biography")
     private String biography;
+    @Column(name = "description")
     private String description;
 
     //    quantity of money, that will be received or payed
+    @Column(name = "cost")
     private double cost;
 
     //    notes from all Users about Visitor
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "visitors_comments",
+            joinColumns = @JoinColumn(name = "visitor_id"),
+            inverseJoinColumns = @JoinColumn(name = "comment_id"))
     private List<Comment> commentList;
 
     /*
@@ -92,7 +110,7 @@ public class Visitor extends Person {
     }
 
     public LocalDate getRegistered() {
-        if(registered  == null) {
+        if (registered == null) {
             registered = LocalDate.now();
         }
         return registered;
@@ -101,7 +119,6 @@ public class Visitor extends Person {
     public void setRegistered(LocalDate registered) {
         this.registered = registered;
     }
-
 
 
     public String getEmail() {
@@ -119,7 +136,6 @@ public class Visitor extends Person {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
 
 
     public String getGitHubAccount() {
@@ -147,7 +163,6 @@ public class Visitor extends Person {
     }
 
 
-
     public String getEmployer() {
         return employer;
     }
@@ -171,7 +186,6 @@ public class Visitor extends Person {
     public void setDescription(String description) {
         this.description = description;
     }
-
 
 
     public double getCost() {
@@ -216,14 +230,14 @@ public class Visitor extends Person {
         if (employer != null ? !employer.equals(visitor.employer) : visitor.employer != null) return false;
         if (biography != null ? !biography.equals(visitor.biography) : visitor.biography != null) return false;
         if (description != null ? !description.equals(visitor.description) : visitor.description != null) return false;
-        if(!this.getCommentList().isEmpty() && visitor.getCommentList().isEmpty() ||
+        if (!this.getCommentList().isEmpty() && visitor.getCommentList().isEmpty() ||
                 this.getCommentList().isEmpty() && !visitor.getCommentList().isEmpty()) {
             return false;
         }
-        if(this.getCommentList().size() != visitor.getCommentList().size()) {
+        if (this.getCommentList().size() != visitor.getCommentList().size()) {
             return false;
         }
-        if(!this.getCommentList().containsAll(visitor.getCommentList()) || !visitor.getCommentList().containsAll(this.getCommentList())) {
+        if (!this.getCommentList().containsAll(visitor.getCommentList()) || !visitor.getCommentList().containsAll(this.getCommentList())) {
             return false;
         }
 //        if(!this.getCommentList().equals(visitor.getCommentList())) {
@@ -255,7 +269,7 @@ public class Visitor extends Person {
     @Override
     public String toString() {
         StringBuilder commentsSB = new StringBuilder();
-        if(!this.getCommentList().isEmpty()) {
+        if (!this.getCommentList().isEmpty()) {
             String prefix = "";
             commentsSB.append('[');
             for (Comment c : commentList) {
