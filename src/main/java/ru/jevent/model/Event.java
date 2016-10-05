@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 
-public class Event extends NamedEntity implements Attachable {
+public class Event extends NamedEntity {
 
     /*
         In probableSpeakers stored map<Visitor, OfferDetails>.
@@ -74,21 +74,6 @@ public class Event extends NamedEntity implements Attachable {
         this.rates = rates;
         this.tracks = tracks;
         this.commentList = commentList;
-    }
-
-    @Override
-    public String getAttachName() {
-        return name;
-    }
-
-    @Override
-    public String getAttachDescription() {
-        return description;
-    }
-
-    @Override
-    public String getAttachImageURL() {
-        return this.getLogoURL();
     }
 
     public User getAuthor() {

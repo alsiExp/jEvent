@@ -17,7 +17,7 @@ public class MockTaskRepositoryImpl implements TaskRepository {
 
 
     private Task task = new Task(1, "Сделать что-то", new User(), null, LocalDateTime.now(),
-            LocalDateTime.now().plus(7, ChronoUnit.DAYS), "task description", true, null, null, null);
+            LocalDateTime.now().plus(7, ChronoUnit.DAYS), "task description", true, null, null);
 
     @Override
     public Task save(Task task) {

@@ -100,7 +100,7 @@ public class JdbcTaskRepositoryImpl implements TaskRepository {
             }
         }
 
-        if(!task.getAttachSet().isEmpty()) {
+ /*       if(!task.getAttachSet().isEmpty()) {
             Map<String, Object> visitorsMap = new HashMap<>();
             visitorsMap.put("task_id", task.getId());
             Map<String, Object> partnersMap = new HashMap<>();
@@ -139,6 +139,7 @@ public class JdbcTaskRepositoryImpl implements TaskRepository {
             insertTaskPartners.flush();
             insertTaskPartners.flush();
         }
+        */
 
         if(!task.getTarget().isEmpty()) {
             Map<String, Object> userTargetMap = new HashMap<>();
@@ -247,7 +248,7 @@ public class JdbcTaskRepositoryImpl implements TaskRepository {
             task.setActive(rs.getBoolean("active"));
             task.setStatusLog(fillStatuses(task.getId()));
             task.setTarget(fillTargetUsers(task.getId()));
-            task.setAttachSet(fillAttachList(task.getId()));
+            insertAttachSets(task);
             task.setCommentList(helper.getAllByTaskId(task.getId()));
             return task;
         }
@@ -280,16 +281,18 @@ public class JdbcTaskRepositoryImpl implements TaskRepository {
         });
     }
 
-    private Set<Attachable> fillAttachList(Long id) {
+    private Task insertAttachSets(Task task) {
         String eventSql = "SELECT event_id from task_attach_events WHERE task_id = ?";
         String visitorSql = "SELECT visitor_id FROM task_attach_visitors WHERE task_id = ?";
         String partnerSql = "SELECT partner_id FROM task_attach_partners WHERE task_id = ?";
-        HashSet<Attachable> set = new HashSet<>();
-        set.addAll(jdbcTemplate.query(eventSql, (rs, i) -> eventRepository.get(rs.getLong("event_id")), id));
-        set.addAll(jdbcTemplate.query(visitorSql, (rs, i) -> visitorRepository.get(rs.getLong("visitor_id")), id));
-        set.addAll(jdbcTemplate.query(partnerSql, (rs, i) -> partnerRepository.get(rs.getLong("partner_id")), id));
+        HashSet<Event> eventSet = new HashSet<>();
+        HashSet<Partner> partnerSet = new HashSet<>();
+        HashSet<Visitor> visitorSet = new HashSet<>();
+        eventSet.addAll(jdbcTemplate.query(eventSql, (rs, i) -> eventRepository.get(rs.getLong("event_id")), task.getId()));
+        visitorSet.addAll(jdbcTemplate.query(visitorSql, (rs, i) -> visitorRepository.get(rs.getLong("visitor_id")), task.getId()));
+        partnerSet.addAll(jdbcTemplate.query(partnerSql, (rs, i) -> partnerRepository.get(rs.getLong("partner_id")), task.getId()));
 
-        return set;
+        return task;
     }
 
     private final class InsertTaskEvents extends BatchSqlUpdate {

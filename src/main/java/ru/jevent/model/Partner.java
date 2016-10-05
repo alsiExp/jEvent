@@ -9,7 +9,7 @@ import javax.persistence.*;
         @NamedQuery(name = "Partner.delete", query = "DELETE from Partner p where p.id = :id"),
         @NamedQuery(name = "Partner.getAllSorted", query = "SELECT p FROM Partner p ORDER BY p.id")
 })
-public class Partner extends NamedEntity implements Attachable {
+public class Partner extends NamedEntity {
 
     public static final String DELETE = "Partner.delete";
     public static final String ALL_SORTED = "Partner.getAllSorted";
@@ -45,22 +45,6 @@ public class Partner extends NamedEntity implements Attachable {
         this.phone = phone;
         this.description = description;
         this.logoURL = logoURL;
-    }
-
-
-    @Override
-    public String getAttachName() {
-        return this.getName();
-    }
-
-    @Override
-    public String getAttachDescription() {
-        return this.getDescription();
-    }
-
-    @Override
-    public String getAttachImageURL() {
-        return this.getLogoURL();
     }
 
     public String getEmail() {

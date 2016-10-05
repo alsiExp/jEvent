@@ -34,7 +34,6 @@ public class TaskServiceTest {
     public void testGet() throws Exception {
         Task task = taskService.get(100025);
         if(task.isNew() ||
-                task.getAttachSet().size() != 4 ||
                 task.getTarget().size() != 6)
             throw new Exception();
     }

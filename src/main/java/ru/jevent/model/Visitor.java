@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Visitor extends Person implements Attachable {
+public class Visitor extends Person {
     /*
         Entity Visitor have not links for Event and Task.
         To find Events, where Visitor was speaker, use getSpeakerEventList<Visitor>(long id) in EventRepository;
@@ -81,21 +81,6 @@ public class Visitor extends Person implements Attachable {
         this.description = description;
         this.cost = cost;
         this.commentList = commentList;
-    }
-
-    @Override
-    public String getAttachName() {
-        return this.getFullName();
-    }
-
-    @Override
-    public String getAttachDescription() {
-        return this.getDescription();
-    }
-
-    @Override
-    public String getAttachImageURL() {
-        return this.getPhotoURL();
     }
 
     public LocalDateTime getBirthDay() {

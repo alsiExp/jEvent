@@ -33,15 +33,29 @@ public class Task extends NamedEntity {
     @OneToMany(mappedBy = "task")
     private List<TaskStatus> statusLog;
 
-    //    can be Event, Partner or Visitor
-    @Transient
-    private Set<Attachable> attachSet;
+    /*
+    Three different sets for Events, Visitors and Partners.
+    Interface in model was not realy good idea.
+     */
+
+//    @ManyToMany
+//    @JoinTable(name = "task_attach_events",
+//                joinColumns = @JoinColumn(name = "task_id"),
+//                inverseJoinColumns = @JoinColumn(name = "event_id"))
+//    private Set<Event> attachEvents;
+//
+//    @ManyToMany
+//    @JoinTable(name = "task_attach_visitors",
+//                joinColumns = @JoinColumn(name = "task_id"),
+//                inverseJoinColumns = @JoinColumn(name = "visitor_id"))
+//    private Set<Visitor> attachVisitors;
 
     @ManyToMany
     @JoinTable(name = "task_attach_partners",
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "partner_id"))
     private Set<Partner> attachPartners;
+
 
     @ManyToMany
     @JoinTable(name = "tasks_comments",
@@ -53,7 +67,7 @@ public class Task extends NamedEntity {
     }
 
     public Task(String name, User author, Set<User> target, LocalDateTime start, LocalDateTime deadline,
-                String description, boolean active, TaskStatus taskStatus, Set<Attachable> attachSet, List<Comment> commentList) {
+                String description, boolean active, TaskStatus taskStatus, List<Comment> commentList) {
         super(name);
         this.author = author;
         this.target = target;
@@ -64,12 +78,11 @@ public class Task extends NamedEntity {
         if (taskStatus != null) {
             this.getStatusLog().add(taskStatus);
         }
-        this.attachSet = attachSet;
         this.commentList = commentList;
     }
 
     public Task(long id, String name, User author, Set<User> target, LocalDateTime start, LocalDateTime deadline,
-                String description, boolean active, TaskStatus taskStatus, Set<Attachable> attachSet, List<Comment> commentList) {
+                String description, boolean active, TaskStatus taskStatus, List<Comment> commentList) {
         super(id, name);
         this.author = author;
         this.target = target;
@@ -80,7 +93,6 @@ public class Task extends NamedEntity {
         if (taskStatus != null) {
             this.getStatusLog().add(taskStatus);
         }
-        this.attachSet = attachSet;
         this.commentList = commentList;
     }
 
@@ -147,17 +159,6 @@ public class Task extends NamedEntity {
         this.statusLog = statusLog;
     }
 
-    public Set<Attachable> getAttachSet() {
-        if(attachSet == null) {
-            attachSet = new HashSet<>();
-        }
-        return attachSet;
-    }
-
-    public void setAttachSet(Set<Attachable> attachSet) {
-        this.attachSet = attachSet;
-    }
-
     public List<Comment> getCommentList() {
         if(commentList == null) {
             commentList = new ArrayList<>();
@@ -188,9 +189,6 @@ public class Task extends NamedEntity {
         if (!isEquals(this.getStatusLog(), task.getStatusLog())) {
             return false;
         }
-        if(!isEquals(this.getAttachSet(), task.getAttachSet())) {
-            return false;
-        }
         if(!isEquals(this.getCommentList(), task.getCommentList())) {
             return false;
         }
@@ -207,7 +205,6 @@ public class Task extends NamedEntity {
         result = 31 * result + (deadline != null ? deadline.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (statusLog != null ? statusLog.hashCode() : 0);
-        result = 31 * result + (attachSet != null ? attachSet.hashCode() : 0);
         result = 31 * result + (commentList != null ? commentList.hashCode() : 0);
         return result;
     }
@@ -239,16 +236,6 @@ public class Task extends NamedEntity {
             prefix = "";
         }
 
-        StringBuilder attachSB = new StringBuilder();
-        if(!this.getAttachSet().isEmpty()) {
-            attachSB.append('[');
-            for (Attachable a : getAttachSet()) {
-                attachSB.append(prefix);
-                prefix = ",";
-                attachSB.append(a.getAttachName());
-            }
-            attachSB.append(']');
-        }
         return "Task{" +
                 super.toString() +
                 ", author=" + author +
@@ -258,7 +245,6 @@ public class Task extends NamedEntity {
                 ", description='" + description + '\'' +
                 ", active=" + active +
                 ", statusLog=" + logSB.toString() +
-                ", attachSet=" + attachSB.toString() +
                 "} ";
     }
 }

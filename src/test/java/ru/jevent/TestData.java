@@ -324,7 +324,7 @@ public class TestData {
     public Task getCompletedTask() {
         Task task = getSimpleTask();
         task.setTarget(new HashSet<>(getExistingUsersList()));
-        task.setAttachSet(new HashSet<>(Arrays.asList(getExistingPartner(), getExistingVisitor(), getNewVisitor())));
+        //add attachable sets
         task.setStatusLog(getStatusList());
         task.setCommentList(getMixedCommentsList());
         return task;
