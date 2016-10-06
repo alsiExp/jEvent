@@ -1,7 +1,7 @@
 DELETE FROM slots;
 DELETE FROM tracks;
 DELETE FROM events_probable_speakers;
-DELETE FROM events_by_rate_confirmed_visitors;
+DELETE FROM events_confirmed_visitors;
 DELETE FROM task_statuses;
 DELETE FROM task_user_target;
 DELETE FROM task_attach_events;
@@ -232,11 +232,11 @@ VALUES
 
 
 
-INSERT INTO events_by_rate_confirmed_visitors (visitor_id, buy_date, rate_id)
+INSERT INTO events_confirmed_visitors (visitor_id, event_id, buy_date, comment, rate_id)
 VALUES
-  (100005, TIMESTAMP '2016-07-15 15:53', 100034),
-  (100005, TIMESTAMP '2016-01-29 07:48', 100054),
-  (100003, TIMESTAMP '2016-08-15 16:00', 100054);
+  (100005, 100012, TIMESTAMP '2016-07-15 15:53', 'some comment about visitor 100005' , 100034),
+  (100005, 100012, TIMESTAMP '2016-01-29 07:48', null, 100054),
+  (100003, 100012, TIMESTAMP '2016-08-15 16:00', null, 100054);
 
 INSERT INTO events_probable_speakers (visitor_id, event_id, send_date, speech_name, speech_description, wish_price)
 VALUES
@@ -251,11 +251,11 @@ VALUES
 
 INSERT INTO slots (name, track_id, start, visitor_id, slot_description, slot_type, grade, price)
 VALUES
-  ('Регистрация + welcome кофе', 100055, TIMESTAMP '2016-10-14 08:30', 100004, NULL, 90050, NULL, 40000),
-  ('Мавен против Грейдла: На заре автоматизации', 100055, TIMESTAMP '2016-10-14 12:00', 100004,
+  ('Регистрация + welcome кофе', 100059, TIMESTAMP '2016-10-14 08:30', 100004, NULL, 90050, NULL, 40000),
+  ('Мавен против Грейдла: На заре автоматизации', 100059, TIMESTAMP '2016-10-14 12:00', 100004,
    'Ну, вы в курсе: монстр, мастадонт и владелец поляны Мавен против молодого, динамичного, изворотливого Грейдла! Битва до победного конца! А судьи — вы! Ведущие представят свои решения «классических» проблем автоматизации проекта с помощью обоих инструментов «живьём» на сцене, а вы проголосуете за тот инструмент, который лучше решает проблему.',
    90054, NULL, 40000),
-  ('Верхом на реактивных стримах', 100055, TIMESTAMP '2016-10-14 12:00', 100003,
+  ('Верхом на реактивных стримах', 100059, TIMESTAMP '2016-10-14 12:00', 100003,
    'Вы из тех, кто считает, что, распараллелив любой цикл, можно улучшить перформанс, и Collection.parallelStream() — ваш лучший друг? А как вам идея — вбросить ещё пачку машин и получить распределенную обработку? Интересно? Тогда для вас этот доклад обязателен к просмотру. ' ||
    'Виктор познакомит слушателей со своим другом, Ориентированным (Направленным) Ациклическим Графом (или Маркизом?!), и покажет, как с его помощью была организована распределенная высокопроизводительная система обработки информации в памяти поверх нашего знакомого Java 8 Stream API.',
    90054, NULL, 30000);

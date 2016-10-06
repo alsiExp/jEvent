@@ -12,7 +12,10 @@ import ru.jevent.service.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Component
 public class TestData {
@@ -194,25 +197,14 @@ public class TestData {
     public Event getEventWithRPs() {
         Event event = getEventWithRates();
 
-        Map<Visitor, OfferDetails> probableSpeakers = new HashMap<>();
-        probableSpeakers.put(getMixedVisitorsList().get(0), getOfferDetails().get(0));
-        probableSpeakers.put(getMixedVisitorsList().get(1), getOfferDetails().get(1));
-        probableSpeakers.put(getMixedVisitorsList().get(2), getOfferDetails().get(2));
 
-        event.setProbableSpeakers(probableSpeakers);
+
 
         return event;
     }
 
     public Event getEventWithRPsCv() {
         Event event = getEventWithRPs();
-
-        Map<Visitor, PayDetails> confirmedVisitors = new HashMap<>();
-        confirmedVisitors.put(getMixedVisitorsList().get(0), getPayDetails(event.getRates()).get(0));
-        confirmedVisitors.put(getMixedVisitorsList().get(1), getPayDetails(event.getRates()).get(1));
-        confirmedVisitors.put(getMixedVisitorsList().get(2), getPayDetails(event.getRates()).get(2));
-
-        event.setConfirmedVisitors(confirmedVisitors);
 
         return event;
     }
@@ -234,19 +226,6 @@ public class TestData {
         return Arrays.asList(r2, r1);
     }
 
-    public List<OfferDetails> getOfferDetails() {
-        OfferDetails details1 = new OfferDetails(LocalDateTime.now().minusDays(12), "First speech", "Test description", 25000.00);
-        OfferDetails details2 = new OfferDetails(LocalDateTime.now().minusDays(10), "Second speech", "Test description", 20000.00);
-        OfferDetails details3 = new OfferDetails(LocalDateTime.now().minusDays(10), "Third speech", "Test description", 50000.00);
-        return Arrays.asList(details1, details2, details3);
-    }
-
-    public List<PayDetails> getPayDetails(List<Rate> rates) {
-        PayDetails details1 = new PayDetails(LocalDateTime.now().minusWeeks(3), rates.get(0));
-        PayDetails details2 = new PayDetails(LocalDateTime.now().minusWeeks(2), rates.get(1));
-        PayDetails details3 = new PayDetails(LocalDateTime.now().minusWeeks(1), rates.get(0));
-        return Arrays.asList(details1, details2, details3);
-    }
 
     public Set<Track> getTrackList() {
         Track t1 = new Track();

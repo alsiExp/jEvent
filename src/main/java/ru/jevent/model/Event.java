@@ -10,15 +10,13 @@ import java.util.*;
 public class Event extends NamedEntity {
 
     /*
-        In probableSpeakers stored map<Visitor, OfferDetails>.
-        Visitors are probable speakers, that sent request to be speaker at this event. DB table - events_probable_speakers.
 
         In confirmedVisitors stored map<Visitor, PayDetails>.
         Visitors are people, that already bought ticket.
         DB table - (events_by_rate_confirmed_visitors left join rates on rate_id = id).
 
         Approved speakers stored in they Slots (in Tracks).
-        DB tables - tracks, slots (with slot_type), visitors_events_speakers
+        DB tables - tracks, slots (with slot_type)
      */
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -36,10 +34,10 @@ public class Event extends NamedEntity {
     @Column(name = "start")
     private LocalDateTime startDate;
 
-    @Transient
-    private Map<Visitor, OfferDetails> probableSpeakers;
-    @Transient
-    private Map<Visitor, PayDetails> confirmedVisitors;
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProbableSpeaker> probableSpeakers;
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ConfirmedVisitor> confirmedVisitors;
 
     //    ticket prices
     //    sort by LocalDate start
@@ -63,22 +61,8 @@ public class Event extends NamedEntity {
     public Event() {
     }
 
-    public Event(String name, User author, String tagName, String address, String description, String logoURL, LocalDateTime startDate, Map<Visitor, OfferDetails> probableSpeakers, Map<Visitor, PayDetails> confirmedVisitors, List<Rate> rates, Set<Track> tracks, List<Comment> commentList) {
-        super(name);
-        this.author = author;
-        this.tagName = tagName;
-        this.address = address;
-        this.description = description;
-        this.logoURL = logoURL;
-        this.startDate = startDate;
-        this.probableSpeakers = probableSpeakers;
-        this.confirmedVisitors = confirmedVisitors;
-        this.rates = rates;
-        this.tracks = tracks;
-        this.commentList = commentList;
-    }
-
-    public Event(long id, String name, User author, String tagName, String address, String description, String logoURL, LocalDateTime startDate, Map<Visitor, OfferDetails> probableSpeakers, HashMap<Visitor, PayDetails> confirmedVisitors, List<Rate> rates, Set<Track> tracks, List<Comment> commentList) {
+    public Event(long id, String name, User author, String tagName, String address, String description, String logoURL,
+                 LocalDateTime startDate, Set<ProbableSpeaker> probableSpeakers, Set<ConfirmedVisitor> confirmedVisitors, List<Rate> rates, Set<Track> tracks, List<Comment> commentList) {
         super(id, name);
         this.author = author;
         this.tagName = tagName;
@@ -141,27 +125,27 @@ public class Event extends NamedEntity {
         this.startDate = startDate;
     }
 
-    public Map<Visitor, OfferDetails> getProbableSpeakers() {
+    public Set<ProbableSpeaker> getProbableSpeakers() {
         if (probableSpeakers == null) {
-            probableSpeakers = new HashMap<>();
+            probableSpeakers = new HashSet<>();
         }
 
         return probableSpeakers;
     }
 
-    public void setProbableSpeakers(Map<Visitor, OfferDetails> probableSpeakers) {
-        this.getProbableSpeakers().putAll(probableSpeakers);
+    public void setProbableSpeakers(Set<ProbableSpeaker> probableSpeakers) {
+        this.probableSpeakers = probableSpeakers;
     }
 
-    public Map<Visitor, PayDetails> getConfirmedVisitors() {
+    public Set<ConfirmedVisitor> getConfirmedVisitors() {
         if (confirmedVisitors == null) {
-            confirmedVisitors = new HashMap<>();
+            confirmedVisitors = new HashSet<>();
         }
         return confirmedVisitors;
     }
 
-    public void setConfirmedVisitors(Map<Visitor, PayDetails> confirmedVisitors) {
-        this.getConfirmedVisitors().putAll(confirmedVisitors);
+    public void setConfirmedVisitors(Set<ConfirmedVisitor> confirmedVisitors) {
+        this.confirmedVisitors = confirmedVisitors;
     }
 
     public List<Comment> getCommentList() {
@@ -319,7 +303,7 @@ public class Event extends NamedEntity {
                 ", description='" + description + '\'' +
                 ", logoURL='" + logoURL + '\'' +
                 ", startDate=" + startDate +
-                ", probableSpeakers=" + probableSpeakers +
+                ", probableSpeakers=" + probableSpeakers.toString() +
                 ", confirmedVisitors=" + confirmedVisitors +
                 ", rates=" + rates +
                 ", tracks=" + tracks +

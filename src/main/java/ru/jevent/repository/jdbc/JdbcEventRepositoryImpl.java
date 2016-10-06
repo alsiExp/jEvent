@@ -17,7 +17,6 @@ import ru.jevent.repository.CommentRepository;
 import ru.jevent.repository.EventRepository;
 import ru.jevent.repository.UserRepository;
 import ru.jevent.repository.VisitorRepository;
-import ru.jevent.util.exception.NotFoundException;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -28,6 +27,12 @@ import java.util.*;
 
 @Repository
 public class JdbcEventRepositoryImpl implements EventRepository {
+    /*
+    TODO:
+        - add user roles
+        - add ConfirmedVisitors and ProbableSpeakers
+     */
+
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -106,24 +111,7 @@ public class JdbcEventRepositoryImpl implements EventRepository {
                 return null;
             }
         }
-        if (!event.getProbableSpeakers().isEmpty()) {
-            Map<String, Object> psMap = new HashMap<>();
-            for (Map.Entry<Visitor, OfferDetails> entry : event.getProbableSpeakers().entrySet()) {
-                if(entry.getKey().isNew()) {
-                    visitorRepository.save(entry.getKey());
-                }
-                psMap.put("visitor_id", entry.getKey().getId());
-                psMap.put("event_id", event.getId());
-                psMap.put("send_date", Timestamp.valueOf(entry.getValue().getSendDate()));
-                psMap.put("speech_name", entry.getValue().getSpeechName());
-                psMap.put("speech_description", entry.getValue().getSpeechDescription());
-                psMap.put("wish_price", entry.getValue().getWishPrice());
-                if (insertProbableSpeaker.updateByNamedParam(psMap) == 0) {
-                    return null;
-                }
-            }
-            insertProbableSpeaker.flush();
-        }
+
 
         if (!event.getRates().isEmpty()) {
             MapSqlParameterSource ratesParamMap = new MapSqlParameterSource();
@@ -149,21 +137,6 @@ public class JdbcEventRepositoryImpl implements EventRepository {
             }
         }
 
-        if (!event.getConfirmedVisitors().isEmpty()) {
-            Map<String, Object> cvMap = new HashMap<>();
-            for (Map.Entry<Visitor, PayDetails> entry : event.getConfirmedVisitors().entrySet()) {
-                if(entry.getKey().isNew()) {
-                    visitorRepository.save(entry.getKey());
-                }
-                cvMap.put("visitor_id", entry.getKey().getId());
-                cvMap.put("buy_date", Timestamp.valueOf(entry.getValue().getDate()));
-                cvMap.put("rate_id", entry.getValue().getRate().getId());
-                if (insertConfirmedVisitor.updateByNamedParam(cvMap) == 0) {
-                    return null;
-                }
-            }
-            insertConfirmedVisitor.flush();
-        }
 
         if (!event.getTracks().isEmpty()) {
             MapSqlParameterSource trackMap = new MapSqlParameterSource();
@@ -264,8 +237,6 @@ public class JdbcEventRepositoryImpl implements EventRepository {
 
             event.setRates(fillRatesList(event.getId()));
             event.setTracks(fillTracks(event.getId()));
-            event.setConfirmedVisitors(fillConfirmedVisitorsMap(event.getId()));
-            event.setProbableSpeakers(fillProbableSpeakersMap(event.getId()));
             event.setCommentList(helper.getAllByEventId(event.getId()));
             clearMaps();
 
@@ -339,55 +310,6 @@ public class JdbcEventRepositoryImpl implements EventRepository {
         });
     }
 
-    private HashMap<Visitor, PayDetails> fillConfirmedVisitorsMap(long eventId) {
-        String sql = "SELECT vev.visitor_id, vev.buy_date, r.id AS rate_id FROM events_by_rate_confirmed_visitors vev " +
-                "LEFT JOIN rates r ON vev.rate_id = r.id WHERE r.event_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{eventId}, (ResultSet rs) -> {
-            HashMap<Visitor, PayDetails> m = new HashMap<>();
-            while (rs.next()) {
-                Long visitorId = rs.getLong("visitor_id");
-                Visitor v = getVisitorMap().get(visitorId);
-                if (v == null) {
-                    v = visitorRepository.get(visitorId);
-                    getVisitorMap().put(visitorId, v);
-                }
-                PayDetails pd = new PayDetails();
-                pd.setDate(rs.getTimestamp("buy_date").toLocalDateTime());
-                Long rateId = rs.getLong("rate_id");
-                Rate r = getRateMap().get(rateId);
-                if (r == null) {
-                    throw new NotFoundException("Wrong Event parse, Rate with id = " + rateId + " is not exist");
-                }
-                pd.setRate(r);
-                m.put(v, pd);
-            }
-            return m;
-        });
-    }
-
-    private HashMap<Visitor, OfferDetails> fillProbableSpeakersMap(long eventId) {
-        String sql = "SELECT visitor_id, send_date, speech_name, speech_description, wish_price " +
-                "FROM events_probable_speakers WHERE event_id = ?";
-
-        return jdbcTemplate.query(sql, new Object[]{eventId}, (ResultSet rs) -> {
-            HashMap<Visitor, OfferDetails> m = new HashMap<>();
-            while (rs.next()) {
-                Long visitorId = rs.getLong("visitor_id");
-                Visitor v = getVisitorMap().get(visitorId);
-                if (v == null) {
-                    v = visitorRepository.get(visitorId);
-                    getVisitorMap().put(visitorId, v);
-                }
-                OfferDetails od = new OfferDetails();
-                od.setSendDate(rs.getTimestamp("send_date").toLocalDateTime());
-                od.setSpeechName(rs.getString("speech_name"));
-                od.setSpeechDescription(rs.getString("speech_description"));
-                od.setWishPrice(rs.getDouble("wish_price"));
-                m.put(v, od);
-            }
-            return m;
-        });
-    }
 
     private HashMap<Long, Rate> getRateMap() {
         if (rateMap == null) {

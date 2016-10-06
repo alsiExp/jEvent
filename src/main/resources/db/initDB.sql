@@ -3,12 +3,13 @@ DROP TABLE IF EXISTS events_visitors;
 DROP TABLE IF EXISTS visitors_events_visits;
 DROP TABLE IF EXISTS visitors_events_speakers;
 DROP TABLE IF EXISTS task_statuses_tasks;
+DROP TABLE IF EXISTS events_by_rate_confirmed_visitors;
 
 
 DROP TABLE IF EXISTS slots;
 DROP TABLE IF EXISTS tracks;
 DROP TABLE IF EXISTS events_probable_speakers;
-DROP TABLE IF EXISTS events_by_rate_confirmed_visitors;
+DROP TABLE IF EXISTS events_confirmed_visitors;
 DROP TABLE IF EXISTS task_statuses;
 DROP TABLE IF EXISTS task_user_target;
 DROP TABLE IF EXISTS task_attach_events;
@@ -32,7 +33,6 @@ DROP TABLE IF EXISTS person_sex;
 DROP TABLE IF EXISTS current_task_status;
 DROP TABLE IF EXISTS rate_type;
 DROP TABLE IF EXISTS slot_type;
-
 
 
 DROP SEQUENCE IF EXISTS GLOBAL_SEQ;
@@ -179,14 +179,17 @@ CREATE TABLE tracks
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE
 );
 
-CREATE TABLE events_by_rate_confirmed_visitors
+CREATE TABLE events_confirmed_visitors
 (
+  id         BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
   visitor_id BIGINT    NOT NULL,
+  event_id   BIGINT    NOT NULL,
   buy_date   TIMESTAMP NOT NULL,
+  comment    VARCHAR,
   rate_id    BIGINT    NOT NULL,
 
-  PRIMARY KEY (visitor_id, buy_date, rate_id),
   FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE,
+  FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
   FOREIGN KEY (rate_id) REFERENCES rates (id) ON DELETE CASCADE
 );
 
@@ -233,6 +236,7 @@ CREATE TABLE visitors_comments
 CREATE TABLE events_probable_speakers
   -- probableSpeakers
 (
+  id                 BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
   visitor_id         BIGINT,
   event_id           BIGINT,
   send_date          TIMESTAMP NOT NULL DEFAULT now(),
@@ -240,7 +244,6 @@ CREATE TABLE events_probable_speakers
   speech_description VARCHAR,
   wish_Price         NUMERIC(20, 2),
 
-  PRIMARY KEY (visitor_id, event_id, speech_name),
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
   FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE
 );

@@ -17,6 +17,10 @@ public class Visitor extends Person {
         To find Events, where Visitor was only visitor, use getVisitorEventList<Visitor>(long id) in EventRepository;
         To find all Tasks for visitor use TaskRepository
 
+         After version 0.9:
+        - add storage for Emails
+        - additional phones and emails list ??
+
      */
 
     //    Dates
@@ -52,18 +56,11 @@ public class Visitor extends Person {
     private double cost;
 
     //    notes from all Users about Visitor
-    @ManyToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "visitors_comments",
             joinColumns = @JoinColumn(name = "visitor_id"),
             inverseJoinColumns = @JoinColumn(name = "comment_id"))
     private List<Comment> commentList;
-
-    /*
-    After version 0.9:
-        - add storage for Emails
-        - additional phones and emails list ??
-
-     */
 
 
     public Visitor() {
