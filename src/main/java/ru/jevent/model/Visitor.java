@@ -1,15 +1,20 @@
 package ru.jevent.model;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import ru.jevent.model.Enums.Sex;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "visitors")
+@NamedQueries({
+        @NamedQuery(name = Visitor.DELETE, query = "DELETE from Visitor v where v.id = :id"),
+        @NamedQuery(name = Visitor.ALL_SORTED, query = "SELECT v FROM Visitor v ORDER BY v.registered"),
+        @NamedQuery(name = Visitor.BY_EMAIL, query = "SELECT v FROM Visitor v WHERE v.email = ?1"),
+})
 public class Visitor extends Person {
     /*
         Entity Visitor have not links for Event and Task.
@@ -23,14 +28,19 @@ public class Visitor extends Person {
 
      */
 
+    public static final String DELETE = "Visitor.delete";
+    public static final String ALL_SORTED = "Visitor.getAllSorted";
+    public static final String BY_EMAIL = "Visitor.getByEmail";
+
     //    Dates
     @Column(name = "birthday")
     private LocalDateTime birthDay;
     @Column(name = "registered_date", nullable = false)
-    private LocalDate registered;
+    private LocalDateTime registered;
 
     //    connection info
     @Column(name = "email")
+    @NotEmpty
     private String email;
     @Column(name = "phone")
     private String phone;
@@ -56,17 +66,17 @@ public class Visitor extends Person {
     private double cost;
 
     //    notes from all Users about Visitor
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "visitors_comments",
-            joinColumns = @JoinColumn(name = "visitor_id"),
-            inverseJoinColumns = @JoinColumn(name = "comment_id"))
+            joinColumns = @JoinColumn(name = "visitor_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id", unique = true))
     private List<Comment> commentList;
 
 
     public Visitor() {
     }
 
-    public Visitor(String firstName, String lastName, Sex sex, boolean enabled, String photoURL, LocalDateTime birthDay, LocalDate registered, String email, String phone, String gitHubAccount, String linkedInAccount, String twitterAccount, String employer, String biography, String description, double cost, List<Comment> commentList) {
+    public Visitor(String firstName, String lastName, Sex sex, boolean enabled, String photoURL, LocalDateTime birthDay, LocalDateTime registered, String email, String phone, String gitHubAccount, String linkedInAccount, String twitterAccount, String employer, String biography, String description, double cost, List<Comment> commentList) {
         super(firstName, lastName, sex, enabled, photoURL);
         this.birthDay = birthDay;
         this.registered = registered;
@@ -82,7 +92,7 @@ public class Visitor extends Person {
         this.commentList = commentList;
     }
 
-    public Visitor(Long id, String firstName, String lastName, Sex sex, String photoURL, LocalDateTime birthDay, LocalDate registered, String email, String phone, String gitHubAccount, String linkedInAccount, String twitterAccount, String employer, String biography, String description, double cost, List<Comment> commentList) {
+    public Visitor(Long id, String firstName, String lastName, Sex sex, String photoURL, LocalDateTime birthDay, LocalDateTime registered, String email, String phone, String gitHubAccount, String linkedInAccount, String twitterAccount, String employer, String biography, String description, double cost, List<Comment> commentList) {
         super(id, firstName, lastName, sex, photoURL);
         this.birthDay = birthDay;
         this.registered = registered;
@@ -106,14 +116,11 @@ public class Visitor extends Person {
         this.birthDay = birthDay;
     }
 
-    public LocalDate getRegistered() {
-        if (registered == null) {
-            registered = LocalDate.now();
-        }
+    public LocalDateTime getRegistered() {
         return registered;
     }
 
-    public void setRegistered(LocalDate registered) {
+    public void setRegistered(LocalDateTime registered) {
         this.registered = registered;
     }
 

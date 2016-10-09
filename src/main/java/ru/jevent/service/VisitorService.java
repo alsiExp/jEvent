@@ -13,6 +13,8 @@ public interface VisitorService {
 
     Visitor get(long id) throws NotFoundException;
 
+    Visitor getByEmail(String email) throws NotFoundException;
+
     void delete(long id) throws NotFoundException;
 
     List<Visitor> getAll();

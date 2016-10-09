@@ -62,7 +62,7 @@ public class UserServiceTest {
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void testSaveWitoutLogin() throws Exception {
+    public void testSaveWithoutLogin() throws Exception {
         User user = testData.getExistingUser();
         user.setLogin(null);
         service.save(user);

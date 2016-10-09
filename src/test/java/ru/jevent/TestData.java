@@ -9,7 +9,6 @@ import ru.jevent.model.Enums.Sex;
 import ru.jevent.model.Enums.SlotType;
 import ru.jevent.service.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -132,7 +131,7 @@ public class TestData {
 
         visitor.setPhotoURL("testvisitor.jpg");
         visitor.setBirthDay(LocalDateTime.now().minus(39, ChronoUnit.YEARS));
-        visitor.setRegistered(LocalDate.now().minus(20, ChronoUnit.DAYS));
+        visitor.setRegistered(LocalDateTime.now().minus(20, ChronoUnit.DAYS));
         visitor.setEmail("test@visitor.com");
         visitor.setPhone("+0-000-000-00-00");
         visitor.setGitHubAccount("testgGithub");
@@ -142,7 +141,13 @@ public class TestData {
         visitor.setBiography("test biography");
         visitor.setDescription("test description");
         visitor.setCost(5000);
-        visitor.setCommentList(getMixedCommentsList());
+        return visitor;
+    }
+
+    public Visitor getNewVisitorWithNewComments() {
+        Visitor visitor =getNewVisitor();
+        visitor.setCommentList(Arrays.asList(getNewComment(), getNewComment()));
+
         return visitor;
     }
 

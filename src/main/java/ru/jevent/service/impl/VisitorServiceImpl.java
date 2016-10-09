@@ -36,6 +36,11 @@ public class VisitorServiceImpl implements VisitorService{
     }
 
     @Override
+    public Visitor getByEmail(String email) throws NotFoundException {
+        return ExceptionUtil.check(repository.getByEmail(email), "email=" + email);
+    }
+
+    @Override
     public void delete(long id) throws NotFoundException {
         ExceptionUtil.check(repository.delete(id), id);
     }

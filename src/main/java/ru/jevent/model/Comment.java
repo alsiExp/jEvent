@@ -7,8 +7,7 @@ import java.time.LocalDateTime;
 @Table(name = "comments")
 @NamedQueries({
         @NamedQuery(name = "Comment.delete", query = "DELETE from Comment c where c.id = :id"),
-        @NamedQuery(name = "Comment.getAllSorted", query = "SELECT c FROM Comment c ORDER BY c.date"),
-        @NamedQuery(name = "Comment.getAllByVisitorId", query = "SELECT c FROM Comment c ORDER BY c.date")
+        @NamedQuery(name = "Comment.getAllSorted", query = "SELECT c FROM Comment c ORDER BY c.date")
 })
 public class Comment extends BaseEntity {
     // simple linear comments

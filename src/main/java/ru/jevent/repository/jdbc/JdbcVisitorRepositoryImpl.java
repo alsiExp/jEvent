@@ -63,7 +63,7 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
         map.addValue("enabled", visitor.isEnabled());
         map.addValue("photo_url", visitor.getPhotoURL());
         map.addValue("birthday", Timestamp.valueOf(visitor.getBirthDay()));
-        map.addValue("registered_date", Timestamp.valueOf(visitor.getRegistered().atTime(0, 0)));
+        map.addValue("registered_date", Timestamp.valueOf(visitor.getRegistered()));
         map.addValue("email", visitor.getEmail());
         map.addValue("phone", visitor.getPhone());
         map.addValue("github_account", visitor.getGitHubAccount());
@@ -150,7 +150,7 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
             }
             Timestamp registeredDate =  rs.getTimestamp("registered_date");
             if(registeredDate != null) {
-                visitor.setRegistered(registeredDate.toLocalDateTime().toLocalDate());
+                visitor.setRegistered(registeredDate.toLocalDateTime());
             }
             visitor.setEmail(rs.getString("email"));
             visitor.setPhone(rs.getString("phone"));

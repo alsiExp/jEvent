@@ -5,12 +5,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.TestData;
 import ru.jevent.model.Visitor;
 import ru.jevent.util.DbPopulator;
-import ru.jevent.util.exception.NotFoundException;
 
 import java.util.List;
 
@@ -43,7 +43,15 @@ public class VisitorServiceTest {
     }
 
     @Test
-    public void testSave() throws Exception {
+    public void testGetByEmail() throws Exception {
+        Visitor v = service.getByEmail("jbaruch@gmail.com");
+        if(!v.equals(testData.getExistingVisitor())) {
+            throw new Exception();
+        }
+    }
+
+    @Test
+    public void testSimpleSave() throws Exception {
         Visitor visitor = testData.getNewVisitor();
         service.save(visitor);
         Visitor savedVisitor = service.get(visitor.getId());
@@ -53,8 +61,18 @@ public class VisitorServiceTest {
     }
 
     @Test
+    public void testSaveWithNewComments() throws Exception {
+        Visitor visitor = testData.getNewVisitorWithNewComments();
+        service.save(visitor);
+        Visitor savedVisitor = service.get(visitor.getId());
+        if(!savedVisitor.equals(visitor)) {
+            throw new Exception();
+        }
+    }
+
+    @Test
     public void testUpdate() throws Exception {
-        Visitor visitor = testData.getNewVisitor();
+        Visitor visitor = service.get(100004L);
         visitor.setDescription("Actual test description");
         service.update(visitor);
         Visitor savedVisitor = service.get(visitor.getId());
@@ -74,10 +92,10 @@ public class VisitorServiceTest {
         }
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test(expected = DataIntegrityViolationException.class)
     public void testUpdateWithException() throws Exception {
         Visitor v = testData.getExistingVisitor();
-        v.setId(911L);
+        v.setRegistered(null);
         service.update(v);
     }
 }
