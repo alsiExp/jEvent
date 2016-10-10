@@ -7,17 +7,17 @@ import java.util.*;
 
 @Entity
 @Table(name = "events")
+@NamedQueries({
+        @NamedQuery(name = Event.DELETE, query = "DELETE FROM Event e WHERE e.id = :id"),
+        @NamedQuery(name = Event.ALL_SORTED, query = "SELECT e FROM Event e ORDER BY e.id")
+})
 public class Event extends NamedEntity {
-
     /*
-
-        In confirmedVisitors stored map<Visitor, PayDetails>.
-        Visitors are people, that already bought ticket.
-        DB table - (events_by_rate_confirmed_visitors left join rates on rate_id = id).
-
         Approved speakers stored in they Slots (in Tracks).
-        DB tables - tracks, slots (with slot_type)
      */
+
+    public static final String DELETE = "Event.delete";
+    public static final String ALL_SORTED = "Event.getAllSorted";
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id", nullable = false)
@@ -41,17 +41,19 @@ public class Event extends NamedEntity {
 
     //    ticket prices
     //    sort by LocalDate start
-    @Transient
+    @OneToMany
+    @JoinColumn(name = "event_id", nullable = false)
     private List<Rate> rates;
 
     //    tracks with slots (in list)
     //    sort by field position in DB
-    @Transient
+    @OneToMany
+    @JoinColumn(name = "event_id", nullable = false)
     private Set<Track> tracks;
 
     //    notes for Event
     //    sort by date
-    @ManyToMany
+    @OneToMany
     @JoinTable(name = "events_comments",
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "comment_id"))

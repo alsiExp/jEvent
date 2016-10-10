@@ -1,26 +1,44 @@
 package ru.jevent.model;
 
 import ru.jevent.model.Enums.SlotType;
+import ru.jevent.model.converter.SlotTypeConverter;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "slots")
 public class Slot extends NamedEntity {
 
     //    can be null
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "visitor_id")
     private Visitor approvedSpeaker;
+    @Column(name = "slot_description")
     private String slotDescription;
+    @Column(name = "start")
     private LocalDateTime start;
+    @Column(name = "slot_type")
+    @Convert(converter = SlotTypeConverter.class)
     private SlotType slotType;
+
     //    will be set after Event (by Visitors votes)
+    @Column(name = "grade")
     private int grade;
+
     //    invitation costs
+    @Column(name = "price")
     private double price;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "track_id")
+    private Track track;
 
     public Slot() {
     }
 
     public Slot(String name, Visitor approvedSpeaker, String slotDescription, LocalDateTime start,
-                SlotType slotType, int grade, int price) {
+                SlotType slotType, int grade, int price, Track track) {
         super(name);
         this.approvedSpeaker = approvedSpeaker;
         this.slotDescription = slotDescription;
@@ -28,10 +46,11 @@ public class Slot extends NamedEntity {
         this.slotType = slotType;
         this.grade = grade;
         this.price = price;
+        this.track = track;
     }
 
     public Slot(long id, String name, Visitor approvedSpeaker, String slotDescription, LocalDateTime start,
-                SlotType slotType, int grade, int price) {
+                SlotType slotType, int grade, int price, Track track) {
         super(id, name);
         this.approvedSpeaker = approvedSpeaker;
         this.slotDescription = slotDescription;
@@ -39,6 +58,7 @@ public class Slot extends NamedEntity {
         this.slotType = slotType;
         this.grade = grade;
         this.price = price;
+        this.track = track;
     }
 
     public Visitor getApprovedSpeaker() {
@@ -89,6 +109,14 @@ public class Slot extends NamedEntity {
         this.price = price;
     }
 
+    public Track getTrack() {
+        return track;
+    }
+
+    public void setTrack(Track track) {
+        this.track = track;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -104,6 +132,7 @@ public class Slot extends NamedEntity {
         if (slotDescription != null ? !slotDescription.equals(slot.slotDescription) : slot.slotDescription != null)
             return false;
         if (start != null ? !start.equals(slot.start) : slot.start != null) return false;
+        if (track != null ? !track.getId().equals(track.getId()) : slot.track != null) return false;
         return slotType == slot.slotType;
 
     }
@@ -119,6 +148,7 @@ public class Slot extends NamedEntity {
         result = 31 * result + grade;
         temp = Double.doubleToLongBits(price);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (track != null ? track.hashCode() : 0);
         return result;
     }
 
@@ -128,6 +158,10 @@ public class Slot extends NamedEntity {
         if(approvedSpeaker != null) {
             speaker  = approvedSpeaker.toString();
         }
+        String trackName = "";
+        if(track != null) {
+            trackName  = track.getName();
+        }
         return "Slot{" +
                 super.toString() +
                 ", approvedSpeakerId=" + speaker +
@@ -136,6 +170,7 @@ public class Slot extends NamedEntity {
                 ", slotType=" + slotType +
                 ", grade=" + grade +
                 ", price=" + price +
+                ", track=" + trackName +
                 "} ";
     }
 }

@@ -10,14 +10,18 @@ public class ConfirmedVisitor extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "visitor_id")
     private Visitor visitor;
-    @ManyToOne(fetch = FetchType.EAGER)
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
     private Event event;
+
     @Column(name = "comment")
     private String payComment;
+
     @Column(name = "buy_date")
     private LocalDateTime buyDate;
-    @ManyToOne(fetch = FetchType.EAGER)
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rate_id")
     private Rate rate;
 
@@ -81,7 +85,7 @@ public class ConfirmedVisitor extends BaseEntity {
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (visitor != null ? visitor.hashCode() : 0);
-        result = 31 * result + (event != null ? event.hashCode() : 0);
+        result = 31 * result + (event != null ? event.getId().hashCode() : 0);
         result = 31 * result + (payComment != null ? payComment.hashCode() : 0);
         result = 31 * result + (buyDate != null ? buyDate.hashCode() : 0);
         result = 31 * result + (rate != null ? rate.hashCode() : 0);

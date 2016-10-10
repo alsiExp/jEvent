@@ -66,7 +66,7 @@ public class Visitor extends Person {
     private double cost;
 
     //    notes from all Users about Visitor
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "visitors_comments",
             joinColumns = @JoinColumn(name = "visitor_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id", unique = true))
@@ -234,20 +234,7 @@ public class Visitor extends Person {
         if (employer != null ? !employer.equals(visitor.employer) : visitor.employer != null) return false;
         if (biography != null ? !biography.equals(visitor.biography) : visitor.biography != null) return false;
         if (description != null ? !description.equals(visitor.description) : visitor.description != null) return false;
-        if (!this.getCommentList().isEmpty() && visitor.getCommentList().isEmpty() ||
-                this.getCommentList().isEmpty() && !visitor.getCommentList().isEmpty()) {
-            return false;
-        }
-        if (this.getCommentList().size() != visitor.getCommentList().size()) {
-            return false;
-        }
-        if (!this.getCommentList().containsAll(visitor.getCommentList()) || !visitor.getCommentList().containsAll(this.getCommentList())) {
-            return false;
-        }
-//        if(!this.getCommentList().equals(visitor.getCommentList())) {
-//            return false;
-//        }
-        return true;
+        return isEquals(this.getCommentList(), visitor.getCommentList());
     }
 
     @Override

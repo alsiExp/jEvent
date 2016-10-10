@@ -10,11 +10,19 @@ import java.time.LocalDateTime;
 public class LocalDateTimeConverter implements AttributeConverter<LocalDateTime, Timestamp> {
     @Override
     public Timestamp convertToDatabaseColumn(LocalDateTime ldt) {
-        return Timestamp.valueOf(ldt);
+        if(ldt == null) {
+            return null;
+        } else {
+            return Timestamp.valueOf(ldt);
+        }
     }
 
     @Override
     public LocalDateTime convertToEntityAttribute(Timestamp ts) {
-        return ts.toLocalDateTime();
+        if(ts == null) {
+            return null;
+        } else {
+            return ts.toLocalDateTime();
+        }
     }
 }

@@ -37,7 +37,7 @@ public class VisitorServiceTest {
     @Test
     public void testGet() throws Exception {
         Visitor v = service.get(100004L);
-        if(!v.equals(testData.getExistingVisitor())) {
+        if (!v.equals(testData.getExistingVisitor())) {
             throw new Exception();
         }
     }
@@ -45,7 +45,7 @@ public class VisitorServiceTest {
     @Test
     public void testGetByEmail() throws Exception {
         Visitor v = service.getByEmail("jbaruch@gmail.com");
-        if(!v.equals(testData.getExistingVisitor())) {
+        if (!v.equals(testData.getExistingVisitor())) {
             throw new Exception();
         }
     }
@@ -55,7 +55,7 @@ public class VisitorServiceTest {
         Visitor visitor = testData.getNewVisitor();
         service.save(visitor);
         Visitor savedVisitor = service.get(visitor.getId());
-        if(!savedVisitor.equals(visitor)) {
+        if (!savedVisitor.equals(visitor)) {
             throw new Exception();
         }
     }
@@ -65,10 +65,28 @@ public class VisitorServiceTest {
         Visitor visitor = testData.getNewVisitorWithNewComments();
         service.save(visitor);
         Visitor savedVisitor = service.get(visitor.getId());
-        if(!savedVisitor.equals(visitor)) {
+        if (!savedVisitor.equals(visitor)) {
             throw new Exception();
         }
     }
+
+    /*
+    *   test failed, new comment in existing visitor have id = null
+    *   here need Unidirectional @OneTOMany
+    *   but so comments must be mapped by visitor, event and task at the same time
+    */
+
+/*    @Test
+    public void testSaveExistingVisitorWithNewComments() throws Exception {
+        Visitor visitor = testData.getNewVisitor();
+        service.save(visitor);
+        visitor.setCommentList(Arrays.asList(testData.getNewComment(), testData.getNewComment()));
+        service.save(visitor);
+        Visitor savedVisitor = service.get(visitor.getId());
+        if (!savedVisitor.equals(visitor)) {
+            throw new Exception();
+        }
+    }*/
 
     @Test
     public void testUpdate() throws Exception {
@@ -76,7 +94,7 @@ public class VisitorServiceTest {
         visitor.setDescription("Actual test description");
         service.update(visitor);
         Visitor savedVisitor = service.get(visitor.getId());
-        if(!savedVisitor.equals(visitor)) {
+        if (!savedVisitor.equals(visitor)) {
             throw new Exception();
         }
     }
@@ -85,9 +103,9 @@ public class VisitorServiceTest {
     public void testDeleteAndGetAll() throws Exception {
         service.delete(100003L);
         List<Visitor> list = service.getAll();
-        if(list.isEmpty()) throw new Exception();
-        for(Visitor v : list) {
-            if(v.getId().equals(100003L))
+        if (list.isEmpty()) throw new Exception();
+        for (Visitor v : list) {
+            if (v.getId().equals(100003L))
                 throw new Exception();
         }
     }

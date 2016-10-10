@@ -10,7 +10,7 @@ public class ProbableSpeaker extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "visitor_id")
     Visitor speaker;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
     Event event;
     @Column(name = "send_date")
@@ -95,7 +95,7 @@ public class ProbableSpeaker extends BaseEntity {
         int result = super.hashCode();
         long temp;
         result = 31 * result + (speaker != null ? speaker.hashCode() : 0);
-        result = 31 * result + (event != null ? event.hashCode() : 0);
+        result = 31 * result + (event != null ? event.getId().hashCode() : 0);
         result = 31 * result + (sendDate != null ? sendDate.hashCode() : 0);
         result = 31 * result + (speechName != null ? speechName.hashCode() : 0);
         result = 31 * result + (speechDescription != null ? speechDescription.hashCode() : 0);

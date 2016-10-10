@@ -1,14 +1,19 @@
 package ru.jevent.model;
 
+import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
 
+@Entity
+@Table(name = "tracks")
 public class Track extends NamedEntity {
 
+    @Column(name = "description")
     private String description;
-    // sort by LocalDateTime start
-    private List<Slot> slotOrder;
 
+    // sort by LocalDateTime start
+    @OneToMany(mappedBy = "track", fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<Slot> slotOrder;
 
     public Track() {
     }
