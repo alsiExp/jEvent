@@ -17,4 +17,6 @@ public interface EventService {
 
     List<Event> getAll();
 
+    void dropCache();
+
 }

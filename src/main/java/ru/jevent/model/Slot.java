@@ -24,7 +24,7 @@ public class Slot extends NamedEntity {
 
     //    will be set after Event (by Visitors votes)
     @Column(name = "grade")
-    private int grade;
+    private Integer grade;
 
     //    invitation costs
     @Column(name = "price")

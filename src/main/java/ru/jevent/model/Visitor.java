@@ -70,6 +70,7 @@ public class Visitor extends Person {
     @JoinTable(name = "visitors_comments",
             joinColumns = @JoinColumn(name = "visitor_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id", unique = true))
+    @OrderBy("date")
     private List<Comment> commentList;
 
 

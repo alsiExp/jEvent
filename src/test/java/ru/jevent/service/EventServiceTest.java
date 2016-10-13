@@ -33,6 +33,7 @@ public class EventServiceTest {
     @Before
     public void setUp() throws Exception {
         dbPopulator.execute();
+        eventService.dropCache();
     }
 
     @Test

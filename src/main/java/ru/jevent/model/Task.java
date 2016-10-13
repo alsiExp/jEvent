@@ -31,6 +31,7 @@ public class Task extends NamedEntity {
     //    actual status is last
     //    sort by creationTime in DB
     @OneToMany(mappedBy = "task", fetch = FetchType.EAGER)
+    @OrderBy("creationTime")
     private List<TaskStatus> statusLog;
 
     /*

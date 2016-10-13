@@ -1,6 +1,8 @@
 package ru.jevent.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import ru.jevent.model.Event;
 import ru.jevent.repository.EventRepository;
@@ -20,11 +22,13 @@ public class EventServiceImpl implements EventService{
         this.repository = repository;
     }
 
+    @CacheEvict(value = "events", allEntries = true)
     @Override
     public Event save(Event event) {
         return repository.save(event);
     }
 
+    @CacheEvict(value = "events", allEntries = true)
     @Override
     public void update(Event event) throws NotFoundException {
         ExceptionUtil.check(repository.save(event), event.getId());
@@ -35,13 +39,21 @@ public class EventServiceImpl implements EventService{
         return ExceptionUtil.check(repository.get(id), id);
     }
 
+    @CacheEvict(value = "events", allEntries = true)
     @Override
     public void delete(long id) throws NotFoundException {
         ExceptionUtil.check(repository.delete(id), id);
     }
 
+    @Cacheable("events")
     @Override
     public List<Event> getAll() {
         return repository.getAll();
+    }
+
+    @CacheEvict(value = "events", allEntries = true)
+    @Override
+    public void dropCache() {
+
     }
 }

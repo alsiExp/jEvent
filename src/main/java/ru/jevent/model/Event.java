@@ -43,10 +43,10 @@ public class Event extends NamedEntity {
     //    sort by LocalDate start
     @OneToMany
     @JoinColumn(name = "event_id", nullable = false)
+    @OrderBy("start, cost")
     private List<Rate> rates;
 
-    //    tracks with slots (in list)
-    //    sort by field position in DB
+    //    tracks with slots
     @OneToMany
     @JoinColumn(name = "event_id", nullable = false)
     private Set<Track> tracks;
@@ -57,6 +57,7 @@ public class Event extends NamedEntity {
     @JoinTable(name = "events_comments",
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "comment_id"))
+    @OrderBy("date")
     private List<Comment> commentList;
 
 
