@@ -12,6 +12,7 @@ import ru.jevent.TestData;
 import ru.jevent.model.Visitor;
 import ru.jevent.util.DbPopulator;
 
+import java.util.Arrays;
 import java.util.List;
 
 @ContextConfiguration({
@@ -71,12 +72,12 @@ public class VisitorServiceTest {
     }
 
     /*
-    *   test failed, new comment in existing visitor have id = null
+    *   TODO: test failed, new comment in existing visitor have id = null
     *   here need Unidirectional @OneTOMany
     *   but so comments must be mapped by visitor, event and task at the same time
     */
 
-/*    @Test
+    @Test
     public void testSaveExistingVisitorWithNewComments() throws Exception {
         Visitor visitor = testData.getNewVisitor();
         service.save(visitor);
@@ -86,7 +87,7 @@ public class VisitorServiceTest {
         if (!savedVisitor.equals(visitor)) {
             throw new Exception();
         }
-    }*/
+    }
 
     @Test
     public void testUpdate() throws Exception {

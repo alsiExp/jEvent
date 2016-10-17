@@ -41,22 +41,22 @@ public class Event extends NamedEntity {
 
     //    ticket prices
     //    sort by LocalDate start
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "event_id", nullable = false)
     @OrderBy("start, cost")
     private List<Rate> rates;
 
     //    tracks with slots
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "event_id", nullable = false)
     private Set<Track> tracks;
 
     //    notes for Event
     //    sort by date
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "events_comments",
-            joinColumns = @JoinColumn(name = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "comment_id"))
+            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id", unique = true))
     @OrderBy("date")
     private List<Comment> commentList;
 
@@ -188,7 +188,9 @@ public class Event extends NamedEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Event)) return false;
-        if (!super.equals(o)) return false;
+        if (!super.equals(o)) {
+            return false;
+        }
 
         Event event = (Event) o;
 
@@ -210,70 +212,22 @@ public class Event extends NamedEntity {
         if (startDate != null ? !startDate.equals(event.startDate) : event.startDate != null) {
             return false;
         }
-
-        if(this.getProbableSpeakers().isEmpty() && !event.getProbableSpeakers().isEmpty() ||
-                !this.getProbableSpeakers().isEmpty() && event.getProbableSpeakers().isEmpty()) {
+        if(!isEquals(this.getProbableSpeakers(), event.getProbableSpeakers())) {
             return  false;
         }
-        if(this.getProbableSpeakers().size() != event.getProbableSpeakers().size()) {
-            return false;
-        }
-        if(this.getProbableSpeakers().hashCode() != event.getProbableSpeakers().hashCode()) {
-            return false;
-        }
-        if(this.getConfirmedVisitors().isEmpty() && !event.getConfirmedVisitors().isEmpty() ||
-                !this.getConfirmedVisitors().isEmpty() && event.getConfirmedVisitors().isEmpty()) {
+        if(!isEquals(this.getConfirmedVisitors(), event.getConfirmedVisitors())) {
             return  false;
         }
-        if(this.getConfirmedVisitors().size() != event.getConfirmedVisitors().size()) {
+        if(!isEquals(this.getCommentList(), event.getCommentList())) {
             return false;
         }
-        if(this.getConfirmedVisitors().hashCode() != event.getConfirmedVisitors().hashCode()) {
-            return false;
-        }
-
-        if(!this.getCommentList().isEmpty() && event.getCommentList().isEmpty() ||
-                this.getCommentList().isEmpty() && !event.getCommentList().isEmpty()) {
-            return false;
-        }
-        if(this.getCommentList().size() != event.getCommentList().size()) {
-            return false;
-        }
-        if(!this.getCommentList().containsAll(event.getCommentList()) || !event.getCommentList().containsAll(this.getCommentList())) {
-            return false;
-        }
-        if (this.getRates().isEmpty() && !event.getRates().isEmpty() ||
-                !this.getRates().isEmpty() && event.getRates().isEmpty()) {
-            return false;
-        }
-        if (this.getRates().size() != event.getRates().size()) {
-            return false;
-        }
-        if(!this.getRates().containsAll(event.getRates()) || !event.getRates().containsAll(this.getRates())) {
+        if (!isEquals(this.getRates(), event.getRates())) {
             return false;
         }
 
-        if (this.getTracks().isEmpty() && !event.getTracks().isEmpty() ||
-                !this.getTracks().isEmpty() && event.getTracks().isEmpty()) {
+        if (!isEquals(this.getTracks(), event.getTracks())) {
             return false;
         }
-        if(this.getTracks().size() != event.getTracks().size()) {
-            return false;
-        }
-
-        Set<Track> summ = new HashSet<>();
-        summ.addAll(this.getTracks());
-        summ.addAll(event.getTracks());
-        if(summ.size() != this.getTracks().size()) {
-            return false;
-        }
-
-//        TODO: understand this:
-//        if(!this.getTracks().containsAll(event.getTracks()) || !event.getTracks().containsAll(this.getTracks())) {
-//            boolean th = this.getTracks().containsAll(event.getTracks());  //true
-//            boolean ev = event.getTracks().containsAll(this.getTracks());  //false --- why??
-//            return false;
-//        }
 
         return true;
     }

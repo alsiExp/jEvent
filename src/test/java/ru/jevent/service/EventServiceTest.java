@@ -65,9 +65,11 @@ public class EventServiceTest {
             throw new Exception();
     }
 
+    // TODO: throw Exception, Probable Speakers are not equals (but really equals)
     @Test
     public void testEventWithProbableSpeakersSave() throws Exception {
-        Event testEvent = testData.getEventWithRPs();
+        Event testEvent = testData.getEventWithRates();
+        testEvent.setProbableSpeakers(testData.getProbableSpeakers(testEvent));
         eventService.save(testEvent);
 
         Event savedEvent = eventService.get(testEvent.getId());
@@ -75,9 +77,11 @@ public class EventServiceTest {
             throw new Exception();
     }
 
+    // TODO: throw Exception, Confirmed Visitors are also not equals (but really equals)
     @Test
     public void testEventWithRatesAndConfirmedVisitorsSave() throws Exception {
-        Event testEvent = testData.getEventWithRPsCv();
+        Event testEvent = testData.getEventWithRates();
+        testEvent.setConfirmedVisitors(testData.getConfirmedVisitors(testEvent));
         eventService.save(testEvent);
 
         Event savedEvent = eventService.get(testEvent.getId());
@@ -85,9 +89,21 @@ public class EventServiceTest {
             throw new Exception();
     }
 
+    // TODO: also not equals, but really equals!
     @Test
-    public void testCompletedEventSave() throws Exception {
-        Event testEvent = testData.getCompletedEvent();
+    public void testEventWithTracksSave() throws Exception {
+        Event testEvent = testData.getEventWithTracks();
+        eventService.save(testEvent);
+
+        Event savedEvent = eventService.get(testEvent.getId());
+        if(!savedEvent.equals(testEvent))
+            throw new Exception();
+    }
+
+    // For new Event comments are new too
+    @Test
+    public void testEventWithCommentsSave() throws Exception {
+        Event testEvent = testData.getEventWithComments();
         eventService.save(testEvent);
 
         Event savedEvent = eventService.get(testEvent.getId());

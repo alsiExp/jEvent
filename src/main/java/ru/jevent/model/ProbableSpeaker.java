@@ -94,8 +94,10 @@ public class ProbableSpeaker extends BaseEntity {
     public int hashCode() {
         int result = super.hashCode();
         long temp;
+        if(event != null && event.getId() != null) {
+            result = 31 * result + event.getId().hashCode();
+        }
         result = 31 * result + (speaker != null ? speaker.hashCode() : 0);
-        result = 31 * result + (event != null ? event.getId().hashCode() : 0);
         result = 31 * result + (sendDate != null ? sendDate.hashCode() : 0);
         result = 31 * result + (speechName != null ? speechName.hashCode() : 0);
         result = 31 * result + (speechDescription != null ? speechDescription.hashCode() : 0);

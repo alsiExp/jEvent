@@ -3,10 +3,7 @@ package ru.jevent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.jevent.model.*;
-import ru.jevent.model.Enums.CurrentTaskStatus;
-import ru.jevent.model.Enums.RateType;
-import ru.jevent.model.Enums.Sex;
-import ru.jevent.model.Enums.SlotType;
+import ru.jevent.model.Enums.*;
 import ru.jevent.service.*;
 
 import java.time.LocalDateTime;
@@ -71,6 +68,8 @@ public class TestData {
         u.setEnabled(true);
         u.setPhotoURL("fedorov.jpg");
         u.setId(100006L);
+        u.addRoles(Role.ROLE_ADMIN);
+        u.addRoles(Role.ROLE_USER);
         return u;
     }
 
@@ -145,7 +144,7 @@ public class TestData {
     }
 
     public Visitor getNewVisitorWithNewComments() {
-        Visitor visitor =getNewVisitor();
+        Visitor visitor = getNewVisitor();
         visitor.setCommentList(Arrays.asList(getNewComment(), getNewComment()));
 
         return visitor;
@@ -199,29 +198,19 @@ public class TestData {
         return event;
     }
 
-    public Event getEventWithRPs() {
-        Event event = getEventWithRates();
-
-
-
-
-        return event;
-    }
-
-    public Event getEventWithRPsCv() {
-        Event event = getEventWithRPs();
-
-        return event;
-    }
-
     public Event getExistingEvent() {
         return eventService.get(100012L);
     }
 
-    public Event getCompletedEvent() {
-        Event event = getEventWithRPsCv();
-        event.setCommentList(getMixedCommentsList());
+    public Event getEventWithTracks() {
+        Event event = getEventWithRates();
         event.setTracks(getTrackList());
+        return event;
+    }
+
+    public Event getEventWithComments() {
+        Event event = getEventWithRates();
+        event.setCommentList( Arrays.asList(getNewComment(), getNewComment()));
         return event;
     }
 
@@ -229,6 +218,39 @@ public class TestData {
         Rate r1 = new Rate("Личное присутствие Standard", RateType.PERSONAL_STANDARD, LocalDateTime.of(2016, 4, 1, 0, 0), LocalDateTime.of(2016, 7, 1, 23, 59), 12000);
         Rate r2 = new Rate("Онлайн-Трансляция Standard", RateType.ONLINE_STANDARD, LocalDateTime.of(2016, 4, 1, 0, 0), LocalDateTime.of(2016, 7, 1, 23, 59), 8000);
         return Arrays.asList(r2, r1);
+    }
+
+    public Set<ProbableSpeaker> getProbableSpeakers(Event e) {
+        ProbableSpeaker ps1 = new ProbableSpeaker();
+        ps1.setEvent(e);
+        ps1.setSendDate(LocalDateTime.now().minusWeeks(1));
+        ps1.setSpeaker(getExistingVisitor());
+        ps1.setSpeechDescription("test description");
+        ps1.setSpeechName("Test speech name");
+        ps1.setWishPrice(5000.0);
+
+        ProbableSpeaker ps2 = new ProbableSpeaker();
+        ps2.setEvent(e);
+        ps2.setSendDate(LocalDateTime.now().minusWeeks(1));
+        ps2.setSpeaker(getExistingVisitor());
+        ps2.setSpeechDescription("test description");
+        ps2.setSpeechName("Test speech name");
+        ps2.setWishPrice(5000.0);
+
+        return new HashSet<>(Arrays.asList(ps1, ps2));
+    }
+
+    public Set<ConfirmedVisitor> getConfirmedVisitors(Event e) {
+        ConfirmedVisitor cv = new ConfirmedVisitor();
+        cv.setEvent(e);
+        cv.setBuyDate(LocalDateTime.now().minusWeeks(5));
+        cv.setPayComment("no comments");
+        cv.setVisitor(getExistingVisitor());
+        Rate r = getRates().get(0);
+        r.setId(100037L);
+        cv.setRate(r);
+
+        return new HashSet<>(Arrays.asList(cv));
     }
 
 
@@ -268,7 +290,7 @@ public class TestData {
         s4.setName("Some lecture with new visitor");
         s4.setSlotDescription("Lecture");
         s4.setStart(LocalDateTime.now().plusDays(30).plusHours(3));
-        s4.setApprovedSpeaker(getNewVisitor());
+        s4.setApprovedSpeaker(getExistingVisitor());
         s4.setPrice(50000);
 
         Slot s5 = new Slot();
@@ -282,7 +304,7 @@ public class TestData {
         s6.setName("Some lecture with new visitor");
         s6.setSlotDescription("Lecture");
         s6.setStart(LocalDateTime.now().plusDays(30).plusHours(3));
-        s6.setApprovedSpeaker(getNewVisitor());
+        s6.setApprovedSpeaker(getExistingVisitor());
         s6.setPrice(50000);
 
         t1.setSlotOrder(Arrays.asList(s1, s2, s3, s4));

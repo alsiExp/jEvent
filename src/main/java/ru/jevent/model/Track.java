@@ -12,8 +12,7 @@ public class Track extends NamedEntity {
     private String description;
 
     // sort by LocalDateTime start
-    @OneToMany(mappedBy = "track", fetch = FetchType.EAGER, orphanRemoval = true)
-
+    @OneToMany(mappedBy = "track", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Slot> slotOrder;
 
     public Track() {

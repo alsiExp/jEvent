@@ -145,7 +145,7 @@ public class Slot extends NamedEntity {
         result = 31 * result + (slotDescription != null ? slotDescription.hashCode() : 0);
         result = 31 * result + (start != null ? start.hashCode() : 0);
         result = 31 * result + (slotType != null ? slotType.hashCode() : 0);
-        result = 31 * result + grade;
+        result = 31 * result + (grade != null ? grade.hashCode() : 0);
         temp = Double.doubleToLongBits(price);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (track != null ? track.hashCode() : 0);

@@ -81,6 +81,7 @@ public class BaseEntity {
         notEquals.addAll(s2);
         if(notEquals.size() != s1.size()) {
             //for debug
+            HashSet<T> fullSet = new HashSet<T>(notEquals);
             notEquals.removeAll(s1);
             return false;
         }

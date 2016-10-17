@@ -84,8 +84,10 @@ public class ConfirmedVisitor extends BaseEntity {
     @Override
     public int hashCode() {
         int result = super.hashCode();
+        if(event != null && event.getId() != null) {
+            result = 31 * result + event.getId().hashCode();
+        }
         result = 31 * result + (visitor != null ? visitor.hashCode() : 0);
-        result = 31 * result + (event != null ? event.getId().hashCode() : 0);
         result = 31 * result + (payComment != null ? payComment.hashCode() : 0);
         result = 31 * result + (buyDate != null ? buyDate.hashCode() : 0);
         result = 31 * result + (rate != null ? rate.hashCode() : 0);

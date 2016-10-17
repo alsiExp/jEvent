@@ -96,13 +96,6 @@ public class User extends Person {
 
         if (!login.equals(user.login)) return false;
         if (password != null ? !password.equals(user.password) : user.password != null) return false;
-        //return roles != null ? roles.equals(user.roles) : user.roles == null;
-        //better way to compare two sets:
-        //  they must be not null (use our get)
-        //  then use equals from AbstractSet
-        if(this.getRoles().size() != user.getRoles().size()) {
-            return false;
-        }
         if(!isEquals(this.getRoles(), user.getRoles())) {
             return false;
         }
