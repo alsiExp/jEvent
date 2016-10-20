@@ -21,7 +21,7 @@ public class UserServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        wac = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+        wac = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

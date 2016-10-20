@@ -1,3 +1,4 @@
+<%@ page pageEncoding="UTF-8" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -19,7 +20,8 @@
             <c:forEach items="${userList}" var="user">
                 <jsp:useBean id="user" scope="page" type="ru.jevent.model.User"/>
                 <div>
-                    <c:out value="${user.name}"/>
+                    <c:out value="${user.login}"/>
+                    <c:out value="${user.lastName}"/>
                 </div>
             </c:forEach>
         </div>
