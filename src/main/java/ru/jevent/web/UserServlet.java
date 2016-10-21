@@ -29,7 +29,7 @@ public class UserServlet extends HttpServlet {
         UserService userService = wac.getBean(UserService.class);
         List<User> userList = userService.getAll();
         request.setAttribute("userList", userList);
-        request.getRequestDispatcher("/userList.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/userList.jsp").forward(request, response);
 //        response.sendRedirect("userList.jsp");
     }
 }
