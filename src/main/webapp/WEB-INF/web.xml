@@ -31,7 +31,6 @@
     </listener>
 
 <!--
-
     <servlet>
         <servlet-name>userServlet</servlet-name>
         <servlet-class>ru.jevent.web.UserServlet</servlet-class>

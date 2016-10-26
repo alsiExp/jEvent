@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Set;
 
 public class LoggedUser {
-    protected long id = 0;
+    protected long id = 100006L;
     protected Set<Role> roles = Collections.singleton(Role.ROLE_USER);
     protected boolean enabled = true;
 
