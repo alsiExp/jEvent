@@ -40,7 +40,8 @@ public class JpaVisitorRepositoryImpl implements VisitorRepository {
 
     @Override
     public Visitor getByEmail(String email) {
-        return em.createNamedQuery(Visitor.BY_EMAIL, Visitor.class).setParameter(1, email).getSingleResult();
+        return null;
+                //em.createNamedQuery(Visitor.BY_EMAIL, Visitor.class).setParameter(1, email).getSingleResult();
     }
 
     @Override

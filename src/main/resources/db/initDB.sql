@@ -21,6 +21,8 @@ DROP TABLE IF EXISTS tasks_comments;
 DROP TABLE IF EXISTS rates;
 DROP TABLE IF EXISTS user_roles;
 
+DROP TABLE IF EXISTS emails;
+
 DROP TABLE IF EXISTS tasks;
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS events;
@@ -99,7 +101,6 @@ CREATE TABLE visitors
   --   visitor
   birthday         TIMESTAMP,
   registered_date  TIMESTAMP NOT NULL DEFAULT now(),
-  email            VARCHAR   NOT NULL CHECK (first_name <> ''),
   phone            VARCHAR,
 
   github_account   VARCHAR,
@@ -114,6 +115,18 @@ CREATE TABLE visitors
 
 
   FOREIGN KEY (sex) REFERENCES person_sex (id)
+);
+
+CREATE TABLE emails
+(
+  id   BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  name VARCHAR,
+  email VARCHAR NOT NULL CHECK (email <> ''),
+  main BOOL,
+  owner_id BIGINT,
+
+  FOREIGN KEY (owner_id) REFERENCES visitors (id) ON DELETE CASCADE
+
 );
 
 CREATE TABLE partners

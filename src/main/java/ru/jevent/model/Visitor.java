@@ -1,19 +1,18 @@
 package ru.jevent.model;
 
-import org.hibernate.validator.constraints.NotEmpty;
-import ru.jevent.model.Enums.Sex;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "visitors")
 @NamedQueries({
         @NamedQuery(name = Visitor.DELETE, query = "DELETE from Visitor v where v.id = :id"),
         @NamedQuery(name = Visitor.ALL_SORTED, query = "SELECT v FROM Visitor v ORDER BY v.registered"),
-        @NamedQuery(name = Visitor.BY_EMAIL, query = "SELECT v FROM Visitor v WHERE v.email = ?1"),
+        //@NamedQuery(name = Visitor.BY_EMAIL, query = "SELECT v FROM Visitor v WHERE v.email = ?1"),
 })
 public class Visitor extends Person {
     /*
@@ -30,7 +29,7 @@ public class Visitor extends Person {
 
     public static final String DELETE = "Visitor.delete";
     public static final String ALL_SORTED = "Visitor.getAllSorted";
-    public static final String BY_EMAIL = "Visitor.getByEmail";
+    //public static final String BY_EMAIL = "Visitor.getByEmail";
 
     //    Dates
     @Column(name = "birthday")
@@ -39,9 +38,9 @@ public class Visitor extends Person {
     private LocalDateTime registered;
 
     //    connection info
-    @Column(name = "email")
-    @NotEmpty
-    private String email;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Email> emails;
     @Column(name = "phone")
     private String phone;
 
@@ -77,38 +76,6 @@ public class Visitor extends Person {
     public Visitor() {
     }
 
-    public Visitor(String firstName, String lastName, Sex sex, boolean enabled, String photoURL, LocalDateTime birthDay, LocalDateTime registered, String email, String phone, String gitHubAccount, String linkedInAccount, String twitterAccount, String employer, String biography, String description, double cost, List<Comment> commentList) {
-        super(firstName, lastName, sex, enabled, photoURL);
-        this.birthDay = birthDay;
-        this.registered = registered;
-        this.email = email;
-        this.phone = phone;
-        this.gitHubAccount = gitHubAccount;
-        this.linkedInAccount = linkedInAccount;
-        this.twitterAccount = twitterAccount;
-        this.employer = employer;
-        this.biography = biography;
-        this.description = description;
-        this.cost = cost;
-        this.commentList = commentList;
-    }
-
-    public Visitor(Long id, String firstName, String lastName, Sex sex, String photoURL, LocalDateTime birthDay, LocalDateTime registered, String email, String phone, String gitHubAccount, String linkedInAccount, String twitterAccount, String employer, String biography, String description, double cost, List<Comment> commentList) {
-        super(id, firstName, lastName, sex, photoURL);
-        this.birthDay = birthDay;
-        this.registered = registered;
-        this.email = email;
-        this.phone = phone;
-        this.gitHubAccount = gitHubAccount;
-        this.linkedInAccount = linkedInAccount;
-        this.twitterAccount = twitterAccount;
-        this.employer = employer;
-        this.biography = biography;
-        this.description = description;
-        this.cost = cost;
-        this.commentList = commentList;
-    }
-
     public LocalDateTime getBirthDay() {
         return birthDay;
     }
@@ -126,12 +93,17 @@ public class Visitor extends Person {
     }
 
 
-    public String getEmail() {
-        return email;
+    public Set<Email> getEmails() {
+        if(this.emails == null) {
+            return new HashSet<>();
+        }
+        else {
+            return emails;
+        }
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void addEmail(Email email) {
+        this.getEmails().add(email);
     }
 
     public String getPhone() {
@@ -224,7 +196,6 @@ public class Visitor extends Person {
         if (Double.compare(visitor.cost, cost) != 0) return false;
         if (birthDay != null ? !birthDay.equals(visitor.birthDay) : visitor.birthDay != null) return false;
         if (registered != null ? !registered.equals(visitor.registered) : visitor.registered != null) return false;
-        if (email != null ? !email.equals(visitor.email) : visitor.email != null) return false;
         if (phone != null ? !phone.equals(visitor.phone) : visitor.phone != null) return false;
         if (gitHubAccount != null ? !gitHubAccount.equals(visitor.gitHubAccount) : visitor.gitHubAccount != null)
             return false;
@@ -235,6 +206,9 @@ public class Visitor extends Person {
         if (employer != null ? !employer.equals(visitor.employer) : visitor.employer != null) return false;
         if (biography != null ? !biography.equals(visitor.biography) : visitor.biography != null) return false;
         if (description != null ? !description.equals(visitor.description) : visitor.description != null) return false;
+        if (!isEquals(this.getEmails(), visitor.getEmails())) {
+            return false;
+        }
         return isEquals(this.getCommentList(), visitor.getCommentList());
     }
 
@@ -244,7 +218,7 @@ public class Visitor extends Person {
         long temp;
         result = 31 * result + (birthDay != null ? birthDay.hashCode() : 0);
         result = 31 * result + (registered != null ? registered.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (emails != null ? emails.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (gitHubAccount != null ? gitHubAccount.hashCode() : 0);
         result = 31 * result + (linkedInAccount != null ? linkedInAccount.hashCode() : 0);
@@ -261,6 +235,7 @@ public class Visitor extends Person {
     @Override
     public String toString() {
         StringBuilder commentsSB = new StringBuilder();
+        StringBuilder emailsSB = new StringBuilder();
         if (!this.getCommentList().isEmpty()) {
             String prefix = "";
             commentsSB.append('[');
@@ -271,12 +246,22 @@ public class Visitor extends Person {
             }
             commentsSB.append(']');
         }
+        if(!this.getEmails().isEmpty()){
+            String prefix = "";
+            emailsSB.append('[');
+            for (Email e : emails) {
+                emailsSB.append(prefix);
+                prefix = ",";
+                emailsSB.append((e).toString());
+            }
+            commentsSB.append(']');
+        }
 
         return "Visitor{" +
                 super.toString() +
                 "birthDay=" + birthDay +
                 ", registered=" + registered +
-                ", email='" + email + '\'' +
+                ", email='" + emailsSB.toString() + '\'' +
                 ", phone='" + phone + '\'' +
                 ", gitHubAccount='" + gitHubAccount + '\'' +
                 ", linkedInAccount='" + linkedInAccount + '\'' +

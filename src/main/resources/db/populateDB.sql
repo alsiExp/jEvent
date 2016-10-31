@@ -1,5 +1,6 @@
 DELETE FROM slots;
 DELETE FROM tracks;
+DELETE FROM emails;
 DELETE FROM events_probable_speakers;
 DELETE FROM events_confirmed_visitors;
 DELETE FROM task_statuses;
@@ -55,26 +56,23 @@ VALUES
    'At JetBrains, code is our passion. For over 15 years we have strived to make the strongest, most effective developer tools on earth. By automating routine checks and corrections, our tools speed up production, freeing developers to grow, discover and create.',
    'jb_200_200.png');
 
-INSERT INTO visitors (first_name, last_name, sex, enabled, photo_url, birthday, registered_date, email,
+INSERT INTO visitors (first_name, last_name, sex, enabled, photo_url, birthday, registered_date,
                       phone, github_account, linkedin_account, twitter_account,
                       employer, biography, description, cost)
 VALUES
   ('Виктор', 'Гамов', 90000, TRUE, 'vgamov.jpg', NULL, TIMESTAMP '2016-10-10 09:00',
-             'gamov@gmail.com',
              '+7-000-000-00-00', 'gAmUssA', 'vikgamov', 'gamussa',
    'Hazelcast', NULL,
    'Виктор Гамов — со-основатель и лидер вашего любимого правильного подкаста для IT-шников «Разбор Полетов» и по совместительству Senior Solution Architect в компании Hazelcast, которая занимается разработкой in-memory data grid с открытым исходным кодом. Накопил большой опыт, участвуя во множестве Java/JavaScript/HTML5 проектов, что легло в основу книги «Enterprise Web Development» издательства O’Reilly, которую он писал в соавторстве с известными персонами из Java мира. Виктор помогает клиентам финансового и телекоммуникационного сектора в проектировании и разработке высоконагруженных систем.
  В свободное от работы время Виктор не забывает про качалку, а также выступает на международных конференциях, пишет в твиттер, помогает с организацией встреч Princetown JUG и NYC Hazelcast User Group.',
    10000),
   ('Барух', 'Садогурский', 90000, TRUE, 'bsadogursky.jpg', TIMESTAMP '1970-11-25 00:00', TIMESTAMP '2016-10-10 07:00',
-            'jbaruch@gmail.com',
             '+7-000-000-00-00', 'jbaruch', NULL, 'jbaruch',
    'JFrog',
    'Developer advocate в компании JFrog, и делает в жизни ровно 3 вещи: зависает с разработчиками Bintray и Artifactory, пописывает для них код, и рассказывает о впечатлениях в блогах и на конференциях. И так несколько лет подряд, ни минуты об этом не жалея.',
    'Поскольку «религия не позволяет» быть евангелистом, Барух — developer advocate в компании JFrog и делает в жизни ровно 3 вещи: зависает с разработчиками Bintray и Artifactory, пописывает для них код, и рассказывает о впечатлениях в блогах и на конференциях, таких как JavaOne, Devoxx, OSCON, конечно же JPoint и Joker, да и многих других. И так более десяти лет подряд.',
    -90000),
   ('Яков', 'Файн', 90000, TRUE, 'yfain.jpg', TIMESTAMP '1960-07-01 00:00', TIMESTAMP '2016-10-15 12:36',
-           'notlull@email.ru',
            NULL, NULL, 'yfain', 'yfain',
    'SuranceBay, Farata Systems',
    'Yakov is a partner and co-founder of two companies: Farata Systems (IT consultancy) and SuranceBay (software for the Insurance industry). Yakov leads various projects related to Web development of complex enterprise applications. In his spare time Yakov enjoys teaching software and writing books.',
@@ -274,3 +272,8 @@ VALUES
 
 
 
+INSERT INTO emails(name, email, main, owner_id)
+VALUES
+  ('Рабочий', 'gamov@gmail.com', TRUE, 100003),
+  (NULL, 'jbaruch@gmail.com', TRUE, 100004),
+  ('Личный', 'notlull@email.ru', TRUE, 100005);

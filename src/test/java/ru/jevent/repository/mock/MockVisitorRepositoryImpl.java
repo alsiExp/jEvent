@@ -2,6 +2,7 @@ package ru.jevent.repository.mock;
 
 import org.springframework.stereotype.Repository;
 import ru.jevent.LoggerWrapper;
+import ru.jevent.model.Email;
 import ru.jevent.model.Enums.Sex;
 import ru.jevent.model.Visitor;
 import ru.jevent.repository.VisitorRepository;
@@ -15,8 +16,22 @@ import java.util.List;
 public class MockVisitorRepositoryImpl implements VisitorRepository{
     private static final LoggerWrapper LOG = LoggerWrapper.get(MockVisitorRepositoryImpl.class);
 
-    private static Visitor visitor = new Visitor(42L, "Алексей", "Шипилев", Sex.MALE, null, LocalDateTime.now().minus(35, ChronoUnit.YEARS), LocalDateTime.now().minus(6, ChronoUnit.DAYS),
-            "email", "phone", null, null, "twitter", null, null, "description", 5000, null);
+    private static Visitor visitor;
+
+    static {
+        visitor = new Visitor();
+        visitor.setId(42L);
+        visitor.setFirstName("Алексей");
+        visitor.setLastName("Шипилев");
+        visitor.setSex(Sex.MALE);
+        visitor.setBirthDay(LocalDateTime.now().minus(39, ChronoUnit.YEARS));
+        visitor.setRegistered(LocalDateTime.now().minus(6, ChronoUnit.DAYS));
+        visitor.addEmail(new Email());
+        visitor.setPhone("+7-000-000");
+        visitor.setTwitterAccount("twitter");
+        visitor.setDescription("description");
+        visitor.setCost(5000);
+    }
 
     public static Visitor getVisitor() {
         return visitor;

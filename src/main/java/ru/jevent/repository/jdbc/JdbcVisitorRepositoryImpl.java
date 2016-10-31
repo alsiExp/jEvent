@@ -64,7 +64,7 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
         map.addValue("photo_url", visitor.getPhotoURL());
         map.addValue("birthday", Timestamp.valueOf(visitor.getBirthDay()));
         map.addValue("registered_date", Timestamp.valueOf(visitor.getRegistered()));
-        map.addValue("email", visitor.getEmail());
+        map.addValue("email", visitor.getEmails());
         map.addValue("phone", visitor.getPhone());
         map.addValue("github_account", visitor.getGitHubAccount());
         map.addValue("linkedin_account", visitor.getLinkedInAccount());
@@ -79,7 +79,7 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
         } else {
             if(namedParameterJdbcTemplate.update("UPDATE visitors SET first_name = :first_name, last_name = :last_name, " +
                     "sex = :sex, enabled = :enabled, photo_url = :photo_url, birthday = :birthday, " +
-                    "registered_date = :registered_date, email = :email, phone = :phone, " +
+                    "registered_date = :registered_date, phone = :phone, " +
                     "github_account = :github_account, linkedin_account = :linkedin_account, twitter_account = :twitter_account, " +
                     "employer = :employer, biography = :biography, description = :description, cost = :cost WHERE id= :id", map) == 0) {
                 return null;
@@ -152,7 +152,7 @@ public class JdbcVisitorRepositoryImpl implements VisitorRepository {
             if(registeredDate != null) {
                 visitor.setRegistered(registeredDate.toLocalDateTime());
             }
-            visitor.setEmail(rs.getString("email"));
+
             visitor.setPhone(rs.getString("phone"));
             visitor.setGitHubAccount(rs.getString("github_account"));
             visitor.setLinkedInAccount(rs.getString("linkedin_account"));
