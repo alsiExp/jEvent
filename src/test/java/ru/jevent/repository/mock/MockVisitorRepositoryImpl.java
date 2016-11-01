@@ -28,7 +28,6 @@ public class MockVisitorRepositoryImpl implements VisitorRepository{
         visitor.setRegistered(LocalDateTime.now().minus(6, ChronoUnit.DAYS));
         visitor.addEmail(new Email());
         visitor.setPhone("+7-000-000");
-        visitor.setTwitterAccount("twitter");
         visitor.setDescription("description");
         visitor.setCost(5000);
     }

@@ -1,5 +1,8 @@
 package ru.jevent.model;
 
+import ru.jevent.model.SocialNetworks.GitHub;
+import ru.jevent.model.SocialNetworks.Twitter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -45,12 +48,12 @@ public class Visitor extends Person {
     private String phone;
 
     //    Social Networks
-    @Column(name = "github_account")
-    private String gitHubAccount;
-    @Column(name = "linkedin_account")
-    private String linkedInAccount;
-    @Column(name = "twitter_account")
-    private String twitterAccount;
+    @OneToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="id", referencedColumnName = "owner_id")
+    private GitHub gitHub;
+    @OneToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="id", referencedColumnName = "owner_id")
+    private Twitter twitter;
 
     //    Visitor description
     @Column(name = "employer")
@@ -106,6 +109,14 @@ public class Visitor extends Person {
         this.getEmails().add(email);
     }
 
+    public void setEmails(Set<Email> emails) {
+        if(emails != null && !emails.isEmpty()) {
+            if(this.getEmails().isEmpty()) {
+                this.emails = emails;
+            }
+        }
+    }
+
     public String getPhone() {
         return phone;
     }
@@ -115,30 +126,21 @@ public class Visitor extends Person {
     }
 
 
-    public String getGitHubAccount() {
-        return gitHubAccount;
+    public GitHub getGitHub() {
+        return gitHub;
     }
 
-    public void setGitHubAccount(String gitHubAccount) {
-        this.gitHubAccount = gitHubAccount;
+    public void setGitHub(GitHub gitHub) {
+        this.gitHub = gitHub;
     }
 
-    public String getLinkedInAccount() {
-        return linkedInAccount;
+    public Twitter getTwitter() {
+        return twitter;
     }
 
-    public void setLinkedInAccount(String linkedInAccount) {
-        this.linkedInAccount = linkedInAccount;
+    public void setTwitter(Twitter twitter) {
+        this.twitter = twitter;
     }
-
-    public String getTwitterAccount() {
-        return twitterAccount;
-    }
-
-    public void setTwitterAccount(String twitterAccount) {
-        this.twitterAccount = twitterAccount;
-    }
-
 
     public String getEmployer() {
         return employer;
@@ -197,11 +199,9 @@ public class Visitor extends Person {
         if (birthDay != null ? !birthDay.equals(visitor.birthDay) : visitor.birthDay != null) return false;
         if (registered != null ? !registered.equals(visitor.registered) : visitor.registered != null) return false;
         if (phone != null ? !phone.equals(visitor.phone) : visitor.phone != null) return false;
-        if (gitHubAccount != null ? !gitHubAccount.equals(visitor.gitHubAccount) : visitor.gitHubAccount != null)
+        if (gitHub != null ? !gitHub.equals(visitor.gitHub) : visitor.gitHub != null)
             return false;
-        if (linkedInAccount != null ? !linkedInAccount.equals(visitor.linkedInAccount) : visitor.linkedInAccount != null)
-            return false;
-        if (twitterAccount != null ? !twitterAccount.equals(visitor.twitterAccount) : visitor.twitterAccount != null)
+        if (twitter != null ? !twitter.equals(visitor.twitter) : visitor.twitter != null)
             return false;
         if (employer != null ? !employer.equals(visitor.employer) : visitor.employer != null) return false;
         if (biography != null ? !biography.equals(visitor.biography) : visitor.biography != null) return false;
@@ -220,9 +220,8 @@ public class Visitor extends Person {
         result = 31 * result + (registered != null ? registered.hashCode() : 0);
         result = 31 * result + (emails != null ? emails.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
-        result = 31 * result + (gitHubAccount != null ? gitHubAccount.hashCode() : 0);
-        result = 31 * result + (linkedInAccount != null ? linkedInAccount.hashCode() : 0);
-        result = 31 * result + (twitterAccount != null ? twitterAccount.hashCode() : 0);
+        result = 31 * result + (gitHub != null ? gitHub.hashCode() : 0);
+        result = 31 * result + (twitter != null ? twitter.hashCode() : 0);
         result = 31 * result + (employer != null ? employer.hashCode() : 0);
         result = 31 * result + (biography != null ? biography.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
@@ -263,9 +262,8 @@ public class Visitor extends Person {
                 ", registered=" + registered +
                 ", email='" + emailsSB.toString() + '\'' +
                 ", phone='" + phone + '\'' +
-                ", gitHubAccount='" + gitHubAccount + '\'' +
-                ", linkedInAccount='" + linkedInAccount + '\'' +
-                ", twitterAccount='" + twitterAccount + '\'' +
+                ", gitHubAccount='" + gitHub.toString() + '\'' +
+                ", twitterAccount='" + twitter.toString() + '\'' +
                 ", employer='" + employer + '\'' +
                 ", biography='" + biography + '\'' +
                 ", description='" + description + '\'' +

@@ -22,6 +22,8 @@ DROP TABLE IF EXISTS rates;
 DROP TABLE IF EXISTS user_roles;
 
 DROP TABLE IF EXISTS emails;
+DROP TABLE IF EXISTS githubaccs;
+DROP TABLE IF EXISTS twitteraccs;
 
 DROP TABLE IF EXISTS tasks;
 DROP TABLE IF EXISTS comments;
@@ -103,10 +105,6 @@ CREATE TABLE visitors
   registered_date  TIMESTAMP NOT NULL DEFAULT now(),
   phone            VARCHAR,
 
-  github_account   VARCHAR,
-  linkedin_account VARCHAR,
-  twitter_account  VARCHAR,
-
   employer         VARCHAR,
   biography        VARCHAR,
   description      VARCHAR,
@@ -123,6 +121,28 @@ CREATE TABLE emails
   name VARCHAR,
   email VARCHAR NOT NULL CHECK (email <> ''),
   main BOOL,
+  owner_id BIGINT,
+
+  FOREIGN KEY (owner_id) REFERENCES visitors (id) ON DELETE CASCADE
+
+);
+
+CREATE TABLE githubaccs
+(
+  id   BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  name VARCHAR,
+  account VARCHAR,
+  owner_id BIGINT,
+
+  FOREIGN KEY (owner_id) REFERENCES visitors (id) ON DELETE CASCADE
+
+);
+
+CREATE TABLE twitteraccs
+(
+  id   BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  name VARCHAR,
+  account VARCHAR,
   owner_id BIGINT,
 
   FOREIGN KEY (owner_id) REFERENCES visitors (id) ON DELETE CASCADE
