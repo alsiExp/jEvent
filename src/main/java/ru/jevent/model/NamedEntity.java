@@ -47,7 +47,7 @@ public class NamedEntity extends BaseEntity {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + name.hashCode();
+        //result = 31 * result + name.hashCode(); //here we have a problem with name
         return result;
     }
 

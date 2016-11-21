@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.TestData;
@@ -14,12 +15,16 @@ import ru.jevent.util.exception.NotFoundException;
 
 import java.util.List;
 
+import static ru.jevent.Profiles.JPA;
+import static ru.jevent.Profiles.POSTGRES;
+
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
         "classpath:spring/spring-db.xml",
         "classpath:spring/service.xml"
 })
 @RunWith(SpringJUnit4ClassRunner.class)
+@ActiveProfiles({POSTGRES, JPA})
 public class PartnerServiceTest {
 
     @Autowired
@@ -84,5 +89,7 @@ public class PartnerServiceTest {
             throw new NotFoundException("DataIntegrityViolationException");
         }
     }
+
+
 
 }

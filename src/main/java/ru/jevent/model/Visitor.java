@@ -271,4 +271,13 @@ public class Visitor extends Person {
                 ", commentList=" + commentsSB.toString() +
                 "} ";
     }
+
+    public void setEmail(String email_string) {
+//       if (email_string != null ){
+//        Email email = new Email();
+//        email.setEmail(email_string);
+//        emails.add(email);
+//      }
+
+    }
 }

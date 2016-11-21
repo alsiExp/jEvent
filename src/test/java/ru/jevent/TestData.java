@@ -133,9 +133,9 @@ public class TestData {
         visitor.setRegistered(LocalDateTime.now().minus(20, ChronoUnit.DAYS));
         visitor.setEmail("test@visitor.com");
         visitor.setPhone("+0-000-000-00-00");
-        visitor.setGitHubAccount("testgGithub");
-        visitor.setLinkedInAccount("testLinkedIn");
-        visitor.setTwitterAccount("@test");
+       // visitor.setGitHubAccount("testgGithub");
+      //  visitor.setLinkedInAccount("testLinkedIn");
+       // visitor.setTwitterAccount("@test");
         visitor.setEmployer("Одноклассники");
         visitor.setBiography("test biography");
         visitor.setDescription("test description");
