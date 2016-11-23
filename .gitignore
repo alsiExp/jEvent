@@ -2,6 +2,7 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff:
+/target/
 /img/team/
 .idea/*
 .idea/workspace.xml
@@ -9,7 +10,7 @@
 .idea/dictionaries
 .idea/vcs.xml
 .idea/jsLibraryMappings.xml
-jEvent.iml
+.iml
 *.log
 
 # Sensitive or high-churn files:
@@ -92,3 +93,4 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+.idea/

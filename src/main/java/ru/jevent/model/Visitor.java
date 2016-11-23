@@ -272,6 +272,7 @@ public class Visitor extends Person {
                 "} ";
     }
 
+    // TODO: commit 2da2d96
     public void setEmail(String email_string) {
 //       if (email_string != null ){
 //        Email email = new Email();

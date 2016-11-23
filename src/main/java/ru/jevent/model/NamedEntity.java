@@ -44,6 +44,7 @@ public class NamedEntity extends BaseEntity {
 
     }
 
+    // TODO: commit 2da2d96
     @Override
     public int hashCode() {
         int result = super.hashCode();
