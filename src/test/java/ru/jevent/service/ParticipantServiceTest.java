@@ -10,7 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.TestData;
-import ru.jevent.model.Visitor;
+import ru.jevent.model.Participant;
 import ru.jevent.util.DbPopulator;
 
 import java.util.Arrays;
@@ -26,10 +26,10 @@ import static ru.jevent.Profiles.POSTGRES;
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles({POSTGRES, JPA})
-public class VisitorServiceTest {
+public class ParticipantServiceTest {
 
     @Autowired
-    private VisitorService service;
+    private ParticipantService service;
     @Autowired
     private TestData testData;
     @Autowired
@@ -42,7 +42,7 @@ public class VisitorServiceTest {
 
     @Test
     public void testGet() throws Exception {
-        Visitor v = service.get(100004L);
+        Participant v = service.get(100004L);
         if (!v.equals(testData.getExistingVisitor())) {
             throw new Exception();
         }
@@ -50,7 +50,7 @@ public class VisitorServiceTest {
 
     @Test
     public void testGetByEmail() throws Exception {
-        Visitor v = service.getByEmail("jbaruch@gmail.com");
+        Participant v = service.getByEmail("jbaruch@gmail.com");
         if (!v.equals(testData.getExistingVisitor())) {
             throw new Exception();
         }
@@ -58,20 +58,20 @@ public class VisitorServiceTest {
 
     @Test
     public void testSimpleSave() throws Exception {
-        Visitor visitor = testData.getNewVisitor();
-        service.save(visitor);
-        Visitor savedVisitor = service.get(visitor.getId());
-        if (!savedVisitor.equals(visitor)) {
+        Participant participant = testData.getNewVisitor();
+        service.save(participant);
+        Participant savedParticipant = service.get(participant.getId());
+        if (!savedParticipant.equals(participant)) {
             throw new Exception();
         }
     }
 
     @Test
     public void testSaveWithNewComments() throws Exception {
-        Visitor visitor = testData.getNewVisitorWithNewComments();
-        service.save(visitor);
-        Visitor savedVisitor = service.get(visitor.getId());
-        if (!savedVisitor.equals(visitor)) {
+        Participant participant = testData.getNewVisitorWithNewComments();
+        service.save(participant);
+        Participant savedParticipant = service.get(participant.getId());
+        if (!savedParticipant.equals(participant)) {
             throw new Exception();
         }
     }
@@ -84,23 +84,23 @@ public class VisitorServiceTest {
 
     @Test
     public void testSaveExistingVisitorWithNewComments() throws Exception {
-        Visitor visitor = testData.getNewVisitor();
-        service.save(visitor);
-        visitor.setCommentList(Arrays.asList(testData.getNewComment(), testData.getNewComment()));
-        service.save(visitor);
-        Visitor savedVisitor = service.get(visitor.getId());
-        if (!savedVisitor.equals(visitor)) {
+        Participant participant = testData.getNewVisitor();
+        service.save(participant);
+        participant.setCommentList(Arrays.asList(testData.getNewComment(), testData.getNewComment()));
+        service.save(participant);
+        Participant savedParticipant = service.get(participant.getId());
+        if (!savedParticipant.equals(participant)) {
             throw new Exception();
         }
     }
 
     @Test
     public void testUpdate() throws Exception {
-        Visitor visitor = service.get(100004L);
-        visitor.setDescription("Actual test description");
-        service.update(visitor);
-        Visitor savedVisitor = service.get(visitor.getId());
-        if (!savedVisitor.equals(visitor)) {
+        Participant participant = service.get(100004L);
+        participant.setDescription("Actual test description");
+        service.update(participant);
+        Participant savedParticipant = service.get(participant.getId());
+        if (!savedParticipant.equals(participant)) {
             throw new Exception();
         }
     }
@@ -108,9 +108,9 @@ public class VisitorServiceTest {
     @Test
     public void testDeleteAndGetAll() throws Exception {
         service.delete(100003L);
-        List<Visitor> list = service.getAll();
+        List<Participant> list = service.getAll();
         if (list.isEmpty()) throw new Exception();
-        for (Visitor v : list) {
+        for (Participant v : list) {
             if (v.getId().equals(100003L))
                 throw new Exception();
         }
@@ -118,7 +118,7 @@ public class VisitorServiceTest {
 
     @Test(expected = DataIntegrityViolationException.class)
     public void testUpdateWithException() throws Exception {
-        Visitor v = testData.getExistingVisitor();
+        Participant v = testData.getExistingVisitor();
         v.setRegistered(null);
         service.update(v);
     }

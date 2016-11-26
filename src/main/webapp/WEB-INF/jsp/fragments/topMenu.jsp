@@ -53,8 +53,8 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-haspopup="true" aria-expanded="false">Посетители <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="../je_visitor/visitor-new.html">Новый посетитель</a></li>
-                            <li><a href="../je_visitor/visitor-list.html">Все посетители</a></li>
+                            <li><a href="../je_visitor/participant-new.html">Новый посетитель</a></li>
+                            <li><a href="../je_visitor/participant-list.html">Все посетители</a></li>
 
                         </ul>
                     </li>

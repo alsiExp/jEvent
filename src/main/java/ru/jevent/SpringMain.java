@@ -2,7 +2,8 @@ package ru.jevent;
 
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import ru.jevent.web.Comment.CommentRestController;
+import ru.jevent.web.Participant.ParticipantRestController;
+
 
 public class SpringMain {
 
@@ -13,7 +14,7 @@ public class SpringMain {
             for(String s : beanNames) {
                 System.out.println(s);
             }
-            CommentRestController commClr = appCtx.getBean(CommentRestController.class);
+            ParticipantRestController commClr = appCtx.getBean(ParticipantRestController.class);
             commClr.delete(2);
             //commClr.get(2);
         }

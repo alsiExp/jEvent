@@ -2,41 +2,41 @@ package ru.jevent.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.jevent.model.Visitor;
-import ru.jevent.repository.VisitorRepository;
-import ru.jevent.service.VisitorService;
+import ru.jevent.model.Participant;
+import ru.jevent.repository.ParticipantRepository;
+import ru.jevent.service.ParticipantService;
 import ru.jevent.util.exception.ExceptionUtil;
 import ru.jevent.util.exception.NotFoundException;
 
 import java.util.List;
 
 @Service
-public class VisitorServiceImpl implements VisitorService{
+public class ParticipantServiceImpl implements ParticipantService {
 
-    private VisitorRepository repository;
+    private ParticipantRepository repository;
 
     @Autowired
-    public VisitorServiceImpl(VisitorRepository repository) {
+    public ParticipantServiceImpl(ParticipantRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public Visitor save(Visitor visitor) {
-        return repository.save(visitor);
+    public Participant save(Participant participant) {
+        return repository.save(participant);
     }
 
     @Override
-    public void update(Visitor visitor) throws NotFoundException {
-        ExceptionUtil.check(repository.save(visitor), visitor.getId());
+    public void update(Participant participant) throws NotFoundException {
+        ExceptionUtil.check(repository.save(participant), participant.getId());
     }
 
     @Override
-    public Visitor get(long id) throws NotFoundException {
+    public Participant get(long id) throws NotFoundException {
         return ExceptionUtil.check(repository.get(id), id);
     }
 
     @Override
-    public Visitor getByEmail(String email) throws NotFoundException {
+    public Participant getByEmail(String email) throws NotFoundException {
         return ExceptionUtil.check(repository.getByEmail(email), "email=" + email);
     }
 
@@ -46,7 +46,7 @@ public class VisitorServiceImpl implements VisitorService{
     }
 
     @Override
-    public List<Visitor> getAll() {
+    public List<Participant> getAll() {
         return repository.getAll();
     }
 }

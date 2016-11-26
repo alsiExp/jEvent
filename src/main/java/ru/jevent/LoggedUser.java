@@ -1,6 +1,6 @@
 package ru.jevent;
 
-import ru.jevent.model.Enums.Role;
+import ru.jevent.model.enums.Role;
 
 import java.util.Collections;
 import java.util.Set;

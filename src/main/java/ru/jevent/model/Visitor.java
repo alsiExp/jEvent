@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "visitors")
-public class ConfirmedVisitor extends BaseEntity {
+public class Visitor extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "participant_id")
@@ -82,10 +82,10 @@ public class ConfirmedVisitor extends BaseEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ConfirmedVisitor)) return false;
+        if (!(o instanceof Visitor)) return false;
         if (!super.equals(o)) return false;
 
-        ConfirmedVisitor visitor = (ConfirmedVisitor) o;
+        Visitor visitor = (Visitor) o;
 
         if (Double.compare(visitor.realCost, realCost) != 0) return false;
         if (participant != null ? !participant.equals(visitor.participant) : visitor.participant != null) return false;

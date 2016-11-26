@@ -44,7 +44,7 @@ public class    Event extends NamedEntity {
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Speech> speeches;
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ConfirmedVisitor> visitors;
+    private Set<Visitor> visitors;
 
     /*
         ticket prices
@@ -128,14 +128,14 @@ public class    Event extends NamedEntity {
         this.speeches = speeches;
     }
 
-    public Set<ConfirmedVisitor> getVisitors() {
+    public Set<Visitor> getVisitors() {
         if (visitors == null) {
             visitors = new HashSet<>();
         }
         return visitors;
     }
 
-    public void setVisitors(Set<ConfirmedVisitor> visitors) {
+    public void setVisitors(Set<Visitor> visitors) {
         this.visitors = visitors;
     }
 

@@ -44,7 +44,7 @@ public class PartnerServiceTest {
         Partner p = service.get(100000L);
         if (p.getId() == null ||
                 p.getName() == null ||
-                p.getEmail() == null) throw new Exception();
+                p.getContactEmail() == null) throw new Exception();
         if(!p.getId().equals(100000L)) throw new Exception();
     }
 

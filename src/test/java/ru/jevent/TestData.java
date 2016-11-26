@@ -3,8 +3,14 @@ package ru.jevent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.jevent.model.*;
-import ru.jevent.model.Enums.*;
-import ru.jevent.service.*;
+import ru.jevent.model.additionalEntity.Rate;
+import ru.jevent.model.enums.RateType;
+import ru.jevent.model.enums.Role;
+import ru.jevent.model.enums.Sex;
+import ru.jevent.service.EventService;
+import ru.jevent.service.ParticipantService;
+import ru.jevent.service.PartnerService;
+import ru.jevent.service.UserService;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -16,26 +22,23 @@ import java.util.Set;
 @Component
 public class TestData {
 
-    private CommentService commentService;
     private UserService userService;
     private PartnerService partnerService;
-    private VisitorService visitorService;
+    private ParticipantService participantService;
     private EventService eventService;
-    private TaskService taskService;
+
 
     public TestData() {
     }
 
     @Autowired
-    public TestData(UserService userService, CommentService commentService,
-                    PartnerService partnerService, VisitorService visitorService,
-                    EventService eventService, TaskService taskService) {
-        this.commentService = commentService;
+    public TestData(UserService userService,
+                    PartnerService partnerService, ParticipantService participantService,
+                    EventService eventService) {
         this.userService = userService;
         this.partnerService = partnerService;
-        this.visitorService = visitorService;
+        this.participantService = participantService;
         this.eventService = eventService;
-        this.taskService = taskService;
     }
 
     public User getNewUser() {
@@ -96,21 +99,18 @@ public class TestData {
         return new Comment("New test comment", this.getExistingUser(), LocalDateTime.now());
     }
 
-    public Comment getExistingComment() {
-//        return new Comment(100014L, "Комментарий про jpoint16 #1", getUser06(), LocalDateTime.of(2016,4,13,13,23,0,0));
-        return commentService.get(100014L);
-    }
 
     public Comment getExistingComment23() {
         return new Comment(100023L, "Комментарий про Баруха #1", getUser11(), LocalDateTime.of(2016,9,19,7,0,0,0));
     }
 
     public List<Comment> getMixedCommentsList() {
-        return Arrays.asList(getExistingComment(), getNewComment(), getNewComment());
+        return Arrays.asList(getNewComment(), getNewComment());
     }
 
     public Partner getNewPartner() {
-        return  new Partner("Test partner", "test@email.com", "+7-999-000-00-00", "Test partner description", "testpartner.jpg");
+//        return  new Partner("Test partner", "test@email.com", "+7-999-000-00-00", "Test partner description", "testpartner.jpg");
+        return new Partner();
     }
 
     public Partner getExistingPartner() {
@@ -121,37 +121,36 @@ public class TestData {
         return Arrays.asList(getNewPartner(), getExistingPartner(), getNewPartner());
     }
 
-    public Visitor getNewVisitor() {
-        Visitor visitor = new Visitor();
-        visitor.setFirstName("Test");
-        visitor.setLastName("Visitor");
-        visitor.setSex(Sex.FEMALE);
-        visitor.setEnabled(true);
+    public Participant getNewVisitor() {
+        Participant participant = new Participant();
+        participant.setFirstName("Test");
+        participant.setLastName("Participant");
+        participant.setSex(Sex.FEMALE);
+        participant.setEnabled(true);
 
-        visitor.setPhotoURL("testvisitor.jpg");
-        visitor.setBirthDay(LocalDateTime.now().minus(39, ChronoUnit.YEARS));
-        visitor.setRegistered(LocalDateTime.now().minus(20, ChronoUnit.DAYS));
-        visitor.setEmail("test@visitor.com");
-        visitor.setPhone("+0-000-000-00-00");
-       // visitor.setGitHubAccount("testgGithub");
-      //  visitor.setLinkedInAccount("testLinkedIn");
-       // visitor.setTwitterAccount("@test");
-        visitor.setEmployer("Одноклассники");
-        visitor.setBiography("test biography");
-        visitor.setDescription("test description");
-        visitor.setCost(5000);
-        return visitor;
+        participant.setPhotoURL("testvisitor.jpg");
+        participant.setBirthDay(LocalDateTime.now().minus(39, ChronoUnit.YEARS));
+        participant.setRegistered(LocalDateTime.now().minus(20, ChronoUnit.DAYS));
+        //participant.setEmail("test@participant.com");
+        participant.setPhone("+0-000-000-00-00");
+       // participant.setGitHubAccount("testgGithub");
+      //  participant.setLinkedInAccount("testLinkedIn");
+       // participant.setTwitterAccount("@test");
+        participant.setEmployer("Одноклассники");
+        participant.setBiography("test biography");
+        participant.setDescription("test description");
+        return participant;
     }
 
-    public Visitor getNewVisitorWithNewComments() {
-        Visitor visitor = getNewVisitor();
-        visitor.setCommentList(Arrays.asList(getNewComment(), getNewComment()));
+    public Participant getNewVisitorWithNewComments() {
+        Participant participant = getNewVisitor();
+        participant.setCommentList(Arrays.asList(getNewComment(), getNewComment()));
 
-        return visitor;
+        return participant;
     }
 
-    public Visitor getExistingVisitor() {
-//        Visitor exVisitor = new Visitor();
+    public Participant getExistingVisitor() {
+//        Participant exVisitor = new Participant();
 //        exVisitor.setBirthDay(LocalDateTime.of(1970, 11, 25, 0, 0, 0, 0));
 //        exVisitor.setRegistered(LocalDate.of(2016, 10, 10));
 //        exVisitor.setEmail("jbaruch@gmail.com");
@@ -170,20 +169,20 @@ public class TestData {
 //        exVisitor.setPhotoURL("bsadogursky.jpg");
 //        exVisitor.setId(100004L);
 //        return exVisitor;
-        return visitorService.get(100004L);
+        return participantService.get(100004L);
     }
 
-    public List<Visitor> getMixedVisitorsList() {
-        Visitor v1 = visitorService.save(getNewVisitor());
-        Visitor v2 = visitorService.get(100005L);
-        Visitor v3 = getNewVisitor();
+    public List<Participant> getMixedVisitorsList() {
+        Participant v1 = participantService.save(getNewVisitor());
+        Participant v2 = participantService.get(100005L);
+        Participant v3 = getNewVisitor();
         return Arrays.asList(v1, v2, v3);
     }
 
     public Event getSimpleEvent() {
         Event event = new Event();
         event.setName("Test Event");
-        event.setTagName("test");
+        event.setVersion("test");
         event.setAuthor(this.getUser06());
         event.setAddress("test adress");
         event.setDescription("Test description");
@@ -204,7 +203,6 @@ public class TestData {
 
     public Event getEventWithTracks() {
         Event event = getEventWithRates();
-        event.setTracks(getTrackList());
         return event;
     }
 
@@ -220,125 +218,36 @@ public class TestData {
         return Arrays.asList(r2, r1);
     }
 
-    public Set<ProbableSpeaker> getProbableSpeakers(Event e) {
-        ProbableSpeaker ps1 = new ProbableSpeaker();
+    public Set<Speech> getProbableSpeakers(Event e) {
+        Speech ps1 = new Speech();
         ps1.setEvent(e);
-        ps1.setSendDate(LocalDateTime.now().minusWeeks(1));
+/*        ps1.setSendDate(LocalDateTime.now().minusWeeks(1));
         ps1.setSpeaker(getExistingVisitor());
-        ps1.setSpeechDescription("test description");
+        ps1.setFullDescription("test description");
         ps1.setSpeechName("Test speech name");
-        ps1.setWishPrice(5000.0);
+        ps1.setWishPrice(5000.0);*/
 
-        ProbableSpeaker ps2 = new ProbableSpeaker();
+        Speech ps2 = new Speech();
         ps2.setEvent(e);
-        ps2.setSendDate(LocalDateTime.now().minusWeeks(1));
+/*        ps2.setSendDate(LocalDateTime.now().minusWeeks(1));
         ps2.setSpeaker(getExistingVisitor());
-        ps2.setSpeechDescription("test description");
+        ps2.setFullDescription("test description");
         ps2.setSpeechName("Test speech name");
-        ps2.setWishPrice(5000.0);
+        ps2.setWishPrice(5000.0);*/
 
         return new HashSet<>(Arrays.asList(ps1, ps2));
     }
 
-    public Set<ConfirmedVisitor> getConfirmedVisitors(Event e) {
-        ConfirmedVisitor cv = new ConfirmedVisitor();
+    public Set<Visitor> getConfirmedVisitors(Event e) {
+        Visitor cv = new Visitor();
         cv.setEvent(e);
         cv.setBuyDate(LocalDateTime.now().minusWeeks(5));
         cv.setPayComment("no comments");
-        cv.setVisitor(getExistingVisitor());
+        cv.setParticipant(getExistingVisitor());
         Rate r = getRates().get(0);
         r.setId(100037L);
         cv.setRate(r);
 
         return new HashSet<>(Arrays.asList(cv));
-    }
-
-
-    public Set<Track> getTrackList() {
-        Track t1 = new Track();
-        t1.setName("First track");
-        t1.setDescription("First track description");
-
-        Track t2 = new Track();
-        t2.setName("Second track");
-
-        Track t3 = new Track();
-        t3.setName("Third track");
-
-        Slot s1 = new Slot();
-        s1.setSlotType(SlotType.CHECK_IN);
-        s1.setName("Check in");
-        s1.setSlotDescription("Just check in");
-        s1.setStart(LocalDateTime.now().plusDays(30));
-
-
-        Slot s2 = new Slot();
-        s2.setSlotType(SlotType.LECTURE);
-        s2.setName("Some lecture with visitor");
-        s2.setSlotDescription("Lecture");
-        s2.setStart(LocalDateTime.now().plusDays(30).plusHours(1));
-        s2.setApprovedSpeaker(getExistingVisitor());
-        s2.setPrice(70000);
-
-        Slot s3 = new Slot();
-        s3.setSlotType(SlotType.BREAK);
-        s3.setName("just break");
-        s3.setStart(LocalDateTime.now().plusDays(30).plusHours(2));
-
-        Slot s4 = new Slot();
-        s4.setSlotType(SlotType.LECTURE);
-        s4.setName("Some lecture with new visitor");
-        s4.setSlotDescription("Lecture");
-        s4.setStart(LocalDateTime.now().plusDays(30).plusHours(3));
-        s4.setApprovedSpeaker(getExistingVisitor());
-        s4.setPrice(50000);
-
-        Slot s5 = new Slot();
-        s5.setSlotType(SlotType.CHECK_IN);
-        s5.setName("Check in");
-        s5.setSlotDescription("Just check in");
-        s5.setStart(LocalDateTime.now().plusDays(30));
-
-        Slot s6 = new Slot();
-        s6.setSlotType(SlotType.LECTURE);
-        s6.setName("Some lecture with new visitor");
-        s6.setSlotDescription("Lecture");
-        s6.setStart(LocalDateTime.now().plusDays(30).plusHours(3));
-        s6.setApprovedSpeaker(getExistingVisitor());
-        s6.setPrice(50000);
-
-        t1.setSlotOrder(Arrays.asList(s1, s2, s3, s4));
-        t2.setSlotOrder(Arrays.asList(s5, s6));
-        return new HashSet<>(Arrays.asList(t1, t2, t3));
-    }
-
-    public Task getSimpleTask() {
-        Task task = new Task();
-        task.setName("Test task");
-        task.setAuthor(this.getExistingUser());
-        task.setTarget(new HashSet<>(getExistingUsersList()));
-
-        task.setStart(LocalDateTime.now().minusDays(7));
-        task.setDeadline(LocalDateTime.now().plusWeeks(4));
-
-        task.setDescription("Test task description");
-        task.setActive(true);
-
-        return task;
-    }
-
-    public Task getCompletedTask() {
-        Task task = getSimpleTask();
-        task.setTarget(new HashSet<>(getExistingUsersList()));
-        //add attachable sets
-        task.setStatusLog(getStatusList());
-        task.setCommentList(getMixedCommentsList());
-        return task;
-    }
-
-    public List<TaskStatus> getStatusList() {
-        TaskStatus st1 = new TaskStatus("Status is new", getExistingUser(), LocalDateTime.now().minusDays(5), CurrentTaskStatus.NEW);
-        TaskStatus st2 = new TaskStatus("Status is in work", getExistingUser(), LocalDateTime.now().minusDays(4), CurrentTaskStatus.IN_WORK);
-        return Arrays.asList(st1, st2);
     }
 }
