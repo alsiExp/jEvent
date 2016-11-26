@@ -1,6 +1,6 @@
 package ru.jevent.model.converter;
 
-import ru.jevent.model.Enums.RateType;
+import ru.jevent.model.enums.RateType;
 
 import javax.persistence.AttributeConverter;
 

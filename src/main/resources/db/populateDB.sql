@@ -230,7 +230,7 @@ VALUES
 
 INSERT INTO events_confirmed_visitors (visitor_id, event_id, buy_date, comment, rate_id)
 VALUES
-  (100005, 100012, TIMESTAMP '2016-07-15 15:53', 'some comment about visitor 100005' , 100034),
+  (100005, 100012, TIMESTAMP '2016-07-15 15:53', 'some comment about participant 100005' , 100034),
   (100005, 100012, TIMESTAMP '2016-01-29 07:48', null, 100054),
   (100003, 100012, TIMESTAMP '2016-08-15 16:00', null, 100054);
 

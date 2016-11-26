@@ -1,5 +1,7 @@
 package ru.jevent.model;
 
+import ru.jevent.model.superclasses.BaseEntity;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 

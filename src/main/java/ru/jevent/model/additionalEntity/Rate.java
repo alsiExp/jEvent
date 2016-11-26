@@ -1,7 +1,8 @@
-package ru.jevent.model;
+package ru.jevent.model.additionalEntity;
 
-import ru.jevent.model.Enums.RateType;
 import ru.jevent.model.converter.RateConverter;
+import ru.jevent.model.enums.RateType;
+import ru.jevent.model.superclasses.NamedEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;

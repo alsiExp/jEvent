@@ -1,10 +1,13 @@
-package ru.jevent.model;
+package ru.jevent.model.additionalEntity;
+
+import ru.jevent.model.Participant;
+import ru.jevent.model.superclasses.NamedEntity;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "emails")
-public class Email extends NamedEntity{
+public class Email extends NamedEntity {
 
     @Column(name = "email")
     String email;
@@ -12,7 +15,7 @@ public class Email extends NamedEntity{
     private boolean main;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id")
-    private Visitor owner;
+    private Participant owner;
 
     public Email() {
     }
@@ -33,11 +36,11 @@ public class Email extends NamedEntity{
         this.main = main;
     }
 
-    public Visitor getOwner() {
+    public Participant getOwner() {
         return owner;
     }
 
-    public void setOwner(Visitor owner) {
+    public void setOwner(Participant owner) {
         this.owner = owner;
     }
 

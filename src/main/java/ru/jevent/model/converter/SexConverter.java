@@ -1,6 +1,6 @@
 package ru.jevent.model.converter;
 
-import ru.jevent.model.Enums.Sex;
+import ru.jevent.model.enums.Sex;
 
 import javax.persistence.AttributeConverter;
 

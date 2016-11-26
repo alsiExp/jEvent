@@ -1,8 +1,8 @@
-package ru.jevent.model;
+package ru.jevent.model.superclasses;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import ru.jevent.model.Enums.Sex;
 import ru.jevent.model.converter.SexConverter;
+import ru.jevent.model.enums.Sex;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;

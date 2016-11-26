@@ -1,4 +1,4 @@
-package ru.jevent.model.Enums;
+package ru.jevent.model.enums;
 
 public enum Sex {
     MALE, FEMALE

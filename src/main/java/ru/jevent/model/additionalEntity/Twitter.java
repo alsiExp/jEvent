@@ -1,7 +1,7 @@
-package ru.jevent.model.SocialNetworks;
+package ru.jevent.model.additionalEntity;
 
-import ru.jevent.model.NamedEntity;
-import ru.jevent.model.Visitor;
+import ru.jevent.model.Participant;
+import ru.jevent.model.superclasses.NamedEntity;
 
 import javax.persistence.*;
 
@@ -12,7 +12,7 @@ public class Twitter extends NamedEntity {
     @Column(name = "account")
     String account;
     @OneToOne(fetch= FetchType.LAZY, mappedBy="twitter")
-    Visitor owner;
+    Participant owner;
 
     public Twitter() {
     }
@@ -25,11 +25,11 @@ public class Twitter extends NamedEntity {
         this.account = account;
     }
 
-    public Visitor getOwner() {
+    public Participant getOwner() {
         return owner;
     }
 
-    public void setOwner(Visitor owner) {
+    public void setOwner(Participant owner) {
         this.owner = owner;
     }
 

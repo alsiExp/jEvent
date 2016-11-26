@@ -4,20 +4,34 @@ DROP TABLE IF EXISTS visitors_events_visits;
 DROP TABLE IF EXISTS visitors_events_speakers;
 DROP TABLE IF EXISTS task_statuses_tasks;
 DROP TABLE IF EXISTS events_by_rate_confirmed_visitors;
-
-
 DROP TABLE IF EXISTS slots;
 DROP TABLE IF EXISTS tracks;
-DROP TABLE IF EXISTS events_probable_speakers;
+DROP TABLE IF EXISTS slot_type;
+DROP TABLE IF EXISTS events_visitors;
 DROP TABLE IF EXISTS events_confirmed_visitors;
+-- all tasks
 DROP TABLE IF EXISTS task_statuses;
+DROP TABLE IF EXISTS tasks_comments;
+DROP TABLE IF EXISTS tasks;
+DROP TABLE IF EXISTS current_task_status;
 DROP TABLE IF EXISTS task_user_target;
 DROP TABLE IF EXISTS task_attach_events;
 DROP TABLE IF EXISTS task_attach_visitors;
 DROP TABLE IF EXISTS task_attach_partners;
+
+
+DROP TABLE IF EXISTS speech_participants;
+DROP TABLE IF EXISTS speeches_speech_tags;
+
+DROP TABLE IF EXISTS speeches_comments;
+DROP TABLE IF EXISTS speeches;
+DROP TABLE IF EXISTS speech_tags;
+DROP TABLE IF EXISTS visitors;
+
+
 DROP TABLE IF EXISTS events_comments;
-DROP TABLE IF EXISTS visitors_comments;
-DROP TABLE IF EXISTS tasks_comments;
+DROP TABLE IF EXISTS participants_comments;
+
 DROP TABLE IF EXISTS rates;
 DROP TABLE IF EXISTS user_roles;
 
@@ -25,18 +39,17 @@ DROP TABLE IF EXISTS emails;
 DROP TABLE IF EXISTS githubaccs;
 DROP TABLE IF EXISTS twitteraccs;
 
-DROP TABLE IF EXISTS tasks;
+
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS events;
 DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS visitors;
+DROP TABLE IF EXISTS participants;
 DROP TABLE IF EXISTS partners;
 
 
 DROP TABLE IF EXISTS person_sex;
-DROP TABLE IF EXISTS current_task_status;
+DROP TABLE IF EXISTS partner_status;
 DROP TABLE IF EXISTS rate_type;
-DROP TABLE IF EXISTS slot_type;
 
 
 DROP SEQUENCE IF EXISTS GLOBAL_SEQ;
@@ -49,23 +62,19 @@ CREATE TABLE person_sex
   sex VARCHAR UNIQUE
 );
 
-CREATE TABLE current_task_status
-(
-  id     BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  status VARCHAR UNIQUE
-);
-
 CREATE TABLE rate_type
 (
   id   BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
   type VARCHAR UNIQUE
 );
 
-CREATE TABLE slot_type
+
+CREATE TABLE partner_status
 (
   id   BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
   type VARCHAR UNIQUE
 );
+
 
 CREATE TABLE users
 (
@@ -91,73 +100,75 @@ CREATE TABLE user_roles
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
-CREATE TABLE visitors
+CREATE TABLE participants
 (
   --   person
-  id               BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  first_name       VARCHAR   NOT NULL CHECK (first_name <> ''),
-  last_name        VARCHAR,
-  sex              BIGINT,
-  enabled          BOOL               DEFAULT FALSE,
-  photo_URL        VARCHAR,
-  --   visitor
-  birthday         TIMESTAMP,
-  registered_date  TIMESTAMP NOT NULL DEFAULT now(),
-  phone            VARCHAR,
-
-  employer         VARCHAR,
-  biography        VARCHAR,
-  description      VARCHAR,
-
-  cost             NUMERIC(20, 2),
-
+  id              BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  first_name      VARCHAR   NOT NULL CHECK (first_name <> ''),
+  last_name       VARCHAR,
+  sex             BIGINT,
+  enabled         BOOL               DEFAULT FALSE,
+  photo_URL       VARCHAR,
+  --   participant
+  birthday        TIMESTAMP,
+  registered_date TIMESTAMP NOT NULL DEFAULT now(),
+  phone           VARCHAR,
+  skype           VARCHAR,
+  city            VARCHAR,
+  employer        VARCHAR,
+  biography       VARCHAR,
+  description     VARCHAR,
+  travel_help     VARCHAR,
 
   FOREIGN KEY (sex) REFERENCES person_sex (id)
 );
 
 CREATE TABLE emails
 (
-  id   BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name VARCHAR,
-  email VARCHAR NOT NULL CHECK (email <> ''),
-  main BOOL,
+  id       BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  name     VARCHAR,
+  email    VARCHAR NOT NULL CHECK (email <> ''),
+  main     BOOL,
   owner_id BIGINT,
 
-  FOREIGN KEY (owner_id) REFERENCES visitors (id) ON DELETE CASCADE
+  FOREIGN KEY (owner_id) REFERENCES participants (id) ON DELETE CASCADE
 
 );
 
 CREATE TABLE githubaccs
 (
-  id   BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name VARCHAR,
-  account VARCHAR,
+  id       BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  name     VARCHAR,
+  account  VARCHAR,
   owner_id BIGINT,
 
-  FOREIGN KEY (owner_id) REFERENCES visitors (id) ON DELETE CASCADE
+  FOREIGN KEY (owner_id) REFERENCES participants (id) ON DELETE CASCADE
 
 );
 
 CREATE TABLE twitteraccs
 (
-  id   BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name VARCHAR,
-  account VARCHAR,
+  id       BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  name     VARCHAR,
+  account  VARCHAR,
   owner_id BIGINT,
 
-  FOREIGN KEY (owner_id) REFERENCES visitors (id) ON DELETE CASCADE
+  FOREIGN KEY (owner_id) REFERENCES participants (id) ON DELETE CASCADE
 
 );
 
 CREATE TABLE partners
 (
-  id          BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name        VARCHAR NOT NULL CHECK (name <> ''),
-  email       VARCHAR,
-  phone       VARCHAR,
-  description VARCHAR,
-  logo_URL    VARCHAR
+  id            BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  name          VARCHAR NOT NULL CHECK (name <> ''),
+  status_id     BIGINT,
+  contact_email VARCHAR,
+  contact_phone VARCHAR,
+  contact_name  VARCHAR,
+  description   VARCHAR,
+  logo_URL      VARCHAR,
 
+  FOREIGN KEY (status_id) REFERENCES partner_status (id)
 );
 
 
@@ -177,8 +188,8 @@ CREATE TABLE events
   id          BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
   name        VARCHAR NOT NULL CHECK (name <> ''),
   author_id   BIGINT  NOT NULL,
-  tag_name    VARCHAR NOT NULL CHECK (tag_name <> ''),
-  start       TIMESTAMP,
+  version     VARCHAR,
+  start_date  TIMESTAMP,
   address     VARCHAR,
   description VARCHAR,
   logo_URL    VARCHAR,
@@ -202,46 +213,19 @@ CREATE TABLE rates
 );
 
 
-CREATE TABLE tracks
+CREATE TABLE visitors
 (
-  id          BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name        VARCHAR NOT NULL CHECK (name <> ''),
-  event_id    BIGINT  NOT NULL,
-  description VARCHAR,
+  id             BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  participant_id BIGINT    NOT NULL,
+  event_id       BIGINT    NOT NULL,
+  buy_date       TIMESTAMP,
+  pay_comment    VARCHAR,
+  rate_id        BIGINT    NOT NULL,
+  real_cost       NUMERIC(20, 2) DEFAULT NULL,
 
-  FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE
-);
-
-CREATE TABLE events_confirmed_visitors
-(
-  id         BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  visitor_id BIGINT    NOT NULL,
-  event_id   BIGINT    NOT NULL,
-  buy_date   TIMESTAMP NOT NULL,
-  comment    VARCHAR,
-  rate_id    BIGINT    NOT NULL,
-
-  FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE,
+  FOREIGN KEY (participant_id) REFERENCES participants (id) ON DELETE CASCADE,
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
   FOREIGN KEY (rate_id) REFERENCES rates (id) ON DELETE CASCADE
-);
-
-CREATE TABLE slots
-(
-  id               BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name             VARCHAR,
-  track_id         BIGINT,
-  start            TIMESTAMP NOT NULL,
-  visitor_id       BIGINT,
-  slot_description VARCHAR,
-  slot_type        BIGINT,
-  grade            INT,
-  price            INT,
-
-  FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE,
-  FOREIGN KEY (slot_type) REFERENCES slot_type (id) ON DELETE CASCADE,
-  FOREIGN KEY (track_id) REFERENCES tracks (id) ON DELETE CASCADE
-
 );
 
 
@@ -255,107 +239,81 @@ CREATE TABLE events_comments
   FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE
 );
 
-CREATE TABLE visitors_comments
+CREATE TABLE participants_comments
 (
-  visitor_id BIGINT,
-  comment_id BIGINT,
+  participant_id BIGINT,
+  comment_id     BIGINT,
 
-  PRIMARY KEY (visitor_id, comment_id),
-  FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE,
+  PRIMARY KEY (participant_id, comment_id),
+  FOREIGN KEY (participant_id) REFERENCES participants (id) ON DELETE CASCADE,
   FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE
 );
 
 
-CREATE TABLE events_probable_speakers
-  -- probableSpeakers
+CREATE TABLE speeches
 (
   id                 BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  visitor_id         BIGINT,
   event_id           BIGINT,
-  send_date          TIMESTAMP NOT NULL DEFAULT now(),
-  speech_name        VARCHAR,
-  speech_description VARCHAR,
-  wish_Price         NUMERIC(20, 2),
+  partner_id         BIGINT,
+  short_desc         VARCHAR,
+  jira_status        VARCHAR,
+  jira_link          VARCHAR,
+  sync_time          TIMESTAMP NOT NULL DEFAULT now(),
+  is_from_jira       BOOL,
+
+  jira_creation_time TIMESTAMP NOT NULL DEFAULT now(),
+  jira_update_time   TIMESTAMP NOT NULL DEFAULT now(),
+
+  name               VARCHAR,
+  full_desc          VARCHAR,
+  viewer_value       VARCHAR,
+  focus              VARCHAR,
+
+  speaker_cost       NUMERIC(20, 2),
+  name_en            VARCHAR,
+  full_desc_en       VARCHAR,
+  short_desc_en      VARCHAR,
 
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
-  FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE
-);
-CREATE TABLE tasks
-(
-  id          BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name        VARCHAR   NOT NULL CHECK (name <> ''),
-  user_id     BIGINT,
-  start       TIMESTAMP NOT NULL DEFAULT now(),
-  deadline    TIMESTAMP,
-  description VARCHAR,
-  active      BOOL               DEFAULT FALSE,
-
-  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+  FOREIGN KEY (partner_id) REFERENCES partners (id)
 );
 
-CREATE TABLE task_statuses
+CREATE TABLE speech_tags
+  -- speeches
 (
-  id                     BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  user_id                BIGINT,
-  task_id                BIGINT    NOT NULL,
-  creation_time          TIMESTAMP NOT NULL DEFAULT now(),
-  current_task_status_id BIGINT,
-  description            VARCHAR   NOT NULL CHECK (description <> ''),
+  id  BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  tag VARCHAR
 
-  FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
-  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-  FOREIGN KEY (current_task_status_id) REFERENCES current_task_status (id) ON DELETE CASCADE
 );
 
-CREATE TABLE tasks_comments
+CREATE TABLE speech_participants
 (
-  task_id    BIGINT,
+  speech_id      BIGINT,
+  participant_id BIGINT,
+
+  PRIMARY KEY (speech_id, participant_id),
+  FOREIGN KEY (speech_id) REFERENCES speeches (id) ON DELETE CASCADE,
+  FOREIGN KEY (participant_id) REFERENCES participants (id) ON DELETE CASCADE
+);
+
+CREATE TABLE speeches_comments
+(
+  speech_id  BIGINT,
   comment_id BIGINT,
 
-  PRIMARY KEY (task_id, comment_id),
-  FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
+  PRIMARY KEY (speech_id, comment_id),
+  FOREIGN KEY (speech_id) REFERENCES speeches (id) ON DELETE CASCADE,
   FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE
 );
 
-CREATE TABLE task_user_target
+CREATE TABLE speeches_speech_tags
 (
-  task_id BIGINT,
-  user_id BIGINT,
+  speech_id BIGINT,
+  tag_id    BIGINT,
 
-  PRIMARY KEY (task_id, user_id),
-  FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
-  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+  PRIMARY KEY (speech_id, tag_id),
+  FOREIGN KEY (speech_id) REFERENCES speeches (id) ON DELETE CASCADE,
+  FOREIGN KEY (tag_id) REFERENCES speech_tags (id) ON DELETE CASCADE
 );
-
-CREATE TABLE task_attach_events
-(
-  task_id  BIGINT,
-  event_id BIGINT,
-
-  PRIMARY KEY (task_id, event_id),
-  FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
-  FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE
-);
-
-CREATE TABLE task_attach_visitors
-(
-  task_id    BIGINT,
-  visitor_id BIGINT,
-
-  PRIMARY KEY (task_id, visitor_id),
-  FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
-  FOREIGN KEY (visitor_id) REFERENCES visitors (id) ON DELETE CASCADE
-);
-
-CREATE TABLE task_attach_partners
-(
-  task_id    BIGINT,
-  partner_id BIGINT,
-
-  PRIMARY KEY (task_id, partner_id),
-  FOREIGN KEY (task_id) REFERENCES tasks (id) ON DELETE CASCADE,
-  FOREIGN KEY (partner_id) REFERENCES partners (id) ON DELETE CASCADE
-);
-
 
 

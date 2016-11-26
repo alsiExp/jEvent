@@ -2,8 +2,9 @@ package ru.jevent.model;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
-import ru.jevent.model.Enums.Role;
-import ru.jevent.model.Enums.Sex;
+import ru.jevent.model.enums.Role;
+import ru.jevent.model.enums.Sex;
+import ru.jevent.model.superclasses.Person;
 
 import javax.persistence.*;
 import java.util.EnumSet;

@@ -1,7 +1,13 @@
 package ru.jevent.model;
 
 
+import ru.jevent.model.converter.PartnerStatusConverter;
+import ru.jevent.model.enums.PartnerStatus;
+import ru.jevent.model.superclasses.NamedEntity;
+
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "partners")
@@ -14,11 +20,17 @@ public class Partner extends NamedEntity {
     public static final String DELETE = "Partner.delete";
     public static final String ALL_SORTED = "Partner.getAllSorted";
 
+    @Column(name = "status_id")
+    @Convert(converter = PartnerStatusConverter.class)
+    private PartnerStatus status;
+
     //    connection info
-    @Column(name = "email")
-    private String email;
-    @Column(name = "phone")
-    private String phone;
+    @Column(name = "contact_email")
+    private String contactEmail;
+    @Column(name = "contact_phone")
+    private String contactPhone;
+    @Column(name = "contact_name")
+    private String contactName;
 
     @Column(name = "description")
     private String description;
@@ -27,40 +39,36 @@ public class Partner extends NamedEntity {
     @Column(name = "logo_url")
     private String logoURL;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "partner_id")
+    private Set<Speech> speechSet;
 
     public Partner() {
     }
 
-    public Partner(String name, String email, String phone, String description, String logoURL) {
-        super(name);
-        this.email = email;
-        this.phone = phone;
-        this.description = description;
-        this.logoURL = logoURL;
+
+    public String getContactEmail() {
+        return contactEmail;
     }
 
-    public Partner(long id, String name, String email, String phone, String description, String logoURL) {
-        super(id, name);
-        this.email = email;
-        this.phone = phone;
-        this.description = description;
-        this.logoURL = logoURL;
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
     }
 
-    public String getEmail() {
-        return email;
+    public String getContactPhone() {
+        return contactPhone;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setContactPhone(String contactPhone) {
+        this.contactPhone = contactPhone;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getContactName() {
+        return contactName;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
     }
 
     public String getDescription() {
@@ -79,6 +87,25 @@ public class Partner extends NamedEntity {
         this.logoURL = logoURL;
     }
 
+    public PartnerStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PartnerStatus status) {
+        this.status = status;
+    }
+
+    public Set<Speech> getSpeechSet() {
+        if(speechSet == null) {
+            speechSet = new HashSet<>();
+        }
+        return speechSet;
+    }
+
+    public void setSpeechSet(Set<Speech> speechSet) {
+        this.speechSet = speechSet;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -87,31 +114,48 @@ public class Partner extends NamedEntity {
 
         Partner partner = (Partner) o;
 
-        if (email != null ? !email.equals(partner.email) : partner.email != null) return false;
-        if (phone != null ? !phone.equals(partner.phone) : partner.phone != null) return false;
+        if (status != partner.status) return false;
+        if (contactEmail != null ? !contactEmail.equals(partner.contactEmail) : partner.contactEmail != null)
+            return false;
+        if (contactPhone != null ? !contactPhone.equals(partner.contactPhone) : partner.contactPhone != null)
+            return false;
+        if (contactName != null ? !contactName.equals(partner.contactName) : partner.contactName != null) return false;
         if (description != null ? !description.equals(partner.description) : partner.description != null) return false;
-        return logoURL != null ? logoURL.equals(partner.logoURL) : partner.logoURL == null;
-
+        if (logoURL != null ? !logoURL.equals(partner.logoURL) : partner.logoURL != null) return false;
+        return speechSet != null ? speechSet.equals(partner.speechSet) : partner.speechSet == null;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (contactEmail != null ? contactEmail.hashCode() : 0);
+        result = 31 * result + (contactPhone != null ? contactPhone.hashCode() : 0);
+        result = 31 * result + (contactName != null ? contactName.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (logoURL != null ? logoURL.hashCode() : 0);
+        result = 31 * result + (speechSet != null ? speechSet.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
+        StringBuilder speechSB = new StringBuilder();
+        if(!this.getSpeechSet().isEmpty()){
+            String prefix = "";
+            speechSB.append('[');
+            for (Speech s : speechSet) {
+                speechSB.append(prefix);
+                prefix = ",";
+                speechSB.append((s.getName()));
+            }
+            speechSB.append(']');
+        }
         return "Partner{" +
                 super.toString() +
-                "email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", description='" + description + '\'' +
-                ", logoURL='" + logoURL + '\'' +
+                ", contact name='" + contactName + '\'' +
+                ", contact phone='" + contactPhone + '\'' +
+                ", speeches='" + speechSB + '\'' +
                 "} ";
     }
 }

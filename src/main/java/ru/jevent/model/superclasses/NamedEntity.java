@@ -1,4 +1,4 @@
-package ru.jevent.model;
+package ru.jevent.model.superclasses;
 
 import org.hibernate.validator.constraints.NotEmpty;
 

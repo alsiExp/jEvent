@@ -1,7 +1,9 @@
 package ru.jevent.model;
 
-import ru.jevent.model.SocialNetworks.GitHub;
-import ru.jevent.model.SocialNetworks.Twitter;
+import ru.jevent.model.additionalEntity.Email;
+import ru.jevent.model.additionalEntity.GitHub;
+import ru.jevent.model.additionalEntity.Twitter;
+import ru.jevent.model.superclasses.Person;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,28 +13,24 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "visitors")
+@Table(name = "participants")
 @NamedQueries({
-        @NamedQuery(name = Visitor.DELETE, query = "DELETE from Visitor v where v.id = :id"),
-        @NamedQuery(name = Visitor.ALL_SORTED, query = "SELECT v FROM Visitor v ORDER BY v.registered"),
-        //@NamedQuery(name = Visitor.BY_EMAIL, query = "SELECT v FROM Visitor v WHERE v.email = ?1"),
+        @NamedQuery(name = Participant.DELETE, query = "DELETE from Participant v where v.id = :id"),
+        @NamedQuery(name = Participant.ALL_SORTED, query = "SELECT v FROM Participant v ORDER BY v.registered"),
+        //@NamedQuery(name = Participant.BY_EMAIL, query = "SELECT v FROM Participant v WHERE v.email = ?1"),
 })
-public class Visitor extends Person {
+public class Participant extends Person {
     /*
-        Entity Visitor have not links for Event and Task.
-        To find Events, where Visitor was speaker, use getSpeakerEventList<Visitor>(long id) in EventRepository;
-        To find Events, where Visitor was only visitor, use getVisitorEventList<Visitor>(long id) in EventRepository;
-        To find all Tasks for visitor use TaskRepository
-
-         After version 0.9:
-        - add storage for Emails
-        - additional phones and emails list ??
+        fields from jira:
+        skype - Skype
+        city - Country, City
+        travelHelp - Travel
 
      */
 
-    public static final String DELETE = "Visitor.delete";
-    public static final String ALL_SORTED = "Visitor.getAllSorted";
-    //public static final String BY_EMAIL = "Visitor.getByEmail";
+    public static final String DELETE = "Participant.delete";
+    public static final String ALL_SORTED = "Participant.getAllSorted";
+    //public static final String BY_EMAIL = "Participant.getByEmail";
 
     //    Dates
     @Column(name = "birthday")
@@ -40,43 +38,44 @@ public class Visitor extends Person {
     @Column(name = "registered_date", nullable = false)
     private LocalDateTime registered;
 
-    //    connection info
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    //    contact information & social networks
+    @OneToMany(fetch=FetchType.EAGER, mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Email> emails;
     @Column(name = "phone")
     private String phone;
-
-    //    Social Networks
-    @OneToOne(fetch=FetchType.LAZY)
+    @Column(name = "skype")
+    private String  skype;
+    @OneToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="id", referencedColumnName = "owner_id")
     private GitHub gitHub;
-    @OneToOne(fetch=FetchType.LAZY)
+    @OneToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="id", referencedColumnName = "owner_id")
     private Twitter twitter;
 
-    //    Visitor description
+
+    //    Common info about participant
+    @Column(name = "city")
+    private String city;
     @Column(name = "employer")
     private String employer;
     @Column(name = "biography")
     private String biography;
     @Column(name = "description")
     private String description;
+    @Column(name = "travel_help")
+    private String travelHelp;
 
-    //    quantity of money, that will be received or payed
-    @Column(name = "cost")
-    private double cost;
-
-    //    notes from all Users about Visitor
+    //    notes about Participant
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(name = "visitors_comments",
-            joinColumns = @JoinColumn(name = "visitor_id", referencedColumnName = "id"),
+    @JoinTable(name = "participants_comments",
+            joinColumns = @JoinColumn(name = "participant_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id", unique = true))
     @OrderBy("date")
     private List<Comment> commentList;
 
 
-    public Visitor() {
+    public Participant() {
     }
 
     public LocalDateTime getBirthDay() {
@@ -116,6 +115,7 @@ public class Visitor extends Person {
             }
         }
     }
+
 
     public String getPhone() {
         return phone;
@@ -166,13 +166,28 @@ public class Visitor extends Person {
         this.description = description;
     }
 
-
-    public double getCost() {
-        return cost;
+    public String getSkype() {
+        return skype;
     }
 
-    public void setCost(double cost) {
-        this.cost = cost;
+    public void setSkype(String skype) {
+        this.skype = skype;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getTravelHelp() {
+        return travelHelp;
+    }
+
+    public void setTravelHelp(String travelHelp) {
+        this.travelHelp = travelHelp;
     }
 
     public List<Comment> getCommentList() {
@@ -187,64 +202,53 @@ public class Visitor extends Person {
     }
 
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Visitor)) return false;
+        if (!(o instanceof Participant)) return false;
         if (!super.equals(o)) return false;
 
-        Visitor visitor = (Visitor) o;
+        Participant that = (Participant) o;
 
-        if (Double.compare(visitor.cost, cost) != 0) return false;
-        if (birthDay != null ? !birthDay.equals(visitor.birthDay) : visitor.birthDay != null) return false;
-        if (registered != null ? !registered.equals(visitor.registered) : visitor.registered != null) return false;
-        if (phone != null ? !phone.equals(visitor.phone) : visitor.phone != null) return false;
-        if (gitHub != null ? !gitHub.equals(visitor.gitHub) : visitor.gitHub != null)
-            return false;
-        if (twitter != null ? !twitter.equals(visitor.twitter) : visitor.twitter != null)
-            return false;
-        if (employer != null ? !employer.equals(visitor.employer) : visitor.employer != null) return false;
-        if (biography != null ? !biography.equals(visitor.biography) : visitor.biography != null) return false;
-        if (description != null ? !description.equals(visitor.description) : visitor.description != null) return false;
-        if (!isEquals(this.getEmails(), visitor.getEmails())) {
-            return false;
-        }
-        return isEquals(this.getCommentList(), visitor.getCommentList());
+        if (birthDay != null ? !birthDay.equals(that.birthDay) : that.birthDay != null) return false;
+        if (registered != null ? !registered.equals(that.registered) : that.registered != null) return false;
+        if (emails != null ? !emails.equals(that.emails) : that.emails != null) return false;
+        if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
+        if (skype != null ? !skype.equals(that.skype) : that.skype != null) return false;
+        if (gitHub != null ? !gitHub.equals(that.gitHub) : that.gitHub != null) return false;
+        if (twitter != null ? !twitter.equals(that.twitter) : that.twitter != null) return false;
+        if (city != null ? !city.equals(that.city) : that.city != null) return false;
+        if (employer != null ? !employer.equals(that.employer) : that.employer != null) return false;
+        if (biography != null ? !biography.equals(that.biography) : that.biography != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (travelHelp != null ? !travelHelp.equals(that.travelHelp) : that.travelHelp != null) return false;
+        return isEquals(this.getCommentList(), that.getCommentList());
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        long temp;
         result = 31 * result + (birthDay != null ? birthDay.hashCode() : 0);
         result = 31 * result + (registered != null ? registered.hashCode() : 0);
         result = 31 * result + (emails != null ? emails.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (skype != null ? skype.hashCode() : 0);
         result = 31 * result + (gitHub != null ? gitHub.hashCode() : 0);
         result = 31 * result + (twitter != null ? twitter.hashCode() : 0);
+        result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (employer != null ? employer.hashCode() : 0);
         result = 31 * result + (biography != null ? biography.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        temp = Double.doubleToLongBits(cost);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (travelHelp != null ? travelHelp.hashCode() : 0);
         result = 31 * result + (commentList != null ? commentList.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        StringBuilder commentsSB = new StringBuilder();
         StringBuilder emailsSB = new StringBuilder();
-        if (!this.getCommentList().isEmpty()) {
-            String prefix = "";
-            commentsSB.append('[');
-            for (Comment c : commentList) {
-                commentsSB.append(prefix);
-                prefix = ",";
-                commentsSB.append((c).toString());
-            }
-            commentsSB.append(']');
-        }
         if(!this.getEmails().isEmpty()){
             String prefix = "";
             emailsSB.append('[');
@@ -253,32 +257,18 @@ public class Visitor extends Person {
                 prefix = ",";
                 emailsSB.append((e).toString());
             }
-            commentsSB.append(']');
+            emailsSB.append(']');
         }
 
-        return "Visitor{" +
+        return "Participant{" +
                 super.toString() +
-                "birthDay=" + birthDay +
+                "full name=" + this.getFullName() +
                 ", registered=" + registered +
                 ", email='" + emailsSB.toString() + '\'' +
                 ", phone='" + phone + '\'' +
-                ", gitHubAccount='" + gitHub.toString() + '\'' +
-                ", twitterAccount='" + twitter.toString() + '\'' +
+                ", gitHubAccount='" + gitHub + '\'' +
+                ", twitterAccount='" + twitter + '\'' +
                 ", employer='" + employer + '\'' +
-                ", biography='" + biography + '\'' +
-                ", description='" + description + '\'' +
-                ", cost=" + cost +
-                ", commentList=" + commentsSB.toString() +
                 "} ";
-    }
-
-    // TODO: commit 2da2d96
-    public void setEmail(String email_string) {
-//       if (email_string != null ){
-//        Email email = new Email();
-//        email.setEmail(email_string);
-//        emails.add(email);
-//      }
-
     }
 }
