@@ -74,7 +74,7 @@ public class EventServiceTest {
     @Test
     public void testEventWithProbableSpeakersSave() throws Exception {
         Event testEvent = testData.getEventWithRates();
-        testEvent.setProbableSpeakers(testData.getProbableSpeakers(testEvent));
+        testEvent.setSpeeches(testData.getProbableSpeakers(testEvent));
         eventService.save(testEvent);
 
         Event savedEvent = eventService.get(testEvent.getId());
@@ -86,7 +86,7 @@ public class EventServiceTest {
     @Test
     public void testEventWithRatesAndConfirmedVisitorsSave() throws Exception {
         Event testEvent = testData.getEventWithRates();
-        testEvent.setConfirmedVisitors(testData.getConfirmedVisitors(testEvent));
+        testEvent.setVisitors(testData.getConfirmedVisitors(testEvent));
         eventService.save(testEvent);
 
         Event savedEvent = eventService.get(testEvent.getId());
@@ -175,7 +175,7 @@ public class EventServiceTest {
             throw new Exception();
         }
 
-        e.setTagName("");
+        e.setVersion("");
         eventService.update(e);
 
     }

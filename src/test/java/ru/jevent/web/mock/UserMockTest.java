@@ -7,8 +7,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.jevent.web.User.UserRestController;
 
-import java.util.Arrays;
-
 
 public class UserMockTest {
     private static ConfigurableApplicationContext appCtx;
@@ -16,8 +14,10 @@ public class UserMockTest {
 
     @BeforeClass
     public static void beforeClass() {
-        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/mock.xml");
-        System.out.println("\n" + Arrays.toString(appCtx.getBeanDefinitionNames()) + "\n");
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-mvc.xml", "spring/spring-app.xml", "spring/mock.xml");
+        for(String s : appCtx.getBeanDefinitionNames()) {
+            System.out.println(s);
+        }
         controller = appCtx.getBean(UserRestController.class);
     }
 

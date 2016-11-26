@@ -8,8 +8,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.jevent.model.User;
 import ru.jevent.web.User.AdminRestController;
 
-import java.util.Arrays;
-
 
 public class AdminMockTest {
 
@@ -18,8 +16,10 @@ public class AdminMockTest {
 
     @BeforeClass
     public static void beforeClass() {
-        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/mock.xml");
-        System.out.println("\n" + Arrays.toString(appCtx.getBeanDefinitionNames()) + "\n");
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-mvc.xml", "spring/spring-app.xml", "spring/mock.xml");
+        for(String s : appCtx.getBeanDefinitionNames()) {
+            System.out.println(s);
+        }
         controller = appCtx.getBean(AdminRestController.class);
     }
 

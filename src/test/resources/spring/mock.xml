@@ -3,42 +3,6 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <!--<bean class="ru.jevent.repository.mock.MockCommentRepositoryImpl" id="mockCommentRepository"/>-->
-
-    <!--<bean class="ru.jevent.service.impl.CommentServiceImpl">-->
-        <!--<constructor-arg ref="mockCommentRepository"/>-->
-    <!--</bean>-->
-
-    <!--<bean class="ru.jevent.repository.mock.MockUserRepositoryImpl" id="mockUserRepository"/>-->
-
-    <!--<bean class="ru.jevent.service.impl.UserServiceImpl">-->
-        <!--<constructor-arg ref="mockUserRepository"/>-->
-    <!--</bean>-->
-
-    <!--<bean class="ru.jevent.repository.mock.MockVisitorRepositoryImpl" id="mockVisitorRepository"/>-->
-
-    <!--<bean class="ru.jevent.service.impl.VisitorServiceImpl">-->
-        <!--<constructor-arg ref="mockVisitorRepository"/>-->
-    <!--</bean>-->
-
-    <!--<bean class="ru.jevent.repository.mock.MockPartnerRepositoryImpl" id="mockPartnerRepository"/>-->
-
-    <!--<bean class="ru.jevent.service.impl.PartnerServiceImpl">-->
-        <!--<constructor-arg ref="mockPartnerRepository"/>-->
-    <!--</bean>-->
-
-    <!--<bean class="ru.jevent.repository.mock.MockEventRepositoryImpl" id="eventRepository"/>-->
-
-    <!--<bean class="ru.jevent.service.impl.EventServiceImpl">-->
-        <!--<constructor-arg ref="eventRepository"/>-->
-    <!--</bean>-->
-
-    <!--<bean class="ru.jevent.repository.mock.MockTaskRepositoryImpl" id="mockTaskRepository"/>-->
-
-    <!--<bean class="ru.jevent.service.impl.TaskServiceImpl">-->
-        <!--<constructor-arg ref="mockTaskRepository"/>-->
-    <!--</bean>-->
-
 
     <context:component-scan base-package="ru.jevent.**.repository.mock"/>
 </beans>

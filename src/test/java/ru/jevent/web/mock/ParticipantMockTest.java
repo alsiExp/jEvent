@@ -5,23 +5,23 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import ru.jevent.model.Visitor;
+import ru.jevent.model.Participant;
 import ru.jevent.util.exception.NotFoundException;
-import ru.jevent.web.Visitor.VisitorRestController;
-
-import java.util.Arrays;
+import ru.jevent.web.Participant.ParticipantRestController;
 
 
-public class VisitorMockTest {
+public class ParticipantMockTest {
 
     private static ConfigurableApplicationContext appCtx;
-    private static VisitorRestController controller;
+    private static ParticipantRestController controller;
 
     @BeforeClass
     public static void beforeClass() {
-        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/mock.xml");
-        System.out.println("\n" + Arrays.toString(appCtx.getBeanDefinitionNames()) + "\n");
-        controller = appCtx.getBean(VisitorRestController.class);
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-mvc.xml", "spring/spring-app.xml", "spring/mock.xml");
+        for(String s : appCtx.getBeanDefinitionNames()) {
+            System.out.println(s);
+        }
+        controller = appCtx.getBean(ParticipantRestController.class);
     }
 
     @AfterClass
@@ -32,7 +32,7 @@ public class VisitorMockTest {
 
     @Test
     public void testCreate() throws Exception {
-        controller.create(new Visitor());
+        controller.create(new Participant());
     }
 
     @Test

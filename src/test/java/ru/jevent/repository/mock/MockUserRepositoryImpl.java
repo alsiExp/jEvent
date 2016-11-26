@@ -2,8 +2,8 @@ package ru.jevent.repository.mock;
 
 import org.springframework.stereotype.Repository;
 import ru.jevent.LoggerWrapper;
-import ru.jevent.model.Enums.Sex;
 import ru.jevent.model.User;
+import ru.jevent.model.enums.Sex;
 import ru.jevent.repository.UserRepository;
 
 import java.util.ArrayList;

@@ -13,7 +13,12 @@ public class MockPartnerRepositoryImpl implements PartnerRepository {
 
     private static final LoggerWrapper LOG = LoggerWrapper.get(MockPartnerRepositoryImpl.class);
 
-    private static Partner partner = new Partner(13, "T-Systems", "email", "+7-812-000-00-00", "Partner description", null);
+    private static Partner partner = new Partner();
+    static {
+        partner.setId(13L);
+        partner.setName("T-Systems");
+        partner.setContactEmail("email");
+    }
 
 
     public static Partner getPartner() {

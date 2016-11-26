@@ -3,17 +3,21 @@ package ru.jevent.repository.mock;
 import org.springframework.stereotype.Repository;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Event;
+import ru.jevent.model.User;
 import ru.jevent.repository.EventRepository;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class MockEventRepositoryImpl implements EventRepository {
     private static final LoggerWrapper LOG = LoggerWrapper.get(MockEventRepositoryImpl.class);
-    private static Event event = new Event(2, "Конференция Joker", MockUserRepositoryImpl.getUser(), "joker16", "Conf address",
-    "Joker 2016 description", null, LocalDateTime.now(), null, null, null, null, null);
+    private static Event event = new Event();
+    static {
+        event.setId(2L);
+        event.setName("Конференция Joker");
+        event.setAuthor(new User());
+    }
 
     public static Event getEvent() {
         return event;

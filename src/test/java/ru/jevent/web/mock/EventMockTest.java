@@ -10,8 +10,6 @@ import ru.jevent.model.User;
 import ru.jevent.util.exception.NotFoundException;
 import ru.jevent.web.Event.EventRestController;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -22,8 +20,10 @@ public class EventMockTest {
 
     @BeforeClass
     public static void beforeClass() {
-        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/mock.xml");
-        System.out.println("\n" + Arrays.toString(appCtx.getBeanDefinitionNames()) + "\n");
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-mvc.xml", "spring/spring-app.xml", "spring/mock.xml");
+        for(String s : appCtx.getBeanDefinitionNames()) {
+            System.out.println(s);
+        }
         controller = appCtx.getBean(EventRestController.class);
     }
 
@@ -40,8 +40,10 @@ public class EventMockTest {
 
     @Test
     public void testUpdate() throws Exception {
-        controller.update(new Event(8, "Конференция Joker", new User(), "joker16", "Conf address",
-                "Joker 2016 description", null, LocalDateTime.now(), null, null, null, null, null));
+        Event event = new Event();
+        event.setId(8L);
+        event.setName("Конференция Joker");
+        event.setAuthor(new User());
     }
 
     @Test

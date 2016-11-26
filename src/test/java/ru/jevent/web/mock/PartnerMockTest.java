@@ -9,8 +9,6 @@ import ru.jevent.model.Partner;
 import ru.jevent.util.exception.NotFoundException;
 import ru.jevent.web.Partner.PartnerRestController;
 
-import java.util.Arrays;
-
 
 public class PartnerMockTest {
 
@@ -19,8 +17,10 @@ public class PartnerMockTest {
 
     @BeforeClass
     public static void beforeClass() {
-        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/mock.xml");
-        System.out.println("\n" + Arrays.toString(appCtx.getBeanDefinitionNames()) + "\n");
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-mvc.xml", "spring/spring-app.xml", "spring/mock.xml");
+        for(String s : appCtx.getBeanDefinitionNames()) {
+            System.out.println(s);
+        }
         controller = appCtx.getBean(PartnerRestController.class);
     }
 
@@ -37,7 +37,11 @@ public class PartnerMockTest {
 
     @Test
     public void testUpdate() throws Exception {
-        controller.create(new Partner(5, "T-Systems", "email", "+7-812-000-00-00", "Partner description", null));
+        Partner partner = new Partner();
+        partner.setId(5L);
+        partner.setName("T-Systems");
+        partner.setContactEmail("email");
+        controller.create(partner);
     }
 
     @Test
