@@ -1,81 +1,75 @@
-DELETE FROM slots;
-DELETE FROM tracks;
+DELETE FROM speeches_speech_tags;
+
+DELETE FROM speech_participants;
+DELETE FROM events_comments;
+DELETE FROM participants_comments;
+DELETE FROM speeches_comments;
+
+DELETE FROM rates;
 DELETE FROM emails;
 DELETE FROM githubaccs;
 DELETE FROM twitteraccs;
-DELETE FROM events_probable_speakers;
-DELETE FROM events_confirmed_visitors;
-DELETE FROM task_statuses;
-DELETE FROM task_user_target;
-DELETE FROM task_attach_events;
-DELETE FROM task_attach_visitors;
-DELETE FROM task_attach_partners;
-DELETE FROM events_comments;
-DELETE FROM visitors_comments;
-DELETE FROM tasks_comments;
-DELETE FROM rates;
+DELETE FROM speech_tags;
 
-DELETE FROM tasks;
+
 DELETE FROM comments;
+DELETE FROM speeches;
 DELETE FROM events;
 DELETE FROM users;
 DELETE FROM visitors;
 DELETE FROM partners;
+DELETE FROM participants;
+
 
 DELETE FROM person_sex;
-DELETE FROM current_task_status;
+DELETE FROM partner_status;
 DELETE FROM rate_type;
-DELETE FROM slot_type;
 DELETE FROM user_roles;
 
 ALTER SEQUENCE GLOBAL_SEQ RESTART WITH 100000;
 
--- password
+
 INSERT INTO person_sex (id, sex)
 VALUES (90000, 'MALE'), (90001, 'FEMALE');
 
-INSERT INTO current_task_status (id, status)
-VALUES (90010, 'NEW'), (90011, 'PAUSED'), (90013, 'IN_WORK'), (90014, 'DONE'), (90015, 'FAILED');
+INSERT INTO partner_status (id, type)
+VALUES (90010, 'GOLD'), (90011, 'SILVER'), (90012, 'BRONZE'), (90013, 'INFO');
 
 INSERT INTO rate_type (id, type)
 VALUES (90030, 'ONLINE_LITE'), (90031, 'ONLINE_STANDARD'), (90032, 'ONLINE_BUSINESS'),
   (90033, 'PERSONAL_LITE'), (90034, 'PERSONAL_STANDARD'), (90035, 'PERSONAL_BUSINESS');
 
 
-INSERT INTO slot_type (id, type)
-VALUES (90050, 'CHECK_IN'), (90051, 'KEYNOTE'), (90053, 'BREAK'), (90054, 'LECTURE');
 
-
-INSERT INTO partners (name, email, phone, description, logo_url)
+INSERT INTO partners (name, contact_email, contact_phone, contact_name, description, logo_url)
 VALUES
-  ('Одноклассники', '8-800-000-00-00', 'cv@odnoklassniki.ru',
+  ('Одноклассники', 'cv@odnoklassniki.ru', '8-800-000-00-00', 'Анастасия',
    'Одноклассники — это в первую очередь команда единомышленников, любящих своё дело и делающих общение в интернете удобнее, гармоничнее и лучше. Мы даём людям возможность виртуально встречаться, делиться эмоциями и каждый день узнавать что-то новое. Вместе.',
    'ok_logo.png'),
-  ('T-Systems', '+7-812-677-66-86', 'info@t-systems.ru',
+  ('T-Systems', 'info@t-systems.ru', '+7-812-677-66-86', 'Виктор Андреевич',
    'T-Systems — стратегическое подразделение Deutsche Telekom, один из лидеров в сфере информационных и телекоммуникационных услуг для таких отраслей, как промышленность, автомобилестроение, энергетика, транспорт, нефтегаз. T-Systems имеет офисы более чем в 20 странах и около 47 600 профессионалов по всему миру.',
    't-sys_200_200.png'),
-  ('JetBrains', '+7-812-380-1641', 'eugenia.dubova@jetbrains.com',
+  ('JetBrains', 'eugenia.dubova@jetbrains.com', '+7-812-380-1641', 'Михаил',
    'At JetBrains, code is our passion. For over 15 years we have strived to make the strongest, most effective developer tools on earth. By automating routine checks and corrections, our tools speed up production, freeing developers to grow, discover and create.',
    'jb_200_200.png');
 
-INSERT INTO visitors (first_name, last_name, sex, enabled, photo_url, birthday, registered_date,
-                      phone, employer, biography, description, cost)
+INSERT INTO participants (first_name, last_name, sex, enabled, photo_url, birthday, registered_date, phone, skype, city, employer, biography, description, travel_help)
 VALUES
   ('Виктор', 'Гамов', 90000, TRUE, 'vgamov.jpg', NULL, TIMESTAMP '2016-10-10 09:00',
-             '+7-000-000-00-00', 'Hazelcast', NULL,
+             '+7-000-000-00-00', NULL, 'New York', 'Hazelcast', NULL,
    'Виктор Гамов — со-основатель и лидер вашего любимого правильного подкаста для IT-шников «Разбор Полетов» и по совместительству Senior Solution Architect в компании Hazelcast, которая занимается разработкой in-memory data grid с открытым исходным кодом. Накопил большой опыт, участвуя во множестве Java/JavaScript/HTML5 проектов, что легло в основу книги «Enterprise Web Development» издательства O’Reilly, которую он писал в соавторстве с известными персонами из Java мира. Виктор помогает клиентам финансового и телекоммуникационного сектора в проектировании и разработке высоконагруженных систем.
  В свободное от работы время Виктор не забывает про качалку, а также выступает на международных конференциях, пишет в твиттер, помогает с организацией встреч Princetown JUG и NYC Hazelcast User Group.',
-   10000),
+   NULL),
   ('Барух', 'Садогурский', 90000, TRUE, 'bsadogursky.jpg', TIMESTAMP '1970-11-25 00:00', TIMESTAMP '2016-10-10 07:00',
-            '+7-000-000-00-00', 'JFrog',
+            '+7-000-000-00-00', 'jbaruh', 'Cupertino, CA', 'JFrog',
    'Developer advocate в компании JFrog, и делает в жизни ровно 3 вещи: зависает с разработчиками Bintray и Artifactory, пописывает для них код, и рассказывает о впечатлениях в блогах и на конференциях. И так несколько лет подряд, ни минуты об этом не жалея.',
    'Поскольку «религия не позволяет» быть евангелистом, Барух — developer advocate в компании JFrog и делает в жизни ровно 3 вещи: зависает с разработчиками Bintray и Artifactory, пописывает для них код, и рассказывает о впечатлениях в блогах и на конференциях, таких как JavaOne, Devoxx, OSCON, конечно же JPoint и Joker, да и многих других. И так более десяти лет подряд.',
-   -90000),
+   ''),
   ('Яков', 'Файн', 90000, TRUE, 'yfain.jpg', TIMESTAMP '1960-07-01 00:00', TIMESTAMP '2016-10-15 12:36',
-           NULL, 'SuranceBay, Farata Systems',
+           '+7-000-000-00-00', NULL, 'New York', 'SuranceBay, Farata Systems',
    'Yakov is a partner and co-founder of two companies: Farata Systems (IT consultancy) and SuranceBay (software for the Insurance industry). Yakov leads various projects related to Web development of complex enterprise applications. In his spare time Yakov enjoys teaching software and writing books.',
    NULL,
-   65000);
+   'помощь с визой в РФ');
 
 INSERT INTO users (first_name, last_name, sex, enabled, photo_url, login, password)
 VALUES
@@ -86,14 +80,20 @@ VALUES
   ('Максим', 'Зверев', 90000, TRUE, 'zverev.jpg', 'maxim', 'user'),
   ('Яна', 'Пилюгина', 90001, TRUE, 'pilugina.jpg', 'yana', 'user');
 
-INSERT INTO events (name, author_id, tag_name, start, address, description, logo_url)
+
+
+
+INSERT INTO events (name, author_id, jira_name, jira_link, version, start_date, address, description, logo_url)
 VALUES
-  ('Joker 2016', 100006, 'joker16', TIMESTAMP '2016-10-14 00:00' ,'196140, Санкт-Петербург, Петербургское шоссе, 64/1',
+  ('Joker 2016', 100006, 'JOKER', NULL,  '2016 Piter', TIMESTAMP '2016-10-14 00:00' ,NULL,
    'Спикеры - Барух Садогурский и Виктор Гамов, посетитель - Яков Файн (также он возможный докладчик). Главная Java-конференция в России. Санкт-Петербург, 14-15 октября 2016',
    'joker_logo.png'),
-  ('JPoint 2016', 100008, 'jpoint16', TIMESTAMP '2016-04-23 00:00' , 'Москва, гостиница «Radisson Славянская» (площадь Европы, 2)',
+  ('JPoint 2016', 100008, 'JPOINT', NULL, '2016 Moscow', TIMESTAMP '2016-04-23 00:00' , 'Москва, гостиница «Radisson Славянская» (площадь Европы, 2)',
    'Спикер - Барух Садогурский, посетители -  Виктор Гамов и Яков Файн. JPoint — Java-конференция только для опытных Java-разработчиков и только про разработку. Это будет уже четвертая по счету конференция JPoint: с каждым годом она получается еще больше, еще интереснее и еще хардкорнее!',
    'jpoint_logo.png');
+
+
+/*
 
 INSERT INTO comments (content, date, user_id)
 VALUES
@@ -286,3 +286,6 @@ VALUES
   (NULL, 'gamussa', 100003),
   (NULL, 'jbaruch', 100004),
   (NULL, 'yfain', 100005);
+
+
+*/

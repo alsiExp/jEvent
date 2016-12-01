@@ -9,6 +9,8 @@ DROP TABLE IF EXISTS tracks;
 DROP TABLE IF EXISTS slot_type;
 DROP TABLE IF EXISTS events_visitors;
 DROP TABLE IF EXISTS events_confirmed_visitors;
+DROP TABLE IF EXISTS events_probable_speakers;
+DROP TABLE IF EXISTS visitors_comments;
 -- all tasks
 DROP TABLE IF EXISTS task_statuses;
 DROP TABLE IF EXISTS tasks_comments;
@@ -20,6 +22,7 @@ DROP TABLE IF EXISTS task_attach_visitors;
 DROP TABLE IF EXISTS task_attach_partners;
 
 
+DROP TABLE IF EXISTS events_partners;
 DROP TABLE IF EXISTS speech_participants;
 DROP TABLE IF EXISTS speeches_speech_tags;
 
@@ -161,14 +164,11 @@ CREATE TABLE partners
 (
   id            BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
   name          VARCHAR NOT NULL CHECK (name <> ''),
-  status_id     BIGINT,
   contact_email VARCHAR,
   contact_phone VARCHAR,
   contact_name  VARCHAR,
   description   VARCHAR,
-  logo_URL      VARCHAR,
-
-  FOREIGN KEY (status_id) REFERENCES partner_status (id)
+  logo_URL      VARCHAR
 );
 
 
@@ -188,6 +188,8 @@ CREATE TABLE events
   id          BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
   name        VARCHAR NOT NULL CHECK (name <> ''),
   author_id   BIGINT  NOT NULL,
+  jira_name   VARCHAR,
+  jira_link   VARCHAR,
   version     VARCHAR,
   start_date  TIMESTAMP,
   address     VARCHAR,
@@ -216,12 +218,12 @@ CREATE TABLE rates
 CREATE TABLE visitors
 (
   id             BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  participant_id BIGINT    NOT NULL,
-  event_id       BIGINT    NOT NULL,
+  participant_id BIGINT NOT NULL,
+  event_id       BIGINT NOT NULL,
   buy_date       TIMESTAMP,
   pay_comment    VARCHAR,
-  rate_id        BIGINT    NOT NULL,
-  real_cost       NUMERIC(20, 2) DEFAULT NULL,
+  rate_id        BIGINT NOT NULL,
+  real_cost      NUMERIC(20, 2)     DEFAULT NULL,
 
   FOREIGN KEY (participant_id) REFERENCES participants (id) ON DELETE CASCADE,
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
@@ -279,7 +281,6 @@ CREATE TABLE speeches
 );
 
 CREATE TABLE speech_tags
-  -- speeches
 (
   id  BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
   tag VARCHAR
@@ -316,4 +317,14 @@ CREATE TABLE speeches_speech_tags
   FOREIGN KEY (tag_id) REFERENCES speech_tags (id) ON DELETE CASCADE
 );
 
+CREATE TABLE events_partners
+(
+  id         BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  event_id   BIGINT,
+  partner_id BIGINT,
+  status_id  BIGINT,
 
+  FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
+  FOREIGN KEY (partner_id) REFERENCES partners (id) ON DELETE CASCADE,
+  FOREIGN KEY (status_id) REFERENCES partner_status (id) ON DELETE CASCADE
+);

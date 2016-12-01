@@ -20,7 +20,9 @@ public class Partner extends NamedEntity {
     public static final String DELETE = "Partner.delete";
     public static final String ALL_SORTED = "Partner.getAllSorted";
 
-    @Column(name = "status_id")
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "events_partners",
+            joinColumns = @JoinColumn(name = "partner_id", referencedColumnName = "status_id"))
     @Convert(converter = PartnerStatusConverter.class)
     private PartnerStatus status;
 

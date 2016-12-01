@@ -30,6 +30,10 @@ public class    Event extends NamedEntity {
         version - important field from remote jira.
         If event is not synchronized can be null
      */
+    @Column(name = "jira_name")
+    private String jiraName;
+    @Column(name = "jira_link")
+    private String jiraLink;
     @Column(name = "version")
     private String version;
     @Column(name = "address")
@@ -74,6 +78,22 @@ public class    Event extends NamedEntity {
 
     public void setAuthor(User author) {
         this.author = author;
+    }
+
+    public String getJiraName() {
+        return jiraName;
+    }
+
+    public void setJiraName(String jiraName) {
+        this.jiraName = jiraName;
+    }
+
+    public String getJiraLink() {
+        return jiraLink;
+    }
+
+    public void setJiraLink(String jiraLink) {
+        this.jiraLink = jiraLink;
     }
 
     public String getVersion() {
@@ -177,6 +197,12 @@ public class    Event extends NamedEntity {
         if (version != null ? !version.equals(event.version) : event.version != null) {
             return false;
         }
+        if (jiraName != null ? !jiraName.equals(event.jiraName) : event.jiraName != null) {
+            return false;
+        }
+        if (jiraLink != null ? !jiraLink.equals(event.jiraLink) : event.jiraLink != null) {
+            return false;
+        }
         if (address != null ? !address.equals(event.address) : event.address != null) {
             return false;
         }
@@ -210,6 +236,8 @@ public class    Event extends NamedEntity {
         int result = super.hashCode();
         result = 31 * result + (author != null ? author.hashCode() : 0);
         result = 31 * result + (version != null ? version.hashCode() : 0);
+        result = 31 * result + (jiraName != null ? jiraName.hashCode() : 0);
+        result = 31 * result + (jiraLink != null ? jiraLink.hashCode() : 0);
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (logoURL != null ? logoURL.hashCode() : 0);
