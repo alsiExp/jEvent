@@ -140,10 +140,10 @@ CREATE TABLE emails
 
 CREATE TABLE githubaccs
 (
-  id       BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name     VARCHAR,
-  account  VARCHAR,
-  owner_id BIGINT,
+  id           BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  name         VARCHAR,
+  account_link VARCHAR,
+  owner_id     BIGINT,
 
   FOREIGN KEY (owner_id) REFERENCES participants (id) ON DELETE CASCADE
 
@@ -151,10 +151,10 @@ CREATE TABLE githubaccs
 
 CREATE TABLE twitteraccs
 (
-  id       BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name     VARCHAR,
-  account  VARCHAR,
-  owner_id BIGINT,
+  id           BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  name         VARCHAR,
+  account_link VARCHAR,
+  owner_id     BIGINT,
 
   FOREIGN KEY (owner_id) REFERENCES participants (id) ON DELETE CASCADE
 
@@ -260,11 +260,11 @@ CREATE TABLE speeches
   short_desc         VARCHAR,
   jira_status        VARCHAR,
   jira_link          VARCHAR,
-  sync_time          TIMESTAMP NOT NULL DEFAULT now(),
+  sync_time          TIMESTAMP,
   is_from_jira       BOOL,
 
-  jira_creation_time TIMESTAMP NOT NULL DEFAULT now(),
-  jira_update_time   TIMESTAMP NOT NULL DEFAULT now(),
+  jira_creation_time TIMESTAMP,
+  jira_update_time   TIMESTAMP,
 
   name               VARCHAR,
   full_desc          VARCHAR,
@@ -283,7 +283,7 @@ CREATE TABLE speeches
 CREATE TABLE speech_tags
 (
   id  BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  tag VARCHAR
+  tag VARCHAR UNIQUE
 
 );
 

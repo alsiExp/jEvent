@@ -9,20 +9,20 @@ import javax.persistence.*;
 @Table(name = "twitteraccs")
 public class Twitter extends NamedEntity {
 
-    @Column(name = "account")
-    String account;
+    @Column(name = "account_link")
+    String accountLink;
     @OneToOne(fetch= FetchType.LAZY, mappedBy="twitter")
     Participant owner;
 
     public Twitter() {
     }
 
-    public String getAccount() {
-        return account;
+    public String getAccountLink() {
+        return accountLink;
     }
 
-    public void setAccount(String account) {
-        this.account = account;
+    public void setAccountLink(String account) {
+        this.accountLink = account;
     }
 
     public Participant getOwner() {
@@ -41,14 +41,14 @@ public class Twitter extends NamedEntity {
 
         Twitter gitHub = (Twitter) o;
 
-        if (account != null ? !account.equals(gitHub.account) : gitHub.account != null) return false;
+        if (accountLink != null ? !accountLink.equals(gitHub.accountLink) : gitHub.accountLink != null) return false;
         return owner != null ? owner.getId().equals(gitHub.owner.getId()) : gitHub.owner == null;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (account != null ? account.hashCode() : 0);
+        result = 31 * result + (accountLink != null ? accountLink.hashCode() : 0);
         result = 31 * result + (owner != null ? owner.getId().hashCode() : 0);
         return result;
     }
@@ -57,7 +57,7 @@ public class Twitter extends NamedEntity {
     public String toString() {
         return "Twitter{" +
                 super.toString() +
-                ", account='" + account + '\'' +
+                ", account='" + accountLink + '\'' +
                 ", owner=" + owner +
                 "}";
     }
