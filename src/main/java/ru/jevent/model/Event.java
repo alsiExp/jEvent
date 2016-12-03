@@ -49,11 +49,12 @@ public class    Event extends NamedEntity {
     private Set<Speech> speeches;
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Visitor> visitors;
-
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EventPartner> eventPartners;
     /*
         ticket prices
     */
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "event_id", nullable = false)
     @OrderBy("start, cost")
     private List<Rate> rates;
@@ -140,7 +141,6 @@ public class    Event extends NamedEntity {
         if (speeches == null) {
             speeches = new HashSet<>();
         }
-
         return speeches;
     }
 
@@ -157,6 +157,17 @@ public class    Event extends NamedEntity {
 
     public void setVisitors(Set<Visitor> visitors) {
         this.visitors = visitors;
+    }
+
+    public Set<EventPartner> getEventPartners() {
+        if (eventPartners == null) {
+            eventPartners = new HashSet<>();
+        }
+        return eventPartners;
+    }
+
+    public void setEventPartners(Set<EventPartner> partners) {
+        this.eventPartners = partners;
     }
 
     public List<Comment> getCommentList() {
@@ -221,6 +232,9 @@ public class    Event extends NamedEntity {
         if (!isEquals(this.getVisitors(), event.getVisitors())) {
             return false;
         }
+        if (!isEquals(this.getEventPartners(), event.getEventPartners())) {
+            return false;
+        }
         if (!isEquals(this.getCommentList(), event.getCommentList())) {
             return false;
         }
@@ -244,6 +258,7 @@ public class    Event extends NamedEntity {
         result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
         result = 31 * result + (speeches != null ? speeches.hashCode() : 0);
         result = 31 * result + (visitors != null ? visitors.hashCode() : 0);
+        result = 31 * result + (eventPartners != null ? eventPartners.hashCode() : 0);
         result = 31 * result + (commentList != null ? commentList.hashCode() : 0);
         result = 31 * result + (rates != null ? rates.hashCode() : 0);
         return result;

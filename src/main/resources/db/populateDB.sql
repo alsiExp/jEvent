@@ -83,10 +83,10 @@ VALUES
 
 INSERT INTO events (name, author_id, jira_name, jira_link, version, start_date, address, description, logo_url)
 VALUES
-  ('Joker 2016', 100006, 'JOKER', NULL, '2016 Piter', TIMESTAMP '2016-10-14 00:00', NULL,
+  ('Joker', 100006, 'JOKER', NULL, '2016 Piter', TIMESTAMP '2016-10-14 00:00', NULL,
    'Главная Java-конференция в России. Санкт-Петербург, 14-15 октября 2016',
    'joker_logo.png'),
-  ('JPoint 2016', 100008, 'JPOINT', NULL, '2016 Moscow', TIMESTAMP '2016-04-23 00:00',
+  ('JPoint', 100008, 'JPOINT', NULL, '2016 Moscow', TIMESTAMP '2016-04-23 00:00',
    'Москва, гостиница «Radisson Славянская» (площадь Европы, 2)',
    'JPoint — Java-конференция только для опытных Java-разработчиков и только про разработку. Это будет уже четвертая по счету конференция JPoint: с каждым годом она получается еще больше, еще интереснее и еще хардкорнее!',
    'jpoint_logo.png');

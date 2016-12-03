@@ -70,11 +70,11 @@ public class Speech extends NamedEntity {
     @Column(name = "speaker_cost")
     private double speakerCost;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "partner_id")
     private Partner partner;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id")
     private Event event;
 
@@ -290,8 +290,8 @@ public class Speech extends NamedEntity {
         if (jiraLink != null ? !jiraLink.equals(speech.jiraLink) : speech.jiraLink != null) return false;
         if (synchronizationTime != null ? !synchronizationTime.equals(speech.synchronizationTime) : speech.synchronizationTime != null)
             return false;
-        if (partner != null ? !partner.equals(speech.partner) : speech.partner != null) return false;
-        if (event != null ? !event.equals(speech.event) : speech.event != null) return false;
+        if (partner.getId() != null ? !partner.getId().equals(speech.partner.getId()) : speech.partner.getId() != null) return false;
+        if (event.getId() != null ? !event.getId().equals(speech.event.getId()) : speech.event.getId() != null) return false;
         if (speakers != null ? !speakers.equals(speech.speakers) : speech.speakers != null) return false;
         if (commentList != null ? !commentList.equals(speech.commentList) : speech.commentList != null) return false;
         return tags != null ? tags.equals(speech.tags) : speech.tags == null;
@@ -316,8 +316,8 @@ public class Speech extends NamedEntity {
         result = 31 * result + (isFromJira ? 1 : 0);
         temp = Double.doubleToLongBits(speakerCost);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (partner != null ? partner.hashCode() : 0);
-        result = 31 * result + (event != null ? event.hashCode() : 0);
+        result = 31 * result + (partner.getId() != null ? partner.getId().hashCode() : 0);
+        result = 31 * result + (event.getId() != null ? event.getId().hashCode() : 0);
         result = 31 * result + (speakers != null ? speakers.hashCode() : 0);
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
         result = 31 * result + (commentList != null ? commentList.hashCode() : 0);

@@ -1,8 +1,6 @@
 package ru.jevent.model;
 
 
-import ru.jevent.model.converter.PartnerStatusConverter;
-import ru.jevent.model.enums.PartnerStatus;
 import ru.jevent.model.superclasses.NamedEntity;
 
 import javax.persistence.*;
@@ -20,12 +18,6 @@ public class Partner extends NamedEntity {
     public static final String DELETE = "Partner.delete";
     public static final String ALL_SORTED = "Partner.getAllSorted";
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "events_partners",
-            joinColumns = @JoinColumn(name = "partner_id", referencedColumnName = "status_id"))
-    @Convert(converter = PartnerStatusConverter.class)
-    private PartnerStatus status;
-
     //    connection info
     @Column(name = "contact_email")
     private String contactEmail;
@@ -41,9 +33,11 @@ public class Partner extends NamedEntity {
     @Column(name = "logo_url")
     private String logoURL;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "partner_id")
+    @OneToMany(mappedBy ="partner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Speech> speechSet;
+
+    @OneToMany(mappedBy = "partner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EventPartner> eventPartners;
 
     public Partner() {
     }
@@ -89,14 +83,6 @@ public class Partner extends NamedEntity {
         this.logoURL = logoURL;
     }
 
-    public PartnerStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(PartnerStatus status) {
-        this.status = status;
-    }
-
     public Set<Speech> getSpeechSet() {
         if(speechSet == null) {
             speechSet = new HashSet<>();
@@ -108,6 +94,17 @@ public class Partner extends NamedEntity {
         this.speechSet = speechSet;
     }
 
+    public Set<EventPartner> getEventPartners() {
+        if(eventPartners == null) {
+            eventPartners = new HashSet<>();
+        }
+        return eventPartners;
+    }
+
+    public void setEventPartners(Set<EventPartner> eventPartners) {
+        this.eventPartners = eventPartners;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -116,7 +113,6 @@ public class Partner extends NamedEntity {
 
         Partner partner = (Partner) o;
 
-        if (status != partner.status) return false;
         if (contactEmail != null ? !contactEmail.equals(partner.contactEmail) : partner.contactEmail != null)
             return false;
         if (contactPhone != null ? !contactPhone.equals(partner.contactPhone) : partner.contactPhone != null)
@@ -124,25 +120,29 @@ public class Partner extends NamedEntity {
         if (contactName != null ? !contactName.equals(partner.contactName) : partner.contactName != null) return false;
         if (description != null ? !description.equals(partner.description) : partner.description != null) return false;
         if (logoURL != null ? !logoURL.equals(partner.logoURL) : partner.logoURL != null) return false;
+        if (!isEquals(this.getEventPartners(), partner.getEventPartners())) {
+            return false;
+        }
         return speechSet != null ? speechSet.equals(partner.speechSet) : partner.speechSet == null;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (contactEmail != null ? contactEmail.hashCode() : 0);
         result = 31 * result + (contactPhone != null ? contactPhone.hashCode() : 0);
         result = 31 * result + (contactName != null ? contactName.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (logoURL != null ? logoURL.hashCode() : 0);
         result = 31 * result + (speechSet != null ? speechSet.hashCode() : 0);
+        result = 31 * result + (eventPartners != null ? eventPartners.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         StringBuilder speechSB = new StringBuilder();
+        StringBuilder eventSB = new StringBuilder();
         if(!this.getSpeechSet().isEmpty()){
             String prefix = "";
             speechSB.append('[');
@@ -153,11 +153,20 @@ public class Partner extends NamedEntity {
             }
             speechSB.append(']');
         }
+        if(!this.getEventPartners().isEmpty()){
+            String prefix = "";
+            eventSB.append('[');
+            for (EventPartner ep : eventPartners) {
+                eventSB.append(prefix);
+                prefix = ",";
+                speechSB.append(ep.getEvent().getName()).append(" ").append(ep.getEvent().getVersion());
+            }
+            speechSB.append(']');
+        }
         return "Partner{" +
                 super.toString() +
-                ", contact name='" + contactName + '\'' +
-                ", contact phone='" + contactPhone + '\'' +
                 ", speeches='" + speechSB + '\'' +
+                ", events='" + eventSB + '\'' +
                 "} ";
     }
 }

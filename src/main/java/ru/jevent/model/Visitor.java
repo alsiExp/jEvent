@@ -14,7 +14,7 @@ public class Visitor extends BaseEntity {
     @JoinColumn(name = "participant_id")
     private Participant participant;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id")
     private Event event;
 
@@ -27,7 +27,7 @@ public class Visitor extends BaseEntity {
     @Column(name = "real_cost")
     private double realCost;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rate_id")
     private Rate rate;
 

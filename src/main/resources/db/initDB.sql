@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS task_attach_visitors;
 DROP TABLE IF EXISTS task_attach_partners;
 
 
-DROP TABLE IF EXISTS events_partners;
+DROP TABLE IF EXISTS event_partners;
 DROP TABLE IF EXISTS speech_participants;
 DROP TABLE IF EXISTS speeches_speech_tags;
 
@@ -317,12 +317,13 @@ CREATE TABLE speeches_speech_tags
   FOREIGN KEY (tag_id) REFERENCES speech_tags (id) ON DELETE CASCADE
 );
 
-CREATE TABLE events_partners
+CREATE TABLE event_partners
 (
   id         BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
   event_id   BIGINT,
   partner_id BIGINT,
   status_id  BIGINT,
+  payment    NUMERIC(20, 2),
 
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
   FOREIGN KEY (partner_id) REFERENCES partners (id) ON DELETE CASCADE,
