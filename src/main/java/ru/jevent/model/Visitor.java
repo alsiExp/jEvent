@@ -24,6 +24,10 @@ public class Visitor extends BaseEntity {
     @Column(name = "buy_date")
     private LocalDateTime buyDate;
 
+    /*
+        Cost with discount and etc.
+        If null, actual is cost from rate.
+     */
     @Column(name = "real_cost")
     private double realCost;
 

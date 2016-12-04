@@ -299,16 +299,83 @@ INSERT INTO speech_participants (speech_id, participant_id)
 VALUES
   (100034, 100032);
 
+-- tagir valeev
+INSERT INTO participants (first_name, last_name, sex, enabled, photo_url, employer, biography)
+VALUES
+  ('Тагир',
+   'Валеев',
+   90000,
+   TRUE,
+   'http://images.contentful.com/oxjq45e8ilak/xCu5sBC6EosmaWKCue8mu/06cf1280147bafb06f80d6eedf17b706/PTG9GIpTtmk.jpg?w=300',
+   'JetBrains',
+   'C недавних пор работает в JetBrains, занимается статическим анализатором кода IntelliJ IDEA, инспекциями и квик-фиксами. Также он кидает патчики в OpenJDK, разрабатывает опенсорсную библиотеку StreamEx и анализатор байткода Java HuntBugs. Известен на Хабрахабре как lany.'
+  );
+
+INSERT INTO twitteraccs (name, account_link, owner_id)
+VALUES
+  ('@tagir_valeev', 'https://twitter.com/tagir_valeev', 100035);
+
+INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
+VALUES
+  (100013,
+   NULL,
+   'Stream API: производительность, загадочное поведение, интересные задачи и практические советы.',
+   FALSE,
+   'Странности Stream API',
+   '<p>На разных конференциях было много докладов на тему, что такое Stream API и как им пользоваться. Здесь мы сосредоточимся на деталях реализации. Какие операции выполняются быстро, какие медленно, какие неожиданно кушают много памяти, какие просто ведут себя странно. Мы разберёмся, какие баги есть в Java 8 Stream API и что будет исправлено в Java 9. Также мы посмотрим, как решать некоторые нетривиальные задачи. Будет немного рекламы моей бесплатной библиотеки StreamEx.</p>',
+   0
+  );
+INSERT INTO speech_participants (speech_id, participant_id)
+VALUES
+  (100037, 100035);
+INSERT INTO speech_tags (tag)
+VALUES
+  ('Stream API');
+INSERT INTO speeches_speech_tags (speech_id, tag_id)
+VALUES
+  (100037, 100038);
+
+-- joker 2016
+-- tagir valeev
+INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
+VALUES
+  (100012,
+   100002,
+   NULL,
+   FALSE,
+   'Причуды Stream API',
+   '<p>Stream API уже не первый год с нами, и многие разработчики вовсю им пользуются. Однако за волшебным API скрывается обычный Java-код со своими причудами. Тагир вместе со слушателями приглядится к некоторым конструкциям, которые могут привести к неожиданным провалам в производительности, или работать не так, как вы ожидаете. Также мы посмотрим на примере, как можно расширить Stream API, добавив свою операцию, и при этом добиться наилучшей производительности. Доклад развивает темы, затронутые Тагиром в этом году на JPoint ("Странности Stream API") и JBreak ("Stream API: рекомендации лучших собаководов").</p>',
+   1300
+  );
+INSERT INTO speech_participants (speech_id, participant_id)
+VALUES
+  (100039, 100035);
+INSERT INTO speeches_speech_tags (speech_id, tag_id)
+VALUES
+  (100039, 100038);
+
+-- shipilev
+
+INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
+VALUES
+  (100012,
+   100002,
+   NULL,
+   FALSE,
+   'Перформанс: Что В Имени Тебе Моём?',
+   '<p>Оптимизация производительности бередит умы опытных разработчиков с начала компьютерных времён. В коллективном бессознательном оптимизация — это то, что делает программирование интересным, конференции раскупаемыми, личный послужной лист — золотым.</p><p>В этом обзорном докладе мы поговорим об оптимизации больших/инфраструктурных проектов (к примеру, OpenJDK): общих принципах, тенденциях и соотношениях; жизненном цикле проекта и экономике оптимизаций; роли и жизненном цикле тестов производительности; типичных ловушках, разногласиях и противоречиях, в которых оказываются оптимизационные задачи в крупных проектах.</p>',
+   0
+  );
+INSERT INTO speech_participants (speech_id, participant_id)
+VALUES
+  (100040, 100019);
 
 
 
 
-
-/*
 
 INSERT INTO comments (content, date, user_id)
 VALUES
-  -- events
   ('Комментарий про jpoint16 #1', TIMESTAMP '2016-04-13 13:23', 100006),
   ('Комментарий про jpoint16 #2', TIMESTAMP '2016-04-13 20:08', 100008),
   ('Комментарий про jpoint16 #3', TIMESTAMP '2016-04-15 09:59', 100009),
@@ -316,23 +383,25 @@ VALUES
 
   ('Комментарий про joker16 #1', TIMESTAMP '2016-09-15 11:07', 100006),
   ('Комментарий про joker16 #2', TIMESTAMP '2016-09-18 07:00', 100010),
-  ('Комментарий про joker16 #3', TIMESTAMP '2016-09-19 07:00', 100011),
+  ('Комментарий про Алексея Шипилёва', TIMESTAMP '2016-09-18 17:00', 100010),
+  ('Комментарий про ORM — это обидно от Егора Бугаенко', TIMESTAMP '2016-09-18 17:20', 100010);
 
-  -- visitors
-  ('Комментарий про Виктора #1', TIMESTAMP '2016-10-19 07:00', 100011),
-  ('Комментарий про Виктора #2', TIMESTAMP '2016-10-21 14:53', 100009),
+INSERT INTO events_comments (event_id, comment_id)
+    VALUES
+      (100013, 100041),
+      (100013, 100042),
+      (100013, 100043),
+      (100013, 100044),
+      (100012, 100045),
+      (100012, 100046);
+INSERT INTO participants_comments (participant_id, comment_id)
+    VALUES
+      (100019 ,100047);
 
-  ('Комментарий про Баруха #1', TIMESTAMP '2016-09-19 07:00', 100011),
-  ('Комментарий про Якова Файна #1', TIMESTAMP '2016-09-21 12:48', 100006);
+INSERT INTO speeches_comments (speech_id, comment_id)
+    VALUES
+      (100025, 100048);
 
-
-INSERT INTO tasks (name, user_id, start, deadline, description, active)
-VALUES
-  ('Задача для joker16 #1', 100006, now(), (now() + (5 * INTERVAL '1 day')), 'Задача для всех (в т.ч. автора), приложен Виктор Гамов, Яков Файн, Одноклассники и Joker 2016', TRUE ),
-  ('Задача для joker16 #2', 100006, (now() - (5 * INTERVAL '1 day')), (now() + (1 * INTERVAL '1 day')),
-   'Задача для Екатерины, Руслана, Максима и Яны, дэдлайн через сутки, приложен Барух Садогурский', TRUE ),
-  ('Задача для joker16 #3', 100006, (now() - (7 * INTERVAL '1 day')), (now() + (179 * INTERVAL '1 minute')),
-   'Задача для всех, дэдлайн через 3 часа (или час, если я еще не разобрался с таймзоой). Никто не приложен.', TRUE );
 
 
 INSERT INTO rates (name, event_id, rate_type, start_date, end_date, cost)
@@ -359,113 +428,12 @@ VALUES
   ('Онлайн-Трансляция Corporate', 100012, 90032, TIMESTAMP '2016-07-02 00:00', TIMESTAMP '2016-07-31 23:59', 40000),
   ('Онлайн-Трансляция Corporate', 100012, 90032, TIMESTAMP '2016-08-01 00:00', TIMESTAMP '2016-08-31 23:59', 48000),
   ('Онлайн-Трансляция Corporate', 100012, 90032, TIMESTAMP '2016-09-01 00:00', TIMESTAMP '2016-09-30 23:59', 56000),
-  ('Онлайн-Трансляция Corporate', 100012, 90032, TIMESTAMP '2016-10-01 00:00', TIMESTAMP '2016-12-31 23:59', 64000);
+  ('Онлайн-Трансляция Corporate', 100012, 90032, TIMESTAMP '2016-10-01 00:00', TIMESTAMP '2016-12-31 23:59', 64000),
 
-INSERT INTO visitors_comments (visitor_id, comment_id)
-VALUES
-  (100003, 100021),
-  (100003, 100022),
-  (100004, 100023),
-  (100005, 100024);
-
-INSERT INTO events_comments (event_id, comment_id)
-VALUES
-  (100012, 100018),
-  (100012, 100019),
-  (100012, 100020),
-
-  (100013, 100014),
-  (100013, 100015),
-  (100013, 100016),
-  (100013, 100017);
-
-INSERT INTO comments (content, date, user_id)
-VALUES
-  -- tasks
-  ('Коммент к "Задача для joker16 #1"', TIMESTAMP '2016-04-13 13:23', 100006);
-
-INSERT INTO tasks_comments (task_id, comment_id)
-VALUES
-  (100025, 100048);
-
-INSERT INTO task_attach_events (task_id, event_id)
-VALUES
-  (100025, 100012);
-
-INSERT INTO task_attach_visitors (task_id, visitor_id)
-VALUES
-  (100025, 100003),
-  (100025, 100005),
-  (100026, 100004);
-
-INSERT INTO task_attach_partners (task_id, partner_id)
-VALUES
-  (100025, 100000);
-
-INSERT INTO task_user_target (task_id, user_id)
-VALUES
-  (100025, 100006),
-  (100025, 100007),
-  (100025, 100008),
-  (100025, 100009),
-  (100025, 100010),
-  (100025, 100011),
-
-  (100026, 100008),
-  (100026, 100009),
-  (100026, 100010),
-  (100026, 100011),
-
-  (100027, 100006),
-  (100027, 100007),
-  (100027, 100008),
-  (100027, 100009),
-  (100027, 100010),
-  (100027, 100011);
-
-INSERT INTO task_statuses (user_id, task_id, creation_time, current_task_status_id, description)
-VALUES
-  (100006, 100025, (SELECT start FROM tasks WHERE id = 100025), 90010, 'Создал новую тестовую задачу для всех!'),
-  (100008, 100025, ((SELECT start FROM tasks WHERE id = 100025) + (26 * INTERVAL '1 minute')), 90013, 'Взяла в работу'),
-  (100011, 100025, ((SELECT start FROM tasks WHERE id = 100025) + (112 * INTERVAL '1 minute')), 90013, 'Я тоже помогу'),
-
-  (100006, 100026, (SELECT start FROM tasks WHERE id = 100026), 90010, 'Новая задача'),
-
-  (100006, 100027, (SELECT start FROM tasks WHERE id = 100027), 90010, 'Новая задача');
-
-INSERT INTO rates (name, event_id, rate_type, start_date, end_date, cost)
-VALUES
-  ('Личное присутствие Standart', 100013, 90032, TIMESTAMP '2016-04-01 00:00', TIMESTAMP '2016-04-20 23:59', 34000);
-
-
-
-INSERT INTO events_confirmed_visitors (visitor_id, event_id, buy_date, comment, rate_id)
-VALUES
-  (100005, 100012, TIMESTAMP '2016-07-15 15:53', 'some comment about participant 100005' , 100034),
-  (100005, 100012, TIMESTAMP '2016-01-29 07:48', null, 100054),
-  (100003, 100012, TIMESTAMP '2016-08-15 16:00', null, 100054);
-
-INSERT INTO events_probable_speakers (visitor_id, event_id, send_date, speech_name, speech_description, wish_price)
-VALUES
-  (100005, 100012, TIMESTAMP '2015-10-14 12:00', 'Название выступления', 'Описание выступления. Хочет 15 тысяч...', 15000);
-
-INSERT INTO tracks (name, event_id, description)
-VALUES
-  ('Зал 1', 100012, 'Главный зал'),
-  ('Зал 2', 100012, 'Доп. зал'),
-  ('Основной зал', 100013, 'Самый главный трэк');
-
-
-INSERT INTO slots (name, track_id, start, visitor_id, slot_description, slot_type, grade, price)
-VALUES
-  ('Регистрация + welcome кофе', 100059, TIMESTAMP '2016-10-14 08:30', 100004, NULL, 90050, NULL, 40000),
-  ('Мавен против Грейдла: На заре автоматизации', 100059, TIMESTAMP '2016-10-14 12:00', 100004,
-   'Ну, вы в курсе: монстр, мастадонт и владелец поляны Мавен против молодого, динамичного, изворотливого Грейдла! Битва до победного конца! А судьи — вы! Ведущие представят свои решения «классических» проблем автоматизации проекта с помощью обоих инструментов «живьём» на сцене, а вы проголосуете за тот инструмент, который лучше решает проблему.',
-   90054, NULL, 40000),
-  ('Верхом на реактивных стримах', 100059, TIMESTAMP '2016-10-14 12:00', 100003,
-   'Вы из тех, кто считает, что, распараллелив любой цикл, можно улучшить перформанс, и Collection.parallelStream() — ваш лучший друг? А как вам идея — вбросить ещё пачку машин и получить распределенную обработку? Интересно? Тогда для вас этот доклад обязателен к просмотру. ' ||
-   'Виктор познакомит слушателей со своим другом, Ориентированным (Направленным) Ациклическим Графом (или Маркизом?!), и покажет, как с его помощью была организована распределенная высокопроизводительная система обработки информации в памяти поверх нашего знакомого Java 8 Stream API.',
-   90054, NULL, 30000);
+  ('Standart', 100013, 90034, TIMESTAMP '2016-01-01 00:00', TIMESTAMP '2016-01-31 23:59', 15000),
+  ('Standart', 100013, 90034, TIMESTAMP '2016-02-01 00:00', TIMESTAMP '2016-02-29 23:59', 18000),
+  ('Standart', 100013, 90034, TIMESTAMP '2016-03-01 00:00', TIMESTAMP '2016-03-31 23:59', 21000),
+  ('Standart', 100013, 90034, TIMESTAMP '2016-04-01 00:00', TIMESTAMP '2016-04-22 23:59', 24000);
 
 INSERT INTO user_roles(user_id, role)
 VALUES
@@ -479,24 +447,24 @@ VALUES
   (100010, 'ROLE_USER'),
   (100011, 'ROLE_USER');
 
-
-
 INSERT INTO emails(name, email, main, owner_id)
 VALUES
   ('Рабочий', 'gamov@gmail.com', TRUE, 100003),
   (NULL, 'jbaruch@gmail.com', TRUE, 100004),
   ('Личный', 'notlull@email.ru', TRUE, 100005);
 
-INSERT INTO githubaccs(name, account, owner_id)
+INSERT INTO event_partners (event_id, partner_id, status_id, payment)
 VALUES
-  (NULL, 'gAmUssA', 100003),
-  (NULL, 'jbaruch', 100004);
+  (100013, 100000, 90010, 200000),
+  (100013, 100001, 90011, 100000),
+  (100013, 100002, 90012, 50000),
 
-INSERT INTO twitteraccs(name, account, owner_id)
+  (100012, 100000, 90010, 300000);
+
+
+INSERT INTO visitors (participant_id, event_id, buy_date, pay_comment, rate_id, real_cost)
 VALUES
-  (NULL, 'gamussa', 100003),
-  (NULL, 'jbaruch', 100004),
-  (NULL, 'yfain', 100005);
+  (100005, 100012, TIMESTAMP '2016-07-15 15:53', 'some comment about participant 100005' , 100055, 15000),
+  (100005, 100013, TIMESTAMP '2016-01-29 07:48', NULL, 100070, NULL);
 
 
-*/
