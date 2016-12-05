@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.jevent.model.*;
 import ru.jevent.model.additionalEntity.Email;
+import ru.jevent.model.additionalEntity.GitHub;
 import ru.jevent.model.additionalEntity.Rate;
+import ru.jevent.model.additionalEntity.Twitter;
 import ru.jevent.model.enums.RateType;
 import ru.jevent.model.enums.Role;
 import ru.jevent.model.enums.Sex;
@@ -37,6 +39,20 @@ public class TestData {
         this.partnerService = partnerService;
         this.participantService = participantService;
         this.eventService = eventService;
+    }
+
+    //comments
+    public Comment getNewComment() {
+        return new Comment("New test comment", this.getExistingUser(), LocalDateTime.now());
+    }
+
+
+    public Comment getExistingComment23() {
+        return new Comment(100023L, "Комментарий про Баруха #1", getUser11(), LocalDateTime.of(2016,9,19,7,0,0,0));
+    }
+
+    public List<Comment> getMixedCommentsList() {
+        return Arrays.asList(getExistingComment23(), getNewComment());
     }
 
     //Users
@@ -148,11 +164,19 @@ public class TestData {
     }
 
 
-    public Participant getNewVisitorWithNewComments() {
-        Participant participant = getNewParticipant();
-        participant.setCommentList(Arrays.asList(getNewComment(), getNewComment()));
+    public Participant getNewParticipantWithNewCommentTwitterGithub() {
+        Participant part = getNewParticipant();
+        part.setCommentList(Arrays.asList(getNewComment(), getNewComment()));
 
-        return participant;
+        Twitter t = new Twitter();
+        t.setAccountLink("https://twitter.com/shipilev");
+        t.setOwner(part);
+
+        GitHub g = new GitHub();
+        g.setAccountLink("https://github.com/alsiExp/jEvent");
+        g.setOwner(part);
+
+        return part;
     }
 
 
@@ -168,18 +192,7 @@ public class TestData {
 
 
 
-    public Comment getNewComment() {
-        return new Comment("New test comment", this.getExistingUser(), LocalDateTime.now());
-    }
 
-
-    public Comment getExistingComment23() {
-        return new Comment(100023L, "Комментарий про Баруха #1", getUser11(), LocalDateTime.of(2016,9,19,7,0,0,0));
-    }
-
-    public List<Comment> getMixedCommentsList() {
-        return Arrays.asList(getNewComment(), getNewComment());
-    }
 
     public Partner getNewPartner() {
 //        return  new Partner("Test partner", "test@email.com", "+7-999-000-00-00", "Test partner description", "testpartner.jpg");

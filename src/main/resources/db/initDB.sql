@@ -116,7 +116,6 @@ CREATE TABLE emails
 CREATE TABLE githubaccs
 (
   id           BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name         VARCHAR,
   account_link VARCHAR,
   owner_id     BIGINT,
 
@@ -127,7 +126,6 @@ CREATE TABLE githubaccs
 CREATE TABLE twitteraccs
 (
   id           BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name         VARCHAR,
   account_link VARCHAR,
   owner_id     BIGINT,
 

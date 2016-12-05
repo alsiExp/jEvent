@@ -66,7 +66,12 @@ public class Participant extends Person {
     @Column(name = "travel_help")
     private String travelHelp;
 
-    //    notes about Participant
+    /*
+    *   notes about Participant
+    *   new comment in existing participant after update have id = null
+    *   here we need Unidirectional @OneTOMany
+    *   but for comments we have middle table participiants_comments, so we can`t just use @JoinColumn
+    */
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "participants_comments",
             joinColumns = @JoinColumn(name = "participant_id", referencedColumnName = "id"),

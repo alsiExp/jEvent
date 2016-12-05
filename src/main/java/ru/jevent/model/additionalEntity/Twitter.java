@@ -1,13 +1,13 @@
 package ru.jevent.model.additionalEntity;
 
 import ru.jevent.model.Participant;
-import ru.jevent.model.superclasses.NamedEntity;
+import ru.jevent.model.superclasses.BaseEntity;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "twitteraccs")
-public class Twitter extends NamedEntity {
+public class Twitter extends BaseEntity {
 
     @Column(name = "account_link")
     String accountLink;

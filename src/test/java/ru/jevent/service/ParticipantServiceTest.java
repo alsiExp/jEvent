@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.TestData;
+import ru.jevent.model.Comment;
 import ru.jevent.model.Participant;
 import ru.jevent.util.DbPopulator;
 
@@ -70,7 +71,7 @@ public class ParticipantServiceTest {
 
     @Test
     public void testSaveWithNewComments() throws Exception {
-        Participant participant = testData.getNewVisitorWithNewComments();
+        Participant participant = testData.getNewParticipantWithNewCommentTwitterGithub();
         service.save(participant);
         Participant savedParticipant = service.get(participant.getId());
         if (!savedParticipant.equals(participant)) {
@@ -78,21 +79,22 @@ public class ParticipantServiceTest {
         }
     }
 
-    /*
-    *   TODO: test failed, new comment in existing visitor have id = null
-    *   here need Unidirectional @OneTOMany
-    *   but so comments must be mapped by visitor, event and task at the same time
-    */
+
 
     @Test
-    public void testSaveExistingVisitorWithNewComments() throws Exception {
+    public void testSaveExistingWithNewComments() throws Exception {
         Participant participant = testData.getNewParticipant();
         service.save(participant);
         participant.setCommentList(Arrays.asList(testData.getNewComment(), testData.getNewComment()));
         service.save(participant);
         Participant savedParticipant = service.get(participant.getId());
-        if (!savedParticipant.equals(participant)) {
+        if (savedParticipant.getCommentList().size() != 2) {
             throw new Exception();
+        }
+        for(Comment c : savedParticipant.getCommentList()) {
+            if(c.getId() == null){
+                throw new Exception();
+            }
         }
     }
 

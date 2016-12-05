@@ -84,11 +84,13 @@ public class Comment extends BaseEntity {
         if (!super.equals(o)) return false;
 
         Comment comment = (Comment) o;
-
+        if (id != null ? !id.equals(comment.id) : comment.id != null) {
+            return false;
+        }
         if (content != null ? !content.equals(comment.content) : comment.content != null) {
             return false;
         }
-        if (!this.getAuthor().equals(comment.getAuthor())) {
+        if (!this.getAuthor().getId().equals(comment.getAuthor().getId())) {
             return false;
         }
         if(!date.equals(comment.date)) {
