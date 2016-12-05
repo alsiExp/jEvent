@@ -1,27 +1,3 @@
--- old tables
-DROP TABLE IF EXISTS events_visitors;
-DROP TABLE IF EXISTS visitors_events_visits;
-DROP TABLE IF EXISTS visitors_events_speakers;
-DROP TABLE IF EXISTS task_statuses_tasks;
-DROP TABLE IF EXISTS events_by_rate_confirmed_visitors;
-DROP TABLE IF EXISTS slots;
-DROP TABLE IF EXISTS tracks;
-DROP TABLE IF EXISTS slot_type;
-DROP TABLE IF EXISTS events_visitors;
-DROP TABLE IF EXISTS events_confirmed_visitors;
-DROP TABLE IF EXISTS events_probable_speakers;
-DROP TABLE IF EXISTS visitors_comments;
--- all tasks
-DROP TABLE IF EXISTS task_statuses;
-DROP TABLE IF EXISTS tasks_comments;
-DROP TABLE IF EXISTS tasks;
-DROP TABLE IF EXISTS current_task_status;
-DROP TABLE IF EXISTS task_user_target;
-DROP TABLE IF EXISTS task_attach_events;
-DROP TABLE IF EXISTS task_attach_visitors;
-DROP TABLE IF EXISTS task_attach_partners;
-
-
 DROP TABLE IF EXISTS event_partners;
 DROP TABLE IF EXISTS speech_participants;
 DROP TABLE IF EXISTS speeches_speech_tags;
@@ -129,7 +105,6 @@ CREATE TABLE participants
 CREATE TABLE emails
 (
   id       BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  name     VARCHAR,
   email    VARCHAR NOT NULL CHECK (email <> ''),
   main     BOOL,
   owner_id BIGINT,

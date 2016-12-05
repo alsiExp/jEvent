@@ -42,8 +42,9 @@ public class ParticipantServiceTest {
 
     @Test
     public void testGet() throws Exception {
-        Participant v = service.get(100004L);
-        if (!v.equals(testData.getExistingVisitor())) {
+        Participant part = service.get(100004L);
+        Participant exPatr = testData.getExistingParticipant();
+        if (!part.equals(exPatr)) {
             throw new Exception();
         }
     }
@@ -51,14 +52,15 @@ public class ParticipantServiceTest {
     @Test
     public void testGetByEmail() throws Exception {
         Participant v = service.getByEmail("jbaruch@gmail.com");
-        if (!v.equals(testData.getExistingVisitor())) {
+        Participant exPatr = testData.getExistingParticipant();
+        if (!v.equals(exPatr)) {
             throw new Exception();
         }
     }
 
     @Test
     public void testSimpleSave() throws Exception {
-        Participant participant = testData.getNewVisitor();
+        Participant participant = testData.getNewParticipant();
         service.save(participant);
         Participant savedParticipant = service.get(participant.getId());
         if (!savedParticipant.equals(participant)) {
@@ -84,7 +86,7 @@ public class ParticipantServiceTest {
 
     @Test
     public void testSaveExistingVisitorWithNewComments() throws Exception {
-        Participant participant = testData.getNewVisitor();
+        Participant participant = testData.getNewParticipant();
         service.save(participant);
         participant.setCommentList(Arrays.asList(testData.getNewComment(), testData.getNewComment()));
         service.save(participant);
@@ -118,7 +120,7 @@ public class ParticipantServiceTest {
 
     @Test(expected = DataIntegrityViolationException.class)
     public void testUpdateWithException() throws Exception {
-        Participant v = testData.getExistingVisitor();
+        Participant v = testData.getExistingParticipant();
         v.setRegistered(null);
         service.update(v);
     }

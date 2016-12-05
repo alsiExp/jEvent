@@ -1,13 +1,13 @@
 package ru.jevent.model.additionalEntity;
 
 import ru.jevent.model.Participant;
-import ru.jevent.model.superclasses.NamedEntity;
+import ru.jevent.model.superclasses.BaseEntity;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "emails")
-public class Email extends NamedEntity {
+public class Email extends BaseEntity {
 
     @Column(name = "email")
     String email;
@@ -63,7 +63,9 @@ public class Email extends NamedEntity {
         int result = super.hashCode();
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (main ? 1 : 0);
-        result = 31 * result + (owner != null ? owner.getId().hashCode() : 0);
+        if(owner != null) {
+            result = 31 * result + (owner.getId() != null ? owner.getId().hashCode() : 0);
+        }
         return result;
     }
 
@@ -73,7 +75,7 @@ public class Email extends NamedEntity {
                 super.toString() +
                 ", email='" + email + '\'' +
                 ", main=" + main +
-                ", owner=" + owner +
+                ", owner=" + owner.getFullName() +
                 "} ";
     }
 }

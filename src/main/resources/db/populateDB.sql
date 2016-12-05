@@ -447,11 +447,11 @@ VALUES
   (100010, 'ROLE_USER'),
   (100011, 'ROLE_USER');
 
-INSERT INTO emails(name, email, main, owner_id)
+INSERT INTO emails(email, main, owner_id)
 VALUES
-  ('Рабочий', 'gamov@gmail.com', TRUE, 100003),
-  (NULL, 'jbaruch@gmail.com', TRUE, 100004),
-  ('Личный', 'notlull@email.ru', TRUE, 100005);
+  ('gamov@gmail.com', TRUE, 100003),
+  ('jbaruch@gmail.com', TRUE, 100004),
+  ('notlull@email.ru', TRUE, 100005);
 
 INSERT INTO event_partners (event_id, partner_id, status_id, payment)
 VALUES

@@ -15,9 +15,9 @@ import java.util.Set;
 @Entity
 @Table(name = "participants")
 @NamedQueries({
-        @NamedQuery(name = Participant.DELETE, query = "DELETE from Participant v where v.id = :id"),
-        @NamedQuery(name = Participant.ALL_SORTED, query = "SELECT v FROM Participant v ORDER BY v.registered"),
-        //@NamedQuery(name = Participant.BY_EMAIL, query = "SELECT v FROM Participant v WHERE v.email = ?1"),
+        @NamedQuery(name = Participant.DELETE, query = "DELETE from Participant p where p.id = :id"),
+        @NamedQuery(name = Participant.ALL_SORTED, query = "SELECT p FROM Participant p ORDER BY p.registered"),
+        @NamedQuery(name = Participant.BY_EMAIL, query = "SELECT p FROM Participant p JOIN p.emails e WHERE e.email = ?1"),
 })
 public class Participant extends Person {
     /*
@@ -30,7 +30,7 @@ public class Participant extends Person {
 
     public static final String DELETE = "Participant.delete";
     public static final String ALL_SORTED = "Participant.getAllSorted";
-    //public static final String BY_EMAIL = "Participant.getByEmail";
+    public static final String BY_EMAIL = "Participant.getByEmail";
 
     //    Dates
     @Column(name = "birthday")
@@ -40,17 +40,17 @@ public class Participant extends Person {
 
 
     //    contact information & social networks
-    @OneToMany(fetch=FetchType.EAGER, mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Email> emails;
     @Column(name = "phone")
     private String phone;
     @Column(name = "skype")
-    private String  skype;
-    @OneToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="id", referencedColumnName = "owner_id")
+    private String skype;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id", referencedColumnName = "owner_id")
     private GitHub gitHub;
-    @OneToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="id", referencedColumnName = "owner_id")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id", referencedColumnName = "owner_id")
     private Twitter twitter;
 
 
@@ -96,12 +96,10 @@ public class Participant extends Person {
 
 
     public Set<Email> getEmails() {
-        if(this.emails == null) {
-            return new HashSet<>();
+        if (this.emails == null) {
+            emails = new HashSet<>();
         }
-        else {
-            return emails;
-        }
+        return emails;
     }
 
     public void addEmail(Email email) {
@@ -109,8 +107,8 @@ public class Participant extends Person {
     }
 
     public void setEmails(Set<Email> emails) {
-        if(emails != null && !emails.isEmpty()) {
-            if(this.getEmails().isEmpty()) {
+        if (emails != null && !emails.isEmpty()) {
+            if (this.getEmails().isEmpty()) {
                 this.emails = emails;
             }
         }
@@ -202,8 +200,6 @@ public class Participant extends Person {
     }
 
 
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -214,7 +210,6 @@ public class Participant extends Person {
 
         if (birthDay != null ? !birthDay.equals(that.birthDay) : that.birthDay != null) return false;
         if (registered != null ? !registered.equals(that.registered) : that.registered != null) return false;
-        if (emails != null ? !emails.equals(that.emails) : that.emails != null) return false;
         if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
         if (skype != null ? !skype.equals(that.skype) : that.skype != null) return false;
         if (gitHub != null ? !gitHub.equals(that.gitHub) : that.gitHub != null) return false;
@@ -224,6 +219,9 @@ public class Participant extends Person {
         if (biography != null ? !biography.equals(that.biography) : that.biography != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (travelHelp != null ? !travelHelp.equals(that.travelHelp) : that.travelHelp != null) return false;
+        if (!isEquals(emails, that.emails))
+            return false;
+//        if (emails != null ? !emails.equals(that.emails) : that.emails != null) return false;
         return isEquals(this.getCommentList(), that.getCommentList());
     }
 
@@ -249,7 +247,7 @@ public class Participant extends Person {
     @Override
     public String toString() {
         StringBuilder emailsSB = new StringBuilder();
-        if(!this.getEmails().isEmpty()){
+        if (!this.getEmails().isEmpty()) {
             String prefix = "";
             emailsSB.append('[');
             for (Email e : emails) {

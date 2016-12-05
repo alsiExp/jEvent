@@ -40,8 +40,7 @@ public class NamedEntity extends BaseEntity {
 
         NamedEntity that = (NamedEntity) o;
 
-        return name.equals(that.name);
-
+        return name != null ? name.equals(that.name) : that.name == null ;
     }
 
     // TODO: commit 2da2d96

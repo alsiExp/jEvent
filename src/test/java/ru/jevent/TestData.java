@@ -3,6 +3,7 @@ package ru.jevent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.jevent.model.*;
+import ru.jevent.model.additionalEntity.Email;
 import ru.jevent.model.additionalEntity.Rate;
 import ru.jevent.model.enums.RateType;
 import ru.jevent.model.enums.Role;
@@ -10,7 +11,6 @@ import ru.jevent.model.enums.Sex;
 import ru.jevent.service.EventService;
 import ru.jevent.service.ParticipantService;
 import ru.jevent.service.PartnerService;
-import ru.jevent.service.UserService;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -22,7 +22,6 @@ import java.util.Set;
 @Component
 public class TestData {
 
-    private UserService userService;
     private PartnerService partnerService;
     private ParticipantService participantService;
     private EventService eventService;
@@ -32,32 +31,33 @@ public class TestData {
     }
 
     @Autowired
-    public TestData(UserService userService,
-                    PartnerService partnerService, ParticipantService participantService,
+    public TestData(PartnerService partnerService,
+                    ParticipantService participantService,
                     EventService eventService) {
-        this.userService = userService;
         this.partnerService = partnerService;
         this.participantService = participantService;
         this.eventService = eventService;
     }
 
+    //Users
     public User getNewUser() {
         return new User("Test", "User", Sex.MALE, true, "photo.jpg", "login", "pass");
     }
 
     public User getExistingUser() {
-//        User exUser = new User();
-//        exUser.setLogin("ekaterina");
-//        exUser.setPassword("user");
-//        exUser.getRoles();
-//        exUser.setFirstName("Екатерина");
-//        exUser.setLastName("Курилова");
-//        exUser.setSex(Sex.FEMALE);
-//        exUser.setEnabled(true);
-//        exUser.setPhotoURL("kurilova.jpg");
-//        exUser.setId(100008L);
-//        return exUser;
-        return userService.get(100008L);
+        User exUser = new User();
+        exUser.setLogin("ekaterina");
+        exUser.setPassword("user");
+        exUser.getRoles();
+        exUser.addRoles(Role.ROLE_USER);
+        exUser.addRoles(Role.ROLE_ADMIN);
+        exUser.setFirstName("Екатерина");
+        exUser.setLastName("Курилова");
+        exUser.setSex(Sex.FEMALE);
+        exUser.setEnabled(true);
+        exUser.setPhotoURL("kurilova.jpg");
+        exUser.setId(100008L);
+        return exUser;
     }
 
     public User getUser06() {
@@ -90,10 +90,83 @@ public class TestData {
         return u;
     }
 
-    public List<User> getExistingUsersList() {
+    //Participants
+    public Participant getExistingParticipant() {
+        Participant part = new Participant();
+        part.setBirthDay(LocalDateTime.of(1970, 11, 25, 0, 0, 0, 0));
+        part.setRegistered(LocalDateTime.of(2016, 10, 10, 7, 0, 0));
+        part.setPhone("+7-000-000-00-00");
+        part.setSkype("jbaruh");
+        part.setCity("Cupertino, CA");
+        part.setEmployer("JFrog");
+        part.setBiography("Developer advocate в компании JFrog, и делает в жизни ровно 3 вещи: зависает с разработчиками Bintray и Artifactory, пописывает для них код, и рассказывает о впечатлениях в блогах и на конференциях. И так несколько лет подряд, ни минуты об этом не жалея.");
+        part.setDescription("Поскольку «религия не позволяет» быть евангелистом, Барух — developer advocate в компании JFrog и делает в жизни ровно 3 вещи: зависает с разработчиками Bintray и Artifactory, пописывает для них код, и рассказывает о впечатлениях в блогах и на конференциях, таких как JavaOne, Devoxx, OSCON, конечно же JPoint и Joker, да и многих других. И так более десяти лет подряд.");
+        part.setTravelHelp("");
+        part.setSex(Sex.MALE);
+        part.setEnabled(true);
+        part.setPhotoURL("http://2016.jpoint.ru/img/baruch.png");
+        part.setId(100004L);
 
-        return userService.getAll();
+        part.setFirstName("Барух");
+        part.setLastName("Садогурский");
+
+        Email email = new Email();
+        email.setId(100074L);
+        email.setEmail("jbaruch@gmail.com");
+        email.setMain(true);
+        email.setOwner(part);
+        part.addEmail(email);
+
+        part.getCommentList();
+
+        return part;
     }
+    public Participant getNewParticipant() {
+        Participant part = new Participant();
+        part.setBirthDay(LocalDateTime.now().minus(39, ChronoUnit.YEARS));
+        part.setRegistered(LocalDateTime.now().minus(20, ChronoUnit.DAYS));
+        part.setPhone("+0-000-000-00-00");
+        part.setSkype("skype");
+        part.setCity("Санкт-Петербург");
+        part.setEmployer("Test Empl.");
+        part.setBiography("test biography");
+        part.setDescription("test description");
+        part.setSex(Sex.FEMALE);
+        part.setEnabled(true);
+        part.setPhotoURL("testvisitor.jpg");
+
+        part.setFirstName("Test");
+        part.setLastName("Participant");
+
+        Email email = new Email();
+        email.setEmail("email@gmail.com");
+        email.setMain(true);
+        email.setOwner(part);
+        part.addEmail(email);
+
+        return part;
+    }
+
+
+    public Participant getNewVisitorWithNewComments() {
+        Participant participant = getNewParticipant();
+        participant.setCommentList(Arrays.asList(getNewComment(), getNewComment()));
+
+        return participant;
+    }
+
+
+
+    public List<Participant> getMixedVisitorsList() {
+        Participant v1 = participantService.save(getNewParticipant());
+        Participant v2 = participantService.get(100005L);
+        Participant v3 = getNewParticipant();
+        return Arrays.asList(v1, v2, v3);
+    }
+
+
+
+
 
     public Comment getNewComment() {
         return new Comment("New test comment", this.getExistingUser(), LocalDateTime.now());
@@ -121,63 +194,7 @@ public class TestData {
         return Arrays.asList(getNewPartner(), getExistingPartner(), getNewPartner());
     }
 
-    public Participant getNewVisitor() {
-        Participant participant = new Participant();
-        participant.setFirstName("Test");
-        participant.setLastName("Participant");
-        participant.setSex(Sex.FEMALE);
-        participant.setEnabled(true);
 
-        participant.setPhotoURL("testvisitor.jpg");
-        participant.setBirthDay(LocalDateTime.now().minus(39, ChronoUnit.YEARS));
-        participant.setRegistered(LocalDateTime.now().minus(20, ChronoUnit.DAYS));
-        //participant.setEmail("test@participant.com");
-        participant.setPhone("+0-000-000-00-00");
-       // participant.setGitHubAccount("testgGithub");
-      //  participant.setLinkedInAccount("testLinkedIn");
-       // participant.setTwitterAccount("@test");
-        participant.setEmployer("Одноклассники");
-        participant.setBiography("test biography");
-        participant.setDescription("test description");
-        return participant;
-    }
-
-    public Participant getNewVisitorWithNewComments() {
-        Participant participant = getNewVisitor();
-        participant.setCommentList(Arrays.asList(getNewComment(), getNewComment()));
-
-        return participant;
-    }
-
-    public Participant getExistingVisitor() {
-//        Participant exVisitor = new Participant();
-//        exVisitor.setBirthDay(LocalDateTime.of(1970, 11, 25, 0, 0, 0, 0));
-//        exVisitor.setRegistered(LocalDate.of(2016, 10, 10));
-//        exVisitor.setEmail("jbaruch@gmail.com");
-//        exVisitor.setPhone("+7-000-000-00-00");
-//        exVisitor.setGitHubAccount("jbaruch");
-//        exVisitor.setTwitterAccount("jbaruch");
-//        exVisitor.setEmployer("JFrog");
-//        exVisitor.setBiography("Developer advocate в компании JFrog, и делает в жизни ровно 3 вещи: зависает с разработчиками Bintray и Artifactory, пописывает для них код, и рассказывает о впечатлениях в блогах и на конференциях. И так несколько лет подряд, ни минуты об этом не жалея.");
-//        exVisitor.setDescription("Поскольку «религия не позволяет» быть евангелистом, Барух — developer advocate в компании JFrog и делает в жизни ровно 3 вещи: зависает с разработчиками Bintray и Artifactory, пописывает для них код, и рассказывает о впечатлениях в блогах и на конференциях, таких как JavaOne, Devoxx, OSCON, конечно же JPoint и Joker, да и многих других. И так более десяти лет подряд.");
-//        exVisitor.setCost(-90000.0);
-//        exVisitor.setCommentList(Arrays.asList(getExistingComment23()));
-//        exVisitor.setFirstName("Барух");
-//        exVisitor.setLastName("Садогурский");
-//        exVisitor.setSex(Sex.MALE);
-//        exVisitor.setEnabled(true);
-//        exVisitor.setPhotoURL("bsadogursky.jpg");
-//        exVisitor.setId(100004L);
-//        return exVisitor;
-        return participantService.get(100004L);
-    }
-
-    public List<Participant> getMixedVisitorsList() {
-        Participant v1 = participantService.save(getNewVisitor());
-        Participant v2 = participantService.get(100005L);
-        Participant v3 = getNewVisitor();
-        return Arrays.asList(v1, v2, v3);
-    }
 
     public Event getSimpleEvent() {
         Event event = new Event();
@@ -222,7 +239,7 @@ public class TestData {
         Speech ps1 = new Speech();
         ps1.setEvent(e);
 /*        ps1.setSendDate(LocalDateTime.now().minusWeeks(1));
-        ps1.setSpeaker(getExistingVisitor());
+        ps1.setSpeaker(getExistingParticipant());
         ps1.setFullDescription("test description");
         ps1.setSpeechName("Test speech name");
         ps1.setWishPrice(5000.0);*/
@@ -230,7 +247,7 @@ public class TestData {
         Speech ps2 = new Speech();
         ps2.setEvent(e);
 /*        ps2.setSendDate(LocalDateTime.now().minusWeeks(1));
-        ps2.setSpeaker(getExistingVisitor());
+        ps2.setSpeaker(getExistingParticipant());
         ps2.setFullDescription("test description");
         ps2.setSpeechName("Test speech name");
         ps2.setWishPrice(5000.0);*/
@@ -243,7 +260,7 @@ public class TestData {
         cv.setEvent(e);
         cv.setBuyDate(LocalDateTime.now().minusWeeks(5));
         cv.setPayComment("no comments");
-        cv.setParticipant(getExistingVisitor());
+        cv.setParticipant(getExistingParticipant());
         Rate r = getRates().get(0);
         r.setId(100037L);
         cv.setRate(r);
