@@ -292,8 +292,12 @@ public class Speech extends NamedEntity {
             return false;
         if (partner.getId() != null ? !partner.getId().equals(speech.partner.getId()) : speech.partner.getId() != null) return false;
         if (event.getId() != null ? !event.getId().equals(speech.event.getId()) : speech.event.getId() != null) return false;
-        if (speakers != null ? !speakers.equals(speech.speakers) : speech.speakers != null) return false;
-        if (commentList != null ? !commentList.equals(speech.commentList) : speech.commentList != null) return false;
+        if (!isEquals(this.speakers, speech.speakers)) {
+            return false;
+        }
+        if (!isEquals(this.commentList, speech.commentList)) {
+            return false;
+        }
         return tags != null ? tags.equals(speech.tags) : speech.tags == null;
     }
 
@@ -318,7 +322,7 @@ public class Speech extends NamedEntity {
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (partner.getId() != null ? partner.getId().hashCode() : 0);
         result = 31 * result + (event.getId() != null ? event.getId().hashCode() : 0);
-        result = 31 * result + (speakers != null ? speakers.hashCode() : 0);
+        result = 31 * result + (speakers.size());
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
         result = 31 * result + (commentList != null ? commentList.hashCode() : 0);
         return result;

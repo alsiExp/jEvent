@@ -43,11 +43,11 @@ public class NamedEntity extends BaseEntity {
         return name != null ? name.equals(that.name) : that.name == null ;
     }
 
-    // TODO: commit 2da2d96
+
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        //result = 31 * result + name.hashCode(); //here we have a problem with name
+        result = 31 * result + name.hashCode();
         return result;
     }
 

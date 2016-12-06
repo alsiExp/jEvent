@@ -163,7 +163,6 @@ public class TestData {
         return part;
     }
 
-
     public Participant getNewParticipantWithNewCommentTwitterGithub() {
         Participant part = getNewParticipant();
         part.setCommentList(Arrays.asList(getNewComment(), getNewComment()));
@@ -179,8 +178,6 @@ public class TestData {
         return part;
     }
 
-
-
     public List<Participant> getMixedVisitorsList() {
         Participant v1 = participantService.save(getNewParticipant());
         Participant v2 = participantService.get(100005L);
@@ -188,25 +185,17 @@ public class TestData {
         return Arrays.asList(v1, v2, v3);
     }
 
-
-
-
-
-
-
+    //Partners
     public Partner getNewPartner() {
-//        return  new Partner("Test partner", "test@email.com", "+7-999-000-00-00", "Test partner description", "testpartner.jpg");
-        return new Partner();
+        Partner p = new Partner();
+        p.setName("Test partner");
+        p.setContactName("Test manager");
+        p.setContactEmail("test@email.com");
+        p.setContactPhone("+7-999-000-00-00");
+        p.setDescription("Test partner description");
+        p.setLogoURL("testpartner.jpg");
+        return p;
     }
-
-    public Partner getExistingPartner() {
-        return partnerService.get(100000L);
-    }
-
-    public List<Partner> getMixedPartnersList() {
-        return Arrays.asList(getNewPartner(), getExistingPartner(), getNewPartner());
-    }
-
 
 
     public Event getSimpleEvent() {

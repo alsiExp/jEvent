@@ -36,7 +36,7 @@ public class Partner extends NamedEntity {
     @OneToMany(mappedBy ="partner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Speech> speechSet;
 
-    @OneToMany(mappedBy = "partner", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "partner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<EventPartner> eventPartners;
 
     public Partner() {
@@ -123,7 +123,10 @@ public class Partner extends NamedEntity {
         if (!isEquals(this.getEventPartners(), partner.getEventPartners())) {
             return false;
         }
-        return speechSet != null ? speechSet.equals(partner.speechSet) : partner.speechSet == null;
+        if (!isEquals(this.getSpeechSet(), partner.getSpeechSet())) {
+            return false;
+        }
+        return true;
     }
 
     @Override
