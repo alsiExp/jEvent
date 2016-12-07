@@ -272,12 +272,14 @@ CREATE TABLE speech_participants
 
 CREATE TABLE speeches_comments
 (
-  speech_id  BIGINT,
-  comment_id BIGINT,
+  id        BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  speech_id BIGINT    NOT NULL,
+  content   VARCHAR   NOT NULL CHECK (content <> ''),
+  date      TIMESTAMP NOT NULL DEFAULT now(),
+  user_id   BIGINT    NOT NULL,
 
-  PRIMARY KEY (speech_id, comment_id),
-  FOREIGN KEY (speech_id) REFERENCES speeches (id) ON DELETE CASCADE,
-  FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+  FOREIGN KEY (speech_id) REFERENCES speeches (id) ON DELETE CASCADE
 );
 
 CREATE TABLE speeches_speech_tags

@@ -71,6 +71,7 @@ public class PartnerServiceTest {
     }
 
     //TODO: partnerOldHash and partnerNewHash are different
+    // problem is in the Speech commentList
     @Test
     public void testUpdate() throws Exception {
         Partner partner = service.get(100000L);
@@ -80,6 +81,7 @@ public class PartnerServiceTest {
         Partner savedPartner = service.get(partner.getId());
         int partnerOldHash = partner.hashCode();
         int partnerNewHash = savedPartner.hashCode();
+        boolean eq = savedPartner.equals(partner);
         if(!savedPartner.getName().equals(newName))
             throw new Exception();
     }

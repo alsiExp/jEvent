@@ -1,5 +1,6 @@
 package ru.jevent.model;
 
+import ru.jevent.model.additionalEntity.SpeechComment;
 import ru.jevent.model.additionalEntity.SpeechTag;
 import ru.jevent.model.superclasses.NamedEntity;
 
@@ -35,7 +36,6 @@ public class Speech extends NamedEntity {
         additionally fields:
         synchronizationTime - last sync time
         isFromJira - true if speech was import from jira, false if add manually
-
     */
 
     @Column(name = "name_en")
@@ -90,12 +90,10 @@ public class Speech extends NamedEntity {
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id", unique = true))
     private Set<SpeechTag> tags;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(name = "speeches_comments",
-            joinColumns = @JoinColumn(name = "speech_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id", unique = true))
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="speech_id")
     @OrderBy("date")
-    private List<Comment> commentList;
+    private List<SpeechComment> commentList;
 
     public Speech() {
     }
@@ -238,14 +236,14 @@ public class Speech extends NamedEntity {
         return tags;
     }
 
-    public List<Comment> getCommentList() {
+    public List<SpeechComment> getCommentList() {
         if (commentList == null) {
             commentList = new ArrayList<>();
         }
         return commentList;
     }
 
-    public void setCommentList(List<Comment> commentList) {
+    public void setCommentList(List<SpeechComment> commentList) {
         this.commentList = commentList;
     }
 
@@ -301,6 +299,11 @@ public class Speech extends NamedEntity {
         return tags != null ? tags.equals(speech.tags) : speech.tags == null;
     }
 
+    /*
+        In hashcode() we have problem with comentList hashcode - he is not the same for the same objects.
+        To fix this problem we use just list size.
+
+     */
     @Override
     public int hashCode() {
         int result = super.hashCode();
@@ -324,7 +327,7 @@ public class Speech extends NamedEntity {
         result = 31 * result + (event.getId() != null ? event.getId().hashCode() : 0);
         result = 31 * result + (speakers.size());
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
-        result = 31 * result + (commentList != null ? commentList.hashCode() : 0);
+        result = 31 * result + (commentList != null ? commentList.size() : 0);
         return result;
     }
 

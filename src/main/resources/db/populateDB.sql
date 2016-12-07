@@ -383,8 +383,11 @@ VALUES
 
   ('Комментарий про joker16 #1', TIMESTAMP '2016-09-15 11:07', 100006),
   ('Комментарий про joker16 #2', TIMESTAMP '2016-09-18 07:00', 100010),
-  ('Комментарий про Алексея Шипилёва', TIMESTAMP '2016-09-18 17:00', 100010),
-  ('Комментарий про ORM — это обидно от Егора Бугаенко', TIMESTAMP '2016-09-18 17:20', 100010);
+  ('Комментарий про Алексея Шипилёва', TIMESTAMP '2016-09-18 17:00', 100010);
+
+INSERT INTO speeches_comments (speech_id, content, date, user_id)
+VALUES
+     (100025, 'Комментарий про ORM — это обидно от Егора Бугаенко', TIMESTAMP '2016-09-18 17:20', 100010);
 
 INSERT INTO events_comments (event_id, comment_id)
     VALUES
@@ -397,10 +400,6 @@ INSERT INTO events_comments (event_id, comment_id)
 INSERT INTO participants_comments (participant_id, comment_id)
     VALUES
       (100019 ,100047);
-
-INSERT INTO speeches_comments (speech_id, comment_id)
-    VALUES
-      (100025, 100048);
 
 
 
@@ -468,3 +467,6 @@ VALUES
   (100005, 100013, TIMESTAMP '2016-01-29 07:48', NULL, 100070, NULL);
 
 
+INSERT INTO speeches_comments (speech_id, content, date, user_id)
+    VALUES
+      (100031, 'Комментарий о speech 100031', TIMESTAMP '2016-06-29 07:48', 100007);
