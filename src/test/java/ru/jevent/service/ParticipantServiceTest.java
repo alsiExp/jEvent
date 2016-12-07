@@ -10,8 +10,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.TestData;
-import ru.jevent.model.Comment;
 import ru.jevent.model.Participant;
+import ru.jevent.model.additionalEntity.ParticipantComment;
 import ru.jevent.util.DbPopulator;
 
 import java.util.Arrays;
@@ -70,28 +70,15 @@ public class ParticipantServiceTest {
     }
 
     @Test
-    public void testSaveWithNewComments() throws Exception {
-        Participant participant = testData.getNewParticipantWithNewCommentTwitterGithub();
-        service.save(participant);
-        Participant savedParticipant = service.get(participant.getId());
-        if (!savedParticipant.equals(participant)) {
-            throw new Exception();
-        }
-    }
-
-
-
-    @Test
     public void testSaveExistingWithNewComments() throws Exception {
-        Participant participant = testData.getNewParticipant();
-        service.save(participant);
-        participant.setCommentList(Arrays.asList(testData.getNewComment(), testData.getNewComment()));
+        Participant participant = service.getByEmail("jbaruch@gmail.com");
+        participant.setCommentList(Arrays.asList(testData.getNewParticipantComment(), testData.getNewParticipantComment()));
         service.save(participant);
         Participant savedParticipant = service.get(participant.getId());
         if (savedParticipant.getCommentList().size() != 2) {
             throw new Exception();
         }
-        for(Comment c : savedParticipant.getCommentList()) {
+        for(ParticipantComment c : savedParticipant.getCommentList()) {
             if(c.getId() == null){
                 throw new Exception();
             }

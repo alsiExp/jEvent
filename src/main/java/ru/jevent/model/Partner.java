@@ -123,7 +123,7 @@ public class Partner extends NamedEntity {
         if (!isEquals(this.getEventPartners(), partner.getEventPartners())) {
             return false;
         }
-        if (!isEquals(this.getSpeechSet(), partner.getSpeechSet())) {
+        if (this.getSpeechSet().hashCode() != partner.getSpeechSet().hashCode()) {
             return false;
         }
         return true;

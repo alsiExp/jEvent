@@ -216,12 +216,14 @@ CREATE TABLE events_comments
 
 CREATE TABLE participants_comments
 (
-  participant_id BIGINT,
-  comment_id     BIGINT,
+  id             BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  participant_id BIGINT    NOT NULL,
+  content        VARCHAR   NOT NULL CHECK (content <> ''),
+  date           TIMESTAMP NOT NULL DEFAULT now(),
+  user_id        BIGINT    NOT NULL,
 
-  PRIMARY KEY (participant_id, comment_id),
-  FOREIGN KEY (participant_id) REFERENCES participants (id) ON DELETE CASCADE,
-  FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+  FOREIGN KEY (participant_id) REFERENCES participants (id) ON DELETE CASCADE
 );
 
 

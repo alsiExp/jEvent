@@ -75,14 +75,10 @@ public class PartnerServiceTest {
     @Test
     public void testUpdate() throws Exception {
         Partner partner = service.get(100000L);
-        String newName = "New CompanyTest name";
-        partner.setName(newName);
+        partner.setName("New CompanyTest name");
         service.update(partner);
         Partner savedPartner = service.get(partner.getId());
-        int partnerOldHash = partner.hashCode();
-        int partnerNewHash = savedPartner.hashCode();
-        boolean eq = savedPartner.equals(partner);
-        if(!savedPartner.getName().equals(newName))
+        if(!savedPartner.equals(partner))
             throw new Exception();
     }
 

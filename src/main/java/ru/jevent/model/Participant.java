@@ -2,6 +2,7 @@ package ru.jevent.model;
 
 import ru.jevent.model.additionalEntity.Email;
 import ru.jevent.model.additionalEntity.GitHub;
+import ru.jevent.model.additionalEntity.ParticipantComment;
 import ru.jevent.model.additionalEntity.Twitter;
 import ru.jevent.model.superclasses.Person;
 
@@ -66,18 +67,10 @@ public class Participant extends Person {
     @Column(name = "travel_help")
     private String travelHelp;
 
-    /*
-    *   notes about Participant
-    *   new comment in existing participant after update have id = null
-    *   here we need Unidirectional @OneTOMany
-    *   but for comments we have middle table participiants_comments, so we can`t just use @JoinColumn
-    */
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(name = "participants_comments",
-            joinColumns = @JoinColumn(name = "participant_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id", unique = true))
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="participant_id")
     @OrderBy("date")
-    private List<Comment> commentList;
+    private List<ParticipantComment> commentList;
 
 
     public Participant() {
@@ -193,14 +186,14 @@ public class Participant extends Person {
         this.travelHelp = travelHelp;
     }
 
-    public List<Comment> getCommentList() {
+    public List<ParticipantComment> getCommentList() {
         if (commentList == null) {
             commentList = new ArrayList<>();
         }
         return commentList;
     }
 
-    public void setCommentList(List<Comment> commentList) {
+    public void setCommentList(List<ParticipantComment> commentList) {
         this.commentList = commentList;
     }
 
@@ -226,8 +219,8 @@ public class Participant extends Person {
         if (travelHelp != null ? !travelHelp.equals(that.travelHelp) : that.travelHelp != null) return false;
         if (!isEquals(emails, that.emails))
             return false;
-//        if (emails != null ? !emails.equals(that.emails) : that.emails != null) return false;
         return isEquals(this.getCommentList(), that.getCommentList());
+        //return this.getCommentList().size() == that.getCommentList().size();
     }
 
     @Override

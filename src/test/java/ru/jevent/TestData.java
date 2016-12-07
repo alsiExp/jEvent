@@ -3,10 +3,7 @@ package ru.jevent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.jevent.model.*;
-import ru.jevent.model.additionalEntity.Email;
-import ru.jevent.model.additionalEntity.GitHub;
-import ru.jevent.model.additionalEntity.Rate;
-import ru.jevent.model.additionalEntity.Twitter;
+import ru.jevent.model.additionalEntity.*;
 import ru.jevent.model.enums.RateType;
 import ru.jevent.model.enums.Role;
 import ru.jevent.model.enums.Sex;
@@ -49,6 +46,14 @@ public class TestData {
 
     public Comment getExistingComment23() {
         return new Comment(100023L, "Комментарий про Баруха #1", getUser11(), LocalDateTime.of(2016,9,19,7,0,0,0));
+    }
+
+    public ParticipantComment getNewParticipantComment() {
+        ParticipantComment pc = new ParticipantComment();
+        pc.setContent("comment");
+        pc.setDate(LocalDateTime.now());
+        pc.setAuthor(getUser06());
+        return pc;
     }
 
     public List<Comment> getMixedCommentsList() {
@@ -127,7 +132,7 @@ public class TestData {
         part.setLastName("Садогурский");
 
         Email email = new Email();
-        email.setId(100074L);
+        email.setId(100073L);
         email.setEmail("jbaruch@gmail.com");
         email.setMain(true);
         email.setOwner(part);
@@ -165,7 +170,8 @@ public class TestData {
 
     public Participant getNewParticipantWithNewCommentTwitterGithub() {
         Participant part = getNewParticipant();
-        part.setCommentList(Arrays.asList(getNewComment(), getNewComment()));
+
+        part.setCommentList(Arrays.asList(getNewParticipantComment(), getNewParticipantComment()));
 
         Twitter t = new Twitter();
         t.setAccountLink("https://twitter.com/shipilev");

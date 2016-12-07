@@ -293,7 +293,7 @@ public class Speech extends NamedEntity {
         if (!isEquals(this.speakers, speech.speakers)) {
             return false;
         }
-        if (!isEquals(this.commentList, speech.commentList)) {
+        if (this.commentList.size() == speech.commentList.size()) {
             return false;
         }
         return tags != null ? tags.equals(speech.tags) : speech.tags == null;
