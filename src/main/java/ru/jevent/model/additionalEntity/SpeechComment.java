@@ -1,18 +1,26 @@
 package ru.jevent.model.additionalEntity;
 
 
+import ru.jevent.model.Speech;
 import ru.jevent.model.superclasses.BaseComment;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "speeches_comments")
 public class SpeechComment extends BaseComment {
 
-    @Column(name="speech_id")
-    private long speechId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "speech_id", nullable = false)
+    private Speech speech;
+
+    public Speech getSpeech() {
+        return speech;
+    }
+
+    public void setSpeech(Speech speech) {
+        this.speech = speech;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -22,14 +30,14 @@ public class SpeechComment extends BaseComment {
 
         SpeechComment that = (SpeechComment) o;
 
-        return speechId == that.speechId;
+        return speech != null ? speech.getId().equals(that.speech.getId()) : that.speech == null;
 
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (int) (speechId ^ (speechId >>> 32));
+        result = 31 * result + (speech != null ? speech.getId().hashCode() : 0);
         return result;
     }
 
@@ -37,7 +45,7 @@ public class SpeechComment extends BaseComment {
     public String toString() {
         return "SpeechComment{"
                 + super.toString() +
-                "speechId=" + speechId +
+                "speech=" + speech.getName() +
                 "}";
     }
 }

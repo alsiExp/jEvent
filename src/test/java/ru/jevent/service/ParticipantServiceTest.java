@@ -72,16 +72,28 @@ public class ParticipantServiceTest {
     @Test
     public void testSaveExistingWithNewComments() throws Exception {
         Participant participant = service.getByEmail("jbaruch@gmail.com");
-        participant.setCommentList(Arrays.asList(testData.getNewParticipantComment(), testData.getNewParticipantComment()));
+        ParticipantComment pc = testData.getNewParticipantComment(participant);
+        participant.setCommentList(Arrays.asList(pc));
         service.save(participant);
         Participant savedParticipant = service.get(participant.getId());
-        if (savedParticipant.getCommentList().size() != 2) {
+        if (savedParticipant.getCommentList().size() != participant.getCommentList().size()) {
             throw new Exception();
         }
         for(ParticipantComment c : savedParticipant.getCommentList()) {
             if(c.getId() == null){
                 throw new Exception();
             }
+        }
+    }
+
+    @Test
+    public void testSaveExistingWithNewTwitterGithub() throws Exception {
+        Participant participant = testData.getNewParticipantWithNewTwitterGithub();
+
+        service.save(participant);
+        Participant savedParticipant = service.get(participant.getId());
+        if (savedParticipant.equals(participant)) {
+            throw new Exception();
         }
     }
 

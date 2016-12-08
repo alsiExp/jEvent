@@ -48,8 +48,9 @@ public class TestData {
         return new Comment(100023L, "Комментарий про Баруха #1", getUser11(), LocalDateTime.of(2016,9,19,7,0,0,0));
     }
 
-    public ParticipantComment getNewParticipantComment() {
+    public ParticipantComment getNewParticipantComment(Participant p) {
         ParticipantComment pc = new ParticipantComment();
+        pc.setParticipant(p);
         pc.setContent("comment");
         pc.setDate(LocalDateTime.now());
         pc.setAuthor(getUser06());
@@ -168,18 +169,18 @@ public class TestData {
         return part;
     }
 
-    public Participant getNewParticipantWithNewCommentTwitterGithub() {
+    public Participant getNewParticipantWithNewTwitterGithub() {
         Participant part = getNewParticipant();
-
-        part.setCommentList(Arrays.asList(getNewParticipantComment(), getNewParticipantComment()));
 
         Twitter t = new Twitter();
         t.setAccountLink("https://twitter.com/shipilev");
         t.setOwner(part);
+        part.setTwitter(t);
 
         GitHub g = new GitHub();
         g.setAccountLink("https://github.com/alsiExp/jEvent");
         g.setOwner(part);
+        part.setGitHub(g);
 
         return part;
     }

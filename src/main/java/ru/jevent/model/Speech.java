@@ -90,8 +90,7 @@ public class Speech extends NamedEntity {
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id", unique = true))
     private Set<SpeechTag> tags;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name="speech_id")
+    @OneToMany(mappedBy = "speech", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("date")
     private List<SpeechComment> commentList;
 

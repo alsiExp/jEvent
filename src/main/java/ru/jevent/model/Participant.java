@@ -47,10 +47,10 @@ public class Participant extends Person {
     private String phone;
     @Column(name = "skype")
     private String skype;
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "id", referencedColumnName = "owner_id")
     private GitHub gitHub;
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "id", referencedColumnName = "owner_id")
     private Twitter twitter;
 
@@ -67,8 +67,7 @@ public class Participant extends Person {
     @Column(name = "travel_help")
     private String travelHelp;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name="participant_id")
+    @OneToMany(mappedBy = "participant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("date")
     private List<ParticipantComment> commentList;
 
