@@ -10,6 +10,7 @@ import ru.jevent.model.enums.Sex;
 import ru.jevent.service.EventService;
 import ru.jevent.service.ParticipantService;
 import ru.jevent.service.PartnerService;
+import ru.jevent.service.SpeechService;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -24,6 +25,7 @@ public class TestData {
     private PartnerService partnerService;
     private ParticipantService participantService;
     private EventService eventService;
+    private SpeechService speechService;
 
 
     public TestData() {
@@ -32,10 +34,12 @@ public class TestData {
     @Autowired
     public TestData(PartnerService partnerService,
                     ParticipantService participantService,
-                    EventService eventService) {
+                    EventService eventService,
+                    SpeechService speechService) {
         this.partnerService = partnerService;
         this.participantService = participantService;
         this.eventService = eventService;
+        this.speechService = speechService;
     }
 
     //comments
@@ -204,7 +208,17 @@ public class TestData {
         return p;
     }
 
+    //Speeches
+    public Set<Speech> getSpeechSet(Event e) {
+        Speech s = speechService.get(100016L);
+        s.setId(null);
+        s.setEvent(e);
 
+        return new HashSet<>(Arrays.asList(s, s));
+    }
+
+
+    //Events
     public Event getSimpleEvent() {
         Event event = new Event();
         event.setName("Test Event");
@@ -244,25 +258,7 @@ public class TestData {
         return Arrays.asList(r2, r1);
     }
 
-    public Set<Speech> getProbableSpeakers(Event e) {
-        Speech ps1 = new Speech();
-        ps1.setEvent(e);
-/*        ps1.setSendDate(LocalDateTime.now().minusWeeks(1));
-        ps1.setSpeaker(getExistingParticipant());
-        ps1.setFullDescription("test description");
-        ps1.setSpeechName("Test speech name");
-        ps1.setWishPrice(5000.0);*/
 
-        Speech ps2 = new Speech();
-        ps2.setEvent(e);
-/*        ps2.setSendDate(LocalDateTime.now().minusWeeks(1));
-        ps2.setSpeaker(getExistingParticipant());
-        ps2.setFullDescription("test description");
-        ps2.setSpeechName("Test speech name");
-        ps2.setWishPrice(5000.0);*/
-
-        return new HashSet<>(Arrays.asList(ps1, ps2));
-    }
 
     public Set<Visitor> getConfirmedVisitors(Event e) {
         Visitor cv = new Visitor();

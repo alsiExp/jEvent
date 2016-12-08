@@ -74,7 +74,7 @@ public class EventServiceTest {
     @Test
     public void testEventWithProbableSpeakersSave() throws Exception {
         Event testEvent = testData.getEventWithRates();
-        testEvent.setSpeeches(testData.getProbableSpeakers(testEvent));
+        testEvent.setSpeeches(testData.getSpeechSet(testEvent));
         eventService.save(testEvent);
 
         Event savedEvent = eventService.get(testEvent.getId());

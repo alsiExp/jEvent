@@ -13,6 +13,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "speeches")
+@NamedQueries({
+        @NamedQuery(name = Speech.DELETE, query = "DELETE from Speech s where s.id = :id"),
+})
 public class Speech extends NamedEntity {
 
     /*
@@ -37,6 +40,8 @@ public class Speech extends NamedEntity {
         synchronizationTime - last sync time
         isFromJira - true if speech was import from jira, false if add manually
     */
+
+    public static final String DELETE = "Speech.delete";
 
     @Column(name = "name_en")
     private String nameEN;
@@ -343,13 +348,15 @@ public class Speech extends NamedEntity {
             }
             speakerSB.append(']');
         }
+        String partnerName = "";
+        if(partner != null) {
+            partnerName =  ", partner=" + partner.getName();
+        }
         return "Speech{" +
                 super.toString() +
-                ", name='" + name + '\'' +
                 ", speaker=" + speakerSB.toString() +
                 ", event=" + event.getName() +
-                ", partner=" + partner.getName() +
-                ", partner=" + partner.getName() +
+                partnerName +
                 "}";
     }
 }

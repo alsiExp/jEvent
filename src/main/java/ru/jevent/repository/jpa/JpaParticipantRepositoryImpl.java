@@ -40,7 +40,6 @@ public class JpaParticipantRepositoryImpl implements ParticipantRepository {
 
     @Override
     public Participant getByEmail(String email) {
-        //return null;
         return em.createNamedQuery(Participant.BY_EMAIL, Participant.class).setParameter(1, email).getSingleResult();
     }
 
