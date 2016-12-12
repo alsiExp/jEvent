@@ -7,6 +7,9 @@ import ru.jevent.repository.SpeechRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.validation.constraints.AssertFalse;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 @Transactional(readOnly = true)
@@ -36,4 +39,9 @@ public class JpaSpeechRepositoryImpl implements SpeechRepository {
     public Speech get(long id) {
         return em.find(Speech.class, id);
     }
+
+//    @Override
+//    public List<Speech> getAll() {
+//        return  em.createNamedQuery(Speech.ALL_SORTED, Speech.class).getResultList();
+//    }
 }

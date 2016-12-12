@@ -8,6 +8,8 @@ import ru.jevent.service.SpeechService;
 import ru.jevent.util.exception.ExceptionUtil;
 import ru.jevent.util.exception.NotFoundException;
 
+import java.util.List;
+
 @Service
 public class SpeechServiceImpl implements SpeechService{
 
@@ -29,12 +31,16 @@ public class SpeechServiceImpl implements SpeechService{
     }
 
     @Override
-    public Speech get(long id) throws NotFoundException {
-        return ExceptionUtil.check(repository.get(id), id);
+    public Speech get(long id){
+        return repository.get(id);
     }
 
     @Override
     public void delete(long id) throws NotFoundException {
         ExceptionUtil.check(repository.delete(id), id);
     }
+
+    @Override
+    public List<Speech> getAll(){ return repository.getAll();}
+
 }

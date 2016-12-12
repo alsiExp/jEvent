@@ -12,6 +12,8 @@ import ru.jevent.model.Speech;
 import ru.jevent.util.DbPopulator;
 import ru.jevent.util.exception.NotFoundException;
 
+import java.util.List;
+
 import static ru.jevent.Profiles.JPA;
 import static ru.jevent.Profiles.POSTGRES;
 
@@ -49,6 +51,51 @@ public class SpeechServiceTest {
     @Test(expected = NotFoundException.class)
     public void testDelete() throws Exception {
         service.delete(100016L);
-        service.get(100016L);
+        Speech speech = service.get(100016L);
+        if(speech != null){
+            throw new Exception();
+        }
+
     }
-}
+
+
+    //equals() in Speech doesn't work correctly
+    @Test
+    public void testSave() throws Exception {
+        Speech testSpeech = service.get(100025L);
+        service.delete(100025L);
+
+ //getAll does not work! Please check it!
+
+//        List<Speech> oldListSpeech = service.getAll();
+//        service.save(testSpeech);
+//        List<Speech> testListSpeech = service.getAll();
+//        if(testListSpeech.size() == oldListSpeech.size()){
+//            throw new Exception();
+//        }
+
+
+        //id is changed after save.
+
+//        Speech speechdb = service.get(testSpeech.getId());
+//        if(speechdb == null) {
+//            throw new Exception();
+//        }
+//        if(!(testSpeech.getId().equals(speechdb.getId()))) {
+//            throw new Exception();
+//        }
+
+    }
+
+
+    @Test
+    public void testUpdate() throws Exception {
+       Speech speech = service.get(100028L);
+       speech.setName("TEst");
+        service.update(speech);
+        Speech speechdb =service.get(100028L);
+        if(!(speech.getName().equals(speechdb.getName()))){
+            throw new Exception();
+        }
+    }
+ }

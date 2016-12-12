@@ -15,6 +15,7 @@ import java.util.Set;
 @Table(name = "speeches")
 @NamedQueries({
         @NamedQuery(name = Speech.DELETE, query = "DELETE from Speech s where s.id = :id"),
+//        @NamedQuery(name = "Speech.getAllSorted", query = "SELECT s FROM Speech s")
 })
 public class Speech extends NamedEntity {
 
@@ -42,6 +43,8 @@ public class Speech extends NamedEntity {
     */
 
     public static final String DELETE = "Speech.delete";
+    public static final String ALL_SORTED = "Speech.getAllSorted";
+
 
     @Column(name = "name_en")
     private String nameEN;
