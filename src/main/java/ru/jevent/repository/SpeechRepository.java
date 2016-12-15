@@ -12,6 +12,6 @@ public interface SpeechRepository {
 
     Speech get(long id);
 
-//    List<Speech> getAll();
+    List<Speech> getByPartner(long id);
 
 }

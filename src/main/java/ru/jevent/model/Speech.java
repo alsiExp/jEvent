@@ -15,7 +15,7 @@ import java.util.Set;
 @Table(name = "speeches")
 @NamedQueries({
         @NamedQuery(name = Speech.DELETE, query = "DELETE from Speech s where s.id = :id"),
-//        @NamedQuery(name = "Speech.getAllSorted", query = "SELECT s FROM Speech s")
+        @NamedQuery(name = Speech.GET_BY_PARTNER, query = "SELECT s FROM Speech s  LEFT JOIN FETCH s.partner p where p.id = :id")
 })
 public class Speech extends NamedEntity {
 
@@ -43,7 +43,7 @@ public class Speech extends NamedEntity {
     */
 
     public static final String DELETE = "Speech.delete";
-    public static final String ALL_SORTED = "Speech.getAllSorted";
+    public static final String GET_BY_PARTNER = "Speech.byPartner";
 
 
     @Column(name = "name_en")

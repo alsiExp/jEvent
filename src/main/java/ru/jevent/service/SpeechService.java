@@ -15,5 +15,5 @@ public interface SpeechService {
 
     void delete(long id) throws NotFoundException;
 
-//    List<Speech> getAll();
+    List<Speech> getByPartner(long id);
 }

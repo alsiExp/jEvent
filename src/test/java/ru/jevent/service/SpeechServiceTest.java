@@ -51,12 +51,24 @@ public class SpeechServiceTest {
     @Test(expected = NotFoundException.class)
     public void testDelete() throws Exception {
         service.delete(100016L);
-        Speech speech = service.get(100016L);
-        if(speech != null){
+        service.get(100016L);
+    }
+
+    @Test
+    public void testGetByParticipant() throws Exception {
+
+        List<Speech> list =  service.getByPartner(100002L);
+        if(list != null) {
+            if(list.size() < 2) {
+                throw new Exception();
+            }
+        } else {
             throw new Exception();
         }
 
     }
+
+
 
 
     //equals() in Speech doesn't work correctly
@@ -65,7 +77,7 @@ public class SpeechServiceTest {
         Speech testSpeech = service.get(100025L);
         service.delete(100025L);
 
- //getAll does not work! Please check it!
+        //getAll does not work! Please check it!
 
 //        List<Speech> oldListSpeech = service.getAll();
 //        service.save(testSpeech);
@@ -90,8 +102,8 @@ public class SpeechServiceTest {
 
     @Test
     public void testUpdate() throws Exception {
-       Speech speech = service.get(100028L);
-       speech.setName("TEst");
+        Speech speech = service.get(100028L);
+        speech.setName("TEst");
         service.update(speech);
         Speech speechdb =service.get(100028L);
         if(!(speech.getName().equals(speechdb.getName()))){

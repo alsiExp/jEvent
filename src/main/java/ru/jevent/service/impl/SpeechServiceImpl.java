@@ -31,8 +31,8 @@ public class SpeechServiceImpl implements SpeechService{
     }
 
     @Override
-    public Speech get(long id){
-        return repository.get(id);
+    public Speech get(long id) throws NotFoundException {
+        return ExceptionUtil.check(repository.get(id), id);
     }
 
     @Override
@@ -41,6 +41,7 @@ public class SpeechServiceImpl implements SpeechService{
     }
 
     @Override
-    public List<Speech> getAll(){ return repository.getAll();}
-
+    public List<Speech> getByPartner(long id) {
+        return repository.getByPartner(id);
+    }
 }
