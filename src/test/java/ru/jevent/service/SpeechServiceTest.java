@@ -75,6 +75,8 @@ public class SpeechServiceTest {
     @Test
     public void testSave() throws Exception {
         Speech testSpeech = service.get(100025L);
+        Speech tSpeech = service.get(100025L);
+        boolean b = testSpeech.equals(tSpeech);
         service.delete(100025L);
 
         //getAll does not work! Please check it!

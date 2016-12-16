@@ -218,8 +218,7 @@ public class Participant extends Person {
         if (travelHelp != null ? !travelHelp.equals(that.travelHelp) : that.travelHelp != null) return false;
         if (!isEquals(emails, that.emails))
             return false;
-        return isEquals(this.getCommentList(), that.getCommentList());
-        //return this.getCommentList().size() == that.getCommentList().size();
+        return this.getCommentList().size() == that.getCommentList().size();
     }
 
     @Override
@@ -237,7 +236,7 @@ public class Participant extends Person {
         result = 31 * result + (biography != null ? biography.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (travelHelp != null ? travelHelp.hashCode() : 0);
-        result = 31 * result + (commentList != null ? commentList.hashCode() : 0);
+        result = 31 * result + (commentList != null ? commentList.size() : 0);
         return result;
     }
 
