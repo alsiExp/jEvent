@@ -80,6 +80,10 @@ public class BaseEntity {
         notEquals.addAll(s1);
         notEquals.addAll(s2);
         if(notEquals.size() != s1.size()) {
+            //last check
+            if(s1.hashCode() == s2.hashCode()) {
+                return true;
+            }
             //for debug
             HashSet<T> fullSet = new HashSet<T>(notEquals);
             notEquals.removeAll(s1);

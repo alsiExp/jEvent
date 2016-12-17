@@ -93,7 +93,7 @@ public class Visitor extends BaseEntity {
 
         if (Double.compare(visitor.realCost, realCost) != 0) return false;
         if (participant != null ? !participant.equals(visitor.participant) : visitor.participant != null) return false;
-        if (event != null ? !event.equals(visitor.event) : visitor.event != null) return false;
+        if (event != null ? !event.getId().equals(visitor.event.getId()) : visitor.event != null) return false;
         if (payComment != null ? !payComment.equals(visitor.payComment) : visitor.payComment != null) return false;
         if (buyDate != null ? !buyDate.equals(visitor.buyDate) : visitor.buyDate != null) return false;
         return rate != null ? rate.equals(visitor.rate) : visitor.rate == null;
@@ -104,7 +104,9 @@ public class Visitor extends BaseEntity {
         int result = super.hashCode();
         long temp;
         result = 31 * result + (participant != null ? participant.hashCode() : 0);
-        result = 31 * result + (event != null ? event.hashCode() : 0);
+        if(event != null) {
+            result = 31 * result + (event.getId() != null ? event.getId().hashCode() : 0);
+        }
         result = 31 * result + (payComment != null ? payComment.hashCode() : 0);
         result = 31 * result + (buyDate != null ? buyDate.hashCode() : 0);
         temp = Double.doubleToLongBits(realCost);

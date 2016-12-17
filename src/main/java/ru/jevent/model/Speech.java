@@ -336,8 +336,10 @@ public class Speech extends NamedEntity {
         if(partner != null) {
             result = 31 * result + (partner.getId() != null ? partner.getId().hashCode() : 0);
         }
-        result = 31 * result + (event.getId() != null ? event.getId().hashCode() : 0);
-        result = 31 * result + (speakers.size());
+        if(partner != null) {
+            result = 31 * result + (event.getId() != null ? event.getId().hashCode() : 0);
+        }
+        result = 31 * result + (speakers != null ? speakers.hashCode() : 0);
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
         result = 31 * result + (commentList != null ? commentList.size() : 0);
         return result;

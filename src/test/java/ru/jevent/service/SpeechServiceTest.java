@@ -78,7 +78,7 @@ public class SpeechServiceTest {
         Speech tSpeech = service.get(100025L);
         boolean b = testSpeech.equals(tSpeech);
         service.delete(100025L);
-
+//TODO: Speech test save
         //getAll does not work! Please check it!
 
 //        List<Speech> oldListSpeech = service.getAll();
