@@ -8,6 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.TestData;
+import ru.jevent.model.Partner;
 import ru.jevent.model.Speech;
 import ru.jevent.util.DbPopulator;
 import ru.jevent.util.exception.NotFoundException;
@@ -28,6 +29,8 @@ public class SpeechServiceTest {
 
     @Autowired
     private SpeechService service;
+    @Autowired
+    private PartnerService partnerService;
     @Autowired
     private TestData testData;
     @Autowired
@@ -55,7 +58,7 @@ public class SpeechServiceTest {
     }
 
     @Test
-    public void testGetByParticipant() throws Exception {
+    public void testGetByPartner() throws Exception {
 
         List<Speech> list =  service.getByPartner(100002L);
         if(list != null) {
@@ -65,40 +68,20 @@ public class SpeechServiceTest {
         } else {
             throw new Exception();
         }
-
     }
 
-
-
-
-    //equals() in Speech doesn't work correctly
     @Test
     public void testSave() throws Exception {
         Speech testSpeech = service.get(100025L);
-        Speech tSpeech = service.get(100025L);
-        boolean b = testSpeech.equals(tSpeech);
         service.delete(100025L);
-//TODO: Speech test save
-        //getAll does not work! Please check it!
-
-//        List<Speech> oldListSpeech = service.getAll();
-//        service.save(testSpeech);
-//        List<Speech> testListSpeech = service.getAll();
-//        if(testListSpeech.size() == oldListSpeech.size()){
-//            throw new Exception();
-//        }
-
-
-        //id is changed after save.
-
-//        Speech speechdb = service.get(testSpeech.getId());
-//        if(speechdb == null) {
-//            throw new Exception();
-//        }
-//        if(!(testSpeech.getId().equals(speechdb.getId()))) {
-//            throw new Exception();
-//        }
-
+        Partner idPartner = partnerService.get(100002);
+        testSpeech.setPartner(idPartner);
+        List<Speech> oldListSpeech = service.getByPartner(100002);
+        service.save(testSpeech);
+        List<Speech> testListSpeech = service.getByPartner(100002);
+        if(testListSpeech.size() == oldListSpeech.size()){
+            throw new Exception();
+        }
     }
 
 
@@ -112,4 +95,4 @@ public class SpeechServiceTest {
             throw new Exception();
         }
     }
- }
+}
