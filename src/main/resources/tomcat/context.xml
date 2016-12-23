@@ -33,7 +33,7 @@
     <!--
     <Valve className="org.apache.catalina.valves.CometConnectionManagerValve" />
     -->
-       <Resource name="jdbc/topjava"
+       <Resource name="jdbc/jevent"
               auth="Container"
               type="javax.sql.DataSource"
               maxActive="5"  minIdle="1"  maxWait="100000"

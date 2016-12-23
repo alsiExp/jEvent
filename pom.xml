@@ -6,7 +6,7 @@
     <artifactId>jevent</artifactId>
     <packaging>war</packaging>
 
-    <version>0.3-SNAPSHOT</version>
+    <version>0.4</version>
 
     <name>jEvent CRM</name>
     <!--<url></url>-->
