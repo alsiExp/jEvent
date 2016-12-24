@@ -1,46 +1,56 @@
 package ru.jevent.web.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import ru.jevent.LoggerWrapper;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.jevent.model.User;
-import ru.jevent.service.UserService;
 
+import java.net.URI;
 import java.util.List;
 
-@Service
+@RestController
+@RequestMapping("/rest/admin/users")
 public class AdminRestController {
-    private static final LoggerWrapper LOG = LoggerWrapper.get(AdminRestController.class);
 
-    private UserService service;
+    private final UserHelper helper;
 
     @Autowired
-    public AdminRestController(UserService service) {
-        this.service = service;
+    public AdminRestController(UserHelper helper) {
+        this.helper = helper;
     }
 
-    public User create(User user) {
-        LOG.info("create user {} by admin", user);
-        return service.save(user);
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> create(User user) {
+        User created = helper.create(user);
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/rest/admin/users/{id}")
+                .buildAndExpand(created.getId()).toUri();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(uriOfNewResource);
+
+        return new ResponseEntity<>(created, httpHeaders, HttpStatus.CREATED);
     }
 
-    public void update(User user) {
-        LOG.info("update user {} by admin", user);
-        service.update(user);
+    @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void update(@RequestBody User user) {
+        helper.update(user);
     }
 
-    public User get(long id) {
-        LOG.info("get user {} by admin", id);
-        return service.get(id);
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public User get(@PathVariable("id") long id) {
+        return helper.get(id);
+    }
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable("id") long id) {
+        helper.delete(id);
     }
 
-    public void delete(long id) {
-        LOG.info("delete user {} by admin", id);
-        service.delete(id);
-    }
-
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<User> getAll() {
-        LOG.info("get all users  by admin");
-        return service.getAll();
+        return helper.getAll();
     }
 }
