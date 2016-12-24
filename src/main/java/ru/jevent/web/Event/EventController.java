@@ -12,7 +12,7 @@ public class EventController {
     @Autowired
     EventService service;
 
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    @RequestMapping(value = "/events", method = RequestMethod.GET)
     public String eventList(Model model) {
         model.addAttribute("eventList", service.getAll());
         return "eventList";
