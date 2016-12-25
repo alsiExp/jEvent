@@ -1,6 +1,8 @@
 package ru.jevent.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import ru.jevent.model.additionalEntity.EventComment;
 import ru.jevent.model.additionalEntity.Rate;
 import ru.jevent.model.superclasses.NamedEntity;
 
@@ -45,11 +47,15 @@ public class    Event extends NamedEntity {
     @Column(name = "start_date")
     private LocalDateTime startDate;
 
+
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<Speech> speeches;
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<Visitor> visitors;
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<EventPartner> eventPartners;
     /*
         ticket prices
@@ -57,17 +63,16 @@ public class    Event extends NamedEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "event_id", nullable = false)
     @OrderBy("start, cost")
+    @JsonManagedReference
     private List<Rate> rates;
 
     /*
         simple notes for event
      */
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(name = "events_comments",
-            joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "comment_id", referencedColumnName = "id", unique = true))
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("date")
-    private List<Comment> commentList;
+    @JsonManagedReference
+    private List<EventComment> commentList;
 
 
     public Event() {
@@ -170,14 +175,14 @@ public class    Event extends NamedEntity {
         this.eventPartners = partners;
     }
 
-    public List<Comment> getCommentList() {
+    public List<EventComment> getCommentList() {
         if (commentList == null) {
             commentList = new ArrayList<>();
         }
         return commentList;
     }
 
-    public void setCommentList(List<Comment> commentList) {
+    public void setCommentList(List<EventComment> commentList) {
         this.commentList = commentList;
     }
 

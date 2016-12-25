@@ -196,7 +196,7 @@ CREATE TABLE visitors
   buy_date       TIMESTAMP,
   pay_comment    VARCHAR,
   rate_id        BIGINT NOT NULL,
-  real_cost      NUMERIC(20, 2)     DEFAULT NULL,
+  real_cost      NUMERIC(20, 2)     DEFAULT 0,
 
   FOREIGN KEY (participant_id) REFERENCES participants (id) ON DELETE CASCADE,
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
@@ -206,12 +206,21 @@ CREATE TABLE visitors
 
 CREATE TABLE events_comments
 (
-  event_id   BIGINT,
+/*  event_id   BIGINT,
   comment_id BIGINT,
 
   PRIMARY KEY (event_id, comment_id),
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
-  FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE
+  FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE*/
+
+  id        BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  event_id BIGINT    NOT NULL,
+  content   VARCHAR   NOT NULL CHECK (content <> ''),
+  date      TIMESTAMP NOT NULL DEFAULT now(),
+  user_id   BIGINT    NOT NULL,
+
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+  FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE
 );
 
 CREATE TABLE participants_comments
