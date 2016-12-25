@@ -10,13 +10,25 @@
     <bean class="ru.jevent.web.json.JacksonObjectMapper" id="objectMapper" factory-method="getMapper"/>
 
     <mvc:annotation-driven>
-<!--        <mvc:message-converters>
+        <!--<mvc:message-converters>-->
+<!--
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
                 <property name="objectMapper">
                     <bean class="ru.jevent.util.mapper.HibernateAwareObjectMapper"/>
                 </property>
             </bean>
-        </mvc:message-converters>-->
+-->
+<!--
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/plain;charset=UTF-8</value>
+                        <value>text/html;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+-->
     </mvc:annotation-driven>
 
     <!--  all resources inside folder src/main/webapp/resources are mapped so they can be refered to inside JSP files -->
