@@ -1,6 +1,7 @@
 package ru.jevent.model.additionalEntity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import ru.jevent.model.Participant;
 import ru.jevent.model.superclasses.BaseComment;
 
@@ -12,6 +13,7 @@ public class ParticipantComment extends BaseComment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "participant_id", nullable = false)
+    @JsonBackReference
     private Participant participant;
 
     public Participant getParticipant() {

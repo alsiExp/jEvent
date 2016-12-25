@@ -1,5 +1,6 @@
 package ru.jevent.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import ru.jevent.model.converter.PartnerStatusConverter;
 import ru.jevent.model.enums.PartnerStatus;
 import ru.jevent.model.superclasses.BaseEntity;
@@ -12,10 +13,12 @@ public class EventPartner extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id")
+    @JsonBackReference
     private Event event;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "partner_id")
+    @JsonBackReference
     private Partner partner;
 
     @Column(name = "status_id")

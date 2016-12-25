@@ -1,6 +1,7 @@
 package ru.jevent.model.additionalEntity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import ru.jevent.model.Speech;
 import ru.jevent.model.superclasses.BaseComment;
 
@@ -12,6 +13,7 @@ public class SpeechComment extends BaseComment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "speech_id", nullable = false)
+    @JsonBackReference
     private Speech speech;
 
     public Speech getSpeech() {

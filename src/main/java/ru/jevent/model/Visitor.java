@@ -1,5 +1,6 @@
 package ru.jevent.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import ru.jevent.model.additionalEntity.Rate;
 import ru.jevent.model.superclasses.BaseEntity;
 
@@ -12,10 +13,12 @@ public class Visitor extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "participant_id")
+    @JsonBackReference
     private Participant participant;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id")
+    @JsonBackReference
     private Event event;
 
     @Column(name = "pay_comment")

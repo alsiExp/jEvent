@@ -1,6 +1,7 @@
 package ru.jevent.model.superclasses;
 
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import ru.jevent.LoggerWrapper;
 
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import java.util.*;
 
 @MappedSuperclass
 @Access(AccessType.FIELD)
-//@JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, isGetterVisibility = NONE, setterVisibility = NONE)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, isGetterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
 public class BaseEntity {
 
     protected static final LoggerWrapper LOG = LoggerWrapper.get(BaseEntity.class);

@@ -1,5 +1,6 @@
 package ru.jevent.model.additionalEntity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import ru.jevent.model.Participant;
 import ru.jevent.model.superclasses.BaseEntity;
 
@@ -15,6 +16,7 @@ public class Email extends BaseEntity {
     private boolean main;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id")
+    @JsonBackReference
     private Participant owner;
 
     public Email() {

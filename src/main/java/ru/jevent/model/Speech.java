@@ -1,5 +1,7 @@
 package ru.jevent.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import ru.jevent.model.additionalEntity.SpeechComment;
 import ru.jevent.model.additionalEntity.SpeechTag;
 import ru.jevent.model.superclasses.NamedEntity;
@@ -80,16 +82,19 @@ public class Speech extends NamedEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "partner_id")
+    @JsonBackReference
     private Partner partner;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id")
+    @JsonBackReference
     private Event event;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "speech_participants",
             joinColumns = @JoinColumn(name = "speech_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "participant_id", referencedColumnName = "id", unique = true))
+    @JsonManagedReference
     private Set<Participant> speakers;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -100,6 +105,7 @@ public class Speech extends NamedEntity {
 
     @OneToMany(mappedBy = "speech", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("date")
+    @JsonManagedReference
     private List<SpeechComment> commentList;
 
     public Speech() {

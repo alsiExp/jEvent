@@ -1,6 +1,7 @@
 package ru.jevent.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import ru.jevent.model.superclasses.NamedEntity;
 
 import javax.persistence.*;
@@ -34,9 +35,11 @@ public class Partner extends NamedEntity {
     private String logoURL;
 
     @OneToMany(mappedBy ="partner", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Speech> speechSet;
 
     @OneToMany(mappedBy = "partner", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<EventPartner> eventPartners;
 
     public Partner() {

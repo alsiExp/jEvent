@@ -1,5 +1,6 @@
 package ru.jevent.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import ru.jevent.model.additionalEntity.Email;
 import ru.jevent.model.additionalEntity.GitHub;
 import ru.jevent.model.additionalEntity.ParticipantComment;
@@ -69,6 +70,7 @@ public class Participant extends Person {
 
     @OneToMany(mappedBy = "participant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("date")
+    @JsonManagedReference
     private List<ParticipantComment> commentList;
 
 

@@ -1,5 +1,6 @@
 package ru.jevent.model.additionalEntity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import ru.jevent.model.Participant;
 import ru.jevent.model.superclasses.BaseEntity;
 
@@ -12,6 +13,7 @@ public class GitHub extends BaseEntity {
     @Column(name = "account_link")
     String accountLink;
     @OneToOne(fetch= FetchType.LAZY, mappedBy="gitHub")
+    @JsonBackReference
     Participant owner;
 
     public GitHub() {
