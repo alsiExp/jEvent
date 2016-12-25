@@ -248,7 +248,6 @@ public class TestData {
 
     public Event getEventWithComments() {
         Event event = getEventWithRates();
-        event.setCommentList( Arrays.asList(getNewComment(), getNewComment()));
         return event;
     }
 

@@ -11,8 +11,12 @@ import java.util.List;
 @Component
 public class UserHelper {
     private static final LoggerWrapper LOG = LoggerWrapper.get(AdminRestController.class);
+    private final UserService service;
+
     @Autowired
-    private UserService service;
+    public UserHelper(UserService service) {
+        this.service = service;
+    }
 
     public User create(User user) {
         LOG.info("create " + user);
@@ -35,7 +39,7 @@ public class UserHelper {
     }
 
     public List<User> getAll() {
-        LOG.info("get all");
+        LOG.info("get all users");
         return service.getAll();
     }
 
