@@ -25,4 +25,11 @@ public class AdminRestControllerTest extends WebTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
 
+    @Test
+    public void testGetAll() throws Exception {
+        mockMvc.perform(get(REST_URL))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+    }
 }

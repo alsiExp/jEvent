@@ -1,60 +1,43 @@
 package ru.jevent.web.Event;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import ru.jevent.LoggedUser;
-import ru.jevent.LoggerWrapper;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import ru.jevent.model.Event;
-import ru.jevent.service.EventService;
 
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/rest/events")
 public class EventRestController {
-    private static final LoggerWrapper LOG = LoggerWrapper.get(EventRestController.class);
 
-
-    private EventService service;
+    private EventHelper helper;
 
     @Autowired
-    public EventRestController(EventService service) {
-        this.service = service;
+    public EventRestController(EventHelper helper) {
+        this.helper = helper;
     }
 
     public Event create(Event event) {
-        long userId = LoggedUser.id();
-        LOG.info("create {} by user {}", event, userId);
-        return service.save(event);
+        return helper.create(event);
     }
 
     public void update(Event event) {
-        long userId = LoggedUser.id();
-        LOG.info("update {} by user {}", event, userId);
-        service.update(event);
+        helper.update(event);
     }
 
     public Event get(long id) {
-        long userId = LoggedUser.id();
-        LOG.info("get event {} by user {}", id, userId);
-        return service.get(id);
+        return helper.get(id);
     }
 
     public void delete(long id) {
-        long userId = LoggedUser.id();
-        LOG.info("delete event {} by user {}", id, userId);
-        service.delete(id);
+        helper.delete(id);
     }
 
-
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Event> getAll() {
-        long userId = LoggedUser.id();
-        LOG.info("getAll event by user {}", userId);
-        return service.getAll();
+        return helper.getAll();
     }
-
-
-
-
-
-
 }

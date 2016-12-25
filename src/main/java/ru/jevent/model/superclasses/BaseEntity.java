@@ -8,6 +8,7 @@ import java.util.*;
 
 @MappedSuperclass
 @Access(AccessType.FIELD)
+//@JsonAutoDetect(fieldVisibility = ANY, getterVisibility = NONE, isGetterVisibility = NONE, setterVisibility = NONE)
 public class BaseEntity {
 
     protected static final LoggerWrapper LOG = LoggerWrapper.get(BaseEntity.class);
