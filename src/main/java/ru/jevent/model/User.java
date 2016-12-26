@@ -106,7 +106,7 @@ public class User extends Person {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + login.hashCode();
+        result = 31 * result + (login != null ? login.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (roles != null ? roles.hashCode() : 0);
         return result;

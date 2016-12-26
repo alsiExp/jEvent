@@ -24,7 +24,7 @@ public class AdminRestController {
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> create(User user) {
+    public ResponseEntity<User> create(@RequestBody User user) {
         User created = helper.create(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/rest/admin/users/{id}")
@@ -35,7 +35,7 @@ public class AdminRestController {
         return new ResponseEntity<>(created, httpHeaders, HttpStatus.CREATED);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void update(@RequestBody User user) {
         helper.update(user);
     }

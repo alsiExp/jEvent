@@ -18,8 +18,21 @@ public class SpeechRestController {
         this.helper = helper;
     }
 
+    public Speech create(Speech speech) {
+        return helper.create(speech);
+    }
+
+    public void update(Speech speech) {
+        helper.update(speech);
+    }
+
+    public void delete(long id) {
+        helper.delete(id);
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Speech get(@PathVariable("id") long id) {
         return helper.get(id);
     }
+
 }
