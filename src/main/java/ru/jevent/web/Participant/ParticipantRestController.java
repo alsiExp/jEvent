@@ -1,52 +1,59 @@
 package ru.jevent.web.Participant;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import ru.jevent.LoggedUser;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Participant;
-import ru.jevent.service.ParticipantService;
 
+import java.net.URI;
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/rest/participants")
 public class ParticipantRestController {
     private static final LoggerWrapper LOG = LoggerWrapper.get(ParticipantRestController.class);
 
-    private ParticipantService service;
+    private ParticipantHelper helper;
 
     @Autowired
-    public ParticipantRestController(ParticipantService service) {
-        this.service = service;
+    public ParticipantRestController(ParticipantHelper helper) {
+        this.helper = helper;
     }
 
-    public Participant create(Participant participant) {
-        long userId = LoggedUser.id();
-        LOG.info("create {} by user {}", participant, userId);
-        return service.save(participant);
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Participant> create(@RequestBody Participant participant) {
+        Participant created =  helper.create(participant);
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/rest/participants/{id}")
+                .buildAndExpand(created.getId()).toUri();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(uriOfNewResource);
+
+        return new ResponseEntity<>(created, httpHeaders, HttpStatus.CREATED);
     }
 
-    public void update(Participant participant) {
-        long userId = LoggedUser.id();
-        LOG.info("update {} by user {}", participant, userId);
-        service.update(participant);
+    @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void update(@RequestBody Participant participant) {
+        helper.update(participant);
     }
 
-    public Participant get(long id) {
-        long userId = LoggedUser.id();
-        LOG.info("get participant {} by user {}", id, userId);
-        return service.get(id);
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable("id") long id) {
+        helper.delete(id);
     }
 
-    public void delete(long id) {
-        long userId = LoggedUser.id();
-        LOG.info("delete participant {} by user {}", id, userId);
-        service.delete(id);
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Participant get(@PathVariable("id") long id) {
+        return helper.get(id);
     }
 
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Participant> getAll() {
-        long userId = LoggedUser.id();
-        LOG.info("get all participant by user {}", userId);
-        return service.getAll();
+        return helper.getAll();
     }
 }

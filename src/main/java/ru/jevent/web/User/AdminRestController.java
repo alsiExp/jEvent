@@ -35,7 +35,7 @@ public class AdminRestController {
         return new ResponseEntity<>(created, httpHeaders, HttpStatus.CREATED);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public void update(@RequestBody User user) {
         helper.update(user);
     }
@@ -44,6 +44,7 @@ public class AdminRestController {
     public User get(@PathVariable("id") long id) {
         return helper.get(id);
     }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable("id") long id) {
         helper.delete(id);

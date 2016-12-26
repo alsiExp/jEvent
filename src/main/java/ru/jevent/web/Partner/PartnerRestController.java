@@ -1,52 +1,56 @@
 package ru.jevent.web.Partner;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import ru.jevent.LoggedUser;
-import ru.jevent.LoggerWrapper;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.jevent.model.Partner;
-import ru.jevent.service.PartnerService;
 
+import java.net.URI;
 import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping("/rest/partners")
 public class PartnerRestController {
-    private static final LoggerWrapper LOG = LoggerWrapper.get(PartnerRestController.class);
 
-    private PartnerService service;
+    private PartnerHelper helper;
 
     @Autowired
-    public PartnerRestController(PartnerService service) {
-        this.service = service;
+    public PartnerRestController(PartnerHelper helper) {
+        this.helper = helper;
+    }
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Partner> create(@RequestBody Partner partner) {
+        Partner created = helper.create(partner);
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/rest/partners/{id}")
+                .buildAndExpand(created.getId()).toUri();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(uriOfNewResource);
+
+        return new ResponseEntity<>(created, httpHeaders, HttpStatus.CREATED);
     }
 
-    public Partner create(Partner partner) {
-        long userId = LoggedUser.id();
-        LOG.info("create {} by user {}", partner, userId);
-        return service.save(partner);
+    @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void update(@RequestBody Partner partner) {
+        helper.update(partner);
     }
 
-    public void update(Partner partner) {
-        long userId = LoggedUser.id();
-        LOG.info("update {} by user {}", partner, userId);
-        service.update(partner);
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable("id") long id) {
+        helper.delete(id);
     }
 
-    public Partner get(long id) {
-        long userId = LoggedUser.id();
-        LOG.info("get partner {} by user {}", id, userId);
-        return service.get(id);
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Partner get(@PathVariable("id") long id) {
+        return helper.get(id);
     }
 
-    public void delete(long id) {
-        long userId = LoggedUser.id();
-        LOG.info("delete partner {} by user {}", id, userId);
-        service.delete(id);
-    }
-
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Partner> getAll() {
-        long userId = LoggedUser.id();
-        LOG.info("getAll partner by user {}", userId);
-        return service.getAll();
+        return helper.getAll();
     }
 }
