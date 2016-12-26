@@ -5,12 +5,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import ru.jevent.web.User.UserRestController;
+import ru.jevent.web.User.ProfileRestController;
 
 
 public class UserMockTest {
     private static ConfigurableApplicationContext appCtx;
-    private static UserRestController controller;
+    private static ProfileRestController controller;
 
     @BeforeClass
     public static void beforeClass() {
@@ -18,7 +18,7 @@ public class UserMockTest {
         for(String s : appCtx.getBeanDefinitionNames()) {
             System.out.println(s);
         }
-        controller = appCtx.getBean(UserRestController.class);
+        controller = appCtx.getBean(ProfileRestController.class);
     }
 
     @AfterClass
@@ -29,11 +29,6 @@ public class UserMockTest {
 
     @Test
     public void testGet() throws Exception {
-        controller.get(1);
-    }
-
-    @Test
-    public void testGetAll() throws Exception {
-        controller.getAll();
+        controller.get();
     }
 }
