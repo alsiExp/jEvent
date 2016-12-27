@@ -24,7 +24,8 @@
         </encoder>
     </appender>
 
-    <logger name="ru.jevent" level="DEBUG"/>
+    <logger name="ru.jevent" level="debug"/>
+    <logger name="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver" level="debug"/>
 
     <root level="INFO">
         <appender-ref ref="file"/>

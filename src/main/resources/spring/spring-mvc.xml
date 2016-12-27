@@ -9,7 +9,7 @@
 
     <bean class="ru.jevent.web.json.JacksonObjectMapper" id="objectMapper" factory-method="getMapper"/>
 
-    <mvc:annotation-driven>
+    <mvc:annotation-driven conversion-service="conversionService">
         <mvc:message-converters>
 <!--
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
@@ -28,6 +28,15 @@
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
+
+    <bean class="org.springframework.context.support.ConversionServiceFactoryBean" id="conversionService">
+        <property name="converters">
+            <set>
+                <bean class="ru.jevent.web.converter.StringToLocalDateTimeConverter"/>
+            </set>
+        </property>
+    </bean>
+
 
     <!--  all resources inside folder src/main/webapp/resources are mapped so they can be refered to inside JSP files -->
     <mvc:resources mapping="/resources/**" location="/resources/"/>
