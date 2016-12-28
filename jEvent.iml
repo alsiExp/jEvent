@@ -57,14 +57,16 @@
     <orderEntry type="library" name="Maven: org.webjars:noty:2.2.4" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:datatables:1.9.4-2" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:font-awesome:4.7.0" level="project" />
-    <orderEntry type="library" name="Maven: com.github.dandelion:datatables-jsp:0.10.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.dandelion:datatables-core:0.10.1" level="project" />
+    <orderEntry type="library" name="Maven: com.github.dandelion:datatables-jsp:1.1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.github.dandelion:datatables-core:1.1.0" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.8.3" level="project" />
-    <orderEntry type="library" name="Maven: com.github.dandelion:dandelion-jsp:0.10.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.dandelion:dandelion-webjars:0.10.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.dandelion:dandelion-core:0.10.1" level="project" />
-    <orderEntry type="library" name="Maven: org.webjars:webjars-locator:0.12" level="project" />
+    <orderEntry type="library" name="Maven: com.github.dandelion:dandelion-jsp:1.1.0" level="project" />
+    <orderEntry type="library" name="Maven: com.github.dandelion:dandelion-webjars:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: com.github.dandelion:dandelion-core:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars:webjars-locator:0.23" level="project" />
+    <orderEntry type="library" name="Maven: org.webjars:webjars-locator-core:0.22" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.6.7" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.6.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.6.7" level="project" />

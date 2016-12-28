@@ -2,7 +2,7 @@
     "bundle" : "jeventDatatable",
     "dependencies" : [ "jevent", "datetimepicker", "datatables"],
     "assets": [{
-        "name": "jquery-noty ",
+        "name": "jquery-noty",
         "version": "2.2.2",
         "type": "js",
         "locations": {
@@ -13,7 +13,7 @@
         "version": "1.0.0",
         "type": "js",
         "locations": {
-            "webapp": "/resources/js/customDatatable.js"
+            "webapp": "/resources/js/custom.js"
         }
     }]
 }

@@ -11,13 +11,13 @@
 
     <mvc:annotation-driven conversion-service="conversionService">
         <mvc:message-converters>
-<!--
-            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-                <property name="objectMapper">
-                    <bean class="ru.jevent.util.mapper.HibernateAwareObjectMapper"/>
-                </property>
-            </bean>
--->
+            <!--
+                        <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                            <property name="objectMapper">
+                                <bean class="ru.jevent.util.mapper.HibernateAwareObjectMapper"/>
+                            </property>
+                        </bean>
+            -->
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
                 <property name="supportedMediaTypes">
                     <list>
@@ -40,6 +40,9 @@
 
     <!--  all resources inside folder src/main/webapp/resources are mapped so they can be refered to inside JSP files -->
     <mvc:resources mapping="/resources/**" location="/resources/"/>
+
+    <!-- uses WebJars so Javascript and CSS libs can be declared as Maven dependencies (Bootstrap, jQuery...) -->
+    <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
 
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"

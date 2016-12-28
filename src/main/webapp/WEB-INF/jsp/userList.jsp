@@ -2,9 +2,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
+<%@ taglib prefix="datatables" uri="http://github.com/dandelion/datatables" %>
+<%@ taglib prefix="dandelion" uri="http://github.com/dandelion" %>
 
 <html>
+    <dandelion:bundle includes="jeventDatatable"/>
     <jsp:include page="fragments/headTag.jsp"/>
 <body>
 <div class="container-fluid">
@@ -30,6 +32,6 @@
     <jsp:include page="fragments/footer.jsp"/>
 
 </div>
-<jsp:include page="fragments/js.jsp"/>
+<%--<jsp:include page="fragments/js.jsp"/>--%>
 </body>
 </html>

@@ -1,6 +1,6 @@
 {
     "bundle" : "jevent",
-    "dependencies" : [ "bootstrap3" ],
+    "dependencies" : [ "bootstrap3", "font-awesome" ],
     "assets": [{
         "name": "jevent",
         "version": "1.0.0",
