@@ -26,32 +26,32 @@
 
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="false">Конференции <span class="caret"></span></a>
+                           aria-haspopup="true" aria-expanded="false"><fmt:message key="app.menu.event"/><span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="../event/list.html">Все конференции</a></li>
+                            <li><a href="#"><fmt:message key="app.menu.event.list"/></a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="#">Новая конференция</a></li>
+                            <li><a href="#"><fmt:message key="app.menu.event.new"/></a></li>
                         </ul>
                     </li>
 
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="false">Спикеры <span class="caret"></span></a>
+                           aria-haspopup="true" aria-expanded="false"><fmt:message key="app.menu.participant"/><span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="../speaker/list.html">Все спикеры</a></li>
+                            <li><a href="#"><fmt:message key="app.menu.participant.list"/></a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="#">Новый спикер</a></li>
+                            <li><a href="#"><fmt:message key="app.menu.participant.new"/></a></li>
 
                         </ul>
                     </li>
 
                     <li class="dropdown hidden-sm">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="false">Партнеры <span class="caret"></span></a>
+                           aria-haspopup="true" aria-expanded="false"><fmt:message key="app.menu.partner"/><span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="../partner/list.html">Все партнеры</a></li>
+                            <li><a href="#"><fmt:message key="app.menu.partner.list"/></a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="#">Новый партнер</a></li>
+                            <li><a href="#"><fmt:message key="app.menu.partner.new"/></a></li>
                         </ul>
                     </li>
                     <!--
@@ -88,19 +88,14 @@
                     <li>
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-haspopup="true" aria-expanded="false">
-                                <span class="visible-sm hidden-lg hidden-md hidden-xs">ЛК <span
-                                        class="caret"></span></span>
-                            <span class="hidden-sm">Личный кабинет <span class="caret"></span></span>
+                            <fmt:message key="app.menu.profile"/><span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Настройки</a></li>
+                            <li><a href="#"><fmt:message key="app.menu.profile.settings"/></a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="../users">Управление командой</a></li>
-                            <li><a href="#">API</a></li>
-                            <li><a href="#">Интеграция</a></li>
-                            <li><a href="#">Организация</a></li>
+                            <li><a href="../users"><fmt:message key="app.menu.profile.team"/></a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="#">Выйти&nbsp;<i class="fa fa-sign-out fa-fw" aria-hidden="true"></i></a>
+                            <li><a href="#"><fmt:message key="app.menu.profile.logout"/>&nbsp;<i class="fa fa-sign-out fa-fw" aria-hidden="true"></i></a>
                         </ul>
                     </li>
 

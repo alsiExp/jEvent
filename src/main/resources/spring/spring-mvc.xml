@@ -51,13 +51,8 @@
 
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
           p:cacheSeconds="60"
-          p:defaultEncoding="UTF-8">
-
-        <property name="basenames">
-            <list>
-                <value>messages/app</value>
-            </list>
-        </property>
+          p:defaultEncoding="UTF-8"
+          p:basenames="WEB-INF/messages/app">
     </bean>
 
 
