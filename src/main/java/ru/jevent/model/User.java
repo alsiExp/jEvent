@@ -15,7 +15,7 @@ import java.util.Set;
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "login", name = "unique_login")})
 @NamedQueries({
         @NamedQuery(name = "User.delete", query = "DELETE from User u where u.id = :id"),
-        @NamedQuery(name = "User.getAllSorted", query = "SELECT u FROM User u LEFT JOIN FETCH u.roles ORDER BY u.id")
+        @NamedQuery(name = "User.getAllSorted", query = "SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles ORDER BY u.id")
 })
 public class User extends Person {
 

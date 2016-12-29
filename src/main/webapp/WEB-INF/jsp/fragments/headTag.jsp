@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title><fmt:message key="app.title"/></title>
+    <link rel="shortcut icon" href="resources/img/favicon.ico">
 
     <!-- CSS -->
 <%--    <link href="resources/css/normalize.css" rel="stylesheet">

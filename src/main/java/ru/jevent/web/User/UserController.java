@@ -9,8 +9,14 @@ import ru.jevent.service.UserService;
 
 @Controller
 public class UserController {
+    private final UserService service;
+
     @Autowired
-    private UserService service;
+    public UserController(UserService service) {
+        this.service = service;
+    }
+
+
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public String userList(Model model) {

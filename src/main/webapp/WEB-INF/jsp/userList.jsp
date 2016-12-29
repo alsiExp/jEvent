@@ -18,13 +18,30 @@
         </div>
 
         <div class="col-sm-9 col-md-9 col-lg-10 main">
-            <c:forEach items="${userList}" var="user">
+            <datatables:table id="datatable" data="${userList}" row="user" theme=""
+                              cssClass="table table-hover avatar-table" pageable="false" info="false">
+                <datatables:column title="Name">
+                    <a href="<c:url value="/users/${user.id}"/>">${user.firstName} ${user.lastName}</a>
+                </datatables:column>
+
+                <datatables:column title="Roles" property="roles"/>
+                <datatables:column title="Active">
+                    <input type="checkbox"
+                           <c:if test="${user.enabled}">checked</c:if> id="active_${user.id}"/>
+                </datatables:column>
+
+                <datatables:column filterable="false" sortable="false">
+                    <a class="btn btn-xs btn-danger delete" id="${user.id}">Delete</a>
+                </datatables:column>
+            </datatables:table>
+
+<%--            <c:forEach items="${userList}" var="user">
                 <jsp:useBean id="user" scope="page" type="ru.jevent.model.User"/>
                 <div>
                     <c:out value="${user.login}"/>
                     <c:out value="${user.lastName}"/>
                 </div>
-            </c:forEach>
+            </c:forEach>--%>
         </div>
 
     </section>
