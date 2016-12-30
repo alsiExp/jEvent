@@ -42,6 +42,7 @@
         <!--web-->
         <jstl.version>1.2</jstl.version>
         <dandelion.version>1.1.1</dandelion.version>
+        <dandelion.datatable.version>1.1.0</dandelion.datatable.version>
 
         <webjars-bootstrap.version>3.3.1</webjars-bootstrap.version>
         <webjars-jquery.version>2.1.1</webjars-jquery.version>
@@ -183,7 +184,7 @@
         <dependency>
             <groupId>com.github.dandelion</groupId>
             <artifactId>datatables-jsp</artifactId>
-            <version>1.1.0</version>
+            <version>${dandelion.datatable.version}</version>
         </dependency>
 
         <dependency>

@@ -4,7 +4,7 @@
     "assets": [
         {
             "name": "datatables",
-            "version": "1.9.4-2",
+            "version": "1.1.0",
             "type": "js",
             "locations": {
                 "webjar": "jquery.dataTables.min.js"
@@ -12,7 +12,7 @@
         },
         {
             "name": "datatables",
-            "version": "1.9.4-2",
+            "version": "1.1.0",
             "type": "css",
             "locations": {
                 "webjar": "jquery.dataTables.css"
