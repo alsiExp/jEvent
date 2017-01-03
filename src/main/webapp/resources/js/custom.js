@@ -1,26 +1,5 @@
-// resize editor window
-// $(function () {
-//     $(".wysihtml5-resize iframe").contents().find("body").each(function () {
-//             $(this).on("click", function () {
-//                 var max_height = 750;
-//                 var editor_box = $(".wysihtml5-resize iframe");
-//                 var doc_height = $(this);
-//                 var scroll_height = editor_box[0].scrollHeight;
-//       // console.log('height: ' + doc_height + ', scroll: ' + editor_box[0].scrollHeight + ', max-height: ' + max_height);
-//                 if (doc_height != scroll_height) {
-//                     if (doc_height < max_height) {
-//                         editor_box.height(doc_height + 30);
-//                     } else {
-//                         editor_box.height(max_height);
-//                     }
-//                 }
-//             })
-//         }
-//     )
-//
-// });
-
 // find and add input fields like phone and email
+/*
 $(function() {
     function addInputAdditionalFields(containerId, btnId, name, pHolderText, type) {
         $( btnId ).click(function() {
@@ -33,6 +12,78 @@ $(function() {
     }
     addInputAdditionalFields("#additionalPhones", "#addAdditionalPhones", "additionalPhone", "Дополнительный телефон", "tel");
     addInputAdditionalFields("#additionalEmails", "#addAdditionalEmails", "additionalEmail", "Дополнительный Email", "email");
-
-    
 });
+*/
+function userStatusRender( data, type, row ) {
+    if(type == 'display') {
+        if(data == 'true' || data == 1) {
+            return '<button type="button" class="btn btn-xs btn-primary" disabled="disabled">Active</button>';
+        }
+        else {
+            return '<button type="button" class="btn btn-xs btn-danger" disabled="disabled">Blocked</button>';
+        }
+    }
+    else {
+        return data;
+    }
+}
+
+function userDeleteBtnRender( data, type, row ) {
+    if(type == 'display') {
+        return '<a class="btn btn-xs btn-danger delete" id="' + data + '">Delete</a>';
+    }
+    else {
+        return data;
+    }
+}
+
+function makeEditable(ajaxUrl) {
+    $('#create-new-user').click(function () {
+        $('#user_id').val(0);
+        $('#editUser').modal();
+    });
+
+    $('.delete').click(function () {
+        deleteRow($(this).attr("id"));
+    });
+
+    $('#detailsUserForm').submit(function () {
+        save();
+        return false;
+    });
+}
+
+function deleteRow(id) {
+    $.ajax({
+        url: ajaxUrl + id,
+        type: 'DELETE',
+        success: function () {
+            updateTable();
+        }
+    });
+}
+
+function updateTable() {
+    $.get(ajaxUrl, function (data) {
+        oTable_datatable.clear();
+        $.each(data, function (key, item) {
+            oTable_datatable.row.add(item);
+        });
+        oTable_datatable.draw();
+        makeEditable(ajaxUrl);
+    });
+}
+
+function save() {
+    var frm = $('#detailsUserForm');
+    //debugger;
+    $.ajax({
+        type: "POST",
+        url: ajaxUrl + $('#user_id').val(),
+        data: frm.serialize(),
+        success: function (data) {
+            $('#editUser').modal('hide');
+            updateTable();
+        }
+    });
+}
