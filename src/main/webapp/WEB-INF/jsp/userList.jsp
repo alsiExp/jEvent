@@ -141,15 +141,21 @@
 
                         <div class="form-group">
                             <label for="password" class="control-label col-xs-3"><fmt:message key="app.user.modal.enabled"/> </label>
-                            <div class="col-xs-1">
-                                <input type="checkbox" class="form-control" id="enabled" name="enabled">
+                            <div class="radio col-xs-9">
+                                <label>
+                                    <input type="radio" name="enabled"  value="true" checked>
+                                    <fmt:message key="app.user.modal.true"/>
+                                </label>
+                                <label>
+                                    <input type="radio" name="enabled" value="false">
+                                    <fmt:message key="app.user.modal.false"/>
+                                </label>
                             </div>
-
                         </div>
 
                         <div class="form-group">
                             <div class="col-xs-offset-3 col-xs-9">
-                                <button type="submit" class="btn btn-primary"><fmt:message key="app.user.modal.submit"/></button>
+                                <button id="btn-submit" type="submit" class="btn btn-primary"><fmt:message key="app.user.modal.submit"/></button>
                             </div>
                         </div>
                     </form>

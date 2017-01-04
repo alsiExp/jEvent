@@ -36,14 +36,14 @@ public class AdminAjaxController {
                        @RequestParam("lastName") String lastName,
                        @RequestParam("login") String login,
                        @RequestParam("password") String password,
-                       @RequestParam("enabled") boolean enabled,
+                       @RequestParam("enabled") String enabled,
                        @RequestParam("sex") String sex) {
         User user = new User();
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setLogin(login);
         user.setPassword(password);
-        user.setEnabled(enabled);
+        user.setEnabled(Boolean.parseBoolean(enabled));
         if(sex.equals("male")) {
             user.setSex(Sex.MALE);
         } else if(sex.equals("female")) {

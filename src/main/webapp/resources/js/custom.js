@@ -14,6 +14,45 @@ $(function() {
     addInputAdditionalFields("#additionalEmails", "#addAdditionalEmails", "additionalEmail", "Дополнительный Email", "email");
 });
 */
+
+/**** notify section ****/
+var failedNote;
+
+function closeNote() {
+    if (failedNote) {
+        failedNote.close();
+        failedNote = undefined;
+    }
+}
+
+function success(text) {
+    closeNote();
+    noty({
+        text: text,
+        type: 'success',
+        layout: 'bottomRight',
+        timeout: true
+    });
+}
+
+function fail(event, jqXHR, options, jsExc) {
+    closeNote();
+    failedNote = noty({
+        text: 'Failed: ' + jqXHR.statusText + "<br>",
+        type: 'error',
+        layout: 'bottomRight'
+    });
+}
+
+
+function initErrorNotify() {
+    $(document).ajaxError(function (event, jqXHR, options, jsExc) {
+        fail(event, jqXHR, options, jsExc);
+    });
+}
+
+/**** render functions ****/
+/* user */
 function userStatusRender( data, type, row ) {
     if(type == 'display') {
         if(data == 'true' || data == 1) {
@@ -37,19 +76,28 @@ function userDeleteBtnRender( data, type, row ) {
     }
 }
 
+/**** end render functions ****/
+
+
+/**** user/admin js ****/
+
 function makeEditable(ajaxUrl) {
     $('#create-new-user').click(function () {
         $('#user_id').val(0);
         $('#editUser').modal();
     });
 
-    $('.delete').click(function () {
-        deleteRow($(this).attr("id"));
-    });
-
     $('#detailsUserForm').submit(function () {
         save();
         return false;
+    });
+    initInnerTableButtons();
+    initErrorNotify();
+}
+
+function initInnerTableButtons() {
+    $('.delete').click(function () {
+        deleteRow($(this).attr("id"));
     });
 }
 
@@ -59,6 +107,7 @@ function deleteRow(id) {
         type: 'DELETE',
         success: function () {
             updateTable();
+            success('Deleted');
         }
     });
 }
@@ -70,13 +119,14 @@ function updateTable() {
             oTable_datatable.row.add(item);
         });
         oTable_datatable.draw();
-        makeEditable(ajaxUrl);
+        initInnerTableButtons();
     });
 }
 
 function save() {
     var frm = $('#detailsUserForm');
-    //debugger;
+    var data = frm.serialize();
+
     $.ajax({
         type: "POST",
         url: ajaxUrl + $('#user_id').val(),
@@ -84,6 +134,9 @@ function save() {
         success: function (data) {
             $('#editUser').modal('hide');
             updateTable();
+            success('Saved');
         }
     });
 }
+
+/**** end user/admin js ****/
