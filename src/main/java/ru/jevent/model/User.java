@@ -23,6 +23,7 @@ public class User extends Person {
     public static final String ALL_SORTED = "User.getAllSorted";
 
     @Column(name = "login", nullable = false, unique = true)
+    @NotEmpty
     private String login;
 
     @Column(name = "password", nullable = false)

@@ -70,6 +70,7 @@ CREATE TABLE users
 
   FOREIGN KEY (sex) REFERENCES person_sex (id)
 );
+CREATE UNIQUE INDEX unique_login ON users (login);
 
 CREATE TABLE user_roles
 (
