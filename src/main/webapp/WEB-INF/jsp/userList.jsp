@@ -38,38 +38,26 @@
         </div>
 
         <div class="col-sm-9 col-md-9 col-lg-10 main">
+            <c:set var="ajaxUrl" value="ajax/admin/users/"/>
 
-            <datatables:table id="datatable" data="${userList}" row="user" cssClass="table table-hover" autoWidth="true"  >
+            <datatables:table id="userTable" url="${ajaxUrl}" row="user" cssClass="table table-hover" autoWidth="true" ajaxParams="initUserTableElements" >
                 <fmt:message key="app.user.table.name" var="name"/>
-                <datatables:column title="${name}" property="fullName">
-                    ${user.firstName} ${user.lastName}
-                </datatables:column>
+                <datatables:column title="${name}" property="fullName" renderFunction="renderUserName"/>
 
                 <fmt:message key="app.user.table.id" var="id"/>
-                <datatables:column title="${id}" property="id">
-                    ${user.id}
-                </datatables:column>
+                <datatables:column title="${id}" property="id"/>
 
                 <fmt:message key="app.user.table.roles" var="roles"/>
-                <datatables:column title="${roles}" property="roles">
-                    ${user.roles}
-                </datatables:column>
+                <datatables:column title="${roles}" property="roles"/>
 
                 <fmt:message key="app.user.table.login" var="login"/>
-                <datatables:column title="${login}" property="login">
-                    ${user.login}
-                </datatables:column>
+                <datatables:column title="${login}" property="login"/>
 
                 <fmt:message key="app.user.table.isActive" var="active"/>
-                <datatables:column title="${active}" filterable="false" sortable="false"  property="enabled" renderFunction="userStatusRender">
-                    <input type="checkbox"
-                           <c:if test="${user.enabled}">checked</c:if> id="active_${user.id}"/>
-                </datatables:column>
+                <datatables:column title="${active}" filterable="false" sortable="false"  property="enabled" renderFunction="renderUserStatus"/>
 
                 <fmt:message key="app.user.table.managment" var="managment"/>
-                <datatables:column title="${managment}"  filterable="false" sortable="false" property="id" renderFunction="userDeleteBtnRender">
-                    <a class="btn btn-xs btn-danger delete" id="${user.id}"><fmt:message key="app.user.table.delete"/></a>
-                </datatables:column>
+                <datatables:column title="${managment}"  filterable="false" sortable="false" renderFunction="renderUserDeleteBtn"/>
             </datatables:table>
 
             <%--            <c:forEach items="${userList}" var="user">
@@ -94,7 +82,7 @@
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal" method="post" id="detailsUserForm">
-                        <input type="text" hidden="hidden" name="user_id" id="user_id">
+                        <input type="text" hidden="hidden" name="userId" id="user_id">
 
                         <div class="form-group">
                             <label for="firstName" class="control-label col-xs-3"><fmt:message key="app.user.modal.firstName"/></label>
@@ -113,14 +101,15 @@
                             <label class="control-label col-xs-3"><fmt:message key="app.user.modal.select.sex"/></label>
                             <div class="radio col-xs-9">
                                 <label>
-                                    <input type="radio" name="sex" id="sex_male" value="male" checked>
+                                    <input type="radio" name="optionsSex" id="sex_male">
                                     <fmt:message key="app.sex.male"/>
                                 </label>
                                 <label>
-                                    <input type="radio" name="sex" id="sex_female" value="female">
+                                    <input type="radio" name="optionsSex" id="sex_female">
                                     <fmt:message key="app.sex.female"/>
                                 </label>
                             </div>
+                            <input type="text" id="sex" hidden="hidden" name="sex">
                         </div>
 
                         <div class="form-group">
@@ -143,11 +132,11 @@
                             <label for="password" class="control-label col-xs-3"><fmt:message key="app.user.modal.enabled"/> </label>
                             <div class="radio col-xs-9">
                                 <label>
-                                    <input type="radio" name="enabled"  value="true" checked>
+                                    <input id="enabled-true" type="radio" name="enabled"  value="true" checked>
                                     <fmt:message key="app.user.modal.true"/>
                                 </label>
                                 <label>
-                                    <input type="radio" name="enabled" value="false">
+                                    <input id="enabled-false" type="radio" name="enabled" value="false">
                                     <fmt:message key="app.user.modal.false"/>
                                 </label>
                             </div>
@@ -168,9 +157,10 @@
 <%--<jsp:include page="fragments/js.jsp"/>--%>
 </body>
 <script type="text/javascript">
-    var ajaxUrl='ajax/admin/users/';
+    var ajaxUrl = '${ajaxUrl}';
     $(function () {
-        makeEditable();
+        makeUserTableEditable();
     });
+
 </script>
 </html>

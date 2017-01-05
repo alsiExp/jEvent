@@ -15,6 +15,7 @@ $(function() {
 });
 */
 
+
 /**** notify section ****/
 var failedNote;
 
@@ -25,7 +26,7 @@ function closeNote() {
     }
 }
 
-function success(text) {
+function successNote(text) {
     closeNote();
     noty({
         text: text,
@@ -35,7 +36,7 @@ function success(text) {
     });
 }
 
-function fail(event, jqXHR, options, jsExc) {
+function failNote(event, jqXHR, options, jsExc) {
     closeNote();
     failedNote = noty({
         text: 'Failed: ' + jqXHR.statusText + "<br>",
@@ -47,13 +48,13 @@ function fail(event, jqXHR, options, jsExc) {
 
 function initErrorNotify() {
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
-        fail(event, jqXHR, options, jsExc);
+        failNote(event, jqXHR, options, jsExc);
     });
 }
 
 /**** render functions ****/
 /* user */
-function userStatusRender( data, type, row ) {
+function renderUserStatus( data, type, row ) {
     if(type == 'display') {
         if(data == 'true' || data == 1) {
             return '<button type="button" class="btn btn-xs btn-primary" disabled="disabled">Active</button>';
@@ -67,38 +68,98 @@ function userStatusRender( data, type, row ) {
     }
 }
 
-function userDeleteBtnRender( data, type, row ) {
+function renderUserDeleteBtn( data, type, row ) {
     if(type == 'display') {
-        return '<a class="btn btn-xs btn-danger delete" id="' + data + '">Delete</a>';
+        return '<a class="btn btn-xs btn-danger deleteElem" id="' + row.id + '">Delete</a>';
     }
     else {
         return data;
     }
 }
 
+function renderUserName( data, type, row ) {
+    if(type == 'display') {
+        return '<a class="updateElem" data-user-id="'+ row.id +'"  href="#">' + data + '</a>';
+    }
+    else {
+        return data;
+    }
+}
+
+
+
 /**** end render functions ****/
 
 
 /**** user/admin js ****/
 
-function makeEditable(ajaxUrl) {
+var mainForm;
+var table;
+var modal;
+
+function makeUserTableEditable(ajaxUrl) {
+
+    table = $('#userTable').DataTable();
+    mainForm = $('#detailsUserForm');
+    modal = $('#editUser');
+
     $('#create-new-user').click(function () {
         $('#user_id').val(0);
-        $('#editUser').modal();
+        modal.modal();
     });
 
-    $('#detailsUserForm').submit(function () {
+    mainForm.submit(function () {
         save();
         return false;
     });
-    initInnerTableButtons();
+
+    /* initiate inner table elements */
+    $(document).ajaxSuccess(function (event, jqXHR, options, jsExc) {
+        $('.deleteElem').click(function () {
+            deleteRow($(this).attr("id"));
+        });
+        $('.updateElem').click(function () {
+            //deleteRow($(this).attr("id"));
+            updateUserRow($(this).attr("data-user-id"))
+        });
+
+    });
+
+    userFormHelper();
     initErrorNotify();
 }
 
-function initInnerTableButtons() {
-    $('.delete').click(function () {
-        deleteRow($(this).attr("id"));
+function updateUserRow(id) {
+    $.get(ajaxUrl + id, function (data) {
+        $.each(data, function (key, value) {
+            mainForm.find("input[name='" + key + "']").val(value);
+        });
+        mainForm.find('#user_id').val(data.id);
+        if(data.sex == 'MALE') {
+            //mainForm.find('#sex_female').removeAttr('checked');
+            mainForm.find('#sex_male').attr("checked", true);
+        } else {
+            //mainForm.find('#sex_male').removeAttr('checked');
+            mainForm.find('#sex_female').attr("checked", true);
+        }
+
+/*        if(data.enabled == true) {
+            mainForm.find('#enabled-true').click();
+        } else {
+            mainForm.find('#enabled-false').click();
+        }*/
+        modal.modal();
+        updateTable();
     });
+}
+
+function userFormHelper() {
+    mainForm.find('#sex_male').click(function () {
+        mainForm.find('#sex').val('male');
+    });
+    mainForm.find('#sex_female').click(function () {
+        mainForm.find('#sex').val('female');
+    })
 }
 
 function deleteRow(id) {
@@ -107,21 +168,22 @@ function deleteRow(id) {
         type: 'DELETE',
         success: function () {
             updateTable();
-            success('Deleted');
+            successNote('Deleted');
         }
     });
 }
 
 function updateTable() {
     $.get(ajaxUrl, function (data) {
-        oTable_datatable.clear();
+        table.clear();
         $.each(data, function (key, item) {
-            oTable_datatable.row.add(item);
+            table.row.add(item);
         });
-        oTable_datatable.draw();
-        initInnerTableButtons();
+        table.draw();
+//        initUserTableElements();
     });
 }
+
 
 function save() {
     var frm = $('#detailsUserForm');
@@ -129,12 +191,12 @@ function save() {
 
     $.ajax({
         type: "POST",
-        url: ajaxUrl + $('#user_id').val(),
+        url: ajaxUrl,
         data: frm.serialize(),
         success: function (data) {
-            $('#editUser').modal('hide');
+            modal.modal('hide');
             updateTable();
-            success('Saved');
+            successNote('Saved');
         }
     });
 }

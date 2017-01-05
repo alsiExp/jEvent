@@ -20,6 +20,11 @@ public class AdminAjaxController {
         this.helper = helper;
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public User get(@PathVariable("id") int id) {
+        return helper.get(id);
+    }
+
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<User> getAll() {
         return helper.getAll();
@@ -30,8 +35,8 @@ public class AdminAjaxController {
         helper.delete(id);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    public void update(@PathVariable("id") int id,
+    @RequestMapping(method = RequestMethod.POST)
+    public void update(@RequestParam("userId") String userId,
                        @RequestParam("firstName") String firstName,
                        @RequestParam("lastName") String lastName,
                        @RequestParam("login") String login,
@@ -44,18 +49,19 @@ public class AdminAjaxController {
         user.setLogin(login);
         user.setPassword(password);
         user.setEnabled(Boolean.parseBoolean(enabled));
-        if(sex.equals("male")) {
+        if(sex.toLowerCase().equals("male")) {
             user.setSex(Sex.MALE);
-        } else if(sex.equals("female")) {
+        } else if(sex.toLowerCase().equals("female")) {
             user.setSex(Sex.FEMALE);
         } else {
             throw new IllegalStateException("Wrong sex value: " + sex);
         }
         user.addRoles(Role.ROLE_USER);
-
+        long id = Long.parseLong(userId);
         if (id == 0) {
             helper.create(user);
         } else {
+            user.setId(id);
             helper.update(user);
         }
     }
