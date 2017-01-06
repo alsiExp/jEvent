@@ -22,7 +22,7 @@ import javax.transaction.Transactional;
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
-public class WebTest {
+abstract public class WebTest {
 
     protected MockMvc mockMvc;
 

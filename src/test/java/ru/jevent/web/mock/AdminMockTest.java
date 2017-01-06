@@ -5,7 +5,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import ru.jevent.model.User;
 import ru.jevent.web.User.AdminRestController;
 
 
@@ -26,12 +25,6 @@ public class AdminMockTest {
     @AfterClass
     public static void afterClass() {
         appCtx.close();
-    }
-
-
-    @Test
-    public void testCreate() throws Exception {
-        controller.create(new User());
     }
 
     @Test
