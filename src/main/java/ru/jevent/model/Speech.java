@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "speeches")
@@ -90,11 +91,11 @@ public class Speech extends NamedEntity {
     @JsonBackReference
     private Event event;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "speech_participants",
             joinColumns = @JoinColumn(name = "speech_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "participant_id", referencedColumnName = "id", unique = true))
-    @JsonManagedReference
+    @JsonBackReference
     private Set<Participant> speakers;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -270,6 +271,26 @@ public class Speech extends NamedEntity {
 
     public void setEvent(Event event) {
         this.event = event;
+    }
+
+    public long getEventId() {
+        return event.getId();
+    }
+
+    public String getEventName() {
+        return event.getName();
+    }
+
+    public List<Long> getParticipantsId() {
+        return getSpeakers().stream().map(Participant :: getId).collect(Collectors.toList());
+    }
+
+    public Long getPartnerId() {
+        if(partner != null) {
+            return partner.getId();
+        } else {
+            return null;
+        }
     }
 
     @Override

@@ -34,6 +34,10 @@ public class Participant extends Person {
     public static final String ALL_SORTED = "Participant.getAllSorted";
     public static final String BY_EMAIL = "Participant.getByEmail";
 
+    @ManyToMany(mappedBy = "speakers", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Set<Speech> speechSet;
+
     //    Dates
     @Column(name = "birthday")
     private LocalDateTime birthDay;
