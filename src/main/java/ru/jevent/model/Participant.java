@@ -1,18 +1,16 @@
 package ru.jevent.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import ru.jevent.model.additionalEntity.Email;
-import ru.jevent.model.additionalEntity.GitHub;
-import ru.jevent.model.additionalEntity.ParticipantComment;
-import ru.jevent.model.additionalEntity.Twitter;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import ru.jevent.model.additionalEntity.*;
+import ru.jevent.model.superclasses.BaseEntity;
 import ru.jevent.model.superclasses.Person;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "participants")
@@ -36,6 +34,7 @@ public class Participant extends Person {
 
     @ManyToMany(mappedBy = "speakers", cascade = CascadeType.ALL)
     @JsonManagedReference
+    @LazyCollection(LazyCollectionOption.FALSE)
     private Set<Speech> speechSet;
 
     //    Dates
@@ -72,7 +71,7 @@ public class Participant extends Person {
     @Column(name = "travel_help")
     private String travelHelp;
 
-    @OneToMany(mappedBy = "participant", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "participant", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("date")
     @JsonManagedReference
     private List<ParticipantComment> commentList;
@@ -202,6 +201,12 @@ public class Participant extends Person {
         this.commentList = commentList;
     }
 
+
+    public Map<Long,String> getParticipantTags() {
+        Map<Long,String> map = new HashMap<>();
+        speechSet.forEach(speech -> map.putAll( speech.getTags().stream().collect(Collectors.toMap(BaseEntity::getId, SpeechTag::getTag))));
+        return map;
+    }
 
     @Override
     public boolean equals(Object o) {
