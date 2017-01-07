@@ -38,7 +38,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-haspopup="true" aria-expanded="false"><fmt:message key="app.menu.participant"/><span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#"><fmt:message key="app.menu.participant.list"/></a></li>
+                            <li><a href="../participants"><fmt:message key="app.menu.participant.list"/></a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="#"><fmt:message key="app.menu.participant.new"/></a></li>
 

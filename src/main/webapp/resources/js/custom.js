@@ -53,6 +53,67 @@ function initErrorNotify() {
 }
 
 /**** render functions ****/
+function renderDeleteBtn( data, type, row ) {
+    if(type == 'display') {
+        return '<a class="btn btn-xs btn-danger deleteElem" id="' + row.id + '">Delete</a>';
+    }
+    else {
+        return data;
+    }
+}
+
+function renderDate( data, type, row ) {
+    if(type == 'display') {
+        var dateObject = new Date(data[0], data[1], data[2], data[3], data[4]);
+        var options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            timezone: 'UTC'
+        };
+        return '<span>' + dateObject.toLocaleString("ru", options)  + '</span>';
+    }
+    else {
+        return data;
+    }
+}
+
+/* participant */
+
+function renderParticipantRatings( data, type, row ) {
+    if(type == 'sort') {
+        var summ = 0;
+        $.each(data, function (key, item) {
+            if (item.rating > 0) {
+                summ += item.rating;
+            }
+        });
+        return summ;
+    }
+    if(type == 'display') {
+        var str = '<div class="participant-rating-container">';
+        $.each(data, function (key, item) {
+            if (item.rating > 0) {
+                str += '<div>' + item.eventName + ' = ' + item.rating + '%</div>';
+            }
+        });
+        str +='</div>';
+        return str;
+    }
+}
+
+function renderParticipantTags( data, type, row ) {
+    if(type == 'display') {
+        var str = "";
+        Object.keys(data).forEach(function (key) {
+            var val = data[key];
+            str += '<a href="#" class="participant-tag" data-tag-id="' + key +'">#' + val + '</a>';
+
+        });
+        return str;
+    }
+}
+
 /* user */
 function renderUserStatus( data, type, row ) {
     if(type == 'display') {
@@ -62,15 +123,6 @@ function renderUserStatus( data, type, row ) {
         else {
             return '<button type="button" class="btn btn-xs btn-danger" disabled="disabled">Blocked</button>';
         }
-    }
-    else {
-        return data;
-    }
-}
-
-function renderUserDeleteBtn( data, type, row ) {
-    if(type == 'display') {
-        return '<a class="btn btn-xs btn-danger deleteElem" id="' + row.id + '">Delete</a>';
     }
     else {
         return data;
@@ -90,12 +142,61 @@ function renderUserName( data, type, row ) {
 
 /**** end render functions ****/
 
-
-/**** user/admin js ****/
+/**** common section ****/
 
 var mainForm;
 var table;
 var modal;
+
+function clearForm(formId) {
+    $(':input', formId)
+        .not(':button, :submit, :reset')
+        .val('')
+        .removeAttr('checked')
+        .removeAttr('selected');
+}
+
+
+function deleteRow(id) {
+    $.ajax({
+        url: ajaxUrl + id,
+        type: 'DELETE',
+        success: function () {
+            updateTable();
+            successNote('Deleted');
+        }
+    });
+}
+
+function updateTable() {
+    $.get(ajaxUrl, function (data) {
+        table.clear();
+        $.each(data, function (key, item) {
+            table.row.add(item);
+        });
+        table.draw();
+    });
+}
+
+
+function save() {
+    $.ajax({
+        type: "POST",
+        url: ajaxUrl,
+        data: mainForm.serialize(),
+        success: function (data) {
+            modal.modal('hide');
+            updateTable();
+            successNote('Saved');
+        }
+    });
+}
+
+/**** end common section ****/
+
+
+
+/**** user/admin js ****/
 
 function makeUserTableEditable(ajaxUrl) {
 
@@ -104,7 +205,8 @@ function makeUserTableEditable(ajaxUrl) {
     modal = $('#editUser');
 
     $('#create-new-user').click(function () {
-        $('#user_id').val(0);
+        clearForm(mainForm);
+        mainForm.find('#user_id').val(0);
         modal.modal();
     });
 
@@ -130,24 +232,24 @@ function makeUserTableEditable(ajaxUrl) {
 }
 
 function updateUserRow(id) {
+    clearForm(mainForm);
     $.get(ajaxUrl + id, function (data) {
         $.each(data, function (key, value) {
             mainForm.find("input[name='" + key + "']").val(value);
         });
         mainForm.find('#user_id').val(data.id);
         if(data.sex == 'MALE') {
-            //mainForm.find('#sex_female').removeAttr('checked');
-            mainForm.find('#sex_male').attr("checked", true);
+            mainForm.find('#sex_male').click();
         } else {
-            //mainForm.find('#sex_male').removeAttr('checked');
-            mainForm.find('#sex_female').attr("checked", true);
+            mainForm.find('#sex_female').click();
         }
 
-/*        if(data.enabled == true) {
+        if(data.enabled == true) {
             mainForm.find('#enabled-true').click();
         } else {
             mainForm.find('#enabled-false').click();
-        }*/
+        }
+
         modal.modal();
         updateTable();
     });
@@ -159,45 +261,12 @@ function userFormHelper() {
     });
     mainForm.find('#sex_female').click(function () {
         mainForm.find('#sex').val('female');
-    })
-}
-
-function deleteRow(id) {
-    $.ajax({
-        url: ajaxUrl + id,
-        type: 'DELETE',
-        success: function () {
-            updateTable();
-            successNote('Deleted');
-        }
     });
-}
-
-function updateTable() {
-    $.get(ajaxUrl, function (data) {
-        table.clear();
-        $.each(data, function (key, item) {
-            table.row.add(item);
-        });
-        table.draw();
-//        initUserTableElements();
+    mainForm.find('#enabled-true').click(function () {
+        mainForm.find('#enabled').val('true');
     });
-}
-
-
-function save() {
-    var frm = $('#detailsUserForm');
-    var data = frm.serialize();
-
-    $.ajax({
-        type: "POST",
-        url: ajaxUrl,
-        data: frm.serialize(),
-        success: function (data) {
-            modal.modal('hide');
-            updateTable();
-            successNote('Saved');
-        }
+    mainForm.find('#enabled-false').click(function () {
+        mainForm.find('#enabled').val('false');
     });
 }
 

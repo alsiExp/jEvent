@@ -19,9 +19,9 @@
                 <ul class="nav nav-pills nav-stacked">
                     <li class="subheader"><fmt:message key="app.control.header"/></li>
                     <li role="separator" class="divider"></li>
-                    <li id="create-new-user" class="create-new"><a class="" href="#"><i
+                    <li id="create-new-participant" class="create-new"><a class="" href="#"><i
                             class="fa fa-plus"
-                            aria-hidden="true"></i><fmt:message key="app.user.control.new"/></a>
+                            aria-hidden="true"></i><fmt:message key="app.participant.control.new"/></a>
                     </li>
 
                 </ul>
@@ -31,23 +31,23 @@
         </div>
 
         <div class="col-sm-9 col-md-9 col-lg-10 main">
-            <c:set var="ajaxUrl" value="ajax/admin/users/"/>
+            <c:set var="ajaxUrl" value="ajax/participants/"/>
 
-            <datatables:table id="userTable" url="${ajaxUrl}" row="user" cssClass="table table-hover" autoWidth="true">
+            <datatables:table id="userTable" url="${ajaxUrl}" row="participant" cssClass="table table-hover" autoWidth="true">
                 <fmt:message key="app.table.name" var="name"/>
                 <datatables:column title="${name}" property="fullName"/>
 
-                <fmt:message key="app.user.table.id" var="id"/>
-                <datatables:column title="${id}" property="id"/>
+                <fmt:message key="app.participant.table.rating" var="name"/>
+                <datatables:column title="${name}" property="speechSet" renderFunction="renderParticipantRatings"/>
 
-                <fmt:message key="app.user.table.roles" var="roles"/>
-                <datatables:column title="${roles}" property="roles"/>
+                <fmt:message key="app.participant.table.tags" var="tags"/>
+                <datatables:column title="${tags}" property="participantTags" filterable="false" sortable="false" renderFunction="renderParticipantTags"/>
 
-                <fmt:message key="app.user.table.login" var="login"/>
-                <datatables:column title="${login}" property="login"/>
+                <fmt:message key="app.table.phone" var="phone"/>
+                <datatables:column title="${phone}" property="phone" filterable="false" sortable="false"/>
 
-                <fmt:message key="app.user.table.isActive" var="active"/>
-                <datatables:column title="${active}" filterable="false" sortable="false"  property="enabled" renderFunction="renderUserStatus"/>
+                <fmt:message key="app.table.registered" var="registered"/>
+                <datatables:column title="${registered}" property="registered" renderFunction="renderDate"/>
 
                 <fmt:message key="app.table.managment" var="managment"/>
                 <datatables:column title="${managment}"  filterable="false" sortable="false" renderFunction="renderDeleteBtn"/>
@@ -59,6 +59,7 @@
 
     <jsp:include page="fragments/footer.jsp"/>
 
+<%--
     <div class="modal fade" id="editUser">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -139,14 +140,15 @@
             </div>
         </div>
     </div>
+--%>
 
 </div>
-<%--<jsp:include page="fragments/js.jsp"/>--%>
+
 </body>
 <script type="text/javascript">
     var ajaxUrl = '${ajaxUrl}';
     $(function () {
-        makeUserTableEditable();
+        //makeUserTableEditable();
     });
 
 </script>
