@@ -17,6 +17,14 @@ public class SpeechTag extends BaseEntity {
     public SpeechTag() {
     }
 
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

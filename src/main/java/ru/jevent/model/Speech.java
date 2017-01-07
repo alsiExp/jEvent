@@ -77,9 +77,11 @@ public class Speech extends NamedEntity {
     private LocalDateTime synchronizationTime;
     @Column(name = "is_from_jira")
     private boolean isFromJira;
+    @Column(name = "rating")
+    private Double rating;
 
     @Column(name = "speaker_cost")
-    private double speakerCost;
+    private Double speakerCost;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "partner_id")
@@ -104,7 +106,7 @@ public class Speech extends NamedEntity {
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id", unique = true))
     private Set<SpeechTag> tags;
 
-    @OneToMany(mappedBy = "speech", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "speech", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("date")
     @JsonManagedReference
     private List<SpeechComment> commentList;
@@ -118,6 +120,14 @@ public class Speech extends NamedEntity {
 
     public void setNameEN(String nameEN) {
         this.nameEN = nameEN;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 
     public String getFullDescription() {
@@ -278,7 +288,7 @@ public class Speech extends NamedEntity {
     }
 
     public String getEventName() {
-        return event.getName();
+        return event.getName() + " " + event.getVersion();
     }
 
     public List<Long> getParticipantsId() {

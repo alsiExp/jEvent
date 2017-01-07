@@ -70,7 +70,8 @@ CREATE TABLE users
 
   FOREIGN KEY (sex) REFERENCES person_sex (id)
 );
-CREATE UNIQUE INDEX unique_login ON users (login);
+CREATE UNIQUE INDEX unique_login
+  ON users (login);
 
 CREATE TABLE user_roles
 (
@@ -182,7 +183,7 @@ CREATE TABLE rates
   rate_type  BIGINT    NOT NULL,
   start_date TIMESTAMP NOT NULL,
   end_date   TIMESTAMP NOT NULL,
-  cost       NUMERIC(20, 2),
+  cost       NUMERIC(20, 2) DEFAULT 0,
 
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
   FOREIGN KEY (rate_type) REFERENCES rate_type (id) ON DELETE CASCADE
@@ -207,18 +208,18 @@ CREATE TABLE visitors
 
 CREATE TABLE events_comments
 (
-/*  event_id   BIGINT,
-  comment_id BIGINT,
+  /*  event_id   BIGINT,
+    comment_id BIGINT,
+  
+    PRIMARY KEY (event_id, comment_id),
+    FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
+    FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE*/
 
-  PRIMARY KEY (event_id, comment_id),
-  FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
-  FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE*/
-
-  id        BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  id       BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
   event_id BIGINT    NOT NULL,
-  content   VARCHAR   NOT NULL CHECK (content <> ''),
-  date      TIMESTAMP NOT NULL DEFAULT now(),
-  user_id   BIGINT    NOT NULL,
+  content  VARCHAR   NOT NULL CHECK (content <> ''),
+  date     TIMESTAMP NOT NULL DEFAULT now(),
+  user_id  BIGINT    NOT NULL,
 
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE
@@ -247,6 +248,7 @@ CREATE TABLE speeches
   jira_link          VARCHAR,
   sync_time          TIMESTAMP,
   is_from_jira       BOOL,
+  rating             NUMERIC(8, 4) DEFAULT 0,
 
   jira_creation_time TIMESTAMP,
   jira_update_time   TIMESTAMP,
@@ -256,7 +258,7 @@ CREATE TABLE speeches
   viewer_value       VARCHAR,
   focus              VARCHAR,
 
-  speaker_cost       NUMERIC(20, 2),
+  speaker_cost       NUMERIC(20, 2) DEFAULT 0,
   name_en            VARCHAR,
   full_desc_en       VARCHAR,
   short_desc_en      VARCHAR,
@@ -310,7 +312,7 @@ CREATE TABLE event_partners
   event_id   BIGINT,
   partner_id BIGINT,
   status_id  BIGINT,
-  payment    NUMERIC(20, 2),
+  payment    NUMERIC(20, 2) DEFAULT 0,
 
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
   FOREIGN KEY (partner_id) REFERENCES partners (id) ON DELETE CASCADE,
