@@ -115,7 +115,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="password" class="control-label col-xs-3"><fmt:message key="app.user.modal.enabled"/> </label>
+                            <label for="enabled" class="control-label col-xs-3"><fmt:message key="app.user.modal.enabled"/> </label>
                             <div class="radio col-xs-9">
                                 <label>
                                     <input id="enabled-true" type="radio" name="optionsEnabled"  value="true" checked>

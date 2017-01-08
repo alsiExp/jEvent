@@ -33,7 +33,7 @@
         <div class="col-sm-9 col-md-9 col-lg-10 main">
             <c:set var="ajaxUrl" value="ajax/participants/"/>
 
-            <datatables:table id="userTable" url="${ajaxUrl}" row="participant" cssClass="table table-hover" autoWidth="true">
+            <datatables:table id="participantTable" url="${ajaxUrl}" row="participant" cssClass="table table-hover" autoWidth="true">
                 <fmt:message key="app.table.name" var="name"/>
                 <datatables:column title="${name}" property="fullName"/>
 
@@ -59,33 +59,32 @@
 
     <jsp:include page="fragments/footer.jsp"/>
 
-<%--
-    <div class="modal fade" id="editUser">
+    <div class="modal fade" id="editParticipant">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h2 class="modal-title"><fmt:message key="app.user.modal.header"/></h2>
+                    <h2 class="modal-title"><fmt:message key="app.participant.modal.header"/></h2>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal" method="post" id="detailsUserForm">
-                        <input type="text" hidden="hidden" name="userId" id="user_id">
+                    <form class="form-horizontal" method="post" id="detailsParticipantForm">
+                        <input type="text" hidden="hidden" name="participantId" id="participantId">
 
                         <div class="form-group">
-                            <label for="firstName" class="control-label col-xs-3"><fmt:message key="app.user.modal.firstName"/></label>
+                            <label for="firstName" class="control-label col-xs-3"><fmt:message key="app.modal.firstName"/></label>
                             <div class="col-xs-9">
                                 <input type="text" class="form-control" id="firstName" name="firstName">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="lastName" class="control-label col-xs-3"><fmt:message key="app.user.modal.lastName"/></label>
+                            <label for="lastName" class="control-label col-xs-3"><fmt:message key="app.modal.lastName"/></label>
                             <div class="col-xs-9">
                                 <input type="text" class="form-control" id="lastName" name="lastName">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-xs-3"><fmt:message key="app.user.modal.select.sex"/></label>
+                            <label class="control-label col-xs-3"><fmt:message key="app.modal.select.sex"/></label>
                             <div class="radio col-xs-9">
                                 <label>
                                     <input type="radio" name="optionsSex" id="sex_male">
@@ -100,35 +99,16 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="login" class="control-label col-xs-3"><fmt:message key="app.user.table.login"/></label>
+                            <label for="birthday" class="control-label col-xs-3"><fmt:message key="app.participant.birthday"/></label>
 
                             <div class="col-xs-9">
-                                <input type="text" class="form-control" id="login" name="login" placeholder=<fmt:message key="app.user.modal.login.placeholder"/>>
+                                <input type="datetime" class="form-control date-picker" id="birthday" name="birthday">
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="password" class="control-label col-xs-3"><fmt:message key="app.user.modal.password"/></label>
 
-                            <div class="col-xs-9">
-                                <input type="password" class="form-control" id="password" name="password" placeholder=<fmt:message key="app.user.modal.password.placeholder"/>>
-                            </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="password" class="control-label col-xs-3"><fmt:message key="app.user.modal.enabled"/> </label>
-                            <div class="radio col-xs-9">
-                                <label>
-                                    <input id="enabled-true" type="radio" name="optionsEnabled"  value="true" checked>
-                                    <fmt:message key="app.user.modal.true"/>
-                                </label>
-                                <label>
-                                    <input id="enabled-false" type="radio" name="optionsEnabled" value="false">
-                                    <fmt:message key="app.user.modal.false"/>
-                                </label>
-                            </div>
-                            <input type="text" id="enabled" hidden="hidden" name="enabled">
-                        </div>
+
 
                         <div class="form-group">
                             <div class="col-xs-offset-3 col-xs-9">
@@ -140,7 +120,6 @@
             </div>
         </div>
     </div>
---%>
 
 </div>
 
@@ -148,7 +127,7 @@
 <script type="text/javascript">
     var ajaxUrl = '${ajaxUrl}';
     $(function () {
-        //makeUserTableEditable();
+        makeParticipantTableEditable();
     });
 
 </script>

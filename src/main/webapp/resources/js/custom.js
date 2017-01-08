@@ -52,6 +52,22 @@ function initErrorNotify() {
     });
 }
 
+/**** datetime picker section ****/
+
+function initDTpicker() {
+    $('.date-picker').datetimepicker({
+        timepicker: false,
+        format: 'Y-m-d'
+    });
+    $('.time-picker').datetimepicker({
+        datepicker: false,
+        format: 'H:i'
+    });
+    $('.datetime-picker').datetimepicker({
+        format: 'Y-m-d H:i'
+    });
+}
+
 /**** render functions ****/
 function renderDeleteBtn( data, type, row ) {
     if(type == 'display') {
@@ -138,8 +154,6 @@ function renderUserName( data, type, row ) {
     }
 }
 
-
-
 /**** end render functions ****/
 
 /**** common section ****/
@@ -194,6 +208,25 @@ function save() {
 
 /**** end common section ****/
 
+/**** participants js ****/
+
+function makeParticipantTableEditable(ajaxUrl) {
+    table = $('#participantTable').DataTable();
+    mainForm = $('#detailsParticipantForm');
+    modal = $('#editParticipant');
+
+    $('#create-new-participant').click(function () {
+        clearForm(mainForm);
+        mainForm.find('#participantId').val(0);
+        modal.modal();
+    });
+
+
+    initDTpicker();
+}
+
+
+/**** end participants js ****/
 
 
 /**** user/admin js ****/
