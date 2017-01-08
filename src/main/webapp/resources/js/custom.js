@@ -55,7 +55,7 @@ function initErrorNotify() {
 /**** render functions ****/
 function renderDeleteBtn( data, type, row ) {
     if(type == 'display') {
-        return '<a class="btn btn-xs btn-danger deleteElem" id="' + row.id + '">Delete</a>';
+        return '<a class="btn btn-xs btn-danger deleteElem" onclick="deleteRow(' + row.id + ')">Delete</a>';
     }
     else {
         return data;
@@ -131,7 +131,7 @@ function renderUserStatus( data, type, row ) {
 
 function renderUserName( data, type, row ) {
     if(type == 'display') {
-        return '<a class="updateElem" data-user-id="'+ row.id +'"  href="#">' + data + '</a>';
+        return '<a class="updateElem" href="#" onclick="updateUserRow(' + row.id + ')">' + data + '</a>';
     }
     else {
         return data;
@@ -215,18 +215,6 @@ function makeUserTableEditable(ajaxUrl) {
         return false;
     });
 
-    /* initiate inner table elements */
-    $(document).ajaxSuccess(function (event, jqXHR, options, jsExc) {
-        $('.deleteElem').click(function () {
-            deleteRow($(this).attr("id"));
-        });
-        $('.updateElem').click(function () {
-            //deleteRow($(this).attr("id"));
-            updateUserRow($(this).attr("data-user-id"))
-        });
-
-    });
-
     userFormHelper();
     initErrorNotify();
 }
@@ -251,7 +239,6 @@ function updateUserRow(id) {
         }
 
         modal.modal();
-        updateTable();
     });
 }
 

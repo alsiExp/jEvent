@@ -35,7 +35,7 @@
 
             <datatables:table id="userTable" url="${ajaxUrl}" row="user" cssClass="table table-hover" autoWidth="true">
                 <fmt:message key="app.table.name" var="name"/>
-                <datatables:column title="${name}" property="fullName"/>
+                <datatables:column title="${name}" property="fullName" renderFunction="renderUserName"/>
 
                 <fmt:message key="app.user.table.id" var="id"/>
                 <datatables:column title="${id}" property="id"/>
@@ -71,20 +71,20 @@
                         <input type="text" hidden="hidden" name="userId" id="user_id">
 
                         <div class="form-group">
-                            <label for="firstName" class="control-label col-xs-3"><fmt:message key="app.user.modal.firstName"/></label>
+                            <label for="firstName" class="control-label col-xs-3"><fmt:message key="app.modal.firstName"/></label>
                             <div class="col-xs-9">
                                 <input type="text" class="form-control" id="firstName" name="firstName">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="lastName" class="control-label col-xs-3"><fmt:message key="app.user.modal.lastName"/></label>
+                            <label for="lastName" class="control-label col-xs-3"><fmt:message key="app.modal.lastName"/></label>
                             <div class="col-xs-9">
                                 <input type="text" class="form-control" id="lastName" name="lastName">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-xs-3"><fmt:message key="app.user.modal.select.sex"/></label>
+                            <label class="control-label col-xs-3"><fmt:message key="app.modal.select.sex"/></label>
                             <div class="radio col-xs-9">
                                 <label>
                                     <input type="radio" name="optionsSex" id="sex_male">
@@ -141,7 +141,7 @@
     </div>
 
 </div>
-<%--<jsp:include page="fragments/js.jsp"/>--%>
+
 </body>
 <script type="text/javascript">
     var ajaxUrl = '${ajaxUrl}';
