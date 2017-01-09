@@ -1,21 +1,3 @@
-// find and add input fields like phone and email
-/*
-$(function() {
-    function addInputAdditionalFields(containerId, btnId, name, pHolderText, type) {
-        $( btnId ).click(function() {
-            var inputCount = $( containerId + " input").length;
-            var input = $("<input class='form-control' value=''/>").attr("name", name + inputCount++);
-            input.attr("type", type);
-            input.attr("placeholder", pHolderText + " " + inputCount);
-            $(containerId).append(input);
-        });
-    }
-    addInputAdditionalFields("#additionalPhones", "#addAdditionalPhones", "additionalPhone", "Дополнительный телефон", "tel");
-    addInputAdditionalFields("#additionalEmails", "#addAdditionalEmails", "additionalEmail", "Дополнительный Email", "email");
-});
-*/
-
-
 /**** notify section ****/
 var failedNote;
 
@@ -168,6 +150,7 @@ function clearForm(formId) {
         .val('')
         .removeAttr('checked')
         .removeAttr('selected');
+    $('.additional-field').remove();
 }
 
 
@@ -206,6 +189,16 @@ function save() {
     });
 }
 
+function addInputAdditionalEmail(containerId, btnId, pHolderText) {
+    $( btnId ).click(function() {
+        var inputCount = $( containerId + " input").length  - 1;
+        $(containerId).append(
+            '<div class="col-xs-offset-3 col-xs-7 additional-field">' +
+            '<input id="'+ btnId + inputCount + '" type="email" class="form-control" value="" placeholder="' + pHolderText + " " + inputCount + '"/>' +
+            '</div>');
+    });
+}
+
 /**** end common section ****/
 
 /**** participants js ****/
@@ -221,10 +214,27 @@ function makeParticipantTableEditable(ajaxUrl) {
         modal.modal();
     });
 
+    mainForm.submit(function () {
+        emailHelper();
+        save();
+        return false;
+    });
+
 
     initDTpicker();
+    addInputAdditionalEmail("#emailContainer", "#addEmail", "Additional Email");
+    sexHelper();
 }
 
+function emailHelper() {
+    var separator = "::"
+    var str = mainForm.find("email-0").val();
+    $(".additional-field input").each(function () {
+        str += separator + $( this ).val();
+    });
+    console.log(str);
+    mainForm.find("#email").text(str);
+}
 
 /**** end participants js ****/
 
@@ -276,12 +286,20 @@ function updateUserRow(id) {
 }
 
 function userFormHelper() {
+    sexHelper();
+    enabledHelper();
+}
+
+function sexHelper() {
     mainForm.find('#sex_male').click(function () {
         mainForm.find('#sex').val('male');
     });
     mainForm.find('#sex_female').click(function () {
         mainForm.find('#sex').val('female');
     });
+}
+
+function enabledHelper() {
     mainForm.find('#enabled-true').click(function () {
         mainForm.find('#enabled').val('true');
     });

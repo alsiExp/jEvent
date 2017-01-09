@@ -187,15 +187,8 @@ body {
     color: #ec5956;
 }
 
-.additional-fields {
-    margin-top: 5px;
-    margin-bottom: 10px;
-    padding-bottom: 5px;
-}
-
-.additional-fields input {
-    margin-top: 5px;
-    margin-bottom: 5px;
+.additional-field {
+    margin-top: 7px;
 }
 
 .avatar-table {
