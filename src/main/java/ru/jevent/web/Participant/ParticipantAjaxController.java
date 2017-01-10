@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.jevent.model.Participant;
+import ru.jevent.model.additionalEntity.Email;
+import ru.jevent.model.enums.Sex;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/ajax/participants")
@@ -37,11 +40,12 @@ public class ParticipantAjaxController {
     public void update(@RequestParam("participantId") long id,
                        @RequestParam("firstName") String firstName,
                        @RequestParam("lastName") String lastName,
-                       @RequestParam("sex") String sex,
+                       @RequestParam("sex") Sex sex,
                        @RequestParam("birthday") LocalDateTime birthday,
+                       @RequestParam("registered") LocalDateTime registered,
                        @RequestParam("phone") String phone,
                        @RequestParam("skype") String skype,
-                       @RequestParam("email") String emails,
+                       @RequestParam("email") Set<Email> email,
                        @RequestParam("github") String github,
                        @RequestParam("twitter") String twitter,
                        @RequestParam("city") String city,
@@ -52,9 +56,20 @@ public class ParticipantAjaxController {
         Participant participant = new Participant();
         participant.setFirstName(firstName);
         participant.setLastName(lastName);
-        participant.setSex(participant, sex);
+        participant.setSex(sex);
         participant.setBirthDay(birthday);
+        participant.setRegistered(registered);
+        participant.setPhone(phone);
+        participant.setSkype(skype);
+        participant.setEmails(email);
 
+        participant.setTravelHelp(travelHelp);
+        if(id == 0) {
+            helper.create(participant);
+        } else {
+            participant.setId(id);
+            helper.update(participant);
+        }
 
     }
 }

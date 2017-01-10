@@ -69,6 +69,7 @@
                 <div class="modal-body">
                     <form class="form-horizontal" method="post" id="detailsParticipantForm">
                         <input type="text" hidden="hidden" name="participantId" id="participantId">
+                        <input type="text" hidden="hidden" name="registered" id="registered">
 
                         <div class="form-group">
                             <label for="firstName" class="control-label col-xs-3"><fmt:message key="app.modal.firstName"/></label>
@@ -177,7 +178,7 @@
 
                             <div class="col-xs-9">
                                 <fmt:message key="app.html.enabled" var="htmlOn"/>
-                                <textarea type="text" class="form-control" id="bio" name="bio" placeholder="${htmlOn}" >
+                                <textarea class="form-control" id="bio" name="bio" placeholder="${htmlOn}" >
                                 </textarea>
                             </div>
                         </div>
@@ -186,7 +187,7 @@
                             <label for="description" class="control-label col-xs-3"><fmt:message key="app.participant.description"/></label>
 
                             <div class="col-xs-9">
-                                <textarea type="text" class="form-control" id="description" name="description">
+                                <textarea class="form-control" id="description" name="description">
                                 </textarea>
                             </div>
                         </div>

@@ -111,6 +111,9 @@ public class Participant extends Person {
     public void setEmails(Set<Email> emails) {
         if (emails != null && !emails.isEmpty()) {
             if (this.getEmails().isEmpty()) {
+                for(Email e : emails) {
+                    e.setOwner(this);
+                }
                 this.emails = emails;
             }
         }

@@ -33,6 +33,8 @@
         <property name="converters">
             <set>
                 <bean class="ru.jevent.web.converter.StringToLocalDateTimeConverter"/>
+                <bean class="ru.jevent.web.converter.StringToSexConverter"/>
+                <bean class="ru.jevent.web.converter.StringToEmailSetConverter"/>
             </set>
         </property>
     </bean>

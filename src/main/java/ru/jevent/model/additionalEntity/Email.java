@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class Email extends BaseEntity {
 
     @Column(name = "email")
-    String email;
+    private String email;
     @Column(name = "main")
     private boolean main;
     @ManyToOne(fetch = FetchType.EAGER)
