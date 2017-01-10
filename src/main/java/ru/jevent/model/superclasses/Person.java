@@ -50,6 +50,16 @@ public class Person extends BaseEntity {
         this.photoURL = photoURL;
     }
 
+    public <T extends Person> void setSex(T entity, String sex){
+        if(sex.toLowerCase().equals("male")) {
+            entity.setSex(Sex.MALE);
+        } else if(sex.toLowerCase().equals("female")) {
+            entity.setSex(Sex.FEMALE);
+        } else {
+            throw new IllegalStateException("Wrong sex value: " + sex);
+        }
+    }
+
     public String getFullName() {
         return this.getFirstName() + " " + this.getLastName();
     }

@@ -5,7 +5,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.jevent.model.User;
 import ru.jevent.model.enums.Role;
-import ru.jevent.model.enums.Sex;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class AdminAjaxController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public User get(@PathVariable("id") int id) {
+    public User get(@PathVariable("id") long id) {
         return helper.get(id);
     }
 
@@ -31,12 +30,12 @@ public class AdminAjaxController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable("id") int id) {
+    public void delete(@PathVariable("id") long id) {
         helper.delete(id);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public void update(@RequestParam("userId") String userId,
+    public void update(@RequestParam("userId") long id,
                        @RequestParam("firstName") String firstName,
                        @RequestParam("lastName") String lastName,
                        @RequestParam("login") String login,
@@ -49,15 +48,8 @@ public class AdminAjaxController {
         user.setLogin(login);
         user.setPassword(password);
         user.setEnabled(Boolean.parseBoolean(enabled));
-        if(sex.toLowerCase().equals("male")) {
-            user.setSex(Sex.MALE);
-        } else if(sex.toLowerCase().equals("female")) {
-            user.setSex(Sex.FEMALE);
-        } else {
-            throw new IllegalStateException("Wrong sex value: " + sex);
-        }
+        user.setSex(user, sex);
         user.addRoles(Role.ROLE_USER);
-        long id = Long.parseLong(userId);
         if (id == 0) {
             helper.create(user);
         } else {

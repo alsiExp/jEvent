@@ -227,13 +227,12 @@ function makeParticipantTableEditable(ajaxUrl) {
 }
 
 function emailHelper() {
-    var separator = "::"
-    var str = mainForm.find("email-0").val();
-    $(".additional-field input").each(function () {
+    var separator = "::";
+    var str = mainForm.find("#email-0").val();
+    mainForm.find(".additional-field input").each(function () {
         str += separator + $( this ).val();
     });
-    console.log(str);
-    mainForm.find("#email").text(str);
+    mainForm.find("#email").val(str);
 }
 
 /**** end participants js ****/

@@ -176,7 +176,8 @@
                             <label for="bio" class="control-label col-xs-3"><fmt:message key="app.table.bio"/></label>
 
                             <div class="col-xs-9">
-                                <textarea type="text" class="form-control" id="bio" name="bio" placeholder=<fmt:message key="app.html.enabled"/> >
+                                <fmt:message key="app.html.enabled" var="htmlOn"/>
+                                <textarea type="text" class="form-control" id="bio" name="bio" placeholder="${htmlOn}" >
                                 </textarea>
                             </div>
                         </div>
