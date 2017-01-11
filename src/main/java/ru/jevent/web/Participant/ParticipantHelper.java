@@ -39,6 +39,11 @@ public class ParticipantHelper {
         service.delete(id);
     }
 
+    public List<Participant> getByTag(long tagId) {
+        LOG.info("get participants by tag " + tagId);
+        return service.getByTag(tagId);
+    }
+
     public List<Participant> getAll() {
         LOG.info("get all participant");
         return service.getAll();

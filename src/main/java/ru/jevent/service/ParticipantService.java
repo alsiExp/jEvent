@@ -17,5 +17,7 @@ public interface ParticipantService {
 
     void delete(long id) throws NotFoundException;
 
+    List<Participant> getByTag(long tagId);
+
     List<Participant> getAll();
 }

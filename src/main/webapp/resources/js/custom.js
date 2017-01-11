@@ -105,7 +105,7 @@ function renderParticipantTags( data, type, row ) {
         var str = "";
         Object.keys(data).forEach(function (key) {
             var val = data[key];
-            str += '<a href="#" class="participant-tag" data-tag-id="' + key +'">#' + val + '</a>';
+            str += '<a href="#" class="participant-tag" data-tag-id="' + key +'" onclick="loadTagData(' + key + ')">#' + val + '</a>';
 
         });
         return str;
@@ -187,6 +187,11 @@ function save() {
             successNote('Saved');
         }
     });
+}
+
+function loadTagData(tagId) {
+    var url = '/ajax/participants/tag/' + tagId;
+    table.ajax.url( url ).load();
 }
 
 function addInputAdditionalEmail(containerId, btnId, pHolderText) {

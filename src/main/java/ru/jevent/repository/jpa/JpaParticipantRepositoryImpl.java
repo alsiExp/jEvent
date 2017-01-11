@@ -44,6 +44,11 @@ public class JpaParticipantRepositoryImpl implements ParticipantRepository {
     }
 
     @Override
+    public List<Participant> getByTag(long tagId) {
+        return em.createNamedQuery(Participant.BY_TAG, Participant.class).setParameter(1, tagId).getResultList();
+    }
+
+    @Override
     public List<Participant> getAll() {
         return em.createNamedQuery(Participant.ALL_SORTED, Participant.class).getResultList();
     }

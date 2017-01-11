@@ -125,4 +125,12 @@ public class ParticipantServiceTest {
         v.setRegistered(null);
         service.update(v);
     }
+
+    @Test
+    public void testGetByTag() throws Exception {
+        List<Participant> list = service.getByTag(100022L);
+        if(list.size() < 1) {
+            throw new Exception();
+        }
+    }
 }

@@ -56,6 +56,11 @@ public class MockParticipantRepositoryImpl implements ParticipantRepository {
     }
 
     @Override
+    public List<Participant> getByTag(long tagId) {
+        return new ArrayList<Participant>();
+    }
+
+    @Override
     public List<Participant> getAll() {
         return new ArrayList<Participant>();
     }

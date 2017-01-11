@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
         @NamedQuery(name = Participant.DELETE, query = "DELETE from Participant p where p.id = :id"),
         @NamedQuery(name = Participant.ALL_SORTED, query = "SELECT p FROM Participant p ORDER BY p.registered"),
         @NamedQuery(name = Participant.BY_EMAIL, query = "SELECT p FROM Participant p JOIN p.emails e WHERE e.email = ?1"),
+        @NamedQuery(name = Participant.BY_TAG, query = "SELECT DISTINCT p FROM Participant p JOIN p.speechSet ss join ss.tags t WHERE t.id = ?1")
 })
 public class Participant extends Person {
     /*
@@ -31,6 +32,7 @@ public class Participant extends Person {
     public static final String DELETE = "Participant.delete";
     public static final String ALL_SORTED = "Participant.getAllSorted";
     public static final String BY_EMAIL = "Participant.getByEmail";
+    public static final String BY_TAG = "Participant.getByTag";
 
     @ManyToMany(mappedBy = "speakers", cascade = CascadeType.ALL)
     @JsonManagedReference

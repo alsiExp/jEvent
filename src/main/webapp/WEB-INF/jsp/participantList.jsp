@@ -23,6 +23,10 @@
                             class="fa fa-plus"
                             aria-hidden="true"></i><fmt:message key="app.participant.control.new"/></a>
                     </li>
+                    <li id="all-participants" class=""><a class="" href="../participants"><i
+                            class="fa fa-list-ul"
+                            aria-hidden="true"></i><fmt:message key="app.participant.control.list"/></a>
+                    </li>
 
                 </ul>
 

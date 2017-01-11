@@ -14,5 +14,7 @@ public interface ParticipantRepository {
 
     Participant getByEmail(String email);
 
+    List<Participant> getByTag(long tagId);
+
     List<Participant> getAll();
 }

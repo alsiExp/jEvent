@@ -33,6 +33,11 @@ public class ParticipantAjaxController {
         return helper.getAll();
     }
 
+    @RequestMapping(value = "/tag/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Participant> getByTag(@PathVariable("id") long tagId) {
+        return helper.getByTag(tagId);
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable("id") long id) {
         helper.delete(id);

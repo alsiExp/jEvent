@@ -46,6 +46,11 @@ public class ParticipantServiceImpl implements ParticipantService {
     }
 
     @Override
+    public List<Participant> getByTag(long tagId) {
+        return repository.getByTag(tagId);
+    }
+
+    @Override
     public List<Participant> getAll() {
         return repository.getAll();
     }
