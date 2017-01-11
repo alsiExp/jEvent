@@ -1,6 +1,7 @@
 package ru.jevent.model.additionalEntity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.springframework.util.StringUtils;
 import ru.jevent.model.Participant;
 import ru.jevent.model.superclasses.BaseEntity;
 
@@ -10,11 +11,13 @@ import javax.persistence.*;
 @Table(name = "githubaccs")
 public class GitHub extends BaseEntity {
 
+    private final static String baseURL = "https://github.com/";
+
     @Column(name = "account_link")
-    String accountLink;
+    private String accountLink;
     @OneToOne(fetch= FetchType.LAZY, mappedBy="gitHub")
     @JsonBackReference
-    Participant owner;
+    private Participant owner;
 
     public GitHub() {
     }
@@ -33,6 +36,12 @@ public class GitHub extends BaseEntity {
 
     public void setOwner(Participant owner) {
         this.owner = owner;
+    }
+
+    public String getFullLink() {
+        if(!StringUtils.isEmpty(accountLink)) {
+            return baseURL + accountLink;
+        } else return null;
     }
 
     @Override
@@ -60,7 +69,6 @@ public class GitHub extends BaseEntity {
         return "GitHub{" +
                 super.toString() +
                 ", account='" + accountLink + '\'' +
-                ", owner=" + owner +
                 "}";
     }
 }

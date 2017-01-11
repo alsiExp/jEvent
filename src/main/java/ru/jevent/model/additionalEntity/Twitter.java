@@ -1,5 +1,6 @@
 package ru.jevent.model.additionalEntity;
 
+import org.springframework.util.StringUtils;
 import ru.jevent.model.Participant;
 import ru.jevent.model.superclasses.BaseEntity;
 
@@ -9,10 +10,12 @@ import javax.persistence.*;
 @Table(name = "twitteraccs")
 public class Twitter extends BaseEntity {
 
+    private final static String baseURL = "https://github.com/";
+
     @Column(name = "account_link")
-    String accountLink;
+    private String accountLink;
     @OneToOne(fetch= FetchType.LAZY, mappedBy="twitter")
-    Participant owner;
+    private Participant owner;
 
     public Twitter() {
     }
@@ -31,6 +34,12 @@ public class Twitter extends BaseEntity {
 
     public void setOwner(Participant owner) {
         this.owner = owner;
+    }
+
+    public String getFullLink() {
+        if(!StringUtils.isEmpty(accountLink)) {
+            return baseURL + accountLink;
+        } else return null;
     }
 
     @Override
@@ -58,7 +67,6 @@ public class Twitter extends BaseEntity {
         return "Twitter{" +
                 super.toString() +
                 ", account='" + accountLink + '\'' +
-                ", owner=" + owner +
                 "}";
     }
 }

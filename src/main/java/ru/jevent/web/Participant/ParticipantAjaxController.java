@@ -5,6 +5,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.jevent.model.Participant;
 import ru.jevent.model.additionalEntity.Email;
+import ru.jevent.model.additionalEntity.GitHub;
+import ru.jevent.model.additionalEntity.Twitter;
 import ru.jevent.model.enums.Sex;
 
 import java.time.LocalDateTime;
@@ -46,8 +48,8 @@ public class ParticipantAjaxController {
                        @RequestParam("phone") String phone,
                        @RequestParam("skype") String skype,
                        @RequestParam("email") Set<Email> email,
-                       @RequestParam("github") String github,
-                       @RequestParam("twitter") String twitter,
+                       @RequestParam("github") GitHub github,
+                       @RequestParam("twitter") Twitter twitter,
                        @RequestParam("city") String city,
                        @RequestParam("employer") String employer,
                        @RequestParam("bio") String biography,
@@ -62,7 +64,12 @@ public class ParticipantAjaxController {
         participant.setPhone(phone);
         participant.setSkype(skype);
         participant.setEmails(email);
-
+        participant.setGitHub(github);
+        participant.setTwitter(twitter);
+        participant.setCity(city);
+        participant.setEmployer(employer);
+        participant.setBiography(biography);
+        participant.setDescription(description);
         participant.setTravelHelp(travelHelp);
         if(id == 0) {
             helper.create(participant);

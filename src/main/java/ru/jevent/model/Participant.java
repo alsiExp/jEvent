@@ -134,6 +134,7 @@ public class Participant extends Person {
     }
 
     public void setGitHub(GitHub gitHub) {
+        gitHub.setOwner(this);
         this.gitHub = gitHub;
     }
 
@@ -142,6 +143,7 @@ public class Participant extends Person {
     }
 
     public void setTwitter(Twitter twitter) {
+        twitter.setOwner(this);
         this.twitter = twitter;
     }
 
@@ -274,8 +276,8 @@ public class Participant extends Person {
                 ", registered=" + registered +
                 ", email='" + emailsSB.toString() + '\'' +
                 ", phone='" + phone + '\'' +
-                ", gitHubAccount='" + gitHub + '\'' +
-                ", twitterAccount='" + twitter + '\'' +
+                ", gitHubAccount='" + gitHub.getFullLink() + '\'' +
+                ", twitterAccount='" + twitter.getFullLink() + '\'' +
                 ", employer='" + employer + '\'' +
                 "} ";
     }
