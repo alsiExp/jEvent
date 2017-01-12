@@ -19,14 +19,14 @@
                 <ul class="nav nav-pills nav-stacked">
                     <li class="subheader"><fmt:message key="app.control.header"/></li>
                     <li role="separator" class="divider"></li>
-                    <li id="create-new-participant" class="create-new"><a class="" href="#"><i
-                            class="fa fa-plus"
-                            aria-hidden="true"></i><fmt:message key="app.participant.control.new"/></a>
-                    </li>
-                    <li id="all-participants" class=""><a class="" href="../participants"><i
-                            class="fa fa-list-ul"
-                            aria-hidden="true"></i><fmt:message key="app.participant.control.list"/></a>
-                    </li>
+                    <%--                    <li id="create-new-participant" class="create-new"><a class="" href="#"><i
+                                                class="fa fa-plus"
+                                                aria-hidden="true"></i><fmt:message key="app.participant.control.new"/></a>
+                                        </li>
+                                        <li id="all-participants" class=""><a class="" href="../participants"><i
+                                                class="fa fa-list-ul"
+                                                aria-hidden="true"></i><fmt:message key="app.participant.control.list"/></a>
+                                        </li>--%>
 
                 </ul>
 
@@ -35,27 +35,63 @@
         </div>
 
         <div class="col-sm-9 col-md-9 col-lg-10 main">
-            <c:set var="ajaxUrl" value="ajax/participants/"/>
+            <c:set var="ajaxUrl" value="../ajax/participants/${speakerId}/speeches/"/>
 
-            <datatables:table id="participantTable" url="${ajaxUrl}" row="participant" cssClass="table table-hover" autoWidth="true">
-                <fmt:message key="app.table.name" var="name"/>
-                <datatables:column title="${name}" property="fullName" renderFunction="renderParticipantName"/>
+            <div class="header-row">
+                <h2 id="page-name"></h2>
+            </div>
 
-                <fmt:message key="app.participant.table.rating" var="rating"/>
-                <datatables:column title="${rating}" property="speechSet" renderFunction="renderParticipantRatings"/>
+            <div>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#events" aria-controls="events" role="tab"
+                                                              data-toggle="tab">Участие в конференциях</a></li>
+                    <li role="presentation"><a href="#description" aria-controls="description" role="tab"
+                                               data-toggle="tab">Спикер</a></li>
 
-                <fmt:message key="app.participant.table.tags" var="tags"/>
-                <datatables:column title="${tags}" property="participantTags" filterable="false" sortable="false" renderFunction="renderParticipantTags"/>
+                </ul>
 
-                <fmt:message key="app.table.phone" var="phone"/>
-                <datatables:column title="${phone}" property="phone" filterable="false" sortable="false"/>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active tab-wrapper" id="events">
+                        <datatables:table id="speechTable" url="${ajaxUrl}" cssClass="table table-hover" autoWidth="true">
+                            <fmt:message key="app.event" var="event"/>
+                            <datatables:column title="${event}" property="eventName"/>
 
-                <fmt:message key="app.table.registered" var="registered"/>
-                <datatables:column title="${registered}" property="registered" renderFunction="renderDate"/>
+                            <fmt:message key="app.speech" var="speech"/>
+                            <datatables:column title="${speech}" property="name"/>
 
-                <fmt:message key="app.table.managment" var="managment"/>
-                <datatables:column title="${managment}"  filterable="false" sortable="false" renderFunction="renderDeleteBtn"/>
-            </datatables:table>
+                            <fmt:message key="app.speech.rating" var="rating"/>
+                            <datatables:column title="${rating}" property="rating"/>
+
+                            <fmt:message key="app.participant.table.tags" var="tags"/>
+                            <datatables:column title="${tags}" property="tags" filterable="false" sortable="false" renderFunction="renderSpeechTags"/>
+
+                            <fmt:message key="app.speech.status" var="jiraStatus"/>
+                            <datatables:column title="${jiraStatus}" property="jiraStatus" filterable="false" sortable="false"/>
+
+                            <fmt:message key="app.speech.jiraLink" var="jiraLink"/>
+                            <datatables:column title="${jiraLink}" property="jiraLink" filterable="false" sortable="false"/>
+
+                            <fmt:message key="app.table.managment" var="managment"/>
+                            <datatables:column title="${managment}" filterable="false" sortable="false" renderFunction="renderDeleteBtn"/>
+                        </datatables:table>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane tab-offset" id="description">
+                        <div class="row">
+                            <div id="speaker-card" class="col-lg-3 col-md-6 col-sm-6 col-xs-12 visitor-card">
+
+                            </div>
+                            <div id="speaker-more-info" class="col-lg-9 col-md-6 col-sm-6 col-xs-12">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
 
         </div>
 
@@ -63,7 +99,7 @@
 
     <jsp:include page="fragments/footer.jsp"/>
 
-    <div class="modal fade" id="editParticipant">
+    <%--<div class="modal fade" id="editParticipant">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -213,7 +249,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>--%>
 
 
 </div>
@@ -222,7 +258,7 @@
 <script type="text/javascript">
     var ajaxUrl = '${ajaxUrl}';
     $(function () {
-        makeParticipantTableEditable();
+        //makeParticipantTableEditable();
     });
 
 </script>

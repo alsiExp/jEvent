@@ -18,27 +18,27 @@ public class SpeechHelper {
         this.service = service;
     }
 
-    Speech create (Speech speech) {
+    public Speech create (Speech speech) {
         LOG.info("create " + speech);
         return service.save(speech);
     }
 
-    void update(Speech speech) {
+    public void update(Speech speech) {
         LOG.info("update " + speech);
         service.update(speech);
     }
 
-    Speech get(long id) {
+    public Speech get(long id) {
         LOG.info("get " + id);
         return service.get(id);
     }
 
-    void delete(long id) {
+    public void delete(long id) {
         LOG.info("delete " + id);
         service.delete(id);
     }
 
-    List<Speech> getByPartner(long id) {
+    public List<Speech> getByPartner(long id) {
         LOG.info("get speeches by partner " + id);
         return service.getByPartner(id);
     }

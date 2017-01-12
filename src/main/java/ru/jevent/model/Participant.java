@@ -204,6 +204,17 @@ public class Participant extends Person {
         return commentList;
     }
 
+    public Set<Speech> getSpeechSet() {
+        if(speechSet == null) {
+            speechSet = new HashSet<>();
+        }
+        return speechSet;
+    }
+
+    public void setSpeechSet(Set<Speech> speechSet) {
+        this.speechSet = speechSet;
+    }
+
     public void setCommentList(List<ParticipantComment> commentList) {
         this.commentList = commentList;
     }
@@ -235,6 +246,8 @@ public class Participant extends Person {
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (travelHelp != null ? !travelHelp.equals(that.travelHelp) : that.travelHelp != null) return false;
         if (!isEquals(emails, that.emails))
+            return false;
+        if (!isEquals(speechSet, that.speechSet))
             return false;
         return this.getCommentList().size() == that.getCommentList().size();
     }
@@ -271,6 +284,15 @@ public class Participant extends Person {
             }
             emailsSB.append(']');
         }
+        StringBuilder gh = new StringBuilder();
+        if(gitHub != null) {
+            gh.append('\'').append(gitHub.getFullLink()).append('\'');
+        }
+        StringBuilder tw = new StringBuilder();
+        if(twitter != null) {
+            tw.append('\'').append(twitter.getFullLink()).append('\'');
+        }
+
 
         return "Participant{" +
                 super.toString() +
@@ -278,8 +300,8 @@ public class Participant extends Person {
                 ", registered=" + registered +
                 ", email='" + emailsSB.toString() + '\'' +
                 ", phone='" + phone + '\'' +
-                ", gitHubAccount='" + gitHub.getFullLink() + '\'' +
-                ", twitterAccount='" + twitter.getFullLink() + '\'' +
+                ", gitHubAccount=" + gh.toString() +
+                ", twitterAccount=" + tw.toString() +
                 ", employer='" + employer + '\'' +
                 "} ";
     }

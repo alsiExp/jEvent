@@ -338,3 +338,7 @@ visitor list
 .tab-offset {
     padding-top: 30px;
 }
+
+.tab-wrapper {
+    margin-top : 15px;
+}

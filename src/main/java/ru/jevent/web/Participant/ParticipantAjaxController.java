@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.jevent.model.Participant;
+import ru.jevent.model.Speech;
 import ru.jevent.model.additionalEntity.Email;
 import ru.jevent.model.additionalEntity.GitHub;
 import ru.jevent.model.additionalEntity.Twitter;
 import ru.jevent.model.enums.Sex;
+import ru.jevent.web.Speech.SpeechHelper;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,10 +19,13 @@ import java.util.Set;
 @RequestMapping("/ajax/participants")
 public class ParticipantAjaxController {
     private final ParticipantHelper helper;
+    private final SpeechHelper speechHelper;
 
     @Autowired
-    public ParticipantAjaxController(ParticipantHelper helper) {
+    public ParticipantAjaxController(ParticipantHelper helper,
+                                     SpeechHelper speechHelper) {
         this.helper = helper;
+        this.speechHelper = speechHelper;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -84,4 +89,15 @@ public class ParticipantAjaxController {
         }
 
     }
+
+    @RequestMapping(value = "/{speakerId}/speeches", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Set<Speech> getSpeeches(@PathVariable("speakerId") long id) {
+        return helper.get(id).getSpeechSet();
+    }
+
+    @RequestMapping(value = "/{speakerId}/speeches/{id}", method = RequestMethod.DELETE)
+    public void deleteSpeech(@PathVariable("id") long id) {
+        speechHelper.delete(id);
+    }
+
 }

@@ -145,6 +145,10 @@ public class TestData {
 
         part.getCommentList();
 
+        Set<Speech> s = new HashSet<>();
+        s.add(speechService.get(100018L));
+        part.setSpeechSet(s);
+
         return part;
     }
     public Participant getNewParticipant() {
@@ -169,6 +173,8 @@ public class TestData {
         email.setMain(true);
         email.setOwner(part);
         part.addEmail(email);
+
+        part.getSpeechSet();
 
         return part;
     }

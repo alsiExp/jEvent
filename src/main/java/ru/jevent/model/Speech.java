@@ -337,9 +337,23 @@ public class Speech extends NamedEntity {
                 return false;
         }
         if (event.getId() != null ? !event.getId().equals(speech.event.getId()) : speech.event.getId() != null) return false;
+        /*
         if (!isEquals(this.speakers, speech.speakers)) {
             return false;
         }
+        */
+        long sumThis = 0;
+        long sumThat = 0;
+        for(Participant p : getSpeakers()) {
+            sumThis += p.getId();
+        }
+        for(Participant p : speech.getSpeakers()) {
+            sumThat += p.getId();
+        }
+        if(sumThis != sumThat) {
+            return false;
+        }
+
         if (this.commentList.size() != speech.commentList.size()) {
             return false;
         }
@@ -376,7 +390,7 @@ public class Speech extends NamedEntity {
         if(partner != null) {
             result = 31 * result + (event.getId() != null ? event.getId().hashCode() : 0);
         }
-        result = 31 * result + (speakers != null ? speakers.hashCode() : 0);
+        result = 31 * result + (speakers != null ? speakers.size() : 0);
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
         result = 31 * result + (commentList != null ? commentList.size() : 0);
         return result;

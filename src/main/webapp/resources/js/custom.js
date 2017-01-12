@@ -76,6 +76,20 @@ function renderDate( data, type, row ) {
     }
 }
 
+/* speech */
+function renderSpeechTags( data, type, row ) {
+    if(type == 'display') {
+        var str = "";
+        data.forEach(function (obj) {
+            str += '<div class="participant-tag" data-tag-id="' + obj.id +'">#' + obj.tag + '</div>';
+
+        });
+        return str;
+    }
+    return data;
+}
+
+
 /* participant */
 
 function renderParticipantRatings( data, type, row ) {
@@ -98,6 +112,7 @@ function renderParticipantRatings( data, type, row ) {
         str +='</div>';
         return str;
     }
+    return data;
 }
 
 function renderParticipantTags( data, type, row ) {
@@ -110,6 +125,14 @@ function renderParticipantTags( data, type, row ) {
         });
         return str;
     }
+    return data;
+}
+
+function renderParticipantName( data, type, row ) {
+    if(type == 'display') {
+        return '<a href="../speaker/' + row.id + '"> ' + data + '</a>';
+    }
+    return data;
 }
 
 /* user */
