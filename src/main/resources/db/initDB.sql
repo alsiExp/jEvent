@@ -147,17 +147,6 @@ CREATE TABLE partners
 );
 
 
-CREATE TABLE comments
-(
-  id      BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  content VARCHAR   NOT NULL CHECK (content <> ''),
-  date    TIMESTAMP NOT NULL DEFAULT now(),
-  user_id BIGINT    NOT NULL,
-
-  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-);
-
-
 CREATE TABLE events
 (
   id          BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),

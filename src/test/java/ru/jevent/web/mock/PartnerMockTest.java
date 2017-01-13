@@ -30,18 +30,14 @@ public class PartnerMockTest {
     }
 
 
-    @Test
-    public void testCreate() throws Exception {
-        controller.create(new Partner());
-    }
 
     @Test
     public void testUpdate() throws Exception {
-        Partner partner = new Partner();
+        Partner partner = controller.get(13L);
         partner.setId(5L);
         partner.setName("T-Systems");
         partner.setContactEmail("email");
-        controller.create(partner);
+        controller.update(partner);
     }
 
     @Test

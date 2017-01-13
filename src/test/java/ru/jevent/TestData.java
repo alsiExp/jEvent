@@ -43,15 +43,6 @@ public class TestData {
     }
 
     //comments
-    public Comment getNewComment() {
-        return new Comment("New test comment", this.getExistingUser(), LocalDateTime.now());
-    }
-
-
-    public Comment getExistingComment23() {
-        return new Comment(100023L, "Комментарий про Баруха #1", getUser11(), LocalDateTime.of(2016,9,19,7,0,0,0));
-    }
-
     public ParticipantComment getNewParticipantComment(Participant p) {
         ParticipantComment pc = new ParticipantComment();
         pc.setParticipant(p);
@@ -59,10 +50,6 @@ public class TestData {
         pc.setDate(LocalDateTime.now());
         pc.setAuthor(getUser06());
         return pc;
-    }
-
-    public List<Comment> getMixedCommentsList() {
-        return Arrays.asList(getExistingComment23(), getNewComment());
     }
 
     //Users

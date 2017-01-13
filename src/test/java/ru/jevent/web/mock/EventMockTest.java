@@ -33,10 +33,6 @@ public class EventMockTest {
     }
 
 
-    @Test
-    public void testCreate() throws Exception {
-        controller.create(new Event());
-    }
 
     @Test
     public void testUpdate() throws Exception {

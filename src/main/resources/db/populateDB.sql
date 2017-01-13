@@ -12,7 +12,6 @@ DELETE FROM twitteraccs;
 DELETE FROM speech_tags;
 
 
-DELETE FROM comments;
 DELETE FROM speeches;
 DELETE FROM events;
 DELETE FROM users;

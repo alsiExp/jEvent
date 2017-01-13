@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -119,12 +118,6 @@ public class ParticipantServiceTest {
         }
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
-    public void testUpdateWithException() throws Exception {
-        Participant v = testData.getExistingParticipant();
-        v.setRegistered(null);
-        service.update(v);
-    }
 
     @Test
     public void testGetByTag() throws Exception {

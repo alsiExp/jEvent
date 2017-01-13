@@ -73,11 +73,15 @@ public class Email extends BaseEntity {
 
     @Override
     public String toString() {
+        String ownerName = "";
+        if(owner != null) {
+            ownerName = owner.getFullName();
+        }
         return "Email{" +
                 super.toString() +
                 ", email='" + email + '\'' +
                 ", main=" + main +
-                ", owner=" + owner.getFullName() +
+                ", owner=" + ownerName +
                 "} ";
     }
 }

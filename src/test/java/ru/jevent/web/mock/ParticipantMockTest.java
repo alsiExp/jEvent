@@ -5,7 +5,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import ru.jevent.model.Participant;
 import ru.jevent.util.exception.NotFoundException;
 import ru.jevent.web.Participant.ParticipantRestController;
 
@@ -30,10 +29,6 @@ public class ParticipantMockTest {
     }
 
 
-    @Test
-    public void testCreate() throws Exception {
-        controller.create(new Participant());
-    }
 
     @Test
     public void testUpdate() throws Exception {
