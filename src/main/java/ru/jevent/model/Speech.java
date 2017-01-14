@@ -24,7 +24,7 @@ public class Speech extends NamedEntity {
 
     /*
         fields from jira:
-        //from speaker
+        //from speaker form
         name - Talk title
         nameEN - Talk title [second - on english]
         fullDescription - Description

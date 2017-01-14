@@ -76,18 +76,18 @@
                         <input type="text" hidden="hidden" name="registered" id="registered">
 
                         <div class="form-group">
-                            <label for="firstName" class="control-label col-xs-3"><fmt:message key="app.modal.firstName"/></label>
+                            <label for="fullName" class="control-label col-xs-3"><fmt:message key="app.modal.fullName"/></label>
                             <div class="col-xs-9">
-                                <input type="text" class="form-control" id="firstName" name="firstName">
+                                <input type="text" class="form-control" id="fullName" name="fullName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="fullNameEN" class="control-label col-xs-3"><fmt:message key="app.modal.fullNameEN"/></label>
+                            <div class="col-xs-9">
+                                <input type="text" class="form-control" id="fullNameEN" name="fullNameEN">
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="lastName" class="control-label col-xs-3"><fmt:message key="app.modal.lastName"/></label>
-                            <div class="col-xs-9">
-                                <input type="text" class="form-control" id="lastName" name="lastName">
-                            </div>
-                        </div>
                         <div class="form-group">
                             <label class="control-label col-xs-3"><fmt:message key="app.modal.select.sex"/></label>
                             <div class="radio col-xs-9">
@@ -183,6 +183,24 @@
                             <div class="col-xs-9">
                                 <fmt:message key="app.html.enabled" var="htmlOn"/>
                                 <textarea class="form-control" id="bio" name="bio" placeholder="${htmlOn}" >
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bioEN" class="control-label col-xs-3"><fmt:message key="app.table.bioEN"/></label>
+
+                            <div class="col-xs-9">
+                                <textarea class="form-control" id="bioEN" name="bioEN" placeholder="${htmlOn}" >
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="speakerBackground" class="control-label col-xs-3"><fmt:message key="app.table.speakerBackground"/></label>
+
+                            <div class="col-xs-9">
+                                <textarea class="form-control" id="speakerBackground" name="speakerBackground" >
                                 </textarea>
                             </div>
                         </div>

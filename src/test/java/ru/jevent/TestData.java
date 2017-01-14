@@ -54,7 +54,7 @@ public class TestData {
 
     //Users
     public User getNewUser() {
-        return new User("Test", "User", Sex.MALE, true, "photo.jpg", "login", "pass");
+        return new User("Test User", Sex.MALE, true, "photo.jpg", "login", "pass");
     }
 
     public User getExistingUser() {
@@ -64,8 +64,7 @@ public class TestData {
         exUser.getRoles();
         exUser.addRoles(Role.ROLE_USER);
         exUser.addRoles(Role.ROLE_ADMIN);
-        exUser.setFirstName("Екатерина");
-        exUser.setLastName("Курилова");
+        exUser.setFullName("Екатерина Курилова");
         exUser.setSex(Sex.FEMALE);
         exUser.setEnabled(true);
         exUser.setPhotoURL("kurilova.jpg");
@@ -78,8 +77,7 @@ public class TestData {
         u.setLogin("alexey");
         u.setPassword("user");
         u.getRoles();
-        u.setFirstName("Алексей");
-        u.setLastName("Фёдоров");
+        u.setFullName("Алексей Фёдоров");
         u.setSex(Sex.MALE);
         u.setEnabled(true);
         u.setPhotoURL("fedorov.jpg");
@@ -94,8 +92,7 @@ public class TestData {
         u.setLogin("yana");
         u.setPassword("user");
         u.getRoles();
-        u.setFirstName("Яна");
-        u.setLastName("Пилюгина");
+        u.setFullName("Яна Пилюгина");
         u.setSex(Sex.FEMALE);
         u.setEnabled(true);
         u.setPhotoURL("pilugina.jpg");
@@ -113,15 +110,14 @@ public class TestData {
         part.setCity("Cupertino, CA");
         part.setEmployer("JFrog");
         part.setBiography("Developer advocate в компании JFrog, и делает в жизни ровно 3 вещи: зависает с разработчиками Bintray и Artifactory, пописывает для них код, и рассказывает о впечатлениях в блогах и на конференциях. И так несколько лет подряд, ни минуты об этом не жалея.");
-        part.setDescription("Поскольку «религия не позволяет» быть евангелистом, Барух — developer advocate в компании JFrog и делает в жизни ровно 3 вещи: зависает с разработчиками Bintray и Artifactory, пописывает для них код, и рассказывает о впечатлениях в блогах и на конференциях, таких как JavaOne, Devoxx, OSCON, конечно же JPoint и Joker, да и многих других. И так более десяти лет подряд.");
         part.setTravelHelp("");
         part.setSex(Sex.MALE);
         part.setEnabled(true);
         part.setPhotoURL("http://2016.jpoint.ru/img/baruch.png");
         part.setId(100004L);
+        part.setTravelHelp("No");
 
-        part.setFirstName("Барух");
-        part.setLastName("Садогурский");
+        part.setFullName("Барух Садогурский");
 
         Email email = new Email();
         email.setId(100073L);
@@ -147,13 +143,11 @@ public class TestData {
         part.setCity("Санкт-Петербург");
         part.setEmployer("Test Empl.");
         part.setBiography("test biography");
-        part.setDescription("test description");
         part.setSex(Sex.FEMALE);
         part.setEnabled(true);
         part.setPhotoURL("testvisitor.jpg");
 
-        part.setFirstName("Test");
-        part.setLastName("Participant");
+        part.setFullName("Test Participant");
 
         Email email = new Email();
         email.setEmail("email@gmail.com");

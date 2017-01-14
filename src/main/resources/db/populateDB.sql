@@ -51,33 +51,30 @@ VALUES
    'At JetBrains, code is our passion. For over 15 years we have strived to make the strongest, most effective developer tools on earth. By automating routine checks and corrections, our tools speed up production, freeing developers to grow, discover and create.',
    'jb_200_200.png');
 
-INSERT INTO participants (first_name, last_name, sex, enabled, photo_url, birthday, registered_date, phone, skype, city, employer, biography, description, travel_help)
+INSERT INTO participants (full_name, sex, enabled, photo_url, birthday, registered_date, phone, skype, city, employer, biography, travel_help)
 VALUES
-  ('Виктор', 'Гамов', 90000, TRUE, 'vgamov.jpg', NULL, TIMESTAMP '2016-10-10 09:00',
-             '+7-000-000-00-00', NULL, 'New York', 'Hazelcast', NULL,
-   'Виктор Гамов — со-основатель и лидер вашего любимого правильного подкаста для IT-шников «Разбор Полетов» и по совместительству Senior Solution Architect в компании Hazelcast, которая занимается разработкой in-memory data grid с открытым исходным кодом. Накопил большой опыт, участвуя во множестве Java/JavaScript/HTML5 проектов, что легло в основу книги «Enterprise Web Development» издательства O’Reilly, которую он писал в соавторстве с известными персонами из Java мира. Виктор помогает клиентам финансового и телекоммуникационного сектора в проектировании и разработке высоконагруженных систем.
- В свободное от работы время Виктор не забывает про качалку, а также выступает на международных конференциях, пишет в твиттер, помогает с организацией встреч Princetown JUG и NYC Hazelcast User Group.',
+  ('Максим Дорофеев', 90000, TRUE, 'http://2016.jpoint.ru/img/dorofeev.jpg', NULL, TIMESTAMP '2016-10-10 09:00',
+             '+7-000-000-00-00', NULL, 'Москва', 'mnogosdelal.ru',
+   'Автор проекта mnogosdelal.ru, бизнес-тренер, консультант.',
    NULL),
-  ('Барух', 'Садогурский', 90000, TRUE, 'http://2016.jpoint.ru/img/baruch.png',
+  ('Барух Садогурский', 90000, TRUE, 'http://2016.jpoint.ru/img/baruch.png',
             TIMESTAMP '1970-11-25 00:00', TIMESTAMP '2016-10-10 07:00',
             '+7-000-000-00-00', 'jbaruh', 'Cupertino, CA', 'JFrog',
    'Developer advocate в компании JFrog, и делает в жизни ровно 3 вещи: зависает с разработчиками Bintray и Artifactory, пописывает для них код, и рассказывает о впечатлениях в блогах и на конференциях. И так несколько лет подряд, ни минуты об этом не жалея.',
-   'Поскольку «религия не позволяет» быть евангелистом, Барух — developer advocate в компании JFrog и делает в жизни ровно 3 вещи: зависает с разработчиками Bintray и Artifactory, пописывает для них код, и рассказывает о впечатлениях в блогах и на конференциях, таких как JavaOne, Devoxx, OSCON, конечно же JPoint и Joker, да и многих других. И так более десяти лет подряд.',
-   ''),
-  ('Яков', 'Файн', 90000, TRUE, 'yfain.jpg', TIMESTAMP '1960-07-01 00:00', TIMESTAMP '2016-10-15 12:36',
+   'No'),
+  ('Яков Файн', 90000, TRUE, 'yfain.jpg', TIMESTAMP '1960-07-01 00:00', TIMESTAMP '2016-10-15 12:36',
            '+7-000-000-00-00', NULL, 'New York', 'SuranceBay, Farata Systems',
    'Yakov is a partner and co-founder of two companies: Farata Systems (IT consultancy) and SuranceBay (software for the Insurance industry). Yakov leads various projects related to Web development of complex enterprise applications. In his spare time Yakov enjoys teaching software and writing books.',
-   NULL,
    'помощь с визой в РФ');
 
-INSERT INTO users (first_name, last_name, sex, enabled, photo_url, login, password)
+INSERT INTO users (full_name, sex, enabled, photo_url, login, password)
 VALUES
-  ('Алексей', 'Фёдоров', 90000, TRUE, 'fedorov.jpg', 'alexey', 'user'),
-  ('Андрей', 'Дмитриев', 90000, TRUE, 'dmitriev.jpg', 'andrey', 'admin'),
-  ('Екатерина', 'Курилова', 90001, TRUE, 'kurilova.jpg', 'ekaterina', 'user'),
-  ('Руслан', 'Ахметзянов', 90000, FALSE, 'ahmetzyanov.jpg', 'ruslan', 'user'),
-  ('Максим', 'Зверев', 90000, TRUE, 'zverev.jpg', 'maxim', 'user'),
-  ('Яна', 'Пилюгина', 90001, TRUE, 'pilugina.jpg', 'yana', 'user');
+  ('Алексей Фёдоров', 90000, TRUE, 'fedorov.jpg', 'alexey', 'user'),
+  ('Андрей Дмитриев', 90000, TRUE, 'dmitriev.jpg', 'andrey', 'admin'),
+  ('Екатерина Курилова', 90001, TRUE, 'kurilova.jpg', 'ekaterina', 'user'),
+  ('Руслан Ахметзянов', 90000, FALSE, 'ahmetzyanov.jpg', 'ruslan', 'user'),
+  ('Максим Зверев', 90000, TRUE, 'zverev.jpg', 'maxim', 'user'),
+  ('Яна Пилюгина', 90001, TRUE, 'pilugina.jpg', 'yana', 'user');
 
 
 INSERT INTO events (name, author_id, jira_name, jira_link, version, start_date, address, description, logo_url)
@@ -91,10 +88,9 @@ VALUES
    'jpoint_logo.png');
 
 -- simple info about speakers
-INSERT INTO participants (first_name, last_name, sex, enabled, photo_url, employer, biography)
+INSERT INTO participants (full_name, sex, enabled, photo_url, employer, biography)
 VALUES
-  ('Tim',
-   'Berglund',
+  ('Tim Berglund',
    90000,
    TRUE,
    'http://2016.jpoint.ru/img/berglund.jpg',
@@ -141,10 +137,9 @@ VALUES
   (100018, 100004);
 
 -- alexey shipilev
-INSERT INTO participants (first_name, last_name, sex, enabled, photo_url, employer, biography)
+INSERT INTO participants (full_name, sex, enabled, photo_url, employer, biography)
 VALUES
-  ('Алексей',
-   'Шипилёв',
+  ('Алексей Шипилёв',
    90000,
    TRUE,
    'http://2016.jpoint.ru/img/shipilev.png',
@@ -177,10 +172,9 @@ INSERT INTO speeches_speech_tags (speech_id, tag_id)
       (100021, 100022);
 
 -- egor bugaenko
-INSERT INTO participants (first_name, last_name, sex, enabled, photo_url, employer, biography)
+INSERT INTO participants (full_name, sex, enabled, photo_url, employer, biography)
 VALUES
-  ('Егор',
-   'Бугаенко',
+  ('Егор Бугаенко',
    90000,
    TRUE,
    'http://2016.jpoint.ru/img/bugayenko.jpg',
@@ -207,10 +201,9 @@ VALUES
   (100025, 100023);
 
 -- viktor gamov
-INSERT INTO participants (first_name, last_name, sex, enabled, photo_url, employer, biography)
+INSERT INTO participants (full_name, sex, enabled, photo_url, employer, biography)
 VALUES
-  ('Виктор',
-   'Гамов',
+  ('Виктор Гамов',
    90000,
    TRUE,
    'http://2016.jpoint.ru/img/gamov.jpg',
@@ -238,10 +231,9 @@ VALUES
 
 
 -- andrey pangin
-INSERT INTO participants (first_name, last_name, sex, enabled, photo_url, employer, biography)
+INSERT INTO participants (full_name, sex, enabled, photo_url, employer, biography)
 VALUES
-  ('Андрей',
-   'Паньгин',
+  ('Андрей Паньгин',
    90000,
    TRUE,
    'http://2016.jpoint.ru/img/pangin.png',
@@ -269,10 +261,9 @@ VALUES
 
 
 -- nicolay alimenkov
-INSERT INTO participants (first_name, last_name, sex, enabled, photo_url, employer, biography)
+INSERT INTO participants (full_name, sex, enabled, photo_url, employer, biography)
 VALUES
-  ('Николай',
-   'Алименков',
+  ('Николай Алименков',
    90000,
    TRUE,
    'http://2016.jpoint.ru/img/alimenkov.png',
@@ -299,10 +290,9 @@ VALUES
   (100034, 100032);
 
 -- tagir valeev
-INSERT INTO participants (first_name, last_name, sex, enabled, photo_url, employer, biography)
+INSERT INTO participants (full_name, sex, enabled, photo_url, employer, biography)
 VALUES
-  ('Тагир',
-   'Валеев',
+  ('Тагир Валеев',
    90000,
    TRUE,
    'http://images.contentful.com/oxjq45e8ilak/xCu5sBC6EosmaWKCue8mu/06cf1280147bafb06f80d6eedf17b706/PTG9GIpTtmk.jpg?w=300',
@@ -342,7 +332,7 @@ VALUES
    100002,
    NULL,
    FALSE,
-   97.53,
+   5,
    'Причуды Stream API',
    '<p>Stream API уже не первый год с нами, и многие разработчики вовсю им пользуются. Однако за волшебным API скрывается обычный Java-код со своими причудами. Тагир вместе со слушателями приглядится к некоторым конструкциям, которые могут привести к неожиданным провалам в производительности, или работать не так, как вы ожидаете. Также мы посмотрим на примере, как можно расширить Stream API, добавив свою операцию, и при этом добиться наилучшей производительности. Доклад развивает темы, затронутые Тагиром в этом году на JPoint ("Странности Stream API") и JBreak ("Stream API: рекомендации лучших собаководов").</p>',
    1300
@@ -362,7 +352,7 @@ VALUES
    100002,
    NULL,
    FALSE,
-   92.00,
+   4.88,
    'Перформанс: Что В Имени Тебе Моём?',
    '<p>Оптимизация производительности бередит умы опытных разработчиков с начала компьютерных времён. В коллективном бессознательном оптимизация — это то, что делает программирование интересным, конференции раскупаемыми, личный послужной лист — золотым.</p><p>В этом обзорном докладе мы поговорим об оптимизации больших/инфраструктурных проектов (к примеру, OpenJDK): общих принципах, тенденциях и соотношениях; жизненном цикле проекта и экономике оптимизаций; роли и жизненном цикле тестов производительности; типичных ловушках, разногласиях и противоречиях, в которых оказываются оптимизационные задачи в крупных проектах.</p>',
    0

@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public class MockUserRepositoryImpl implements UserRepository {
     private static final LoggerWrapper LOG = LoggerWrapper.get(MockUserRepositoryImpl.class);
-    private static User user = new User(1L, "Екатерина", "Курилова", Sex.FEMALE, true,  null, "partners@jugru.org", "jug");
+    private static User user = new User(1L, "Екатерина Курилова", Sex.FEMALE, true,  null, "partners@jugru.org", "jug");
 
     public static User getUser() {
         return user;

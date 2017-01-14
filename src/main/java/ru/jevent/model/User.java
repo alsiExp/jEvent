@@ -41,16 +41,16 @@ public class User extends Person {
     public User() {
     }
 
-    public User(String firstName, String lastName, Sex sex, boolean enabled, String photoURL, String login,
+    public User(String fullName, Sex sex, boolean enabled, String photoURL, String login,
                 String password) {
-        super(firstName, lastName, sex, enabled, photoURL);
+        super(fullName, sex, enabled, photoURL);
         this.login = login;
         this.password = password;
     }
 
-    public User(Long id, String firstName, String lastName, Sex sex, boolean enabled, String photoURL, String login,
+    public User(Long id, String fullName, Sex sex, boolean enabled, String photoURL, String login,
                 String password) {
-        super(firstName, lastName, sex, enabled, photoURL);
+        super(fullName, sex, enabled, photoURL);
         this.id = id;
         this.login = login;
         this.password = password;

@@ -58,15 +58,14 @@ CREATE TABLE partner_status
 CREATE TABLE users
 (
   --   person
-  id         BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  first_name VARCHAR NOT NULL CHECK (first_name <> ''),
-  last_name  VARCHAR,
-  sex        BIGINT,
-  enabled    BOOL               DEFAULT FALSE,
-  photo_URL  VARCHAR,
+  id        BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  full_name VARCHAR NOT NULL CHECK (full_name <> ''),
+  sex       BIGINT,
+  enabled   BOOL               DEFAULT FALSE,
+  photo_URL VARCHAR,
   --   user
-  login      VARCHAR NOT NULL CHECK (login <> ''),
-  password   VARCHAR NOT NULL CHECK (password <> ''),
+  login     VARCHAR NOT NULL CHECK (login <> ''),
+  password  VARCHAR NOT NULL CHECK (password <> ''),
 
   FOREIGN KEY (sex) REFERENCES person_sex (id)
 );
@@ -85,8 +84,8 @@ CREATE TABLE participants
 (
   --   person
   id              BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  first_name      VARCHAR   NOT NULL CHECK (first_name <> ''),
-  last_name       VARCHAR,
+  full_name       VARCHAR   NOT NULL CHECK (full_name <> ''),
+  full_name_en    VARCHAR,
   sex             BIGINT,
   enabled         BOOL               DEFAULT FALSE,
   photo_URL       VARCHAR,
@@ -98,7 +97,8 @@ CREATE TABLE participants
   city            VARCHAR,
   employer        VARCHAR,
   biography       VARCHAR,
-  description     VARCHAR,
+  biography_en    VARCHAR,
+  background      VARCHAR,
   travel_help     VARCHAR,
 
   FOREIGN KEY (sex) REFERENCES person_sex (id)
@@ -172,7 +172,7 @@ CREATE TABLE rates
   rate_type  BIGINT    NOT NULL,
   start_date TIMESTAMP NOT NULL,
   end_date   TIMESTAMP NOT NULL,
-  cost       NUMERIC(20, 2) DEFAULT 0,
+  cost       NUMERIC(20, 2)     DEFAULT 0,
 
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
   FOREIGN KEY (rate_type) REFERENCES rate_type (id) ON DELETE CASCADE
@@ -237,7 +237,7 @@ CREATE TABLE speeches
   jira_link          VARCHAR,
   sync_time          TIMESTAMP,
   is_from_jira       BOOL,
-  rating             NUMERIC(8, 4) DEFAULT 0,
+  rating             NUMERIC(8, 4)      DEFAULT 0,
 
   jira_creation_time TIMESTAMP,
   jira_update_time   TIMESTAMP,
@@ -247,7 +247,7 @@ CREATE TABLE speeches
   viewer_value       VARCHAR,
   focus              VARCHAR,
 
-  speaker_cost       NUMERIC(20, 2) DEFAULT 0,
+  speaker_cost       NUMERIC(20, 2)     DEFAULT 0,
   name_en            VARCHAR,
   full_desc_en       VARCHAR,
   short_desc_en      VARCHAR,
@@ -301,7 +301,7 @@ CREATE TABLE event_partners
   event_id   BIGINT,
   partner_id BIGINT,
   status_id  BIGINT,
-  payment    NUMERIC(20, 2) DEFAULT 0,
+  payment    NUMERIC(20, 2)     DEFAULT 0,
 
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
   FOREIGN KEY (partner_id) REFERENCES partners (id) ON DELETE CASCADE,

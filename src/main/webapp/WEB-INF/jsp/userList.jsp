@@ -71,18 +71,13 @@
                         <input type="text" hidden="hidden" name="userId" id="user_id">
 
                         <div class="form-group">
-                            <label for="firstName" class="control-label col-xs-3"><fmt:message key="app.modal.firstName"/></label>
+                            <label for="fullName" class="control-label col-xs-3"><fmt:message key="app.modal.firstName"/></label>
                             <div class="col-xs-9">
-                                <input type="text" class="form-control" id="firstName" name="firstName">
+                                <input type="text" class="form-control" id="fullName" name="fullName">
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="lastName" class="control-label col-xs-3"><fmt:message key="app.modal.lastName"/></label>
-                            <div class="col-xs-9">
-                                <input type="text" class="form-control" id="lastName" name="lastName">
-                            </div>
-                        </div>
+
                         <div class="form-group">
                             <label class="control-label col-xs-3"><fmt:message key="app.modal.select.sex"/></label>
                             <div class="radio col-xs-9">

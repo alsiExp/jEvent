@@ -37,15 +37,13 @@ public class AdminAjaxController {
 
     @RequestMapping(method = RequestMethod.POST)
     public void update(@RequestParam("userId") long id,
-                       @RequestParam("firstName") String firstName,
-                       @RequestParam("lastName") String lastName,
+                       @RequestParam("fullName") String fullName,
                        @RequestParam("login") String login,
                        @RequestParam("password") String password,
                        @RequestParam("enabled") boolean enabled,
                        @RequestParam("sex") Sex sex) {
         User user = new User();
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
+        user.setFullName(fullName);
         user.setLogin(login);
         user.setPassword(password);
         user.setEnabled(enabled);

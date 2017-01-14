@@ -23,9 +23,19 @@ import java.util.stream.Collectors;
 public class Participant extends Person {
     /*
         fields from jira:
+        firstName + lastName - Name
+        fullNameEN - nameEN
+        employer - Company
+        photoURL - Photo link
+        Set<Email>(isMain == true) - Email
+        phone - Phone
+        twitter - Twitter [followers count - optional]
         skype - Skype
         city - Country, City
         travelHelp - Travel
+        biography - Bio
+        biographyEN - Bio en
+        speakerBackground - Speaker background
 
      */
 
@@ -33,6 +43,9 @@ public class Participant extends Person {
     public static final String ALL_SORTED = "Participant.getAllSorted";
     public static final String BY_EMAIL = "Participant.getByEmail";
     public static final String BY_TAG = "Participant.getByTag";
+
+    @Column(name = "full_name_en")
+    private String fullNameEN;
 
     @ManyToMany(mappedBy = "speakers", cascade = CascadeType.ALL)
     @JsonManagedReference
@@ -68,10 +81,12 @@ public class Participant extends Person {
     private String employer;
     @Column(name = "biography")
     private String biography;
-    @Column(name = "description")
-    private String description;
+    @Column(name = "biography_en")
+    private String biographyEN;
     @Column(name = "travel_help")
     private String travelHelp;
+    @Column(name = "background")
+    private String speakerBackground;
 
     @OneToMany(mappedBy = "participant", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("date")
@@ -165,14 +180,6 @@ public class Participant extends Person {
         this.biography = biography;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getSkype() {
         return skype;
     }
@@ -195,6 +202,30 @@ public class Participant extends Person {
 
     public void setTravelHelp(String travelHelp) {
         this.travelHelp = travelHelp;
+    }
+
+    public String getFullNameEN() {
+        return fullNameEN;
+    }
+
+    public void setFullNameEN(String fullNameEN) {
+        this.fullNameEN = fullNameEN;
+    }
+
+    public String getBiographyEN() {
+        return biographyEN;
+    }
+
+    public void setBiographyEN(String biographyEN) {
+        this.biographyEN = biographyEN;
+    }
+
+    public String getSpeakerBackground() {
+        return speakerBackground;
+    }
+
+    public void setSpeakerBackground(String speakerBackground) {
+        this.speakerBackground = speakerBackground;
     }
 
     public List<ParticipantComment> getCommentList() {
@@ -243,7 +274,9 @@ public class Participant extends Person {
         if (city != null ? !city.equals(that.city) : that.city != null) return false;
         if (employer != null ? !employer.equals(that.employer) : that.employer != null) return false;
         if (biography != null ? !biography.equals(that.biography) : that.biography != null) return false;
-        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (biographyEN != null ? !biographyEN.equals(that.biographyEN) : that.biographyEN != null) return false;
+        if (fullNameEN != null ? !fullNameEN.equals(that.fullNameEN) : that.fullNameEN != null) return false;
+        if (speakerBackground != null ? !speakerBackground.equals(that.speakerBackground) : that.speakerBackground != null) return false;
         if (travelHelp != null ? !travelHelp.equals(that.travelHelp) : that.travelHelp != null) return false;
         if (!isEquals(emails, that.emails))
             return false;
@@ -265,7 +298,9 @@ public class Participant extends Person {
         result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (employer != null ? employer.hashCode() : 0);
         result = 31 * result + (biography != null ? biography.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (biographyEN != null ? biographyEN.hashCode() : 0);
+        result = 31 * result + (fullNameEN != null ? fullNameEN.hashCode() : 0);
+        result = 31 * result + (speakerBackground != null ? speakerBackground.hashCode() : 0);
         result = 31 * result + (travelHelp != null ? travelHelp.hashCode() : 0);
         result = 31 * result + (commentList != null ? commentList.size() : 0);
         return result;

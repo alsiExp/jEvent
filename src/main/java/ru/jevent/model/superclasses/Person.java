@@ -13,10 +13,8 @@ import javax.persistence.MappedSuperclass;
 public class Person extends BaseEntity {
 
     @NotEmpty
-    @Column(name = "first_name", nullable = false)
-    protected String firstName;
-    @Column(name = "last_name")
-    protected String lastName;
+    @Column(name = "full_name", nullable = false)
+    protected String fullName;
 
     // see http://stackoverflow.com/questions/5596518/read-enum-and-its-fields-from-a-database-jpa
     @Column(name = "sex")
@@ -34,32 +32,26 @@ public class Person extends BaseEntity {
     public Person() {
     }
 
-    public Person(String firstName, String lastName, Sex sex, boolean enabled, String photoURL) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Person(String fullName, Sex sex, boolean enabled, String photoURL) {
+        this.fullName = fullName;
         this.sex = sex;
         this.enabled = enabled;
         this.photoURL = photoURL;
     }
 
-    public Person(Long id, String firstName, String lastName, Sex sex, String photoURL) {
+    public Person(Long id, String fullName, String lastName, Sex sex, String photoURL) {
         super(id);
-        this.firstName = firstName;
+        this.fullName = fullName;
         this.sex = sex;
-        this.lastName = lastName;
         this.photoURL = photoURL;
     }
 
     public String getFullName() {
-        return this.getFirstName() + " " + this.getLastName();
+        return fullName;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFullName(String firstName) {
+        this.fullName = firstName;
     }
 
     public Sex getSex() {
@@ -68,14 +60,6 @@ public class Person extends BaseEntity {
 
     public void setSex(Sex sex) {
         this.sex = sex;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public boolean isEnabled() {
@@ -103,8 +87,7 @@ public class Person extends BaseEntity {
         Person person = (Person) o;
 
         if (enabled != person.enabled) return false;
-        if (firstName != null ? !firstName.equals(person.firstName) : person.firstName != null) return false;
-        if (lastName != null ? !lastName.equals(person.lastName) : person.lastName != null) return false;
+        if (fullName != null ? !fullName.equals(person.fullName) : person.fullName != null) return false;
         if (sex != person.sex) return false;
         return photoURL != null ? photoURL.equals(person.photoURL) : person.photoURL == null;
 
@@ -113,8 +96,7 @@ public class Person extends BaseEntity {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
-        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        result = 31 * result + (fullName != null ? fullName.hashCode() : 0);
         result = 31 * result + (sex != null ? sex.hashCode() : 0);
         result = 31 * result + (enabled ? 1 : 0);
         result = 31 * result + (photoURL != null ? photoURL.hashCode() : 0);
@@ -124,8 +106,7 @@ public class Person extends BaseEntity {
     @Override
     public String toString() {
         return "Person{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                "name='" + fullName + '\'' +
                 ", sex=" + sex +
                 ", enabled=" + enabled +
                 ", photoURL='" + photoURL + '\'' +

@@ -106,7 +106,7 @@ function renderParticipantRatings( data, type, row ) {
         var str = '<div class="participant-rating-container">';
         $.each(data, function (key, item) {
             if (item.rating > 0) {
-                str += '<div>' + item.eventName + ' = ' + item.rating + '%</div>';
+                str += '<div>' + item.eventName + ' = ' + item.rating + '</div>';
             }
         });
         str +='</div>';

@@ -99,7 +99,7 @@ public class ParticipantServiceTest {
     @Test
     public void testUpdate() throws Exception {
         Participant participant = service.get(100004L);
-        participant.setDescription("Actual test description");
+        participant.setBiography("Actual test bio");
         service.update(participant);
         Participant savedParticipant = service.get(participant.getId());
         if (!savedParticipant.equals(participant)) {

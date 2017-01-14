@@ -50,8 +50,8 @@ public class ParticipantAjaxController {
 
     @RequestMapping(method = RequestMethod.POST)
     public void update(@RequestParam("participantId") long id,
-                       @RequestParam("firstName") String firstName,
-                       @RequestParam("lastName") String lastName,
+                       @RequestParam("fullName") String fullName,
+                       @RequestParam("fullNameEN") String fullNameEN,
                        @RequestParam("sex") Sex sex,
                        @RequestParam("birthday") LocalDateTime birthday,
                        @RequestParam("registered") LocalDateTime registered,
@@ -63,11 +63,12 @@ public class ParticipantAjaxController {
                        @RequestParam("city") String city,
                        @RequestParam("employer") String employer,
                        @RequestParam("bio") String biography,
-                       @RequestParam("description") String description,
+                       @RequestParam("bioEN") String biographyEN,
+                       @RequestParam("speakerBackground") String speakerBackground,
                        @RequestParam("travelHelp") String travelHelp) {
         Participant participant = new Participant();
-        participant.setFirstName(firstName);
-        participant.setLastName(lastName);
+        participant.setFullName(fullName);
+        participant.setFullNameEN(fullNameEN);
         participant.setSex(sex);
         participant.setBirthDay(birthday);
         participant.setRegistered(registered);
@@ -79,7 +80,8 @@ public class ParticipantAjaxController {
         participant.setCity(city);
         participant.setEmployer(employer);
         participant.setBiography(biography);
-        participant.setDescription(description);
+        participant.setBiographyEN(biographyEN);
+        participant.setSpeakerBackground(speakerBackground);
         participant.setTravelHelp(travelHelp);
         if(id == 0) {
             helper.create(participant);

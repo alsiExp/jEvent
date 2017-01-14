@@ -21,14 +21,12 @@ public class MockParticipantRepositoryImpl implements ParticipantRepository {
     static {
         participant = new Participant();
         participant.setId(42L);
-        participant.setFirstName("Алексей");
-        participant.setLastName("Шипилев");
+        participant.setFullName("Алексей Шипилев");
         participant.setSex(Sex.MALE);
         participant.setBirthDay(LocalDateTime.now().minus(39, ChronoUnit.YEARS));
         participant.setRegistered(LocalDateTime.now().minus(6, ChronoUnit.DAYS));
         participant.addEmail(new Email());
         participant.setPhone("+7-000-000");
-        participant.setDescription("description");
     }
 
     public static Participant getParticipant() {
