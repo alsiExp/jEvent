@@ -110,7 +110,6 @@ public class TestData {
         part.setCity("Cupertino, CA");
         part.setEmployer("JFrog");
         part.setBiography("Developer advocate в компании JFrog, и делает в жизни ровно 3 вещи: зависает с разработчиками Bintray и Artifactory, пописывает для них код, и рассказывает о впечатлениях в блогах и на конференциях. И так несколько лет подряд, ни минуты об этом не жалея.");
-        part.setTravelHelp("");
         part.setSex(Sex.MALE);
         part.setEnabled(true);
         part.setPhotoURL("http://2016.jpoint.ru/img/baruch.png");
@@ -125,6 +124,12 @@ public class TestData {
         email.setMain(true);
         email.setOwner(part);
         part.addEmail(email);
+
+        Twitter t = new Twitter();
+        t.setId(100017L);
+        t.setAccountLink("https://twitter.com/jbaruch");
+
+        part.setTwitter(t);
 
         part.getCommentList();
 

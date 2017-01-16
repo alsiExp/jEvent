@@ -102,4 +102,9 @@ public class ParticipantAjaxController {
         speechHelper.delete(id);
     }
 
+    @RequestMapping(value = "/{speakerId}/speeches/{id}", method = RequestMethod.GET)
+    public Speech getSpeech(@PathVariable("id") long id) {
+        return speechHelper.get(id);
+    }
+
 }

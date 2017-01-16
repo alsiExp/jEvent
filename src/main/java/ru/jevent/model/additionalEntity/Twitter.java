@@ -1,5 +1,6 @@
 package ru.jevent.model.additionalEntity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.springframework.util.StringUtils;
 import ru.jevent.model.Participant;
 import ru.jevent.model.superclasses.BaseEntity;
@@ -10,10 +11,11 @@ import javax.persistence.*;
 @Table(name = "twitteraccs")
 public class Twitter extends BaseEntity {
 
-    private final static String baseURL = "https://github.com/";
+    private final static String baseURL = "https://twitter.com/";
 
     @Column(name = "account_link")
     private String accountLink;
+    @JsonBackReference
     @OneToOne(fetch= FetchType.LAZY, mappedBy="twitter")
     private Participant owner;
 

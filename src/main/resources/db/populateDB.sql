@@ -98,9 +98,9 @@ VALUES
    'Tim is a teacher, author, and technology leader with DataStax, where he serves as the Director of Training. He can frequently be found at speaking at conferences in the United States and all over the world. He is the co-presenter of various O’Reilly training videos on topics ranging from Git to Distributed Systems, and is the author of Gradle Beyond the Basics. He tweets as @tlberglund, blogs very occasionally at http://timberglund.com, and lives in Littleton, CO, USA with the wife of his youth and their youngest child.'
   );
 
-INSERT INTO twitteraccs (account_link, owner_id)
+INSERT INTO twitteraccs (account_link)
 VALUES
-  ('https://twitter.com/tlberglund', 100014);
+  ('tlberglund');
 
 INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
 VALUES
@@ -118,9 +118,9 @@ VALUES
 
 
 -- baruh sadogursky
-INSERT INTO twitteraccs (account_link, owner_id)
+INSERT INTO twitteraccs (account_link)
 VALUES
-  ('https://twitter.com/jbaruch', 100004);
+  ('jbaruch');
 
 INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
 VALUES
@@ -147,9 +147,9 @@ VALUES
    'Работает над производительностью Java около 10 лет. За это время он успел позаниматься Apache Harmony в Intel, затем перешёл в Sun Microsystems, а потом и в Oracle, где сегодня работает над Sun/Oracle JDK, главным образом над изменениями, связанными с производительностью JVM, библиотек классов, фреймворков и приложений. Разрабатывает и поддерживает под-проекты OpenJDK: jmh, jcstress, jol. Работает в экспертных группах, связанных с формализацией, тестированием и производительностью concurrency.'
   );
 
-INSERT INTO twitteraccs (account_link, owner_id)
+INSERT INTO twitteraccs (account_link)
 VALUES
-  ('https://twitter.com/shipilev', 100019);
+  ('shipilev');
 
 INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
 VALUES
@@ -182,9 +182,9 @@ VALUES
    '<p>Егор уже более десяти лет CTO в Teamed.io — софтверной компании с уникальной методологией разработки в распределенном режиме. Егор регулярно пишет на www.yegor256.com, пишет на Java в rultor.com, takes.org и jcabi.com. Егор живет то в Пало-Альто, то в Киеве.</p><p>Поищите в Гугле «ORM» и найдете статью Егора на эту тему. Тема очень интересна для обсуждения, в основном потому, что резко протестует против сложившихся стандартов работы с базами данных в Java. Против JPA и Hibernate, в частности.</p>'
   );
 
-INSERT INTO twitteraccs (account_link, owner_id)
+INSERT INTO twitteraccs (account_link)
 VALUES
-  ('https://twitter.com/yegor256', 100023);
+  ('yegor256');
 
 INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
 VALUES
@@ -211,9 +211,9 @@ VALUES
    '<p>Виктор Гамов — Senior Solution Architect в компании Hazelcast, которая занимается разработкой продукта для распределенной обработки данных (in-memory data grid) с открытым исходным кодом. Виктор помогает клиентам финансового и телекоммуникационного сектора в проектировании и разработке высоконагруженных систем. До этого он накопил большой опыт, участвуя в качестве консультанта, во множестве проектов Java/JavaScript/HTML5, что легло в основу книги «Enterprise Web Development» издательства O’Reilly, которую он писал в соавторстве с известными персонами из Java мира.</p><p>В свободное от работы время Виктор помогает с организацией встреч Princetown JUG и NYC Hazelcast User Group, а также выступает на международных конференциях, пишет в твитер, и поскольку совершенно неутомим, ведет «Правильный подкаст для IT-шников» «Разбор Полетов» и не забывает про качалку и бицуху.</p>'
   );
 
-INSERT INTO twitteraccs (account_link, owner_id)
+INSERT INTO twitteraccs (account_link)
 VALUES
-  ('https://twitter.com/gamussa', 100026);
+  ('gamussa');
 
 INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
 VALUES
@@ -241,9 +241,9 @@ VALUES
    '<p>Специализируется на создании ПО для высоконагруженных серверов в проекте Одноклассники. С увлечением копается во внутренностях JVM и JDK. Ранее работал в Sun Microsystems над виртуальной машиной HotSpot.</p>'
   );
 
-INSERT INTO twitteraccs (account_link, owner_id)
+INSERT INTO twitteraccs (account_link)
 VALUES
-  ('https://twitter.com/AndreiPangin', 100029);
+  ('AndreiPangin');
 
 INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
 VALUES
@@ -271,9 +271,9 @@ VALUES
    '<p>Практикующий Java-техлид и Delivery Manager. Эксперт в разработке на Java, Agile-практиках и управлении проектами. Разрабатывает на Java более 12 лет, специализируется на разработке сложных распределённых масштабируемых систем. Активный участник и докладчик многих международных конференций. Основатель и тренер тренингового центра XP Injection. Организатор и идеолог конференций Selenium Camp, JEEConf, XP Days Ukraine и IT Brunch. Основатель Клуба анонимных разработчиков.</p>'
   );
 
-INSERT INTO twitteraccs (account_link, owner_id)
+INSERT INTO twitteraccs (account_link)
 VALUES
-  ('https://twitter.com/xpinjection', 100032);
+  ('xpinjection');
 
 INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
 VALUES
@@ -300,9 +300,9 @@ VALUES
    'C недавних пор работает в JetBrains, занимается статическим анализатором кода IntelliJ IDEA, инспекциями и квик-фиксами. Также он кидает патчики в OpenJDK, разрабатывает опенсорсную библиотеку StreamEx и анализатор байткода Java HuntBugs. Известен на Хабрахабре как lany.'
   );
 
-INSERT INTO twitteraccs (account_link, owner_id)
+INSERT INTO twitteraccs (account_link)
 VALUES
-  ('https://twitter.com/tagir_valeev', 100035);
+  ('tagir_valeev');
 
 INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
 VALUES
@@ -450,3 +450,11 @@ INSERT INTO participants_comments (participant_id, content, date, user_id)
 VALUES
   (100019 ,'Комментарий про Алексея Шипилёва', TIMESTAMP '2016-09-18 17:00', 100010),
   (100029 ,'Комментарий про Андрея Паньгина', TIMESTAMP '2016-09-18 17:00', 100010);
+
+UPDATE participants SET twitter_id = 100036 WHERE id = 100035;
+UPDATE participants SET twitter_id = 100033 WHERE id = 100032;
+UPDATE participants SET twitter_id = 100030 WHERE id = 100029;
+UPDATE participants SET twitter_id = 100027 WHERE id = 100026;
+UPDATE participants SET twitter_id = 100024 WHERE id = 100023;
+UPDATE participants SET twitter_id = 100020 WHERE id = 100019;
+UPDATE participants SET twitter_id = 100017 WHERE id = 100004;

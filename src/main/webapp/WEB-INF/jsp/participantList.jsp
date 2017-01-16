@@ -182,8 +182,7 @@
 
                             <div class="col-xs-9">
                                 <fmt:message key="app.html.enabled" var="htmlOn"/>
-                                <textarea class="form-control" id="bio" name="bio" placeholder="${htmlOn}" >
-                                </textarea>
+                                <textarea class="form-control" id="bio" name="bio" placeholder="${htmlOn}"></textarea>
                             </div>
                         </div>
 
@@ -191,8 +190,7 @@
                             <label for="bioEN" class="control-label col-xs-3"><fmt:message key="app.table.bioEN"/></label>
 
                             <div class="col-xs-9">
-                                <textarea class="form-control" id="bioEN" name="bioEN" placeholder="${htmlOn}" >
-                                </textarea>
+                                <textarea class="form-control" id="bioEN" name="bioEN" placeholder="${htmlOn}"></textarea>
                             </div>
                         </div>
 

@@ -229,6 +229,107 @@ function addInputAdditionalEmail(containerId, btnId, pHolderText) {
 
 /**** end common section ****/
 
+/**** speaker js ****/
+function makeSpeechTableEditable() {
+    table = $('#speechTable').DataTable();
+    mainForm = $('#detailsSpeechForm');
+    modal = $('#editSpeech');
+}
+
+
+function updateSpeechRow(id){
+    clearForm(mainForm);
+    $.get(ajaxUrl + id, function (data) {
+        $.each(data, function (key, value) {
+            mainForm.find("input[name='" + key + "']").val(value);
+            mainForm.find("textarea[name='" + key + "']").val(value);
+        });
+
+    });
+
+}
+
+
+function initSpeaker() {
+    $.ajax({
+        type: "GET",
+        url: "../ajax/participants/" + speakerID,
+        success: function (data) {
+            speaker = data;
+            addSpeakerInfo();
+        }
+    });
+}
+
+function addSpeakerInfo(){
+    $('#page-name').html('Спикер: ' +speaker.fullName);
+    $('#photo').html('<img class="img-circle" src="' + speaker.photoURL + '" />');
+    var phone = '-';
+    if(speaker.phone != null) {
+        phone = speaker.phone;
+    }
+    var emails = '';
+    speaker.emails.forEach(function (e) {
+        if(e.main = true) {
+            emails += '<div> <strong>' + e.email + '</strong></div>';
+        } else {
+            emails += '<div>' + e.email + '</div>';
+        }
+    });
+    var twitter = '-';
+    if(speaker.twitter != null) {
+        twitter = '<a href="' + speaker.twitter.fullLink + '" target="_blank"> @' + speaker.twitter.accountLink + '</a>';
+    }
+    var github = '-';
+    if(speaker.github != null) {
+        twitter = '<a href="' + speaker.github.fullLink + '" target="_blank"> ' + speaker.github.accountLink + '</a>';
+    }
+    var skype = '-';
+    if(speaker.skype != null) {
+        skype = speaker.skype;
+    }
+    var employer = '-';
+    if(speaker.employer != null) {
+        employer = speaker.employer;
+    }
+    var city = '-';
+    if(speaker.city != null) {
+        city = speaker.city;
+    }
+
+    $('#contacts').html(
+        '<div class="row"><div class="col-xs-4"><strong>Phone:</strong></div> <div class="col-xs-8 speaker-info-text">'+ phone + '</div></div>' +
+        '<div class="row"><div class="col-xs-4"><strong>Emails:</strong></div> <div class="col-xs-8 speaker-info-text">'+ emails + '</div></div>' +
+        '<div class="row"><div class="col-xs-4"><strong>Twitter:</strong></div> <div class="col-xs-8 speaker-info-text">'+ twitter + '</div></div>' +
+        '<div class="row"><div class="col-xs-4"><strong>Skype:</strong></div> <div class="col-xs-8 speaker-info-text">'+ skype + '</div></div>' +
+        '<div class="row"><div class="col-xs-4"><strong>Github:</strong></div> <div class="col-xs-8 speaker-info-text">'+ github + '</div></div>' +
+
+        '<div class="row speaker-info-separator"><div class="col-xs-4"><strong>Employer:</strong></div> <div class="col-xs-8 speaker-info-text">'+ employer + '</div></div>' +
+        '<div class="row"><div class="col-xs-4"><strong>City:</strong></div> <div class="col-xs-8 speaker-info-text">'+ city + '</div></div>'
+    );
+    var bioRU = '-';
+    if(speaker.biography != null) {
+        bioRU =speaker.biography;
+    }
+    var bioEN = '-';
+    if(speaker.biographyEN != null) {
+        bioEN =speaker.biography;
+    }
+    var background = '-';
+    if(speaker.speakerBackground != null) {
+        background =speaker.speakerBackground;
+    }
+
+    $('#bio').html(
+        '<div class="speaker-bio-ru"><strong>Bio:</strong> ' + bioRU + '</div>' +
+        '<div class="speaker-bio-en"><strong>BioEN:</strong> ' + bioEN + '</div>' +
+        '<div class="speaker-background"><strong>Background:</strong> ' + background + '</div>'
+    );
+}
+
+/**** end speaker js ****/
+
+
 /**** participants js ****/
 
 function makeParticipantTableEditable(ajaxUrl) {

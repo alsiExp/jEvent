@@ -232,14 +232,14 @@ visitor list
     border-width: 0;
 }
 
-.visitor-img {
+.speaker-photo {
     text-align: center;
     margin-bottom: 10px;
 }
 
-.visitor-img img {
-    max-width: 120px;
-    max-height: 120px;
+.speaker-photo img {
+    max-width: 140px;
+    max-height: 140px;
     padding: 3px;
     border: 1px solid #c8f9bc;
 }
@@ -250,33 +250,16 @@ visitor list
     margin-right: 36px;
 }
 
-.visitor-description {
-    margin-bottom: 20px;
+.speaker-info {
+    margin-bottom: 15px;
 }
-
-.visitor-info {
+.speaker-info-text {
     color: #565a5f;
-    margin-left: 10px;
+}
+.speaker-info-separator {
+    margin-top: 7px;
 }
 
-.visitor-icons {
-    text-align: center;
-    margin-right: 36px;
-}
-
-.visitor-icons .btn-send-message {
-    font-size: 14px;
-    border-radius: 2em;
-    padding: 6px 18px;
-}
-
-.visitor-notes blockquote {
-    border-left: 3px solid #1b809e;
-    font-size: 13px;
-    margin: 0 0 20px;
-    padding: 5px 10px;
-    line-height: 1.1;
-}
 
 .menu-control-panel {
     padding: 20px 0;
