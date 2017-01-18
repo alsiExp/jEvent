@@ -3,6 +3,7 @@ package ru.jevent.repository.jpa;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.jevent.model.Speech;
+import ru.jevent.model.additionalEntity.SpeechTag;
 import ru.jevent.repository.SpeechRepository;
 
 import javax.persistence.EntityManager;
@@ -42,5 +43,11 @@ public class JpaSpeechRepositoryImpl implements SpeechRepository {
     @Override
     public List<Speech> getByPartner(long id) {
         return em.createNamedQuery(Speech.GET_BY_PARTNER, Speech.class).setParameter("id", id).getResultList();
+    }
+
+    @Override
+    public List<SpeechTag> getPossibleTags(long speechId) {
+        return em.createNamedQuery(Speech.GET_POSSIBLE_TAGS, SpeechTag.class).setParameter("id", speechId).getResultList();
+        /*return em.createNamedQuery(Speech.GET_POSSIBLE_TAGS, SpeechTag.class).getResultList();*/
     }
 }

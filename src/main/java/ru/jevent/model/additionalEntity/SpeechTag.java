@@ -45,9 +45,9 @@ public class SpeechTag extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Email{" +
+        return "SpeechTag{" +
                 super.toString() +
-                ", email='" + tag + '\'' +
+                ", tag='" + tag + '\'' +
                 "} ";
     }
 }

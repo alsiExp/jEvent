@@ -3,6 +3,7 @@ package ru.jevent.repository.mock;
 import org.springframework.stereotype.Repository;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Speech;
+import ru.jevent.model.additionalEntity.SpeechTag;
 import ru.jevent.repository.SpeechRepository;
 
 import java.util.Arrays;
@@ -37,5 +38,10 @@ public class MockSpeechRepositoryImpl implements SpeechRepository {
     @Override
     public List<Speech> getByPartner(long id) {
         return Arrays.asList(speech);
+    }
+
+    @Override
+    public List<SpeechTag> getPossibleTags(long speechId) {
+        return null;
     }
 }

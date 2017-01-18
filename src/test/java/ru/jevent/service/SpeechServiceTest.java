@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.TestData;
 import ru.jevent.model.Partner;
 import ru.jevent.model.Speech;
+import ru.jevent.model.additionalEntity.SpeechTag;
 import ru.jevent.util.DbPopulator;
 import ru.jevent.util.exception.NotFoundException;
 
@@ -92,6 +93,29 @@ public class SpeechServiceTest {
         service.update(speech);
         Speech speechdb =service.get(100028L);
         if(!(speech.getName().equals(speechdb.getName()))){
+            throw new Exception();
+        }
+    }
+
+    @Test
+    public void addTag() throws Exception {
+        Speech speech = service.get(100028L);
+        SpeechTag tag = new SpeechTag();
+        tag.setTag("JCache");
+        speech.addTag(tag);
+        service.update(speech);
+
+        Speech speechWithTag = service.get(100028L);
+        if(speechWithTag.getTags().isEmpty()) {
+            throw new Exception();
+        }
+
+    }
+
+    @Test
+    public void getPossibleTags() throws Exception {
+        List<SpeechTag> tags = service.getPossibleTags(100021L);
+        if(tags.size() == 0) {
             throw new Exception();
         }
     }

@@ -84,6 +84,7 @@ function renderSpeechTags( data, type, row ) {
             str += '<div class="participant-tag" data-tag-id="' + obj.id +'">#' + obj.tag + '</div>';
 
         });
+        str += '<div class="participant-tag"><a class="btn btn-xs btn-success" onclick="addSpeakerTag(' + row.id + ')">Add Tag</a></div>';
         return str;
     }
     return data;
@@ -230,6 +231,12 @@ function addInputAdditionalEmail(containerId, btnId, pHolderText) {
 /**** end common section ****/
 
 /**** speaker js ****/
+
+function addSpeakerTag(speechId) {
+    console.log(speechId);
+}
+
+
 function makeSpeechTableEditable() {
     table = $('#speechTable').DataTable();
     mainForm = $('#detailsSpeechForm');

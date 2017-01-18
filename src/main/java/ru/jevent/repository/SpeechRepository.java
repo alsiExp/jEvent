@@ -1,6 +1,7 @@
 package ru.jevent.repository;
 
 import ru.jevent.model.Speech;
+import ru.jevent.model.additionalEntity.SpeechTag;
 
 import java.util.List;
 
@@ -13,5 +14,7 @@ public interface SpeechRepository {
     Speech get(long id);
 
     List<Speech> getByPartner(long id);
+
+    List<SpeechTag> getPossibleTags(long speechId);
 
 }

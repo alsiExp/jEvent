@@ -18,7 +18,11 @@ import java.util.stream.Collectors;
 @Table(name = "speeches")
 @NamedQueries({
         @NamedQuery(name = Speech.DELETE, query = "DELETE from Speech s where s.id = :id"),
-        @NamedQuery(name = Speech.GET_BY_PARTNER, query = "SELECT s FROM Speech s  LEFT JOIN FETCH s.partner p where p.id = :id")
+        @NamedQuery(name = Speech.GET_BY_PARTNER, query = "SELECT s FROM Speech s  LEFT JOIN FETCH s.partner p where p.id = :id"),
+        @NamedQuery(name = Speech.GET_POSSIBLE_TAGS, query = "SELECT t FROM SpeechTag t")
+        /*@NamedQuery(name = Speech.GET_POSSIBLE_TAGS, query = "SELECT t FROM SpeechTag t WHERE t.id NOT IN (SELECT s.tags FROM Speech s WHERE s.id  = :id)")*/
+        /*@NamedQuery(name = Speech.GET_POSSIBLE_TAGS, query = "SELECT s.tags FROM Speech s WHERE s.id  = :id")*/
+
 })
 public class Speech extends NamedEntity {
 
@@ -47,6 +51,7 @@ public class Speech extends NamedEntity {
 
     public static final String DELETE = "Speech.delete";
     public static final String GET_BY_PARTNER = "Speech.byPartner";
+    public static final String GET_POSSIBLE_TAGS = "Tags.bySpeech";
 
 
     @Column(name = "name_en")
@@ -281,6 +286,12 @@ public class Speech extends NamedEntity {
 
     public void setEvent(Event event) {
         this.event = event;
+    }
+
+    public void addTag(SpeechTag tag) {
+        if(tag != null) {
+            getTags().add(tag);
+        }
     }
 
     public long getEventId() {

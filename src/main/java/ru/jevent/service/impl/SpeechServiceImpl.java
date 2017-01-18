@@ -3,6 +3,7 @@ package ru.jevent.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.jevent.model.Speech;
+import ru.jevent.model.additionalEntity.SpeechTag;
 import ru.jevent.repository.SpeechRepository;
 import ru.jevent.service.SpeechService;
 import ru.jevent.util.exception.ExceptionUtil;
@@ -43,5 +44,10 @@ public class SpeechServiceImpl implements SpeechService{
     @Override
     public List<Speech> getByPartner(long id) {
         return repository.getByPartner(id);
+    }
+
+    @Override
+    public List<SpeechTag> getPossibleTags(long speechId) {
+        return repository.getPossibleTags(speechId);
     }
 }

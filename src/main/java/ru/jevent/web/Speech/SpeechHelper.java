@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Speech;
+import ru.jevent.model.additionalEntity.SpeechTag;
 import ru.jevent.service.SpeechService;
 
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class SpeechHelper {
@@ -41,5 +43,9 @@ public class SpeechHelper {
     public List<Speech> getByPartner(long id) {
         LOG.info("get speeches by partner " + id);
         return service.getByPartner(id);
+    }
+
+    public Set<SpeechTag> getPossibleTags (long speechId) {
+        return null;
     }
 }
