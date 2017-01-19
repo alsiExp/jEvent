@@ -232,8 +232,53 @@ function addInputAdditionalEmail(containerId, btnId, pHolderText) {
 
 /**** speaker js ****/
 
+function initSpeechForm() {
+    $('#add-new-tag').click(function () {
+        var tagName = tagForm.find('#new-tag').val();
+        if(tagName != null){
+            tagContainer.append(
+                '<label class="checkbox-inline">' +
+                '<input type="checkbox" id="inlineCheckbox1" name="tags" value="0-' + tagName + '">' + tagName +
+                '</label>'
+            );
+            tagForm.find('#new-tag').val('');
+        }
+    });
+    tagForm.submit(function () {
+            $.ajax({
+                type: "POST",
+                url: "../ajax/speeches/tags",
+                data: tagForm.serialize(),
+                success: function (data) {
+                    tagModal.modal('hide');
+                    updateTable();
+                    successNote('Saved');
+                }
+            });
+            return false;
+        });
+}
+
 function addSpeakerTag(speechId) {
-    console.log(speechId);
+    tagForm.find('#speechIdTags').val(speechId);
+    tagContainer.html('');
+    tagForm.find('#new-tag').val('');
+
+    $.ajax({
+        type: "GET",
+        url: "../ajax/speeches/" + speechId + "/tags/",
+        success: function (data) {
+            data.forEach(function (tag) {
+                tagContainer.append(
+                    '<label class="checkbox-inline">' +
+                        '<input type="checkbox" id="inlineCheckbox1" name="tags" value="' + tag.id + '-' + tag.tag + '">' + tag.tag +
+                    '</label>'
+                );
+
+            });
+            tagModal.modal();
+        }
+    });
 }
 
 

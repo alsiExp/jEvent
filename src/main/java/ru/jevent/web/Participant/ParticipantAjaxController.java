@@ -7,7 +7,6 @@ import ru.jevent.model.Participant;
 import ru.jevent.model.Speech;
 import ru.jevent.model.additionalEntity.Email;
 import ru.jevent.model.additionalEntity.GitHub;
-import ru.jevent.model.additionalEntity.SpeechTag;
 import ru.jevent.model.additionalEntity.Twitter;
 import ru.jevent.model.enums.Sex;
 import ru.jevent.web.Speech.SpeechHelper;
@@ -108,8 +107,4 @@ public class ParticipantAjaxController {
         return speechHelper.get(id);
     }
 
-    @RequestMapping(value = "/{speakerId}/speeches/{id}/tags", method = RequestMethod.GET)
-    public Set<SpeechTag> getAllSpeechTags(@PathVariable("id") long id) {
-        return speechHelper.getPossibleTags(id);
-    }
 }

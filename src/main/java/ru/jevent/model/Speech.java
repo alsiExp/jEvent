@@ -19,10 +19,7 @@ import java.util.stream.Collectors;
 @NamedQueries({
         @NamedQuery(name = Speech.DELETE, query = "DELETE from Speech s where s.id = :id"),
         @NamedQuery(name = Speech.GET_BY_PARTNER, query = "SELECT s FROM Speech s  LEFT JOIN FETCH s.partner p where p.id = :id"),
-        @NamedQuery(name = Speech.GET_POSSIBLE_TAGS, query = "SELECT t FROM SpeechTag t")
-        /*@NamedQuery(name = Speech.GET_POSSIBLE_TAGS, query = "SELECT t FROM SpeechTag t WHERE t.id NOT IN (SELECT s.tags FROM Speech s WHERE s.id  = :id)")*/
-        /*@NamedQuery(name = Speech.GET_POSSIBLE_TAGS, query = "SELECT s.tags FROM Speech s WHERE s.id  = :id")*/
-
+        @NamedQuery(name = Speech.GET_POSSIBLE_TAGS, query = "SELECT t FROM SpeechTag t WHERE NOT EXISTS (SELECT s FROM Speech s WHERE s.id  = :id AND t MEMBER of s.tags)")
 })
 public class Speech extends NamedEntity {
 
@@ -105,7 +102,7 @@ public class Speech extends NamedEntity {
     @JsonBackReference
     private Set<Participant> speakers;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name = "speeches_speech_tags",
             joinColumns = @JoinColumn(name = "speech_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id", unique = true))
@@ -291,6 +288,12 @@ public class Speech extends NamedEntity {
     public void addTag(SpeechTag tag) {
         if(tag != null) {
             getTags().add(tag);
+        }
+    }
+
+    public void addTag(Set<SpeechTag> tags) {
+        if(tags != null) {
+            getTags().addAll(tags);
         }
     }
 

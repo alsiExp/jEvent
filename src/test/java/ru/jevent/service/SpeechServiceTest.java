@@ -110,6 +110,13 @@ public class SpeechServiceTest {
             throw new Exception();
         }
 
+        speech = service.get(100021L);
+        speech.addTag(tag);
+        service.update(speech);
+        speechWithTag = service.get(100021L);
+        if(speechWithTag.getTags().isEmpty()) {
+            throw new Exception();
+        }
     }
 
     @Test

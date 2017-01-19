@@ -48,6 +48,5 @@ public class JpaSpeechRepositoryImpl implements SpeechRepository {
     @Override
     public List<SpeechTag> getPossibleTags(long speechId) {
         return em.createNamedQuery(Speech.GET_POSSIBLE_TAGS, SpeechTag.class).setParameter("id", speechId).getResultList();
-        /*return em.createNamedQuery(Speech.GET_POSSIBLE_TAGS, SpeechTag.class).getResultList();*/
     }
 }

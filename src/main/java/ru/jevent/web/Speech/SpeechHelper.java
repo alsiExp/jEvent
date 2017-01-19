@@ -8,7 +8,6 @@ import ru.jevent.model.additionalEntity.SpeechTag;
 import ru.jevent.service.SpeechService;
 
 import java.util.List;
-import java.util.Set;
 
 @Component
 public class SpeechHelper {
@@ -45,7 +44,8 @@ public class SpeechHelper {
         return service.getByPartner(id);
     }
 
-    public Set<SpeechTag> getPossibleTags (long speechId) {
-        return null;
+    public List<SpeechTag> getPossibleTags (long speechId) {
+        LOG.info("get possible tags for speech " + speechId);
+        return service.getPossibleTags(speechId);
     }
 }
