@@ -77,6 +77,13 @@ function renderDate( data, type, row ) {
 }
 
 /* speech */
+
+function renderSpeechName( data, type, row ) {
+    if(type == 'display') {
+        return '<a href="../speech/'+ row.id + '/"> ' + data + '</a>';
+    }
+}
+
 function renderSpeechTags( data, type, row ) {
     if(type == 'display') {
         var str = "";
@@ -84,7 +91,7 @@ function renderSpeechTags( data, type, row ) {
             str += '<div class="participant-tag" data-tag-id="' + obj.id +'">#' + obj.tag + '</div>';
 
         });
-        str += '<div class="participant-tag"><a class="btn btn-xs btn-success" onclick="addSpeakerTag(' + row.id + ')">Add Tag</a></div>';
+        str += '<div class="participant-tag"><a class="btn btn-xs btn-success" onclick="addSpeakerTag(' + row.id + ')">Edit Tags</a></div>';
         return str;
     }
     return data;
@@ -230,15 +237,59 @@ function addInputAdditionalEmail(containerId, btnId, pHolderText) {
 
 /**** end common section ****/
 
+
+/**** speech js ****/
+
+function initSpeech() {
+    $.ajax({
+        type: "GET",
+        url: "/ajax/speeches/" + speechId,
+        success: function (data) {
+            speech = data;
+            addSpeechInfo();
+        }
+    });
+}
+
+function addSpeechInfo() {
+    $('#page-name').html('Доклад: ' +speech.name);
+    var nameEN = '-';
+    if(speech.jiraStatus != null) {
+        nameEn = speech.jiraStatus;
+    }
+    var status =  '-';
+    if(speech.jiraStatus != null) {
+        status = '<button type="button" class="btn btn-xs btn-primary" disabled="disabled">' + nameEN + '</button>';
+    }
+    var sDesc = '-';
+    if(speech.shortDescription != null) {
+        sDesc = speech.shortDescription;
+    }
+    var sDescEN = '-';
+    if(speech.shortDescriptionEN != null) {
+        sDescEN = speech.shortDescriptionEN;
+    }
+
+
+    $('#speech-info').html(
+        '<div class="row"><div class="col-xs-4"><strong>Name (en):</strong></div> <div class="col-xs-8 speaker-info-text">'+ nameEN + '</div></div>' +
+        '<div class="row"><div class="col-xs-4"><strong>Jira Status:</strong></div> <div class="col-xs-8 speaker-info-text">'+ status + '</div></div>' +
+        '<div class="row"><div class="col-xs-4"><strong>Short Description:</strong></div> <div class="col-xs-8 speaker-info-text">'+ sDesc + '</div></div>' +
+        '<div class="row"><div class="col-xs-4"><strong>Short Description (en):</strong></div> <div class="col-xs-8 speaker-info-text">'+ sDescEN + '</div></div>'
+    );
+}
+
+/**** end speech js ****/
+
 /**** speaker js ****/
 
 function initSpeechForm() {
     $('#add-new-tag').click(function () {
         var tagName = tagForm.find('#new-tag').val();
-        if(tagName != null){
+        if(tagName != null && tagName != ''){
             tagContainer.append(
                 '<label class="checkbox-inline">' +
-                '<input type="checkbox" id="inlineCheckbox1" name="tags" value="0-' + tagName + '">' + tagName +
+                    '<input type="checkbox" id="inlineCheckbox1" name="tags" value="0-' + tagName + '">' + tagName +
                 '</label>'
             );
             tagForm.find('#new-tag').val('');
@@ -266,15 +317,25 @@ function addSpeakerTag(speechId) {
 
     $.ajax({
         type: "GET",
-        url: "../ajax/speeches/" + speechId + "/tags/",
+        url: "../ajax/speeches/tags/",
         success: function (data) {
             data.forEach(function (tag) {
                 tagContainer.append(
                     '<label class="checkbox-inline">' +
-                        '<input type="checkbox" id="inlineCheckbox1" name="tags" value="' + tag.id + '-' + tag.tag + '">' + tag.tag +
+                        '<input type="checkbox" id="' + tag.id + '" name="tags" value="' + tag.id + '-' + tag.tag + '">' + tag.tag +
                     '</label>'
                 );
 
+            });
+            $.ajax({
+                type: "GET",
+                url: "../ajax/speeches/" + speechId,
+                success: function (data) {
+                    data.tags.forEach(function (tag) {
+                        el = "#" + tag.id;
+                        tagContainer.find(el).click();
+                    });
+                }
             });
             tagModal.modal();
         }

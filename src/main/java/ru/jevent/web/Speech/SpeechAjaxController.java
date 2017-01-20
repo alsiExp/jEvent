@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.jevent.model.Speech;
 import ru.jevent.model.additionalEntity.SpeechTag;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/ajax/speeches")
@@ -28,20 +30,39 @@ public class SpeechAjaxController {
         helper.delete(id);
     }
 
+    @RequestMapping(value = "/tags", method = RequestMethod.GET)
+    public List<SpeechTag> getAllSpeechTags() {
+        return helper.getAllTags();
+    }
+
     @RequestMapping(value = "/{id}/tags", method = RequestMethod.GET)
-    public List<SpeechTag> getAllSpeechTags(@PathVariable("id") long id) {
+    public List<SpeechTag> getPossibleSpeechTags(@PathVariable("id") long id) {
         return helper.getPossibleTags(id);
     }
 
     @RequestMapping(value = "/tags", method = RequestMethod.POST)
     public void saveTags(@RequestParam("speechId") long id,
-                         @RequestParam("tags") String[] tags) {
+                         @RequestParam(value = "tags", required = false) String[] tags) {
 
-        if(tags != null){
-            Speech speech = helper.get(id);
-/*            speech.addTag(tags);
-            helper.update(speech);*/
+        Speech speech = helper.get(id);
+        Set<SpeechTag> tagSet = new HashSet<>();
+        if(tags != null) {
+            for (String s : tags) {
+                int index = s.indexOf('-');
+                SpeechTag tag = new SpeechTag();
+                Long tagId = Long.parseLong(s.substring(0, index));
+                tag.setTag(s.substring(index + 1));
+                if (tagId != 0) {
+                    tag.setId(tagId);
+                } else {
+                    helper.create(tag);
+                }
+                tagSet.add(tag);
+            }
         }
+
+        speech.setTags(tagSet);
+        helper.update(speech);
     }
 
 }

@@ -24,4 +24,10 @@ public class RootController {
         model.addAttribute("speakerId", speakerId);
         return "speaker";
     }
+
+    @RequestMapping(value = "/speech/{speechId}", method = RequestMethod.GET)
+    public String speech(@PathVariable String speechId, Model model) {
+        model.addAttribute("speechId", speechId);
+        return "speech";
+    }
 }

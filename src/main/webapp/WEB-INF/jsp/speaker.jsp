@@ -62,7 +62,7 @@
                 <datatables:column title="${event}" property="eventName"/>
 
                 <fmt:message key="app.speech" var="speech"/>
-                <datatables:column title="${speech}" property="name"/>
+                <datatables:column title="${speech}" property="name" sortable="false" renderFunction="renderSpeechName"/>
 
                 <fmt:message key="app.speech.rating" var="rating"/>
                 <datatables:column title="${rating}" property="rating"/>

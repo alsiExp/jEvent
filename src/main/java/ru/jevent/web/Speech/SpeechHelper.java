@@ -6,6 +6,7 @@ import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Speech;
 import ru.jevent.model.additionalEntity.SpeechTag;
 import ru.jevent.service.SpeechService;
+import ru.jevent.service.SpeechTagService;
 
 import java.util.List;
 
@@ -13,10 +14,12 @@ import java.util.List;
 public class SpeechHelper {
     private static final LoggerWrapper LOG = LoggerWrapper.get(Speech.class);
     private final SpeechService service;
+    private final SpeechTagService tagService;
 
     @Autowired
-    public SpeechHelper(SpeechService service) {
+    public SpeechHelper(SpeechService service, SpeechTagService tagService) {
         this.service = service;
+        this.tagService = tagService;
     }
 
     public Speech create (Speech speech) {
@@ -47,5 +50,15 @@ public class SpeechHelper {
     public List<SpeechTag> getPossibleTags (long speechId) {
         LOG.info("get possible tags for speech " + speechId);
         return service.getPossibleTags(speechId);
+    }
+
+    public List<SpeechTag> getAllTags () {
+        LOG.info("get all tags");
+        return tagService.getAll();
+    }
+
+    public SpeechTag create(SpeechTag tag){
+        LOG.info("create " + tag);
+        return tagService.save(tag);
     }
 }

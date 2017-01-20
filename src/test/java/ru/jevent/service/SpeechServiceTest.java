@@ -33,6 +33,8 @@ public class SpeechServiceTest {
     @Autowired
     private PartnerService partnerService;
     @Autowired
+    private SpeechTagService tagService;
+    @Autowired
     private TestData testData;
     @Autowired
     private DbPopulator dbPopulator;
@@ -102,12 +104,18 @@ public class SpeechServiceTest {
         Speech speech = service.get(100028L);
         SpeechTag tag = new SpeechTag();
         tag.setTag("JCache");
+        tagService.save(tag);
         speech.addTag(tag);
         service.update(speech);
 
         Speech speechWithTag = service.get(100028L);
         if(speechWithTag.getTags().isEmpty()) {
             throw new Exception();
+        }
+        for(SpeechTag t : speechWithTag.getTags()) {
+            if(t.getTag() == null) {
+                throw new Exception();
+            }
         }
 
         speech = service.get(100021L);
@@ -116,6 +124,12 @@ public class SpeechServiceTest {
         speechWithTag = service.get(100021L);
         if(speechWithTag.getTags().isEmpty()) {
             throw new Exception();
+        }
+
+        for(SpeechTag t : speechWithTag.getTags()) {
+            if(t.getTag() == null) {
+                throw new Exception();
+            }
         }
     }
 
