@@ -2,13 +2,18 @@ package ru.jevent.model.additionalEntity;
 
 import ru.jevent.model.superclasses.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "speech_tags")
+@NamedQueries({
+        @NamedQuery(name = SpeechTag.DELETE, query = "DELETE from SpeechTag t where t.id = :id"),
+        @NamedQuery(name = SpeechTag.ALL_SORTED, query = "SELECT t FROM SpeechTag t ORDER BY t.id")
+})
 public class SpeechTag extends BaseEntity {
+
+    public static final String DELETE = "SpeechTag.delete";
+    public static final String ALL_SORTED = "SpeechTag.getAllSorted";
 
     @Column(name = "tag")
     private String tag;
