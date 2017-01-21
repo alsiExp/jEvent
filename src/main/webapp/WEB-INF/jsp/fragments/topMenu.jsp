@@ -24,7 +24,9 @@
             <div class="collapse navbar-collapse" id="top-navbar-collapse">
                 <ul class="nav navbar-nav">
 
-                    <li class="dropdown">
+                    <li><a href="../events"><fmt:message key="app.menu.event"/></a></li>
+
+<%--                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-haspopup="true" aria-expanded="false"><fmt:message key="app.menu.event"/><span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -33,7 +35,11 @@
                             <li><a href="#"><fmt:message key="app.menu.event.new"/></a></li>
                         </ul>
                     </li>
+--%>
 
+                    <li><a href="../participants"><fmt:message key="app.menu.participant"/></a></li>
+
+<%--
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-haspopup="true" aria-expanded="false"><fmt:message key="app.menu.participant"/><span class="caret"></span></a>
@@ -44,6 +50,7 @@
 
                         </ul>
                     </li>
+--%>
 
                     <li class="dropdown hidden-sm">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"

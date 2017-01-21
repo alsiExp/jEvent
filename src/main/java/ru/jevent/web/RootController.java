@@ -30,4 +30,9 @@ public class RootController {
         model.addAttribute("speechId", speechId);
         return "speech";
     }
+
+    @RequestMapping(value = "/events", method = RequestMethod.GET)
+    public String eventList() {
+        return "eventList";
+    }
 }
