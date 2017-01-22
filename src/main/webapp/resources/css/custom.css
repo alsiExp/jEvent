@@ -329,3 +329,7 @@ visitor list
 .participant-tag {
     margin-right: 5px;
 }
+
+.event-speech-status {
+    font-size: 75%;
+}

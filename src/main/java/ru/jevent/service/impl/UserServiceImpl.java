@@ -22,6 +22,11 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User save(User user) {
+        if(user.getId() != 0 && user.getJiraLogin() == null && user.getJiraPassword() == null) {
+            User oldUser = repository.get(user.getId());
+            user.setJiraLogin(oldUser.getJiraLogin());
+            user.setJiraPassword(oldUser.getJiraPassword());
+        }
         return repository.save(user);
     }
 

@@ -98,7 +98,7 @@
                             <fmt:message key="app.menu.profile"/><span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="#"><fmt:message key="app.menu.profile.settings"/></a></li>
+                            <li><a href="../profile"><fmt:message key="app.menu.profile"/></a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="../users"><fmt:message key="app.menu.profile.team"/></a></li>
                             <li role="separator" class="divider"></li>

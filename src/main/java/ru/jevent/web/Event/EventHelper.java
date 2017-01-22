@@ -45,4 +45,8 @@ public class EventHelper {
         LOG.info("getAll events");
         return service.getAll();
     }
+
+    public void getAllFromJira() {
+
+    }
 }

@@ -67,6 +67,9 @@ CREATE TABLE users
   login     VARCHAR NOT NULL CHECK (login <> ''),
   password  VARCHAR NOT NULL CHECK (password <> ''),
 
+  jira_login VARCHAR,
+  jira_password  VARCHAR,
+
   FOREIGN KEY (sex) REFERENCES person_sex (id)
 );
 CREATE UNIQUE INDEX unique_login
@@ -153,7 +156,7 @@ CREATE TABLE events
   author_id   BIGINT  NOT NULL,
   jira_name   VARCHAR,
   jira_link   VARCHAR,
-  version     VARCHAR,
+  version     VARCHAR NOT NULL,
   start_date  TIMESTAMP,
   address     VARCHAR,
   description VARCHAR,
@@ -232,7 +235,7 @@ CREATE TABLE speeches
   event_id           BIGINT,
   partner_id         BIGINT,
   short_desc         VARCHAR,
-  jira_status        VARCHAR,
+  jira_status        VARCHAR NOT NULL DEFAULT ('Local'),
   jira_link          VARCHAR,
   sync_time          TIMESTAMP,
   is_from_jira       BOOL,

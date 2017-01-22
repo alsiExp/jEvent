@@ -76,6 +76,54 @@ function renderDate( data, type, row ) {
     }
 }
 
+
+/* events */
+function renderConfirmedSpeeches( data, type, row ) {
+    if(type == 'display') {
+        var str = '';
+        Object.keys(data).forEach(function (key) {
+            var val = data[key];
+            if(key != 'НОВАЯ'){
+                str += '<div class="event-speech-status">' + key + ' : ' + val + '</div>';
+            }
+        });
+        return str;
+    }
+    if(type == 'sort') {
+        var summ = 0;
+        Object.keys(data).forEach(function (key) {
+            var val = data[key];
+            if(key != 'НОВАЯ'){
+                summ += val;
+            }
+        });
+        return summ;
+    }
+}
+
+function renderNewSpeeches( data, type, row ) {
+    if(type == 'display') {
+        var str = '';
+        Object.keys(data).forEach(function (key) {
+            var val = data[key];
+            if(key == 'НОВАЯ'){
+                str += '<div class="">' + val + '</div>';
+            }
+        });
+        return str;
+    }
+    if(type == 'sort') {
+        var summ = 0;
+        Object.keys(data).forEach(function (key) {
+            var val = data[key];
+            if(key == 'НОВАЯ'){
+                summ += val;
+            }
+        });
+        return summ;
+    }
+}
+
 /* speech */
 
 function renderSpeechName( data, type, row ) {
@@ -237,6 +285,36 @@ function addInputAdditionalEmail(containerId, btnId, pHolderText) {
 
 /**** end common section ****/
 
+/**** events js ****/
+
+function makeEventTableEditable() {
+    table = $('#eventTable').DataTable();
+    mainForm = $('#detailsEventForm');
+    modal = $('#editEvent');
+
+    $('#create-new-event').click(function () {
+        clearForm(mainForm);
+        mainForm.find('#eventId').val(0);
+        modal.modal();
+    });
+
+    mainForm.submit(function () {
+        save();
+        return false;
+    });
+
+    $('#add-from-jira').click(function () {
+        $.ajax({
+            type: "GET",
+            url: ajaxUrl + '/jira/',
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    });
+}
+
+/**** end events js ****/
 
 /**** speech js ****/
 

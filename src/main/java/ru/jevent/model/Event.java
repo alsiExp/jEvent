@@ -1,6 +1,7 @@
 package ru.jevent.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import ru.jevent.model.additionalEntity.EventComment;
 import ru.jevent.model.additionalEntity.Rate;
@@ -9,6 +10,9 @@ import ru.jevent.model.superclasses.NamedEntity;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
+
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
 
 @Entity
 @Table(name = "events")
@@ -63,7 +67,7 @@ public class    Event extends NamedEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "event_id", nullable = false)
     @OrderBy("start, cost")
-    @JsonManagedReference
+    @JsonIgnore
     private List<Rate> rates;
 
     /*
@@ -71,7 +75,7 @@ public class    Event extends NamedEntity {
      */
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("date")
-    @JsonManagedReference
+    @JsonIgnore
     private List<EventComment> commentList;
 
 
@@ -196,6 +200,11 @@ public class    Event extends NamedEntity {
     public void setRates(List<Rate> rates) {
         this.rates = rates;
     }
+
+    public Map<String, Long> getSpeechesCount() {
+        return getSpeeches().stream().collect(groupingBy(Speech::getJiraStatus, counting()));
+    }
+
 
     @Override
     public boolean equals(Object o) {

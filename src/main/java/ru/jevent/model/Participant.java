@@ -1,5 +1,6 @@
 package ru.jevent.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -92,7 +93,7 @@ public class Participant extends Person {
 
     @OneToMany(mappedBy = "participant", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("date")
-    @JsonManagedReference
+    @JsonIgnore
     private List<ParticipantComment> commentList;
 
 

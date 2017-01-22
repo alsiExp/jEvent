@@ -1,5 +1,6 @@
 package ru.jevent.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import ru.jevent.model.enums.Role;
@@ -37,6 +38,14 @@ public class User extends Person {
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.LAZY)
     private Set<Role> roles;
+
+    @Column(name = "jira_login")
+    @JsonIgnore
+    private String jiraLogin;
+
+    @Column(name = "jira_password")
+    @JsonIgnore
+    private String jiraPassword;
 
     public User() {
     }
@@ -87,6 +96,21 @@ public class User extends Person {
         return roles;
     }
 
+    public String getJiraLogin() {
+        return jiraLogin;
+    }
+
+    public void setJiraLogin(String jiraLogin) {
+        this.jiraLogin = jiraLogin;
+    }
+
+    public String getJiraPassword() {
+        return jiraPassword;
+    }
+
+    public void setJiraPassword(String jiraPassword) {
+        this.jiraPassword = jiraPassword;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -98,6 +122,8 @@ public class User extends Person {
 
         if (!login.equals(user.login)) return false;
         if (password != null ? !password.equals(user.password) : user.password != null) return false;
+        if (jiraLogin != null ? !jiraLogin.equals(user.jiraLogin) : user.jiraLogin != null) return false;
+        if (jiraPassword != null ? !jiraPassword.equals(user.jiraPassword) : user.jiraPassword != null) return false;
         if(!isEquals(this.getRoles(), user.getRoles())) {
             return false;
         }
@@ -109,6 +135,8 @@ public class User extends Person {
         int result = super.hashCode();
         result = 31 * result + (login != null ? login.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (jiraLogin != null ? jiraLogin.hashCode() : 0);
+        result = 31 * result + (jiraPassword != null ? jiraPassword.hashCode() : 0);
         result = 31 * result + (roles != null ? roles.hashCode() : 0);
         return result;
     }
@@ -130,7 +158,6 @@ public class User extends Person {
         return "User{" +
                 super.toString() +
                 ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
                 ", roles=" + roleSB.toString() +
                 "}";
     }

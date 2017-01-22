@@ -102,11 +102,12 @@ INSERT INTO twitteraccs (account_link)
 VALUES
   ('tlberglund');
 
-INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
+INSERT INTO speeches (event_id, partner_id, short_desc,jira_status ,is_from_jira, name, full_desc, speaker_cost)
 VALUES
   (100013,
    NULL,
    'A series of technical and leadership lessons from the world of filmmaking.',
+   'НОВАЯ',
    FALSE,
    'Seven lessons developers can learn from film',
    '<p>Filmmaking is a deeply technical, collaborative, artistic, high-stakes endeavor. The details of this mysterious craft are unknown to all but an elite few, while the benefits are enjoyed by almost everyone. Sound like a profession you know?</p><p>In this short talk, we’ll explore some stories from filmmaking’s past and present and learn from another industry’s technological transitions, collaborative patterns, and specialized roles. From synchronized sound to diva directors to dolly grips, this highly scientific art has a lot to teach us about the way we developers are changing the world.</p>',
@@ -346,11 +347,12 @@ VALUES
 
 -- shipilev
 
-INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, rating, name, full_desc, speaker_cost)
+INSERT INTO speeches (event_id, partner_id, short_desc,jira_status , is_from_jira, rating, name, full_desc, speaker_cost)
 VALUES
   (100012,
    100002,
    NULL,
+   'ЗАКРЫТА',
    FALSE,
    4.88,
    'Перформанс: Что В Имени Тебе Моём?',

@@ -1,7 +1,7 @@
 package ru.jevent.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ru.jevent.model.additionalEntity.SpeechComment;
 import ru.jevent.model.additionalEntity.SpeechTag;
 import ru.jevent.model.superclasses.NamedEntity;
@@ -110,7 +110,7 @@ public class Speech extends NamedEntity {
 
     @OneToMany(mappedBy = "speech", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("date")
-    @JsonManagedReference
+    @JsonIgnore
     private List<SpeechComment> commentList;
 
     public Speech() {
