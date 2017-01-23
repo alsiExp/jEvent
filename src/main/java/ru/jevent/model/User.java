@@ -89,6 +89,10 @@ public class User extends Person {
         }
     }
 
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
     public Set<Role> getRoles() {
         if(roles == null) {
             roles = new HashSet<>();

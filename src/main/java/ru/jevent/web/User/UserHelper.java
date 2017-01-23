@@ -1,9 +1,12 @@
 package ru.jevent.web.User;
 
+import net.rcarz.jiraclient.JiraException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.jevent.LoggedUser;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.User;
+import ru.jevent.service.JiraService;
 import ru.jevent.service.UserService;
 
 import java.util.List;
@@ -12,10 +15,12 @@ import java.util.List;
 public class UserHelper {
     private static final LoggerWrapper LOG = LoggerWrapper.get(AdminRestController.class);
     private final UserService service;
+    private final JiraService jiraService;
 
     @Autowired
-    public UserHelper(UserService service) {
+    public UserHelper(UserService service, JiraService jiraService) {
         this.service = service;
+        this.jiraService = jiraService;
     }
 
     public User create(User user) {
@@ -41,6 +46,18 @@ public class UserHelper {
     public List<User> getAll() {
         LOG.info("get all users");
         return service.getAll();
+    }
+
+    public List<String> testJira() {
+        try {
+            return jiraService.test(LoggedUser.id());
+        } catch (JiraException je) {
+            System.out.println();
+            System.err.println(je.getMessage());
+            if (je.getCause() != null)
+                System.err.println(je.getCause().getMessage());
+            return null;
+        }
     }
 
 

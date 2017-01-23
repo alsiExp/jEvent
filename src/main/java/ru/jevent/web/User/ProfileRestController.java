@@ -20,7 +20,7 @@ public class ProfileRestController {
         this.helper = helper;
     }
 
-    @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public void update(@RequestBody User user) {
         helper.update(user);
     }

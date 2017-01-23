@@ -1,18 +1,23 @@
 package ru.jevent.service.jira;
 
 import net.rcarz.jiraclient.BasicCredentials;
+import net.rcarz.jiraclient.JiraClient;
+import net.rcarz.jiraclient.JiraException;
+import net.rcarz.jiraclient.Project;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.jevent.LoggedUser;
+import org.springframework.stereotype.Service;
 import ru.jevent.model.Event;
 import ru.jevent.model.User;
 import ru.jevent.service.JiraService;
 import ru.jevent.service.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class JiraServiceImpl implements JiraService {
 
-    private final String base = "http://jira.jugru.org/";
+    private static final String BASE_URL = "http://jira.jugru.org/";
     private UserService userService;
 
     @Autowired
@@ -20,15 +25,24 @@ public class JiraServiceImpl implements JiraService {
         this.userService = userService;
     }
 
-    private BasicCredentials getCredentials() {
-        User user = userService.get(LoggedUser.id());
-
-
-        return null;
+    private BasicCredentials getCredentials(long userId) {
+        User user = userService.get(userId);
+        return new BasicCredentials(user.getJiraLogin(), user.getJiraPassword());
     }
 
     @Override
-    public List<Event> getAllEvent() {
+    public List<String> test(long userId) throws JiraException {
+        JiraClient jira = new JiraClient(BASE_URL, getCredentials(userId));
+        List<Project> projectList = jira.getProjects();
+        List<String> list = new ArrayList<>();
+        for(Project p : projectList) {
+            list.add(p.getKey());
+        }
+        return list;
+    }
+
+    @Override
+    public List<Event> getAllEvent() throws JiraException {
 
 //        try {
 //            Issue issue = jira.getIssue("name");

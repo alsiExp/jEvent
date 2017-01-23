@@ -628,3 +628,34 @@ function enabledHelper() {
 }
 
 /**** end user/admin js ****/
+
+/**** profile ****/
+function initUserProfile() {
+    mainForm = $('#detailsUserForm');
+    updateProfileForm();
+
+    mainForm.submit(function () {
+        $.ajax({
+            type: "POST",
+            url: ajaxUrl,
+            data: mainForm.serialize(),
+            success: function (data) {
+                console.log(data);
+                successNote("Saved");
+                updateProfileForm();
+            }
+        });
+        return false;
+    });
+}
+
+function updateProfileForm() {
+    $.get(ajaxUrl, function (data) {
+        $.each(data, function (key, value) {
+            mainForm.find("input[name='" + key + "']").val(value);
+        });
+        mainForm.find('#jiraPassword').val('');
+        mainForm.find('#jiraLogin').val('');
+    });
+}
+/**** end profile ****/

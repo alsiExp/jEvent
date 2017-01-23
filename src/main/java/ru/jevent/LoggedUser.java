@@ -21,10 +21,10 @@ public class LoggedUser {
     }
 
     public Set<Role> getAuthorities() {
-        return roles;
+        return get().roles;
     }
 
     public boolean isEnabled() {
-        return enabled;
+        return get().enabled;
     }
 }

@@ -22,16 +22,23 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User save(User user) {
-        if(user.getId() != 0 && user.getJiraLogin() == null && user.getJiraPassword() == null) {
-            User oldUser = repository.get(user.getId());
-            user.setJiraLogin(oldUser.getJiraLogin());
-            user.setJiraPassword(oldUser.getJiraPassword());
-        }
         return repository.save(user);
     }
 
     @Override
     public void update(User user) throws NotFoundException {
+        if(user.getId() != 0) {
+            User oldUser = repository.get(user.getId());
+            if(user.getJiraLogin() == null) {
+                user.setJiraLogin(oldUser.getJiraLogin());
+            }
+            if(user.getJiraPassword() == null) {
+                user.setJiraPassword(oldUser.getJiraPassword());
+            }
+            if(user.getSex() == null) {
+                user.setSex(oldUser.getSex());
+            }
+        }
         ExceptionUtil.check(repository.save(user), user.getId());
     }
 

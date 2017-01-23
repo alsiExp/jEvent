@@ -35,4 +35,9 @@ public class RootController {
     public String eventList() {
         return "eventList";
     }
+
+    @RequestMapping(value = "/profile", method = RequestMethod.GET)
+    public String profile() {
+        return "profile";
+    }
 }
