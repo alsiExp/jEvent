@@ -66,7 +66,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div id="group-jiraLogin" class="form-group">
                         <label for="jiraLogin" class="control-label col-xs-4"><fmt:message
                                 key="app.user.jiraLogin"/></label>
 
@@ -75,7 +75,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div id="group-jiraPassword" class="form-group">
                         <label for="jiraPassword" class="control-label col-xs-4"><fmt:message
                                 key="app.user.jiraPassword"/></label>
 
@@ -93,6 +93,11 @@
                     </div>
                 </form>
             </div>
+
+            <div id="jira-info" class="col-xs-12 col-md-6 col-lg-4 main">
+
+            </div>
+
         </div>
 
     </section>

@@ -70,6 +70,8 @@ CREATE TABLE users
   jira_login VARCHAR,
   jira_password  VARCHAR,
 
+  jira_valid_credentials BOOL DEFAULT FALSE,
+
   FOREIGN KEY (sex) REFERENCES person_sex (id)
 );
 CREATE UNIQUE INDEX unique_login

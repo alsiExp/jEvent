@@ -48,6 +48,11 @@ public class UserHelper {
         return service.getAll();
     }
 
+    public void setJiraValidCredentials(long id, boolean cred) {
+        LOG.info("User" + id + "set valid credential for Jira "  + cred);
+        service.setJiraValidCredentials(id, cred);
+    }
+
     public List<String> testJira() {
         try {
             return jiraService.test(LoggedUser.id());

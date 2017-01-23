@@ -640,13 +640,35 @@ function initUserProfile() {
             url: ajaxUrl,
             data: mainForm.serialize(),
             success: function (data) {
-                console.log(data);
-                successNote("Saved");
-                updateProfileForm();
+                console.log(data.length);
+                if (data.length > 0) {
+                    displaytestJiraInfo(
+                        '<h4 class="text-success">Jira connection success</h4>' +
+                        '<p>Events, avaliable for you:</p>' +
+                        '<p>' + data + '</p>'
+                    );
+                    successNote("Saved");
+                    updateProfileForm();
+                } else {
+                    displaytestJiraInfo(
+                        '<h4 class="text-danger">Jira connection failed, check Credentials</h4>'
+                    );
+                }
+            },
+            error: function () {
+                displaytestJiraInfo(
+                    '<h4 class="text-danger">Jira connection failed, check Credentials</h4>'
+                );
             }
         });
         return false;
     });
+}
+
+function displaytestJiraInfo(msg) {
+    var el = $('#jira-info');
+    el.html('');
+    el.html(msg);
 }
 
 function updateProfileForm() {
@@ -656,6 +678,11 @@ function updateProfileForm() {
         });
         mainForm.find('#jiraPassword').val('');
         mainForm.find('#jiraLogin').val('');
+        var b = data.jiraValidCredentials;
+            mainForm.find('#group-jiraLogin').toggleClass('has-success', b);
+            mainForm.find('#group-jiraPassword').toggleClass('has-success', b);
+            mainForm.find('#group-jiraLogin').toggleClass('has-warning', !b);
+            mainForm.find('#group-jiraPassword').toggleClass('has-warning', !b);
     });
 }
 /**** end profile ****/

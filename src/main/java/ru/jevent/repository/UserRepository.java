@@ -15,4 +15,6 @@ public interface UserRepository {
 
 
     List<User> getAll();
+
+    boolean setJiraValidCredentials(long id, boolean cred);
 }

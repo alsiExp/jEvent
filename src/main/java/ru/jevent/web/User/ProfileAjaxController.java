@@ -22,7 +22,7 @@ public class ProfileAjaxController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public void update(@RequestParam("fullName") String fullName,
+    public List<String> update(@RequestParam("fullName") String fullName,
                        @RequestParam("login") String login,
                        @RequestParam("password") String password,
                        @RequestParam(value = "jiraLogin", required = false) String jiraLogin,
@@ -43,9 +43,11 @@ public class ProfileAjaxController {
 
         helper.update(user);
         List<String> list = helper.testJira();
-        if(!list.isEmpty()) {
-
+        if(list != null && !list.isEmpty()) {
+            helper.setJiraValidCredentials(user.getId(), true);
+            return list;
         }
+        return null;
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

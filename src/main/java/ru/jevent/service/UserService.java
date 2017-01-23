@@ -16,4 +16,6 @@ public interface UserService {
     void delete(long id) throws NotFoundException;
 
     List<User> getAll();
+
+    void setJiraValidCredentials(long id, boolean cred);
 }

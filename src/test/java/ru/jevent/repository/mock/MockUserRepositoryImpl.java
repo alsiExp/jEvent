@@ -39,4 +39,9 @@ public class MockUserRepositoryImpl implements UserRepository {
             add(user);
         }};
     }
+
+    @Override
+    public boolean setJiraValidCredentials(long id, boolean cred) {
+        return false;
+    }
 }

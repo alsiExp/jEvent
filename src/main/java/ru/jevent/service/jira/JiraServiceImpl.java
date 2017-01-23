@@ -36,7 +36,7 @@ public class JiraServiceImpl implements JiraService {
         List<Project> projectList = jira.getProjects();
         List<String> list = new ArrayList<>();
         for(Project p : projectList) {
-            list.add(p.getKey());
+            list.add(p.getName());
         }
         return list;
     }

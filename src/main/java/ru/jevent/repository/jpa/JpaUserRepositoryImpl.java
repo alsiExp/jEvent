@@ -42,4 +42,10 @@ public class JpaUserRepositoryImpl implements UserRepository {
     public List<User> getAll() {
         return em.createNamedQuery(User.ALL_SORTED, User.class).getResultList();
     }
+
+    @Override
+    @Transactional
+    public boolean setJiraValidCredentials(long id, boolean cred) {
+        return em.createNamedQuery(User.SET_JIRA_CRED).setParameter("id", id).setParameter("cred", cred).executeUpdate() != 0;
+    }
 }

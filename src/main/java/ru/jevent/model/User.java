@@ -16,12 +16,14 @@ import java.util.Set;
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "login", name = "unique_login")})
 @NamedQueries({
         @NamedQuery(name = "User.delete", query = "DELETE from User u where u.id = :id"),
-        @NamedQuery(name = "User.getAllSorted", query = "SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles ORDER BY u.id")
+        @NamedQuery(name = "User.getAllSorted", query = "SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles ORDER BY u.id"),
+        @NamedQuery(name = "User.setJiraValidCredentials", query = "UPDATE User u SET u.jiraValidCredentials = :cred WHERE u.id = :id")
 })
 public class User extends Person {
 
     public static final String DELETE = "User.delete";
     public static final String ALL_SORTED = "User.getAllSorted";
+    public static final String SET_JIRA_CRED = "User.setJiraValidCredentials";
 
     @Column(name = "login", nullable = false, unique = true)
     @NotEmpty
@@ -46,6 +48,9 @@ public class User extends Person {
     @Column(name = "jira_password")
     @JsonIgnore
     private String jiraPassword;
+
+    @Column(name = "jira_valid_credentials")
+    private boolean jiraValidCredentials;
 
     public User() {
     }
@@ -116,6 +121,14 @@ public class User extends Person {
         this.jiraPassword = jiraPassword;
     }
 
+    public boolean isJiraValidCredentials() {
+        return jiraValidCredentials;
+    }
+
+    public void setJiraValidCredentials(boolean jiraValidCredentials) {
+        this.jiraValidCredentials = jiraValidCredentials;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -124,6 +137,7 @@ public class User extends Person {
 
         User user = (User) o;
 
+        if (jiraValidCredentials != user.jiraValidCredentials) return false;
         if (!login.equals(user.login)) return false;
         if (password != null ? !password.equals(user.password) : user.password != null) return false;
         if (jiraLogin != null ? !jiraLogin.equals(user.jiraLogin) : user.jiraLogin != null) return false;
@@ -142,6 +156,7 @@ public class User extends Person {
         result = 31 * result + (jiraLogin != null ? jiraLogin.hashCode() : 0);
         result = 31 * result + (jiraPassword != null ? jiraPassword.hashCode() : 0);
         result = 31 * result + (roles != null ? roles.hashCode() : 0);
+        result = 31 * result + (jiraValidCredentials ? 1 : 0);
         return result;
     }
 

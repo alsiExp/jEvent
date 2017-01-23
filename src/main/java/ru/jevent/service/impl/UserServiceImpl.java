@@ -56,4 +56,9 @@ public class UserServiceImpl implements UserService{
     public List<User> getAll() {
         return repository.getAll();
     }
+
+    @Override
+    public void setJiraValidCredentials(long id, boolean cred) {
+        ExceptionUtil.check(repository.setJiraValidCredentials(id, cred), id);
+    }
 }
