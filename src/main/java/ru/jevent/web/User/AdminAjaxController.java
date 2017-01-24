@@ -5,7 +5,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.jevent.model.User;
 import ru.jevent.model.enums.Role;
-import ru.jevent.model.enums.Sex;
 
 import java.util.List;
 
@@ -40,14 +39,12 @@ public class AdminAjaxController {
                        @RequestParam("fullName") String fullName,
                        @RequestParam("login") String login,
                        @RequestParam("password") String password,
-                       @RequestParam("enabled") boolean enabled,
-                       @RequestParam("sex") Sex sex) {
+                       @RequestParam("enabled") boolean enabled) {
         User user = new User();
         user.setFullName(fullName);
         user.setLogin(login);
         user.setPassword(password);
         user.setEnabled(enabled);
-        user.setSex(sex);
         user.addRoles(Role.ROLE_USER);
         if (id == 0) {
             helper.create(user);

@@ -4,7 +4,6 @@ import org.springframework.stereotype.Repository;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Participant;
 import ru.jevent.model.additionalEntity.Email;
-import ru.jevent.model.enums.Sex;
 import ru.jevent.repository.ParticipantRepository;
 
 import java.time.LocalDateTime;
@@ -22,7 +21,6 @@ public class MockParticipantRepositoryImpl implements ParticipantRepository {
         participant = new Participant();
         participant.setId(42L);
         participant.setFullName("Алексей Шипилев");
-        participant.setSex(Sex.MALE);
         participant.setBirthDay(LocalDateTime.now().minus(39, ChronoUnit.YEARS));
         participant.setRegistered(LocalDateTime.now().minus(6, ChronoUnit.DAYS));
         participant.addEmail(new Email());

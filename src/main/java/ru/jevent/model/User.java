@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import ru.jevent.model.enums.Role;
-import ru.jevent.model.enums.Sex;
 import ru.jevent.model.superclasses.Person;
 
 import javax.persistence.*;
@@ -55,16 +54,16 @@ public class User extends Person {
     public User() {
     }
 
-    public User(String fullName, Sex sex, boolean enabled, String photoURL, String login,
+    public User(String fullName, boolean enabled, String photoURL, String login,
                 String password) {
-        super(fullName, sex, enabled, photoURL);
+        super(fullName, enabled, photoURL);
         this.login = login;
         this.password = password;
     }
 
-    public User(Long id, String fullName, Sex sex, boolean enabled, String photoURL, String login,
+    public User(Long id, String fullName, boolean enabled, String photoURL, String login,
                 String password) {
-        super(fullName, sex, enabled, photoURL);
+        super(fullName, enabled, photoURL);
         this.id = id;
         this.login = login;
         this.password = password;
@@ -142,10 +141,7 @@ public class User extends Person {
         if (password != null ? !password.equals(user.password) : user.password != null) return false;
         if (jiraLogin != null ? !jiraLogin.equals(user.jiraLogin) : user.jiraLogin != null) return false;
         if (jiraPassword != null ? !jiraPassword.equals(user.jiraPassword) : user.jiraPassword != null) return false;
-        if(!isEquals(this.getRoles(), user.getRoles())) {
-            return false;
-        }
-        return true;
+        return isEquals(this.getRoles(), user.getRoles());
     }
 
     @Override

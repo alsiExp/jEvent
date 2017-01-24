@@ -543,7 +543,6 @@ function makeParticipantTableEditable(ajaxUrl) {
 
     initDTpicker();
     addInputAdditionalEmail("#emailContainer", "#addEmail", "Additional Email");
-    sexHelper();
 }
 
 function emailHelper() {
@@ -588,11 +587,6 @@ function updateUserRow(id) {
             mainForm.find("input[name='" + key + "']").val(value);
         });
         mainForm.find('#user_id').val(data.id);
-        if(data.sex == 'MALE') {
-            mainForm.find('#sex_male').click();
-        } else {
-            mainForm.find('#sex_female').click();
-        }
 
         if(data.enabled == true) {
             mainForm.find('#enabled-true').click();
@@ -605,18 +599,9 @@ function updateUserRow(id) {
 }
 
 function userFormHelper() {
-    sexHelper();
     enabledHelper();
 }
 
-function sexHelper() {
-    mainForm.find('#sex_male').click(function () {
-        mainForm.find('#sex').val('male');
-    });
-    mainForm.find('#sex_female').click(function () {
-        mainForm.find('#sex').val('female');
-    });
-}
 
 function enabledHelper() {
     mainForm.find('#enabled-true').click(function () {

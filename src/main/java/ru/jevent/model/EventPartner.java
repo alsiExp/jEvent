@@ -77,8 +77,8 @@ public class EventPartner extends BaseEntity{
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (event.getId() != null ? event.getId().hashCode() : 0);
-        result = 31 * result + (partner.getId() != null ? partner.getId().hashCode() : 0);
+        result = 31 * result + (event != null ? event.getId().hashCode() : 0);
+        result = 31 * result + (partner != null ? partner.getId().hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (payment != null ? payment.hashCode() : 0);
         return result;

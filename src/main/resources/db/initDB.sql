@@ -2,14 +2,10 @@ DROP TABLE IF EXISTS event_partners;
 DROP TABLE IF EXISTS speech_participants;
 DROP TABLE IF EXISTS speeches_speech_tags;
 
-DROP TABLE IF EXISTS speeches_comments;
 DROP TABLE IF EXISTS speeches;
 DROP TABLE IF EXISTS speech_tags;
 DROP TABLE IF EXISTS visitors;
 
-
-DROP TABLE IF EXISTS events_comments;
-DROP TABLE IF EXISTS participants_comments;
 
 DROP TABLE IF EXISTS rates;
 DROP TABLE IF EXISTS user_roles;
@@ -35,11 +31,6 @@ DROP SEQUENCE IF EXISTS GLOBAL_SEQ;
 
 CREATE SEQUENCE GLOBAL_SEQ START 100000;
 
-CREATE TABLE person_sex
-(
-  id  BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  sex VARCHAR UNIQUE
-);
 
 CREATE TABLE rate_type
 (
@@ -60,7 +51,6 @@ CREATE TABLE users
   --   person
   id        BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
   full_name VARCHAR NOT NULL CHECK (full_name <> ''),
-  sex       BIGINT,
   enabled   BOOL               DEFAULT FALSE,
   photo_URL VARCHAR,
   --   user
@@ -70,9 +60,8 @@ CREATE TABLE users
   jira_login VARCHAR,
   jira_password  VARCHAR,
 
-  jira_valid_credentials BOOL DEFAULT FALSE,
+  jira_valid_credentials BOOL DEFAULT FALSE
 
-  FOREIGN KEY (sex) REFERENCES person_sex (id)
 );
 CREATE UNIQUE INDEX unique_login
   ON users (login);
@@ -105,7 +94,6 @@ CREATE TABLE participants
   id              BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
   full_name       VARCHAR   NOT NULL CHECK (full_name <> ''),
   full_name_en    VARCHAR,
-  sex             BIGINT,
   enabled         BOOL               DEFAULT FALSE,
   photo_URL       VARCHAR,
   --   participant
@@ -122,7 +110,6 @@ CREATE TABLE participants
   twitter_id      BIGINT,
   github_id       BIGINT,
 
-  FOREIGN KEY (sex) REFERENCES person_sex (id),
   FOREIGN KEY (twitter_id) REFERENCES twitteraccs (id) ON DELETE CASCADE,
   FOREIGN KEY (github_id) REFERENCES githubaccs (id) ON DELETE CASCADE
 );
@@ -198,39 +185,6 @@ CREATE TABLE visitors
   FOREIGN KEY (rate_id) REFERENCES rates (id) ON DELETE CASCADE
 );
 
-
-CREATE TABLE events_comments
-(
-  /*  event_id   BIGINT,
-    comment_id BIGINT,
-  
-    PRIMARY KEY (event_id, comment_id),
-    FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
-    FOREIGN KEY (comment_id) REFERENCES comments (id) ON DELETE CASCADE*/
-
-  id       BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  event_id BIGINT    NOT NULL,
-  content  VARCHAR   NOT NULL CHECK (content <> ''),
-  date     TIMESTAMP NOT NULL DEFAULT now(),
-  user_id  BIGINT    NOT NULL,
-
-  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-  FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE
-);
-
-CREATE TABLE participants_comments
-(
-  id             BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  participant_id BIGINT    NOT NULL,
-  content        VARCHAR   NOT NULL CHECK (content <> ''),
-  date           TIMESTAMP NOT NULL DEFAULT now(),
-  user_id        BIGINT    NOT NULL,
-
-  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-  FOREIGN KEY (participant_id) REFERENCES participants (id) ON DELETE CASCADE
-);
-
-
 CREATE TABLE speeches
 (
   id                 BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
@@ -277,17 +231,6 @@ CREATE TABLE speech_participants
   FOREIGN KEY (participant_id) REFERENCES participants (id) ON DELETE CASCADE
 );
 
-CREATE TABLE speeches_comments
-(
-  id        BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  speech_id BIGINT    NOT NULL,
-  content   VARCHAR   NOT NULL CHECK (content <> ''),
-  date      TIMESTAMP NOT NULL DEFAULT now(),
-  user_id   BIGINT    NOT NULL,
-
-  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
-  FOREIGN KEY (speech_id) REFERENCES speeches (id) ON DELETE CASCADE
-);
 
 CREATE TABLE speeches_speech_tags
 (

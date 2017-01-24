@@ -50,10 +50,10 @@ public class Twitter extends BaseEntity {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
-        Twitter gitHub = (Twitter) o;
+        Twitter twitter = (Twitter) o;
 
-        if (accountLink != null ? !accountLink.equals(gitHub.accountLink) : gitHub.accountLink != null) return false;
-        return owner != null ? owner.getId().equals(gitHub.owner.getId()) : gitHub.owner == null;
+        if (accountLink != null ? !accountLink.equals(twitter.accountLink) : twitter.accountLink != null) return false;
+        return owner != null ? owner.getId().equals(twitter.owner.getId()) : twitter.owner == null;
     }
 
     @Override

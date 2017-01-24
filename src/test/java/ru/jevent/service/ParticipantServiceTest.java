@@ -10,10 +10,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.jevent.TestData;
 import ru.jevent.model.Participant;
-import ru.jevent.model.additionalEntity.ParticipantComment;
 import ru.jevent.util.DbPopulator;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static ru.jevent.Profiles.JPA;
@@ -68,22 +66,6 @@ public class ParticipantServiceTest {
         }
     }
 
-    @Test
-    public void testSaveExistingWithNewComments() throws Exception {
-        Participant participant = service.getByEmail("jbaruch@gmail.com");
-        ParticipantComment pc = testData.getNewParticipantComment(participant);
-        participant.setCommentList(Arrays.asList(pc));
-        service.save(participant);
-        Participant savedParticipant = service.get(participant.getId());
-        if (savedParticipant.getCommentList().size() != participant.getCommentList().size()) {
-            throw new Exception();
-        }
-        for(ParticipantComment c : savedParticipant.getCommentList()) {
-            if(c.getId() == null){
-                throw new Exception();
-            }
-        }
-    }
 
     @Test
     public void testSaveExistingWithNewTwitterGithub() throws Exception {
@@ -91,7 +73,7 @@ public class ParticipantServiceTest {
 
         service.save(participant);
         Participant savedParticipant = service.get(participant.getId());
-        if (savedParticipant.equals(participant)) {
+        if (!savedParticipant.equals(participant)) {
             throw new Exception();
         }
     }

@@ -3,10 +3,12 @@ package ru.jevent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.jevent.model.*;
-import ru.jevent.model.additionalEntity.*;
+import ru.jevent.model.additionalEntity.Email;
+import ru.jevent.model.additionalEntity.GitHub;
+import ru.jevent.model.additionalEntity.Rate;
+import ru.jevent.model.additionalEntity.Twitter;
 import ru.jevent.model.enums.RateType;
 import ru.jevent.model.enums.Role;
-import ru.jevent.model.enums.Sex;
 import ru.jevent.service.EventService;
 import ru.jevent.service.ParticipantService;
 import ru.jevent.service.PartnerService;
@@ -42,19 +44,11 @@ public class TestData {
         this.speechService = speechService;
     }
 
-    //comments
-    public ParticipantComment getNewParticipantComment(Participant p) {
-        ParticipantComment pc = new ParticipantComment();
-        pc.setParticipant(p);
-        pc.setContent("comment");
-        pc.setDate(LocalDateTime.now());
-        pc.setAuthor(getUser06());
-        return pc;
-    }
+
 
     //Users
     public User getNewUser() {
-        return new User("Test User", Sex.MALE, true, "photo.jpg", "login", "pass");
+        return new User("Test User",true, "photo.jpg", "login", "pass");
     }
 
     public User getExistingUser() {
@@ -65,7 +59,6 @@ public class TestData {
         exUser.addRoles(Role.ROLE_USER);
         exUser.addRoles(Role.ROLE_ADMIN);
         exUser.setFullName("Екатерина Курилова");
-        exUser.setSex(Sex.FEMALE);
         exUser.setEnabled(true);
         exUser.setPhotoURL("kurilova.jpg");
         exUser.setId(100008L);
@@ -78,7 +71,6 @@ public class TestData {
         u.setPassword("user");
         u.getRoles();
         u.setFullName("Алексей Фёдоров");
-        u.setSex(Sex.MALE);
         u.setEnabled(true);
         u.setPhotoURL("fedorov.jpg");
         u.setId(100006L);
@@ -93,7 +85,6 @@ public class TestData {
         u.setPassword("user");
         u.getRoles();
         u.setFullName("Яна Пилюгина");
-        u.setSex(Sex.FEMALE);
         u.setEnabled(true);
         u.setPhotoURL("pilugina.jpg");
         u.setId(100011L);
@@ -110,7 +101,6 @@ public class TestData {
         part.setCity("Cupertino, CA");
         part.setEmployer("JFrog");
         part.setBiography("Developer advocate в компании JFrog, и делает в жизни ровно 3 вещи: зависает с разработчиками Bintray и Artifactory, пописывает для них код, и рассказывает о впечатлениях в блогах и на конференциях. И так несколько лет подряд, ни минуты об этом не жалея.");
-        part.setSex(Sex.MALE);
         part.setEnabled(true);
         part.setPhotoURL("http://2016.jpoint.ru/img/baruch.png");
         part.setId(100004L);
@@ -119,7 +109,7 @@ public class TestData {
         part.setFullName("Барух Садогурский");
 
         Email email = new Email();
-        email.setId(100073L);
+        email.setId(100072L);
         email.setEmail("jbaruch@gmail.com");
         email.setMain(true);
         email.setOwner(part);
@@ -127,11 +117,9 @@ public class TestData {
 
         Twitter t = new Twitter();
         t.setId(100017L);
-        t.setAccountLink("https://twitter.com/jbaruch");
+        t.setAccountLink("jbaruch");
 
         part.setTwitter(t);
-
-        part.getCommentList();
 
         Set<Speech> s = new HashSet<>();
         s.add(speechService.get(100018L));
@@ -148,7 +136,6 @@ public class TestData {
         part.setCity("Санкт-Петербург");
         part.setEmployer("Test Empl.");
         part.setBiography("test biography");
-        part.setSex(Sex.FEMALE);
         part.setEnabled(true);
         part.setPhotoURL("testvisitor.jpg");
 
@@ -169,12 +156,12 @@ public class TestData {
         Participant part = getNewParticipant();
 
         Twitter t = new Twitter();
-        t.setAccountLink("https://twitter.com/shipilev");
+        t.setAccountLink("shipilev");
         t.setOwner(part);
         part.setTwitter(t);
 
         GitHub g = new GitHub();
-        g.setAccountLink("https://github.com/alsiExp/jEvent");
+        g.setAccountLink("alsiExp");
         g.setOwner(part);
         part.setGitHub(g);
 

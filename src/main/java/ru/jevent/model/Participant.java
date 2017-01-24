@@ -1,16 +1,21 @@
 package ru.jevent.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import ru.jevent.model.additionalEntity.*;
+import ru.jevent.model.additionalEntity.Email;
+import ru.jevent.model.additionalEntity.GitHub;
+import ru.jevent.model.additionalEntity.SpeechTag;
+import ru.jevent.model.additionalEntity.Twitter;
 import ru.jevent.model.superclasses.BaseEntity;
 import ru.jevent.model.superclasses.Person;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
@@ -90,12 +95,6 @@ public class Participant extends Person {
     private String travelHelp;
     @Column(name = "background")
     private String speakerBackground;
-
-    @OneToMany(mappedBy = "participant", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("date")
-    @JsonIgnore
-    private List<ParticipantComment> commentList;
-
 
     public Participant() {
     }
@@ -231,12 +230,6 @@ public class Participant extends Person {
         this.speakerBackground = speakerBackground;
     }
 
-    public List<ParticipantComment> getCommentList() {
-        if (commentList == null) {
-            commentList = new ArrayList<>();
-        }
-        return commentList;
-    }
 
     public Set<Speech> getSpeechSet() {
         if(speechSet == null) {
@@ -247,10 +240,6 @@ public class Participant extends Person {
 
     public void setSpeechSet(Set<Speech> speechSet) {
         this.speechSet = speechSet;
-    }
-
-    public void setCommentList(List<ParticipantComment> commentList) {
-        this.commentList = commentList;
     }
 
 
@@ -283,9 +272,7 @@ public class Participant extends Person {
         if (travelHelp != null ? !travelHelp.equals(that.travelHelp) : that.travelHelp != null) return false;
         if (!isEquals(emails, that.emails))
             return false;
-        if (!isEquals(speechSet, that.speechSet))
-            return false;
-        return this.getCommentList().size() == that.getCommentList().size();
+        return (isEquals(speechSet, that.speechSet));
     }
 
     @Override
@@ -305,7 +292,6 @@ public class Participant extends Person {
         result = 31 * result + (fullNameEN != null ? fullNameEN.hashCode() : 0);
         result = 31 * result + (speakerBackground != null ? speakerBackground.hashCode() : 0);
         result = 31 * result + (travelHelp != null ? travelHelp.hashCode() : 0);
-        result = 31 * result + (commentList != null ? commentList.size() : 0);
         return result;
     }
 

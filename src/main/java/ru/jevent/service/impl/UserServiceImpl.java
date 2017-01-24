@@ -35,9 +35,6 @@ public class UserServiceImpl implements UserService{
             if(user.getJiraPassword() == null) {
                 user.setJiraPassword(oldUser.getJiraPassword());
             }
-            if(user.getSex() == null) {
-                user.setSex(oldUser.getSex());
-            }
         }
         ExceptionUtil.check(repository.save(user), user.getId());
     }

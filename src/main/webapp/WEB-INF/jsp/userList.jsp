@@ -77,22 +77,6 @@
                             </div>
                         </div>
 
-
-                        <div class="form-group">
-                            <label class="control-label col-xs-3"><fmt:message key="app.modal.select.sex"/></label>
-                            <div class="radio col-xs-9">
-                                <label>
-                                    <input type="radio" name="optionsSex" id="sex_male">
-                                    <fmt:message key="app.sex.male"/>
-                                </label>
-                                <label>
-                                    <input type="radio" name="optionsSex" id="sex_female">
-                                    <fmt:message key="app.sex.female"/>
-                                </label>
-                            </div>
-                            <input type="text" id="sex" hidden="hidden" name="sex">
-                        </div>
-
                         <div class="form-group">
                             <label for="login" class="control-label col-xs-3"><fmt:message key="app.user.table.login"/></label>
 

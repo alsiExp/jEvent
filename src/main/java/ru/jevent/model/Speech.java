@@ -1,14 +1,11 @@
 package ru.jevent.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import ru.jevent.model.additionalEntity.SpeechComment;
 import ru.jevent.model.additionalEntity.SpeechTag;
 import ru.jevent.model.superclasses.NamedEntity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -107,11 +104,6 @@ public class Speech extends NamedEntity {
             joinColumns = @JoinColumn(name = "speech_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id", unique = true))
     private Set<SpeechTag> tags;
-
-    @OneToMany(mappedBy = "speech", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("date")
-    @JsonIgnore
-    private List<SpeechComment> commentList;
 
     public Speech() {
     }
@@ -262,17 +254,6 @@ public class Speech extends NamedEntity {
         return tags;
     }
 
-    public List<SpeechComment> getCommentList() {
-        if (commentList == null) {
-            commentList = new ArrayList<>();
-        }
-        return commentList;
-    }
-
-    public void setCommentList(List<SpeechComment> commentList) {
-        this.commentList = commentList;
-    }
-
     public void setTags(Set<SpeechTag> tags) {
         this.tags = tags;
     }
@@ -367,18 +348,9 @@ public class Speech extends NamedEntity {
         if(sumThis != sumThat) {
             return false;
         }
-
-        if (this.commentList.size() != speech.commentList.size()) {
-            return false;
-        }
         return tags != null ? tags.equals(speech.tags) : speech.tags == null;
     }
 
-    /*
-        In hashcode() we have problem with comentList hashcode - he is not the same for the same objects.
-        To fix this problem we use just list size.
-
-     */
     @Override
     public int hashCode() {
         int result = super.hashCode();
@@ -406,7 +378,6 @@ public class Speech extends NamedEntity {
         }
         result = 31 * result + (speakers != null ? speakers.size() : 0);
         result = 31 * result + (tags != null ? tags.hashCode() : 0);
-        result = 31 * result + (commentList != null ? commentList.size() : 0);
         return result;
     }
 

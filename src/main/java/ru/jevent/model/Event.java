@@ -3,7 +3,6 @@ package ru.jevent.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import ru.jevent.model.additionalEntity.EventComment;
 import ru.jevent.model.additionalEntity.Rate;
 import ru.jevent.model.superclasses.NamedEntity;
 
@@ -70,13 +69,6 @@ public class    Event extends NamedEntity {
     @JsonIgnore
     private List<Rate> rates;
 
-    /*
-        simple notes for event
-     */
-    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("date")
-    @JsonIgnore
-    private List<EventComment> commentList;
 
 
     public Event() {
@@ -179,16 +171,6 @@ public class    Event extends NamedEntity {
         this.eventPartners = partners;
     }
 
-    public List<EventComment> getCommentList() {
-        if (commentList == null) {
-            commentList = new ArrayList<>();
-        }
-        return commentList;
-    }
-
-    public void setCommentList(List<EventComment> commentList) {
-        this.commentList = commentList;
-    }
 
     public List<Rate> getRates() {
         if (rates == null) {
@@ -249,13 +231,7 @@ public class    Event extends NamedEntity {
         if (!isEquals(this.getEventPartners(), event.getEventPartners())) {
             return false;
         }
-        if (!isEquals(this.getCommentList(), event.getCommentList())) {
-            return false;
-        }
-        if (!isEquals(this.getRates(), event.getRates())) {
-            return false;
-        }
-        return true;
+        return isEquals(this.getRates(), event.getRates());
     }
 
 
@@ -273,7 +249,6 @@ public class    Event extends NamedEntity {
         result = 31 * result + (speeches != null ? speeches.hashCode() : 0);
         result = 31 * result + (visitors != null ? visitors.hashCode() : 0);
         result = 31 * result + (eventPartners != null ? eventPartners.hashCode() : 0);
-        result = 31 * result + (commentList != null ? commentList.hashCode() : 0);
         result = 31 * result + (rates != null ? rates.hashCode() : 0);
         return result;
     }

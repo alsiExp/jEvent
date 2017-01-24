@@ -1,9 +1,6 @@
 DELETE FROM speeches_speech_tags;
 
 DELETE FROM speech_participants;
-DELETE FROM events_comments;
-DELETE FROM participants_comments;
-DELETE FROM speeches_comments;
 
 DELETE FROM rates;
 DELETE FROM emails;
@@ -20,16 +17,12 @@ DELETE FROM partners;
 DELETE FROM participants;
 
 
-DELETE FROM person_sex;
 DELETE FROM partner_status;
 DELETE FROM rate_type;
 DELETE FROM user_roles;
 
 ALTER SEQUENCE GLOBAL_SEQ RESTART WITH 100000;
 
-
-INSERT INTO person_sex (id, sex)
-VALUES (90000, 'MALE'), (90001, 'FEMALE');
 
 INSERT INTO partner_status (id, type)
 VALUES (90010, 'GOLD'), (90011, 'SILVER'), (90012, 'BRONZE'), (90013, 'INFO');
@@ -51,30 +44,30 @@ VALUES
    'At JetBrains, code is our passion. For over 15 years we have strived to make the strongest, most effective developer tools on earth. By automating routine checks and corrections, our tools speed up production, freeing developers to grow, discover and create.',
    'jb_200_200.png');
 
-INSERT INTO participants (full_name, sex, enabled, photo_url, birthday, registered_date, phone, skype, city, employer, biography, travel_help)
+INSERT INTO participants (full_name, enabled, photo_url, birthday, registered_date, phone, skype, city, employer, biography, travel_help)
 VALUES
-  ('Максим Дорофеев', 90000, TRUE, 'http://2016.jpoint.ru/img/dorofeev.jpg', NULL, TIMESTAMP '2016-10-10 09:00',
+  ('Максим Дорофеев', TRUE, 'http://2016.jpoint.ru/img/dorofeev.jpg', NULL, TIMESTAMP '2016-10-10 09:00',
              '+7-000-000-00-00', NULL, 'Москва', 'mnogosdelal.ru',
    'Автор проекта mnogosdelal.ru, бизнес-тренер, консультант.',
    NULL),
-  ('Барух Садогурский', 90000, TRUE, 'http://2016.jpoint.ru/img/baruch.png',
+  ('Барух Садогурский', TRUE, 'http://2016.jpoint.ru/img/baruch.png',
             TIMESTAMP '1970-11-25 00:00', TIMESTAMP '2016-10-10 07:00',
             '+7-000-000-00-00', 'jbaruh', 'Cupertino, CA', 'JFrog',
    'Developer advocate в компании JFrog, и делает в жизни ровно 3 вещи: зависает с разработчиками Bintray и Artifactory, пописывает для них код, и рассказывает о впечатлениях в блогах и на конференциях. И так несколько лет подряд, ни минуты об этом не жалея.',
    'No'),
-  ('Яков Файн', 90000, TRUE, 'yfain.jpg', TIMESTAMP '1960-07-01 00:00', TIMESTAMP '2016-10-15 12:36',
+  ('Яков Файн', TRUE, 'yfain.jpg', TIMESTAMP '1960-07-01 00:00', TIMESTAMP '2016-10-15 12:36',
            '+7-000-000-00-00', NULL, 'New York', 'SuranceBay, Farata Systems',
    'Yakov is a partner and co-founder of two companies: Farata Systems (IT consultancy) and SuranceBay (software for the Insurance industry). Yakov leads various projects related to Web development of complex enterprise applications. In his spare time Yakov enjoys teaching software and writing books.',
    'помощь с визой в РФ');
 
-INSERT INTO users (full_name, sex, enabled, photo_url, login, password)
+INSERT INTO users (full_name, enabled, photo_url, login, password)
 VALUES
-  ('Алексей Фёдоров', 90000, TRUE, 'fedorov.jpg', 'alexey', 'user'),
-  ('Андрей Дмитриев', 90000, TRUE, 'dmitriev.jpg', 'andrey', 'admin'),
-  ('Екатерина Курилова', 90001, TRUE, 'kurilova.jpg', 'ekaterina', 'user'),
-  ('Руслан Ахметзянов', 90000, FALSE, 'ahmetzyanov.jpg', 'ruslan', 'user'),
-  ('Максим Зверев', 90000, TRUE, 'zverev.jpg', 'maxim', 'user'),
-  ('Яна Пилюгина', 90001, TRUE, 'pilugina.jpg', 'yana', 'user');
+  ('Алексей Фёдоров', TRUE, 'fedorov.jpg', 'alexey', 'user'),
+  ('Андрей Дмитриев', TRUE, 'dmitriev.jpg', 'andrey', 'admin'),
+  ('Екатерина Курилова', TRUE, 'kurilova.jpg', 'ekaterina', 'user'),
+  ('Руслан Ахметзянов', FALSE, 'ahmetzyanov.jpg', 'ruslan', 'user'),
+  ('Максим Зверев', TRUE, 'zverev.jpg', 'maxim', 'user'),
+  ('Яна Пилюгина', TRUE, 'pilugina.jpg', 'yana', 'user');
 
 
 INSERT INTO events (name, author_id, jira_name, jira_link, version, start_date, address, description, logo_url)
@@ -88,10 +81,9 @@ VALUES
    'jpoint_logo.png');
 
 -- simple info about speakers
-INSERT INTO participants (full_name, sex, enabled, photo_url, employer, biography)
+INSERT INTO participants (full_name, enabled, photo_url, employer, biography)
 VALUES
   ('Tim Berglund',
-   90000,
    TRUE,
    'http://2016.jpoint.ru/img/berglund.jpg',
    'DataStax',
@@ -138,10 +130,9 @@ VALUES
   (100018, 100004);
 
 -- alexey shipilev
-INSERT INTO participants (full_name, sex, enabled, photo_url, employer, biography)
+INSERT INTO participants (full_name, enabled, photo_url, employer, biography)
 VALUES
   ('Алексей Шипилёв',
-   90000,
    TRUE,
    'http://2016.jpoint.ru/img/shipilev.png',
    'Oracle',
@@ -173,10 +164,9 @@ INSERT INTO speeches_speech_tags (speech_id, tag_id)
       (100021, 100022);
 
 -- egor bugaenko
-INSERT INTO participants (full_name, sex, enabled, photo_url, employer, biography)
+INSERT INTO participants (full_name, enabled, photo_url, employer, biography)
 VALUES
   ('Егор Бугаенко',
-   90000,
    TRUE,
    'http://2016.jpoint.ru/img/bugayenko.jpg',
    'Teamed.io',
@@ -202,10 +192,9 @@ VALUES
   (100025, 100023);
 
 -- viktor gamov
-INSERT INTO participants (full_name, sex, enabled, photo_url, employer, biography)
+INSERT INTO participants (full_name, enabled, photo_url, employer, biography)
 VALUES
   ('Виктор Гамов',
-   90000,
    TRUE,
    'http://2016.jpoint.ru/img/gamov.jpg',
    'Hazelcast',
@@ -232,10 +221,9 @@ VALUES
 
 
 -- andrey pangin
-INSERT INTO participants (full_name, sex, enabled, photo_url, employer, biography)
+INSERT INTO participants (full_name, enabled, photo_url, employer, biography)
 VALUES
   ('Андрей Паньгин',
-   90000,
    TRUE,
    'http://2016.jpoint.ru/img/pangin.png',
    'Одноклассники',
@@ -262,10 +250,9 @@ VALUES
 
 
 -- nicolay alimenkov
-INSERT INTO participants (full_name, sex, enabled, photo_url, employer, biography)
+INSERT INTO participants (full_name, enabled, photo_url, employer, biography)
 VALUES
   ('Николай Алименков',
-   90000,
    TRUE,
    'http://2016.jpoint.ru/img/alimenkov.png',
    'EPAM',
@@ -291,10 +278,9 @@ VALUES
   (100034, 100032);
 
 -- tagir valeev
-INSERT INTO participants (full_name, sex, enabled, photo_url, employer, biography)
+INSERT INTO participants (full_name, enabled, photo_url, employer, biography)
 VALUES
   ('Тагир Валеев',
-   90000,
    TRUE,
    'http://images.contentful.com/oxjq45e8ilak/xCu5sBC6EosmaWKCue8mu/06cf1280147bafb06f80d6eedf17b706/PTG9GIpTtmk.jpg?w=300',
    'JetBrains',
@@ -363,22 +349,14 @@ INSERT INTO speech_participants (speech_id, participant_id)
 VALUES
   (100040, 100019);
 
-
-INSERT INTO events_comments(event_id, content, date, user_id)
+INSERT INTO speech_tags( tag)
     VALUES
-      (100012, 'Комментарий про jpoint16 #1', TIMESTAMP '2016-04-13 13:23', 100006),
-      (100012,'Комментарий про jpoint16 #2', TIMESTAMP '2016-04-13 20:08', 100008),
-      (100012,'Комментарий про jpoint16 #3', TIMESTAMP '2016-04-15 09:59', 100009),
-      (100012,'Комментарий про jpoint16 #4', TIMESTAMP '2016-04-25 13:07', 100006),
-
-      (100013,'Комментарий про joker16 #1', TIMESTAMP '2016-09-15 11:07', 100006),
-      (100013,'Комментарий про joker16 #2', TIMESTAMP '2016-09-18 07:00', 100010);
-
-
-INSERT INTO speeches_comments (speech_id, content, date, user_id)
-VALUES
-     (100025, 'Комментарий про ORM — это обидно от Егора Бугаенко', TIMESTAMP '2016-09-18 17:20', 100010);
-
+      ('String'),
+      ('Tests'),
+      ('Nice tag'),
+      ('Another Tag'),
+      ('Больше тэгов'),
+      ('Runtime');
 
 INSERT INTO rates (name, event_id, rate_type, start_date, end_date, cost)
 VALUES
@@ -443,15 +421,6 @@ VALUES
   (100005, 100012, TIMESTAMP '2016-07-15 15:53', 'some comment about participant 100005' , 100055, 15000),
   (100005, 100013, TIMESTAMP '2016-01-29 07:48', NULL, 100070, 0);
 
-
-INSERT INTO speeches_comments (speech_id, content, date, user_id)
-    VALUES
-      (100031, 'Комментарий о speech 100031', TIMESTAMP '2016-06-29 07:48', 100007);
-
-INSERT INTO participants_comments (participant_id, content, date, user_id)
-VALUES
-  (100019 ,'Комментарий про Алексея Шипилёва', TIMESTAMP '2016-09-18 17:00', 100010),
-  (100029 ,'Комментарий про Андрея Паньгина', TIMESTAMP '2016-09-18 17:00', 100010);
 
 UPDATE participants SET twitter_id = 100036 WHERE id = 100035;
 UPDATE participants SET twitter_id = 100033 WHERE id = 100032;

@@ -8,7 +8,6 @@ import ru.jevent.model.Speech;
 import ru.jevent.model.additionalEntity.Email;
 import ru.jevent.model.additionalEntity.GitHub;
 import ru.jevent.model.additionalEntity.Twitter;
-import ru.jevent.model.enums.Sex;
 import ru.jevent.web.Speech.SpeechHelper;
 
 import java.time.LocalDateTime;
@@ -52,7 +51,6 @@ public class ParticipantAjaxController {
     public void update(@RequestParam("participantId") long id,
                        @RequestParam("fullName") String fullName,
                        @RequestParam("fullNameEN") String fullNameEN,
-                       @RequestParam("sex") Sex sex,
                        @RequestParam("birthday") LocalDateTime birthday,
                        @RequestParam("registered") LocalDateTime registered,
                        @RequestParam("phone") String phone,
@@ -69,7 +67,6 @@ public class ParticipantAjaxController {
         Participant participant = new Participant();
         participant.setFullName(fullName);
         participant.setFullNameEN(fullNameEN);
-        participant.setSex(sex);
         participant.setBirthDay(birthday);
         participant.setRegistered(registered);
         participant.setPhone(phone);
