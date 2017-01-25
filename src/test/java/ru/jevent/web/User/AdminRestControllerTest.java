@@ -3,6 +3,7 @@ package ru.jevent.web.User;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import ru.jevent.model.enums.Role;
 import ru.jevent.web.WebTest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -14,6 +15,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.jevent.Profiles.JPA;
 import static ru.jevent.Profiles.POSTGRES;
 import ru.jevent.model.User;
+import ru.jevent.web.json.JsonUtil;
+
 
 @ActiveProfiles({POSTGRES, JPA})
 public class AdminRestControllerTest extends WebTest {
@@ -45,11 +48,19 @@ public class AdminRestControllerTest extends WebTest {
 
     @Test
     public void testUpdate() throws Exception {
-        User user=new User();
-        mockMvc.perform(put(REST_URL).contentType(MediaType.APPLICATION_JSON_VALUE).content(user.toString()))
+        User exUser = new User();
+        exUser.setLogin("ekaterina");
+        exUser.setPassword("user");
+        exUser.getRoles();
+        exUser.addRoles(Role.ROLE_USER);
+        exUser.addRoles(Role.ROLE_ADMIN);
+        exUser.setFullName("Екатерина Курилова");
+        exUser.setEnabled(true);
+        exUser.setPhotoURL("kurilova.jpg");
+        exUser.setId(100008L);
+        mockMvc.perform(put(REST_URL).contentType(MediaType.APPLICATION_JSON_VALUE).content(JsonUtil.writeValue(exUser)))
                 .andDo(print())
                 .andExpect(status().isOk());
-
 
     }
 
