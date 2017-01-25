@@ -14,7 +14,7 @@ function successNote(text) {
         text: text,
         type: 'success',
         layout: 'bottomRight',
-        timeout: true
+        timeout: 7500
     });
 }
 
@@ -121,6 +121,16 @@ function renderNewSpeeches( data, type, row ) {
             }
         });
         return summ;
+    }
+}
+
+function renderJiraLink( data, type, row ) {
+    if(type == 'display') {
+        if(data != null) {
+            return '<a href="' + data + '" target="_blank"> Jira </a>';
+        } else {
+            return '-';
+        }
     }
 }
 
@@ -306,9 +316,19 @@ function makeEventTableEditable() {
     $('#add-from-jira').click(function () {
         $.ajax({
             type: "GET",
-            url: ajaxUrl + '/jira/',
+            url: ajaxUrl + 'jira/',
             success: function (data) {
-                console.log(data);
+                if(data.length > 0) {
+                    var str = 'Updated events: ';
+                    var separator = '';
+                    data.forEach(function (event) {
+                        str += separator +  event.name + " " + event.version;
+                        separator = ', '
+                    });
+                    successNote(str);
+                    updateTable();
+                }
+
             }
         });
     });

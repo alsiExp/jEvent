@@ -54,6 +54,8 @@
                 <fmt:message key="app.event.newSpeeches" var="newSpeeches"/>
                 <datatables:column title="${newSpeeches}" property="speechesCount" renderFunction="renderNewSpeeches"/>
 
+                <fmt:message key="app.event.jiraLink" var="jiraLink"/>
+                <datatables:column title="${jiraLink}" property="jiraLink" filterable="false" sortable="false" renderFunction="renderJiraLink"/>
 
                 <fmt:message key="app.table.managment" var="managment"/>
                 <datatables:column title="${managment}"  filterable="false" sortable="false" renderFunction="renderDeleteBtn"/>

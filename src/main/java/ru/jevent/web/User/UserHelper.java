@@ -13,7 +13,7 @@ import java.util.List;
 
 @Component
 public class UserHelper {
-    private static final LoggerWrapper LOG = LoggerWrapper.get(AdminRestController.class);
+    private static final LoggerWrapper LOG = LoggerWrapper.get(UserHelper.class);
     private final UserService service;
     private final JiraService jiraService;
 
@@ -57,10 +57,8 @@ public class UserHelper {
         try {
             return jiraService.test(LoggedUser.id());
         } catch (JiraException je) {
-            System.out.println();
-            System.err.println(je.getMessage());
-            if (je.getCause() != null)
-                System.err.println(je.getCause().getMessage());
+            LOG.error(je.getMessage());
+            je.printStackTrace();
             return null;
         }
     }

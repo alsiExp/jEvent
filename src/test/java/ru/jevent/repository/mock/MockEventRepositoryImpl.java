@@ -3,7 +3,6 @@ package ru.jevent.repository.mock;
 import org.springframework.stereotype.Repository;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Event;
-import ru.jevent.model.User;
 import ru.jevent.repository.EventRepository;
 
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ public class MockEventRepositoryImpl implements EventRepository {
     static {
         event.setId(2L);
         event.setName("Конференция Joker");
-        event.setAuthor(new User());
     }
 
     public static Event getEvent() {
@@ -44,5 +42,10 @@ public class MockEventRepositoryImpl implements EventRepository {
         return new ArrayList<Event>() {{
                 add(event);
         }};
+    }
+
+    @Override
+    public Event getByJiraId(int jiraId) {
+        return null;
     }
 }

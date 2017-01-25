@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.jevent.model.Event;
-import ru.jevent.model.User;
 import ru.jevent.util.exception.NotFoundException;
 import ru.jevent.web.Event.EventRestController;
 
@@ -39,7 +38,6 @@ public class EventMockTest {
         Event event = new Event();
         event.setId(8L);
         event.setName("Конференция Joker");
-        event.setAuthor(new User());
     }
 
     @Test

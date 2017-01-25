@@ -49,18 +49,18 @@ CREATE TABLE partner_status
 CREATE TABLE users
 (
   --   person
-  id        BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  full_name VARCHAR NOT NULL CHECK (full_name <> ''),
-  enabled   BOOL               DEFAULT FALSE,
-  photo_URL VARCHAR,
+  id                     BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  full_name              VARCHAR NOT NULL CHECK (full_name <> ''),
+  enabled                BOOL               DEFAULT FALSE,
+  photo_URL              VARCHAR,
   --   user
-  login     VARCHAR NOT NULL CHECK (login <> ''),
-  password  VARCHAR NOT NULL CHECK (password <> ''),
+  login                  VARCHAR NOT NULL CHECK (login <> ''),
+  password               VARCHAR NOT NULL CHECK (password <> ''),
 
-  jira_login VARCHAR,
-  jira_password  VARCHAR,
+  jira_login             VARCHAR,
+  jira_password          VARCHAR,
 
-  jira_valid_credentials BOOL DEFAULT FALSE
+  jira_valid_credentials BOOL               DEFAULT FALSE
 
 );
 CREATE UNIQUE INDEX unique_login
@@ -142,16 +142,14 @@ CREATE TABLE events
 (
   id          BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
   name        VARCHAR NOT NULL CHECK (name <> ''),
-  author_id   BIGINT  NOT NULL,
-  jira_name   VARCHAR,
   jira_link   VARCHAR,
-  version     VARCHAR NOT NULL,
+  version     VARCHAR NOT NULL CHECK (version <> ''),
   start_date  TIMESTAMP,
-  address     VARCHAR,
   description VARCHAR,
   logo_URL    VARCHAR,
+  jira_key    VARCHAR,
+  jira_id     INT DEFAULT 0
 
-  FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 
@@ -191,7 +189,7 @@ CREATE TABLE speeches
   event_id           BIGINT,
   partner_id         BIGINT,
   short_desc         VARCHAR,
-  jira_status        VARCHAR NOT NULL DEFAULT ('Local'),
+  jira_status        VARCHAR NOT NULL   DEFAULT ('Local'),
   jira_link          VARCHAR,
   sync_time          TIMESTAMP,
   is_from_jira       BOOL,

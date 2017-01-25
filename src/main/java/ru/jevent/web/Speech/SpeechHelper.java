@@ -12,7 +12,7 @@ import java.util.List;
 
 @Component
 public class SpeechHelper {
-    private static final LoggerWrapper LOG = LoggerWrapper.get(Speech.class);
+    private static final LoggerWrapper LOG = LoggerWrapper.get(SpeechHelper.class);
     private final SpeechService service;
     private final SpeechTagService tagService;
 
