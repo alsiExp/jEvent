@@ -15,5 +15,7 @@ public interface EventRepository {
     // null if not found
     Event get(long id);
 
+    Event getByJiraId(int jiraId);
+
     List<Event> getAll();
 }

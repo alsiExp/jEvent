@@ -202,8 +202,7 @@ public class TestData {
         Event event = new Event();
         event.setName("Test Event");
         event.setVersion("test");
-        event.setAuthor(this.getUser06());
-        event.setAddress("test adress");
+        event.setJiraKey("test adress");
         event.setDescription("Test description");
         event.setLogoURL("testevent.jpg");
         event.setStartDate(LocalDateTime.now().plusDays(25));

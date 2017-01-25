@@ -9,6 +9,8 @@ public interface EventService {
 
     Event save(Event event);
 
+    public Event simpleSave(Event event);
+
     void update(Event event) throws NotFoundException;
 
     Event get(long id) throws NotFoundException;
@@ -18,5 +20,7 @@ public interface EventService {
     List<Event> getAll();
 
     void dropCache();
+
+    Event getByJiraId(int jiraId);
 
 }

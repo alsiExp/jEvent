@@ -10,7 +10,7 @@ import java.util.List;
 
 @Component
 public class ParticipantHelper {
-    private static final LoggerWrapper LOG = LoggerWrapper.get(ParticipantRestController.class);
+    private static final LoggerWrapper LOG = LoggerWrapper.get(ParticipantHelper.class);
 
     private ParticipantService service;
 

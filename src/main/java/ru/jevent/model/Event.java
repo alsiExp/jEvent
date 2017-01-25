@@ -17,32 +17,26 @@ import static java.util.stream.Collectors.groupingBy;
 @Table(name = "events")
 @NamedQueries({
         @NamedQuery(name = Event.DELETE, query = "DELETE FROM Event e WHERE e.id = :id"),
-        @NamedQuery(name = Event.ALL_SORTED, query = "SELECT e FROM Event e ORDER BY e.id")
+        @NamedQuery(name = Event.ALL_SORTED, query = "SELECT e FROM Event e ORDER BY e.id"),
+        @NamedQuery(name = Event.BY_JIRA_ID, query = "SELECT e FROM Event e WHERE e.jiraId = :jiraId")
 })
-public class    Event extends NamedEntity {
+public class Event extends NamedEntity {
     /*
 
      */
 
     public static final String DELETE = "Event.delete";
     public static final String ALL_SORTED = "Event.getAllSorted";
+    public static final String BY_JIRA_ID = "Event.getByJiraId";
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "author_id", nullable = false)
-    private User author;
-
-    /*
-        version - important field from remote jira.
-        If event is not synchronized can be null
-     */
-    @Column(name = "jira_name")
-    private String jiraName;
     @Column(name = "jira_link")
     private String jiraLink;
     @Column(name = "version")
     private String version;
-    @Column(name = "address")
-    private String address;
+    @Column(name = "jira_key")
+    private String jiraKey;
+    @Column(name = "jira_id")
+    private int jiraId;
     @Column(name = "description")
     private String description;
     @Column(name = "logo_url")
@@ -70,25 +64,9 @@ public class    Event extends NamedEntity {
     private List<Rate> rates;
 
 
-
     public Event() {
     }
 
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
-    public String getJiraName() {
-        return jiraName;
-    }
-
-    public void setJiraName(String jiraName) {
-        this.jiraName = jiraName;
-    }
 
     public String getJiraLink() {
         return jiraLink;
@@ -106,12 +84,20 @@ public class    Event extends NamedEntity {
         this.version = tagName;
     }
 
-    public String getAddress() {
-        return address;
+    public String getJiraKey() {
+        return jiraKey;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setJiraKey(String jiraKey) {
+        this.jiraKey = jiraKey;
+    }
+
+    public int getJiraId() {
+        return jiraId;
+    }
+
+    public void setJiraId(int jiraId) {
+        this.jiraId = jiraId;
     }
 
     public String getDescription() {
@@ -187,6 +173,14 @@ public class    Event extends NamedEntity {
         return getSpeeches().stream().collect(groupingBy(Speech::getJiraStatus, counting()));
     }
 
+    public void update(Event newEvent) {
+        jiraLink = newEvent.getJiraLink();
+        version = newEvent.getVersion();
+        jiraKey = newEvent.getJiraKey();
+        description = newEvent.getDescription();
+        logoURL = newEvent.getLogoURL();
+        startDate = newEvent.getStartDate();
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -198,19 +192,16 @@ public class    Event extends NamedEntity {
 
         Event event = (Event) o;
 
-        if (author != null ? !author.equals(event.author) : event.author != null) {
-            return false;
-        }
         if (version != null ? !version.equals(event.version) : event.version != null) {
-            return false;
-        }
-        if (jiraName != null ? !jiraName.equals(event.jiraName) : event.jiraName != null) {
             return false;
         }
         if (jiraLink != null ? !jiraLink.equals(event.jiraLink) : event.jiraLink != null) {
             return false;
         }
-        if (address != null ? !address.equals(event.address) : event.address != null) {
+        if (jiraKey != null ? !jiraKey.equals(event.jiraKey) : event.jiraKey != null) {
+            return false;
+        }
+        if (jiraId != event.jiraId) {
             return false;
         }
         if (description != null ? !description.equals(event.description) : event.description != null) {
@@ -238,11 +229,10 @@ public class    Event extends NamedEntity {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (author != null ? author.hashCode() : 0);
         result = 31 * result + (version != null ? version.hashCode() : 0);
-        result = 31 * result + (jiraName != null ? jiraName.hashCode() : 0);
         result = 31 * result + (jiraLink != null ? jiraLink.hashCode() : 0);
-        result = 31 * result + (address != null ? address.hashCode() : 0);
+        result = 31 * result + (jiraKey != null ? jiraKey.hashCode() : 0);
+        result = 31 * result + jiraId;
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (logoURL != null ? logoURL.hashCode() : 0);
         result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
@@ -258,8 +248,7 @@ public class    Event extends NamedEntity {
         return "Event{" +
                 super.toString() +
                 ", version='" + version + '\'' +
-                ", author=" + author +
-                ", startDate=" + startDate +
+                ", jiraId=" + jiraId +
                 "} ";
     }
 

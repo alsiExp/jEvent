@@ -25,8 +25,29 @@ public class EventServiceImpl implements EventService{
     @CacheEvict(value = "events", allEntries = true)
     @Override
     public Event save(Event event) {
-        return repository.save(event);
+            return repository.save(event);
     }
+
+    @CacheEvict(value = "events", allEntries = true)
+    @Override
+    public Event simpleSave(Event event) {
+        if(event.getJiraId() != 0) {
+            Event oldJiraEvent = repository.getByJiraId(event.getJiraId());
+            if(oldJiraEvent != null) {
+                /*
+                    Method set all basic fields (exclusion jiraId) from event to oldJiraEvent
+                 */
+                oldJiraEvent.update(event);
+                return this.save(oldJiraEvent);
+            } else {
+                return this.save(event);
+            }
+
+        } else {
+            return this.save(event);
+        }
+    }
+
 
     @CacheEvict(value = "events", allEntries = true)
     @Override
@@ -49,6 +70,12 @@ public class EventServiceImpl implements EventService{
     @Override
     public List<Event> getAll() {
         return repository.getAll();
+    }
+
+    @Override
+    public Event getByJiraId(int jiraId) {
+        //normally can be null
+        return repository.getByJiraId(jiraId);
     }
 
     @CacheEvict(value = "events", allEntries = true)
