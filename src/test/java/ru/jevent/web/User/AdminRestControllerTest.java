@@ -6,9 +6,7 @@ import org.springframework.test.context.ActiveProfiles;
 import ru.jevent.model.enums.Role;
 import ru.jevent.web.WebTest;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -21,6 +19,8 @@ import ru.jevent.web.json.JsonUtil;
 @ActiveProfiles({POSTGRES, JPA})
 public class AdminRestControllerTest extends WebTest {
 
+    private static final String REST_URL = "/rest/admin/users/";
+
     @Test
     public void testDelete() throws Exception {
         mockMvc.perform(delete(REST_URL+ (100006)))
@@ -28,7 +28,6 @@ public class AdminRestControllerTest extends WebTest {
                 .andDo(print());
     }
 
-    private static final String REST_URL = "/rest/admin/users/";
 
     @Test
     public void testGet() throws Exception {
@@ -58,10 +57,29 @@ public class AdminRestControllerTest extends WebTest {
         exUser.setEnabled(true);
         exUser.setPhotoURL("kurilova.jpg");
         exUser.setId(100008L);
-        mockMvc.perform(put(REST_URL).contentType(MediaType.APPLICATION_JSON_VALUE).content(JsonUtil.writeValue(exUser)))
+        mockMvc.perform(put(REST_URL).contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(JsonUtil.writeValue(exUser)))
                 .andDo(print())
                 .andExpect(status().isOk());
 
+    }
+
+    @Test
+    public void testCreate() throws Exception {
+        User exUser = new User();
+        exUser.setLogin("testuser");
+        exUser.setPassword("user");
+        exUser.getRoles();
+        exUser.addRoles(Role.ROLE_USER);
+        exUser.addRoles(Role.ROLE_ADMIN);
+        exUser.setFullName("Test Test");
+        exUser.setEnabled(true);
+        exUser.setPhotoURL("test.jpg");
+        exUser.setId(100066L);
+        mockMvc.perform(post(REST_URL).contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(JsonUtil.writeValue(exUser)))
+                .andDo(print())
+                .andExpect(status().isCreated());
     }
 
 }
