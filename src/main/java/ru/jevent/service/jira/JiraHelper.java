@@ -3,10 +3,16 @@ package ru.jevent.service.jira;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-public class UriHelper {
+class JiraHelper {
+
+    private  static final String ISSUE_LIST_PATTERN = "project = %s AND issuetype = %s AND ";
 
 
-    public static String getEventLink(String eventName, String versionName) {
+    static String getSpeechIssuesJQL(String key, String version) {
+        return String.format(ISSUE_LIST_PATTERN, key, version);
+    }
+
+    static String getEventLink(String eventName, String versionName) {
         StringBuilder uri = new StringBuilder();
         uri.append(JiraServiceImpl.getBaseUrl());
         uri.append("issues/?jql=");

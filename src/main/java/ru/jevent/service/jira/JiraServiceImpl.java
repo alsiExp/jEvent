@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.jevent.model.Event;
 import ru.jevent.model.User;
+import ru.jevent.service.EventService;
 import ru.jevent.service.JiraService;
 import ru.jevent.service.UserService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,14 +17,18 @@ import java.util.List;
 public class JiraServiceImpl implements JiraService {
 
     private static final String BASE_URL = "http://jira.jugru.org/";
-    private  static final String ISSUE_LIST_PATTERN = "project = %s AND issuetype = %s AND ";
-    private  static final String EVENT_LINK_PATTERN = "http://jira.jugru.org/issues/?jql=project%20%3D%20HOLYJS%20AND%20affectedVersion%3D\"2016%20Piter\"";
 
-    private UserService userService;
+    private final UserService userService;
+    private final EventService eventService;
 
     @Autowired
-    public JiraServiceImpl(UserService userService) {
+    public JiraServiceImpl(UserService userService, EventService eventService) {
         this.userService = userService;
+        this.eventService = eventService;
+    }
+
+    public static String getBaseUrl() {
+        return BASE_URL;
     }
 
     private BasicCredentials getCredentials(long userId) {
@@ -42,39 +48,49 @@ public class JiraServiceImpl implements JiraService {
     }
 
     @Override
-    public List<Event> getAllEvent(long userId) throws JiraException {
+    public List<String> getAllEvent(long userId) throws JiraException {
         JiraClient jira = new JiraClient(BASE_URL, getCredentials(userId));
         List<Project> projectList = jira.getProjects();
-        List<Event> eventList = new ArrayList<>();
+        List<String> eventNames = new ArrayList<>();
         for(Project p : projectList) {
             p = jira.getProject(p.getKey());
             for(Version version : p.getVersions()) {
-                Event ev = new Event();
-                ev.setVersion(version.getName());
-                ev.setLogoURL(p.getAvatarUrls().get("48x48"));
-                ev.setName(p.getName());
-                ev.setDescription(p.getDescription());
-                ev.setJiraLink(UriHelper.getEventLink(p.getName(), version.getName()));
-                ev.setJiraKey(p.getKey());
-                ev.setJiraId(Integer.parseInt(version.getId()));
-                eventList.add(ev);
+                int jiraId = Integer.parseInt(version.getId());
+                Event event = eventService.getByJiraId(jiraId);
+                if(event == null) {
+                    event = new Event();
+                }
+                event.setVersion(version.getName());
+                event.setLogoURL(p.getAvatarUrls().get("48x48"));
+                event.setName(p.getName());
+                event.setDescription(p.getDescription());
+                event.setJiraLink(JiraHelper.getEventLink(p.getName(), version.getName()));
+                event.setJiraKey(p.getKey());
+                event.setJiraId(jiraId);
+                event.setJiraSync(LocalDateTime.now());
+                if(event.getId() == null) {
+                    eventService.save(event);
+                } else {
+                    eventService.update(event);
+                }
+                eventNames.add(event.getName() + " " + event.getVersion());
+
+                int maxResult = 250;
+                Issue.SearchResult speechResult = jira.searchIssues(JiraHelper.getSpeechIssuesJQL(p.getKey(), version.getName()), maxResult);
+                if(speechResult.total > maxResult) {
+                    speechResult = jira.searchIssues(JiraHelper.getSpeechIssuesJQL(p.getKey(), version.getName()), speechResult.total);
+                }
+                for(Issue issue : speechResult.issues) {
+                    parseIssue(issue, jira.getIssue(issue.getKey(),"comment").getComments());
+                }
             }
         }
 
-        return eventList;
-/*
-        // project = HolyJS AND affectedVersion = "2016 Piter"  AND type = Доклад
-        Issue.SearchResult sr = jira.searchIssues("project = HEISENBUG AND issuetype = Доклад ", 500);
-
-        System.out.println("Total: " + sr.total);
-        for (Issue i : sr.issues)
-            System.out.println("Result: " + i);
-
-*/
-
+        return eventNames;
     }
 
-    public static String getBaseUrl() {
-        return BASE_URL;
+    public void parseIssue(Issue issue, List<Comment> comments) {
+        //TODO: parse Speech and Participant
     }
+
 }

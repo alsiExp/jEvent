@@ -321,8 +321,8 @@ function makeEventTableEditable() {
                 if(data.length > 0) {
                     var str = 'Updated events: ';
                     var separator = '';
-                    data.forEach(function (event) {
-                        str += separator +  event.name + " " + event.version;
+                    data.forEach(function (eventName) {
+                        str += separator +  eventName;
                         separator = ', '
                     });
                     successNote(str);

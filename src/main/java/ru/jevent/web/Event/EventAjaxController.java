@@ -42,7 +42,7 @@ public class EventAjaxController {
     }
 
     @RequestMapping(value = "/jira", method = RequestMethod.GET)
-    public List<Event> getAllFromJira() {
+    public List<String> getAllFromJira() {
         return helper.getAllFromJira();
     }
 

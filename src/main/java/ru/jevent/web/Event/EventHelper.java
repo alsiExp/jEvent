@@ -51,18 +51,11 @@ public class EventHelper {
         return service.getAll();
     }
 
-    public List<Event> getAllFromJira() {
+    public List<String> getAllFromJira() {
         try {
-            List<Event> eventList =  jiraService.getAllEvent(LoggedUser.id());
-            for(Event event : eventList) {
-                service.simpleSave(event);
-            }
-            return eventList;
-
+            return jiraService.getAllEvent(LoggedUser.id());
         } catch (JiraException je) {
             LOG.error(je.getMessage());
-            if (je.getCause() != null)
-                LOG.error(je.getCause().getMessage());
         }
         return null;
     }

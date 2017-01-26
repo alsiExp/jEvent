@@ -145,10 +145,11 @@ CREATE TABLE events
   jira_link   VARCHAR,
   version     VARCHAR NOT NULL CHECK (version <> ''),
   start_date  TIMESTAMP,
+  jira_sync   TIMESTAMP,
   description VARCHAR,
   logo_URL    VARCHAR,
   jira_key    VARCHAR,
-  jira_id     INT DEFAULT 0
+  jira_id     INT                DEFAULT 0
 
 );
 

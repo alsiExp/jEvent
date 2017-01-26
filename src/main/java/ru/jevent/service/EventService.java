@@ -9,8 +9,6 @@ public interface EventService {
 
     Event save(Event event);
 
-    public Event simpleSave(Event event);
-
     void update(Event event) throws NotFoundException;
 
     Event get(long id) throws NotFoundException;

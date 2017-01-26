@@ -43,6 +43,8 @@ public class Event extends NamedEntity {
     private String logoURL;
     @Column(name = "start_date")
     private LocalDateTime startDate;
+    @Column(name = "jira_sync")
+    private LocalDateTime jiraSync;
 
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -124,6 +126,14 @@ public class Event extends NamedEntity {
         this.startDate = startDate;
     }
 
+    public LocalDateTime getJiraSync() {
+        return jiraSync;
+    }
+
+    public void setJiraSync(LocalDateTime jiraSync) {
+        this.jiraSync = jiraSync;
+    }
+
     public Set<Speech> getSpeeches() {
         if (speeches == null) {
             speeches = new HashSet<>();
@@ -173,14 +183,6 @@ public class Event extends NamedEntity {
         return getSpeeches().stream().collect(groupingBy(Speech::getJiraStatus, counting()));
     }
 
-    public void update(Event newEvent) {
-        jiraLink = newEvent.getJiraLink();
-        version = newEvent.getVersion();
-        jiraKey = newEvent.getJiraKey();
-        description = newEvent.getDescription();
-        logoURL = newEvent.getLogoURL();
-        startDate = newEvent.getStartDate();
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -213,6 +215,9 @@ public class Event extends NamedEntity {
         if (startDate != null ? !startDate.equals(event.startDate) : event.startDate != null) {
             return false;
         }
+        if (jiraSync != null ? !jiraSync.equals(event.jiraSync) : event.jiraSync != null) {
+            return false;
+        }
         if (!isEquals(this.getSpeeches(), event.getSpeeches())) {
             return false;
         }
@@ -236,6 +241,7 @@ public class Event extends NamedEntity {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (logoURL != null ? logoURL.hashCode() : 0);
         result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
+        result = 31 * result + (jiraSync != null ? jiraSync.hashCode() : 0);
         result = 31 * result + (speeches != null ? speeches.hashCode() : 0);
         result = 31 * result + (visitors != null ? visitors.hashCode() : 0);
         result = 31 * result + (eventPartners != null ? eventPartners.hashCode() : 0);
