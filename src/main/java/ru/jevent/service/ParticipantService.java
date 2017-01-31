@@ -13,7 +13,7 @@ public interface ParticipantService {
 
     Participant get(long id) throws NotFoundException;
 
-    Participant getByEmail(String email) throws NotFoundException;
+    Participant getByEmail(String email);
 
     void delete(long id) throws NotFoundException;
 

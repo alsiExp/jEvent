@@ -22,6 +22,12 @@ public class Twitter extends BaseEntity {
     public Twitter() {
     }
 
+    public Twitter(Long id, String accountLink, Participant owner) {
+        super(id);
+        this.accountLink = accountLink;
+        this.owner = owner;
+    }
+
     public String getAccountLink() {
         return accountLink;
     }

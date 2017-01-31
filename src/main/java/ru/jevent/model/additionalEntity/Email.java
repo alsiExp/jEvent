@@ -22,6 +22,13 @@ public class Email extends BaseEntity {
     public Email() {
     }
 
+    public Email(Long id, String email, boolean main, Participant owner) {
+        super(id);
+        this.email = email;
+        this.main = main;
+        this.owner = owner;
+    }
+
     public String getEmail() {
         return email;
     }

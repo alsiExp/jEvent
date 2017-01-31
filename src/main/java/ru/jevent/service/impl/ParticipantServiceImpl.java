@@ -36,8 +36,8 @@ public class ParticipantServiceImpl implements ParticipantService {
     }
 
     @Override
-    public Participant getByEmail(String email) throws NotFoundException {
-        return ExceptionUtil.check(repository.getByEmail(email), "email=" + email);
+    public Participant getByEmail(String email) {
+        return repository.getByEmail(email);
     }
 
     @Override

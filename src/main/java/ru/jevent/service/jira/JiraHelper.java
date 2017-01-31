@@ -5,7 +5,7 @@ import java.net.URLEncoder;
 
 class JiraHelper {
 
-    private  static final String ISSUE_LIST_PATTERN = "project = %s AND issuetype = %s AND ";
+    private  static final String ISSUE_LIST_PATTERN = "project = %s AND issuetype = Доклад AND affectedVersion = \"%s\"";
 
 
     static String getSpeechIssuesJQL(String key, String version) {
