@@ -1,7 +1,11 @@
 package ru.jevent.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.jevent.LoggedUser;
 import ru.jevent.model.User;
 import ru.jevent.repository.UserRepository;
 import ru.jevent.service.UserService;
@@ -10,8 +14,8 @@ import ru.jevent.util.exception.NotFoundException;
 
 import java.util.List;
 
-@Service
-public class UserServiceImpl implements UserService{
+@Service("userService")
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private UserRepository repository;
 
@@ -57,5 +61,14 @@ public class UserServiceImpl implements UserService{
     @Override
     public void setJiraValidCredentials(long id, boolean cred) {
         ExceptionUtil.check(repository.setJiraValidCredentials(id, cred), id);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        User u = repository.getByLogin(login);
+        if (u == null) {
+            throw new UsernameNotFoundException("User " + login + " is not found");
+        }
+        return new LoggedUser(u);
     }
 }

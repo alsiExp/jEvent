@@ -16,13 +16,15 @@ import java.util.Set;
 @NamedQueries({
         @NamedQuery(name = "User.delete", query = "DELETE from User u where u.id = :id"),
         @NamedQuery(name = "User.getAllSorted", query = "SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles ORDER BY u.id"),
-        @NamedQuery(name = "User.setJiraValidCredentials", query = "UPDATE User u SET u.jiraValidCredentials = :cred WHERE u.id = :id")
+        @NamedQuery(name = "User.setJiraValidCredentials", query = "UPDATE User u SET u.jiraValidCredentials = :cred WHERE u.id = :id"),
+        @NamedQuery(name = User.BY_LOGIN, query = "SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.login=?1")
 })
 public class User extends Person {
 
     public static final String DELETE = "User.delete";
     public static final String ALL_SORTED = "User.getAllSorted";
     public static final String SET_JIRA_CRED = "User.setJiraValidCredentials";
+    public static final String BY_LOGIN = "User.getByLogin";
 
     @Column(name = "login", nullable = false, unique = true)
     @NotEmpty
@@ -67,6 +69,15 @@ public class User extends Person {
         this.id = id;
         this.login = login;
         this.password = password;
+    }
+
+    public User(Long id, String fullName, boolean enabled,  String login,
+                String password, Role role, Role... roles) {
+        super(fullName, enabled, "#");
+        this.id = id;
+        this.login = login;
+        this.password = password;
+        this.roles = EnumSet.of(role, roles);
     }
 
     public String getLogin() {

@@ -53,4 +53,11 @@ public class AdminAjaxController {
             helper.update(user);
         }
     }
+
+/*    @RequestMapping(method = RequestMethod.POST)
+    public void update(UserTo userTo) {
+        if(userTo != null) {
+            System.out.println(userTo);
+        }
+    }*/
 }

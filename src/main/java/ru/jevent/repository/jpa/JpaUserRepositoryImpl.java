@@ -39,6 +39,11 @@ public class JpaUserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public User getByLogin(String login) {
+        return em.createNamedQuery(User.BY_LOGIN, User.class).setParameter(1, login).getSingleResult();
+    }
+
+    @Override
     public List<User> getAll() {
         return em.createNamedQuery(User.ALL_SORTED, User.class).getResultList();
     }
