@@ -82,20 +82,26 @@ public class JiraServiceImpl implements JiraService {
                     eventService.update(event);
                 }
                 eventNames.add(event.getName() + " " + event.getVersion());
-
-                int maxResult = 250;
-                Issue.SearchResult speechResult = jira.searchIssues(JiraHelper.getSpeechIssuesJQL(p.getKey(), version.getName()), maxResult);
-
-                for(Issue issue : speechResult.issues) {
-                    parseIssue(issue, jira.getIssue(issue.getKey(),"comment").getComments());
-                }
             }
         }
 
         return eventNames;
     }
 
-    public void parseIssue(Issue issue, List<Comment> comments) {
+    public List<String> getEventSpeechList(long eventId) {
+
+/*        int maxResult = 250;
+        Issue.SearchResult speechResult = jira.searchIssues(JiraHelper.getSpeechIssuesJQL(p.getKey(), version.getName()), maxResult);
+
+        for(Issue issue : speechResult.issues) {
+            List<Comment> c = jira.getIssue(issue.getKey(),"comment").getComments();
+            parseIssue(issue);
+        }*/
+
+        return null;
+    }
+
+    public void parseIssue(Issue issue) {
         //TODO: parse Speech and Participant
         Matcher fullMatcher = Pattern.compile("\\*Name:\\*\\s+([\\s\\S]*);\\s*\\*Company:\\*\\s+([\\s\\S]*),\\s*\\*Photo link:\\*\\s+([\\s\\S]*);\\s*\\*Email:\\*\\s+([\\s\\S]*);\\s*\\*Skype:\\*\\s+([\\s\\S]*);\\s*\\*Phone:\\*\\s+([\\s\\S]*);\\s*\\*Twitter:\\*\\s+([\\s\\S]*)\\s*\\*Country, City:\\*\\s+([\\s\\S]*);\\s*\\*Travel:\\*\\s+([\\s\\S]*);\\s*\\*Bio:\\*\\s+([\\s\\S]*);\\s*\\*Speaker background:\\*\\s+([\\s\\S]*);\\s*\\*Talk title:\\*\\s+([\\s\\S]*);\\s*\\*Description:\\*\\s+([\\s\\S]*);\\s*\\*Short Description:\\*\\s+([\\s\\S]*);\\s*\\*Short Description:\\*\\s+([\\s\\S]*).").matcher(issue.getDescription());
         Matcher speakerMatcher = Pattern.compile("\\*Name:\\*\\s+([\\s\\S]*);\\s*\\*Company:\\*\\s+([\\s\\S]*),\\s*\\*Photo link:\\*\\s+([\\s\\S]*);\\s*\\*Email:\\*\\s+([\\s\\S]*);\\s*\\*Skype:\\*\\s+([\\s\\S]*);\\s*\\*Phone:\\*\\s+([\\s\\S]*);\\s*\\*Twitter:\\*\\s+([\\s\\S]*)\\s*\\*Country, City:\\*\\s+([\\s\\S]*);\\s*\\*Travel:\\*\\s+([\\s\\S]*);\\s*\\*Bio:\\*\\s+([\\s\\S]*);\\s*\\*Speaker background:\\*\\s+([\\s\\S]*);\\s*\\*Talk ").matcher(issue.getDescription());

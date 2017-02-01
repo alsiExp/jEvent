@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.jevent.model.Event;
+import ru.jevent.model.Speech;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/ajax/events")
@@ -46,4 +48,8 @@ public class EventAjaxController {
         return helper.getAllFromJira();
     }
 
+    @RequestMapping(value = "/{eventId}/speeches", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Set<Speech> getSpeeches(@PathVariable("eventId") long id) {
+        return helper.get(id).getSpeeches();
+    }
 }

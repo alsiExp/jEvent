@@ -7,7 +7,7 @@ import ru.jevent.model.superclasses.NamedEntity;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -306,8 +306,8 @@ public class Speech extends NamedEntity {
         return event.getName() + " " + event.getVersion();
     }
 
-    public List<Long> getParticipantsId() {
-        return getSpeakers().stream().map(Participant :: getId).collect(Collectors.toList());
+    public Map<Long, String> getParticipants() {
+        return getSpeakers().stream().collect(Collectors.toMap(Participant :: getId, Participant :: getFullName));
     }
 
     public Long getPartnerId() {

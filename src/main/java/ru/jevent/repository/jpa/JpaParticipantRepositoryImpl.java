@@ -9,6 +9,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+import static ru.jevent.util.exception.ExceptionUtil.checkUniqueResult;
+
 @Repository
 @Transactional(readOnly = true)
 public class JpaParticipantRepositoryImpl implements ParticipantRepository {
@@ -40,7 +42,7 @@ public class JpaParticipantRepositoryImpl implements ParticipantRepository {
 
     @Override
     public Participant getByEmail(String email) {
-        return em.createNamedQuery(Participant.BY_EMAIL, Participant.class).setParameter(1, email).getSingleResult();
+        return checkUniqueResult(em.createNamedQuery(Participant.BY_EMAIL, Participant.class).setParameter(1, email).getResultList());
     }
 
     @Override

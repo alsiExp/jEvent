@@ -2,6 +2,8 @@ package ru.jevent.util.exception;
 
 import ru.jevent.LoggerWrapper;
 
+import javax.persistence.NonUniqueResultException;
+import java.util.List;
 
 public class ExceptionUtil {
 
@@ -22,6 +24,16 @@ public class ExceptionUtil {
 
     public static <T> T check(T obj, long id) {
         return check(obj, "id = " + id);
+    }
+
+    public static <T> T checkUniqueResult(List<T> result) {
+        if(result.size() == 1) {
+            return result.get(0);
+        } else if(result.size() == 0) {
+            return null;
+        } else {
+            throw new NonUniqueResultException();
+        }
     }
 
 }

@@ -21,6 +21,7 @@
         <intercept-url pattern="/**" access="isAuthenticated()" />
         <form-login />
         <logout />
+        <csrf disabled="true"/>
     </http>
 
     <beans:bean class="ru.jevent.util.PasswordUtil" id="passwordEncoder" factory-method="getPasswordEncoder"/>

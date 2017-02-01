@@ -6,9 +6,10 @@ import ru.jevent.model.Event;
 import ru.jevent.repository.EventRepository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+
+import static ru.jevent.util.exception.ExceptionUtil.checkUniqueResult;
 
 @Repository
 @Transactional(readOnly = true)
@@ -47,13 +48,6 @@ public class JpaEventRepositoryImpl implements EventRepository {
 
     @Override
     public Event getByJiraId(int jiraId) {
-        List<Event> list =  em.createNamedQuery(Event.BY_JIRA_ID, Event.class).setParameter("jiraId", jiraId).getResultList();
-        if(list.size() == 1) {
-            return list.get(0);
-        } else if(list.size() == 0) {
-            return null;
-        } else {
-            throw new NonUniqueResultException();
-        }
+        return checkUniqueResult(em.createNamedQuery(Event.BY_JIRA_ID, Event.class).setParameter("jiraId", jiraId).getResultList());
     }
 }
