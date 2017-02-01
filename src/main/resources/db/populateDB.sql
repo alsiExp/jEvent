@@ -60,14 +60,19 @@ VALUES
    'Yakov is a partner and co-founder of two companies: Farata Systems (IT consultancy) and SuranceBay (software for the Insurance industry). Yakov leads various projects related to Web development of complex enterprise applications. In his spare time Yakov enjoys teaching software and writing books.',
    'помощь с визой в РФ');
 
+/*
+  password => $2a$10$Sh0ZD2NFrzRRJJEKEWn8l.92ROEuzlVyzB9SV1AM8fdluPR0aC1ni
+  admin    => $2a$10$WejOLxVuXRpOgr4IlzQJ.eT4UcukNqHlAiOVZj1P/nmc8WbpMkiju
+*/
+
 INSERT INTO users (full_name, enabled, photo_url, login, password)
 VALUES
-  ('Яна Пилюгина', TRUE, 'pilugina.jpg', 'yana', 'user'),
-  ('Андрей Дмитриев', TRUE, 'dmitriev.jpg', 'andrey', 'admin'),
-  ('Екатерина Курилова', TRUE, 'kurilova.jpg', 'ekaterina', 'user'),
-  ('Руслан Ахметзянов', FALSE, 'ahmetzyanov.jpg', 'ruslan', 'user'),
-  ('Максим Зверев', TRUE, 'zverev.jpg', 'maxim', 'user'),
-  ('Алексей Фёдоров', TRUE, 'fedorov.jpg', 'alexey', 'user');
+  ('Яна Пилюгина', TRUE, 'pilugina.jpg', 'yana', '$2a$10$Sh0ZD2NFrzRRJJEKEWn8l.92ROEuzlVyzB9SV1AM8fdluPR0aC1ni'),
+  ('Андрей Дмитриев', TRUE, 'dmitriev.jpg', 'andrey', '$2a$10$WejOLxVuXRpOgr4IlzQJ.eT4UcukNqHlAiOVZj1P/nmc8WbpMkiju'),
+  ('Екатерина Курилова', TRUE, 'kurilova.jpg', 'ekaterina', '$2a$10$Sh0ZD2NFrzRRJJEKEWn8l.92ROEuzlVyzB9SV1AM8fdluPR0aC1ni'),
+  ('Руслан Ахметзянов', FALSE, 'ahmetzyanov.jpg', 'ruslan', '$2a$10$Sh0ZD2NFrzRRJJEKEWn8l.92ROEuzlVyzB9SV1AM8fdluPR0aC1ni'),
+  ('Максим Зверев', TRUE, 'zverev.jpg', 'maxim', '$2a$10$Sh0ZD2NFrzRRJJEKEWn8l.92ROEuzlVyzB9SV1AM8fdluPR0aC1ni'),
+  ('Алексей Фёдоров', TRUE, 'fedorov.jpg', 'alexey', '$2a$10$Sh0ZD2NFrzRRJJEKEWn8l.92ROEuzlVyzB9SV1AM8fdluPR0aC1ni');
 
 
 INSERT INTO events (name, jira_key, jira_link, version, start_date, description, logo_url)

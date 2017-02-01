@@ -8,6 +8,7 @@ import ru.jevent.LoggerWrapper;
 import ru.jevent.model.User;
 import ru.jevent.service.JiraService;
 import ru.jevent.service.UserService;
+import ru.jevent.util.PasswordUtil;
 
 import java.util.List;
 
@@ -25,17 +26,19 @@ public class UserHelper {
 
     public User create(User user) {
         LOG.info("create " + user);
-        return service.save(user);
+        return service.save(PasswordUtil.getEncoded(user));
     }
 
     public void update(User user) {
         LOG.info("update " + user);
-        service.update(user);
+        service.update(PasswordUtil.getEncoded(user));
     }
 
     public User get(long id) {
         LOG.info("get " + id);
-        return service.get(id);
+        User user = service.get(id);
+        user.setPassword(null);
+        return user;
     }
 
     public void delete(long id) {
@@ -45,7 +48,9 @@ public class UserHelper {
 
     public List<User> getAll() {
         LOG.info("get all users");
-        return service.getAll();
+        List<User> all = service.getAll();
+        all.forEach(u -> u.setPassword(null));
+        return all;
     }
 
     public void setJiraValidCredentials(long id, boolean cred) {

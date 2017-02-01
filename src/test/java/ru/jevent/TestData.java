@@ -54,7 +54,7 @@ public class TestData {
     public User getExistingUser() {
         User exUser = new User();
         exUser.setLogin("ekaterina");
-        exUser.setPassword("user");
+        exUser.setPassword("$2a$10$Sh0ZD2NFrzRRJJEKEWn8l.92ROEuzlVyzB9SV1AM8fdluPR0aC1ni");
         exUser.getRoles();
         exUser.addRoles(Role.ROLE_USER);
         exUser.addRoles(Role.ROLE_ADMIN);
@@ -68,7 +68,7 @@ public class TestData {
     public User getUser06() {
         User u = new User();
         u.setLogin("alexey");
-        u.setPassword("user");
+        u.setPassword("$2a$10$Sh0ZD2NFrzRRJJEKEWn8l.92ROEuzlVyzB9SV1AM8fdluPR0aC1ni");
         u.getRoles();
         u.setFullName("Алексей Фёдоров");
         u.setEnabled(true);
@@ -82,7 +82,7 @@ public class TestData {
     public User getUser11() {
         User u = new User();
         u.setLogin("yana");
-        u.setPassword("user");
+        u.setPassword("$2a$10$Sh0ZD2NFrzRRJJEKEWn8l.92ROEuzlVyzB9SV1AM8fdluPR0aC1ni");
         u.getRoles();
         u.setFullName("Яна Пилюгина");
         u.setEnabled(true);

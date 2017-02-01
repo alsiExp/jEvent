@@ -3,10 +3,11 @@ package ru.jevent.to;
 import org.hibernate.validator.constraints.NotEmpty;
 import ru.jevent.model.User;
 import ru.jevent.model.enums.Role;
+import ru.jevent.util.HasPassword;
 
 import javax.validation.constraints.Size;
 
-public class UserTo {
+public class UserTo implements HasPassword{
     protected int id;
 
     @NotEmpty
@@ -36,6 +37,12 @@ public class UserTo {
         this.login = login;
     }
 
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
     public void setPassword(String password) {
         this.password = password;
     }

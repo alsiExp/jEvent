@@ -13,10 +13,21 @@
         <http-basic/>
         <intercept-url pattern="/rest/admin/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/**" access="isAuthenticated()"/>
+        <csrf disabled="true"/>
     </http>
+
+    <http>
+        <intercept-url pattern="/**/admin/**" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/**" access="isAuthenticated()" />
+        <form-login />
+        <logout />
+    </http>
+
+    <beans:bean class="ru.jevent.util.PasswordUtil" id="passwordEncoder" factory-method="getPasswordEncoder"/>
 
     <authentication-manager>
         <authentication-provider user-service-ref="userService">
+            <password-encoder ref="passwordEncoder"/>
 
             <!--
                         <jdbc-user-service data-source-ref="dataSource"
