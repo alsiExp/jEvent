@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 
 <section class="row" id="navigation">
@@ -15,7 +16,8 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="#">
-                    <img class="" src="${pageContext.request.contextPath}/resources/img/jEvent-logo-xl.png" alt="jEvent">
+                    <img class="" src="${pageContext.request.contextPath}/resources/img/jEvent-logo-xl.png"
+                         alt="jEvent">
 
                 </a>
             </div>
@@ -26,35 +28,36 @@
 
                     <li><a href="../events"><fmt:message key="app.menu.event"/></a></li>
 
-<%--                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="false"><fmt:message key="app.menu.event"/><span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#"><fmt:message key="app.menu.event.list"/></a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#"><fmt:message key="app.menu.event.new"/></a></li>
-                        </ul>
-                    </li>
---%>
+                    <%--                    <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                               aria-haspopup="true" aria-expanded="false"><fmt:message key="app.menu.event"/><span class="caret"></span></a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#"><fmt:message key="app.menu.event.list"/></a></li>
+                                                <li role="separator" class="divider"></li>
+                                                <li><a href="#"><fmt:message key="app.menu.event.new"/></a></li>
+                                            </ul>
+                                        </li>
+                    --%>
 
                     <li><a href="../participants"><fmt:message key="app.menu.participant"/></a></li>
 
-<%--
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="false"><fmt:message key="app.menu.participant"/><span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="../participants"><fmt:message key="app.menu.participant.list"/></a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#"><fmt:message key="app.menu.participant.new"/></a></li>
+                    <%--
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                               aria-haspopup="true" aria-expanded="false"><fmt:message key="app.menu.participant"/><span class="caret"></span></a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="../participants"><fmt:message key="app.menu.participant.list"/></a></li>
+                                                <li role="separator" class="divider"></li>
+                                                <li><a href="#"><fmt:message key="app.menu.participant.new"/></a></li>
 
-                        </ul>
-                    </li>
---%>
+                                            </ul>
+                                        </li>
+                    --%>
 
                     <li class="dropdown hidden-sm">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="false"><fmt:message key="app.menu.partner"/><span class="caret"></span></a>
+                           aria-haspopup="true" aria-expanded="false"><fmt:message key="app.menu.partner"/><span
+                                class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="#"><fmt:message key="app.menu.partner.list"/></a></li>
                             <li role="separator" class="divider"></li>
@@ -98,11 +101,15 @@
                             <fmt:message key="app.menu.profile"/><span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="../profile"><fmt:message key="app.menu.profile"/></a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="../users"><fmt:message key="app.menu.profile.team"/></a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#"><fmt:message key="app.menu.profile.logout"/>&nbsp;<i class="fa fa-sign-out fa-fw" aria-hidden="true"></i></a>
+                            <sec:authorize access="isAuthenticated()">
+                                <li><a href="../profile"><fmt:message key="app.menu.profile"/></a></li>
+                                <li role="separator" class="divider"></li>
+                                <sec:authorize access="hasRole('ROLE_ADMIN')">
+                                    <li><a href="../users"><fmt:message key="app.menu.profile.team"/></a></li>
+                                    <li role="separator" class="divider"></li>
+                                </sec:authorize>
+                                <li><a href="#"><fmt:message key="app.menu.profile.logout"/>&nbsp;<i class="fa fa-sign-out fa-fw" aria-hidden="true"></i></a></li>
+                            </sec:authorize>
                         </ul>
                     </li>
 
@@ -111,4 +118,5 @@
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
-</section>      <!-- end menu section-->
+</section>
+<!-- end menu section-->
