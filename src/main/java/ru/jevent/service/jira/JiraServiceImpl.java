@@ -3,8 +3,10 @@ package ru.jevent.service.jira;
 import net.rcarz.jiraclient.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Event;
 import ru.jevent.model.Participant;
+import ru.jevent.model.Speech;
 import ru.jevent.model.User;
 import ru.jevent.model.additionalEntity.Email;
 import ru.jevent.model.additionalEntity.Twitter;
@@ -13,12 +15,14 @@ import ru.jevent.service.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
 public class JiraServiceImpl implements JiraService {
 
+    private static final LoggerWrapper LOG = LoggerWrapper.get(JiraService.class);
     private static final String BASE_URL = "http://jira.jugru.org/";
 
     private final UserService userService;
@@ -88,24 +92,36 @@ public class JiraServiceImpl implements JiraService {
         return eventNames;
     }
 
-    public List<String> getEventSpeechList(long eventId) {
+    public List<String> getEventSpeechList(long eventId, long userId) {
 
-/*        int maxResult = 250;
-        Issue.SearchResult speechResult = jira.searchIssues(JiraHelper.getSpeechIssuesJQL(p.getKey(), version.getName()), maxResult);
+        JiraClient jira = new JiraClient(BASE_URL, getCredentials(userId));
+        Event event = eventService.get(eventId);
 
+        int maxResult = 350;
+        try {
+        Issue.SearchResult speechResult = jira.searchIssues(JiraHelper.getSpeechIssuesJQL(event.getJiraKey(), event.getVersion()), maxResult);
         for(Issue issue : speechResult.issues) {
-            List<Comment> c = jira.getIssue(issue.getKey(),"comment").getComments();
-            parseIssue(issue);
-        }*/
+            List<Comment> commentList = jira.getIssue(issue.getKey(), "comment").getComments();
+            Speech speech =  parseIssue(issue, event);
+            if(speech != null) {
+                System.out.println(speech);
+            }
+        }
 
+        } catch(JiraException je){
+            LOG.error(je.getMessage(), je);
+         }
         return null;
     }
 
-    public void parseIssue(Issue issue) {
+    public Speech parseIssue(Issue issue, Event event) {
         //TODO: parse Speech and Participant
         Matcher fullMatcher = Pattern.compile("\\*Name:\\*\\s+([\\s\\S]*);\\s*\\*Company:\\*\\s+([\\s\\S]*),\\s*\\*Photo link:\\*\\s+([\\s\\S]*);\\s*\\*Email:\\*\\s+([\\s\\S]*);\\s*\\*Skype:\\*\\s+([\\s\\S]*);\\s*\\*Phone:\\*\\s+([\\s\\S]*);\\s*\\*Twitter:\\*\\s+([\\s\\S]*)\\s*\\*Country, City:\\*\\s+([\\s\\S]*);\\s*\\*Travel:\\*\\s+([\\s\\S]*);\\s*\\*Bio:\\*\\s+([\\s\\S]*);\\s*\\*Speaker background:\\*\\s+([\\s\\S]*);\\s*\\*Talk title:\\*\\s+([\\s\\S]*);\\s*\\*Description:\\*\\s+([\\s\\S]*);\\s*\\*Short Description:\\*\\s+([\\s\\S]*);\\s*\\*Short Description:\\*\\s+([\\s\\S]*).").matcher(issue.getDescription());
         Matcher speakerMatcher = Pattern.compile("\\*Name:\\*\\s+([\\s\\S]*);\\s*\\*Company:\\*\\s+([\\s\\S]*),\\s*\\*Photo link:\\*\\s+([\\s\\S]*);\\s*\\*Email:\\*\\s+([\\s\\S]*);\\s*\\*Skype:\\*\\s+([\\s\\S]*);\\s*\\*Phone:\\*\\s+([\\s\\S]*);\\s*\\*Twitter:\\*\\s+([\\s\\S]*)\\s*\\*Country, City:\\*\\s+([\\s\\S]*);\\s*\\*Travel:\\*\\s+([\\s\\S]*);\\s*\\*Bio:\\*\\s+([\\s\\S]*);\\s*\\*Speaker background:\\*\\s+([\\s\\S]*);\\s*\\*Talk ").matcher(issue.getDescription());
         Participant part;
+        Speech speech = new Speech();
+        String speechTitle;
+        String speechTitleEN;
 
         if (fullMatcher.find()) {
             String email = fullMatcher.group(4);
@@ -134,24 +150,26 @@ public class JiraServiceImpl implements JiraService {
             part.setBiography(fullMatcher.group(10));
             part.setSpeakerBackground(fullMatcher.group(11));
 
-            /*
+
+
             String[] titles = checkEN(fullMatcher.group(12));
             if (titles != null) {
-                title = titles[0];
-                titleEN = titles[1];
+                speechTitle = titles[0];
+                speechTitleEN = titles[1];
             } else
-                title = fullMatcher.group(12);
-            desc = fullMatcher.group(13);
-            shortDescEN = fullMatcher.group(14);
-            shortDesc = fullMatcher.group(15);
-
-            if (email == null || name == null || title == null || desc == null) {
-
+                speechTitle = fullMatcher.group(12);
+            for (Speech s : part.getSpeechSet()) {
+                if(s.getName().equals(speechTitle) && Objects.equals(s.getEvent().getId(), event.getId())) {
+                    speech = s;
+                }
             }
-            */
-            if (part.getFullName() != null) {
-                return;
-            }
+            speech.addSpeaker(part);
+            speech.setFullDescription(fullMatcher.group(13));
+            speech.setShortDescriptionEN(fullMatcher.group(14));
+            speech.setShortDescription(fullMatcher.group(15));
+
+            return new Speech();
+
         }
         if (speakerMatcher.find()) {
             String email = speakerMatcher.group(4);
@@ -180,7 +198,7 @@ public class JiraServiceImpl implements JiraService {
                 System.out.println(debug + " speakerMatcher error");
             }*/
         }
-
+        return null;
     }
 
     private String[] checkEN(String str) {

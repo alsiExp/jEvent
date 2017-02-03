@@ -267,6 +267,13 @@ public class Speech extends NamedEntity {
         this.speakers = speakers;
     }
 
+    public void addSpeaker(Participant p) {
+        if(p != null) {
+            p.addSpeech(this);
+            getSpeakers().add(p);
+        }
+    }
+
     public Set<SpeechTag> getTags() {
         if (tags == null) {
             tags = new HashSet<>();

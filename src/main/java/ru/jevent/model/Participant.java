@@ -242,6 +242,11 @@ public class Participant extends Person {
         this.speechSet = speechSet;
     }
 
+    public void addSpeech(Speech speech) {
+        if(speech != null) {
+            getSpeechSet().add(speech);
+        }
+    }
 
     public Map<Long,String> getParticipantTags() {
         Map<Long,String> map = new HashMap<>();
