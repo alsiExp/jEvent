@@ -16,7 +16,8 @@ import java.util.stream.Collectors;
 @NamedQueries({
         @NamedQuery(name = Speech.DELETE, query = "DELETE from Speech s where s.id = :id"),
         @NamedQuery(name = Speech.GET_BY_PARTNER, query = "SELECT s FROM Speech s  LEFT JOIN FETCH s.partner p where p.id = :id"),
-        @NamedQuery(name = Speech.GET_POSSIBLE_TAGS, query = "SELECT t FROM SpeechTag t WHERE NOT EXISTS (SELECT s FROM Speech s WHERE s.id  = :id AND t MEMBER of s.tags)")
+        @NamedQuery(name = Speech.GET_POSSIBLE_TAGS, query = "SELECT t FROM SpeechTag t WHERE NOT EXISTS (SELECT s FROM Speech s WHERE s.id  = :id AND t MEMBER of s.tags)"),
+        @NamedQuery(name = Speech.BY_JIRA_ID, query = "SELECT s FROM Speech s WHERE s.jiraId = :jiraId")
 })
 public class Speech extends NamedEntity {
 
@@ -46,6 +47,7 @@ public class Speech extends NamedEntity {
     public static final String DELETE = "Speech.delete";
     public static final String GET_BY_PARTNER = "Speech.byPartner";
     public static final String GET_POSSIBLE_TAGS = "Tags.bySpeech";
+    public static final String BY_JIRA_ID = "Speech.getByJiraId";
 
 
     @Column(name = "name_en")
@@ -63,23 +65,21 @@ public class Speech extends NamedEntity {
     @Column(name = "short_desc_en")
     private String shortDescriptionEN;
 
+    @Column(name = "jira_id")
+    private int jiraId;
     @Column(name = "jira_key")
     private String jiraKey;
     @Column(name = "jira_resolution")
     private String jiraResolution;
     @Column(name = "jira_comments")
     private String jiraComments;
-    @Column(name = "jira_update_time")
-    private LocalDateTime jiraUpdateTime;
     @Column(name = "jira_status")
     private String jiraStatus;
     @Column(name = "jira_link")
     private String jiraLink;
 
     @Column(name = "sync_time")
-    private LocalDateTime synchronizationTime;
-    @Column(name = "is_from_jira")
-    private boolean isFromJira;
+    private LocalDateTime jiraSync;
     @Column(name = "rating")
     private double rating;
 
@@ -176,20 +176,20 @@ public class Speech extends NamedEntity {
         this.shortDescriptionEN = shortDescriptionEN;
     }
 
+    public int getJiraId() {
+        return jiraId;
+    }
+
+    public void setJiraId(int jiraId) {
+        this.jiraId = jiraId;
+    }
+
     public String getJiraKey() {
         return jiraKey;
     }
 
     public void setJiraKey(String jiraKey) {
         this.jiraKey = jiraKey;
-    }
-
-    public LocalDateTime getJiraUpdateTime() {
-        return jiraUpdateTime;
-    }
-
-    public void setJiraUpdateTime(LocalDateTime jiraUpdateTime) {
-        this.jiraUpdateTime = jiraUpdateTime;
     }
 
     public String getJiraStatus() {
@@ -224,20 +224,12 @@ public class Speech extends NamedEntity {
         this.jiraComments = jiraComments;
     }
 
-    public LocalDateTime getSynchronizationTime() {
-        return synchronizationTime;
+    public LocalDateTime getJiraSync() {
+        return jiraSync;
     }
 
-    public void setSynchronizationTime(LocalDateTime synchronizationTime) {
-        this.synchronizationTime = synchronizationTime;
-    }
-
-    public boolean isFromJira() {
-        return isFromJira;
-    }
-
-    public void setFromJira(boolean fromJira) {
-        isFromJira = fromJira;
+    public void setJiraSync(LocalDateTime synchronizationTime) {
+        this.jiraSync = synchronizationTime;
     }
 
     public double getSpeakerCost() {
@@ -333,7 +325,6 @@ public class Speech extends NamedEntity {
 
         Speech speech = (Speech) o;
 
-        if (isFromJira != speech.isFromJira) return false;
         if (Double.compare(speech.speakerCost, speakerCost) != 0) return false;
         if (nameEN != null ? !nameEN.equals(speech.nameEN) : speech.nameEN != null) return false;
         if (fullDescription != null ? !fullDescription.equals(speech.fullDescription) : speech.fullDescription != null)
@@ -346,6 +337,8 @@ public class Speech extends NamedEntity {
             return false;
         if (shortDescriptionEN != null ? !shortDescriptionEN.equals(speech.shortDescriptionEN) : speech.shortDescriptionEN != null)
             return false;
+        if (jiraId != speech.jiraId)
+            return false;
         if (jiraKey != null ? !jiraKey.equals(speech.jiraKey) : speech.jiraKey != null)
             return false;
         if (jiraResolution != null ? !jiraResolution.equals(speech.jiraResolution) : speech.jiraResolution != null)
@@ -356,11 +349,9 @@ public class Speech extends NamedEntity {
             return false;
         if (speakerCost != speech.speakerCost)
             return false;
-        if (jiraUpdateTime != null ? !jiraUpdateTime.equals(speech.jiraUpdateTime) : speech.jiraUpdateTime != null)
-            return false;
         if (jiraStatus != null ? !jiraStatus.equals(speech.jiraStatus) : speech.jiraStatus != null) return false;
         if (jiraLink != null ? !jiraLink.equals(speech.jiraLink) : speech.jiraLink != null) return false;
-        if (synchronizationTime != null ? !synchronizationTime.equals(speech.synchronizationTime) : speech.synchronizationTime != null)
+        if (jiraSync != null ? !jiraSync.equals(speech.jiraSync) : speech.jiraSync != null)
             return false;
         if(partner != null) {
             if (partner.getId().equals(speech.partner.getId()))
@@ -397,14 +388,13 @@ public class Speech extends NamedEntity {
         result = 31 * result + (focus != null ? focus.hashCode() : 0);
         result = 31 * result + (shortDescription != null ? shortDescription.hashCode() : 0);
         result = 31 * result + (shortDescriptionEN != null ? shortDescriptionEN.hashCode() : 0);
+        result = 31 * result + jiraId;
         result = 31 * result + (jiraKey != null ? jiraKey.hashCode() : 0);
         result = 31 * result + (jiraResolution != null ? jiraResolution.hashCode() : 0);
         result = 31 * result + (jiraComments != null ? jiraComments.hashCode() : 0);
-        result = 31 * result + (jiraUpdateTime != null ? jiraUpdateTime.hashCode() : 0);
         result = 31 * result + (jiraStatus != null ? jiraStatus.hashCode() : 0);
         result = 31 * result + (jiraLink != null ? jiraLink.hashCode() : 0);
-        result = 31 * result + (synchronizationTime != null ? synchronizationTime.hashCode() : 0);
-        result = 31 * result + (isFromJira ? 1 : 0);
+        result = 31 * result + (jiraSync != null ? jiraSync.hashCode() : 0);
         temp = Double.doubleToLongBits(speakerCost);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(rating);

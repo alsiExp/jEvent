@@ -52,4 +52,9 @@ public class EventAjaxController {
     public Set<Speech> getSpeeches(@PathVariable("eventId") long id) {
         return helper.get(id).getSpeeches();
     }
+
+    @RequestMapping(value = "/{eventId}/speeches/jira", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<String> getJiraSpeeches(@PathVariable("eventId") long id) {
+        return helper.getSpeechesByEvent(id);
+    }
 }

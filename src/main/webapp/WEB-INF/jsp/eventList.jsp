@@ -43,7 +43,7 @@
 
             <datatables:table id="eventTable" url="${ajaxUrl}" row="event" cssClass="table table-hover" autoWidth="true">
                 <fmt:message key="app.event.name" var="name"/>
-                <datatables:column title="${name}" property="name"/>
+                <datatables:column title="${name}" property="name" renderFunction="renderEventLink"/>
 
                 <fmt:message key="app.event.version" var="version"/>
                 <datatables:column title="${version}" property="version"/>

@@ -11,13 +11,13 @@ import ru.jevent.model.User;
 import ru.jevent.model.additionalEntity.Email;
 import ru.jevent.model.additionalEntity.Twitter;
 import ru.jevent.service.*;
+import ru.jevent.util.exception.NotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
 
 @Service
 public class JiraServiceImpl implements JiraService {
@@ -92,164 +92,84 @@ public class JiraServiceImpl implements JiraService {
         return eventNames;
     }
 
-    public List<String> getEventSpeechList(long eventId, long userId) {
+    @Override
+    public List<String> getEventSpeechList(long eventId, long userId) throws JiraException {
+        Map<String, List<String>> parseMap = new HashMap<>();
+        List<String> success = new ArrayList<>();
+        List<String> error = new ArrayList<>();
+        parseMap.put("sucess", success);
+        parseMap.put("error", error);
 
         JiraClient jira = new JiraClient(BASE_URL, getCredentials(userId));
         Event event = eventService.get(eventId);
 
         int maxResult = 350;
-        try {
         Issue.SearchResult speechResult = jira.searchIssues(JiraHelper.getSpeechIssuesJQL(event.getJiraKey(), event.getVersion()), maxResult);
         for(Issue issue : speechResult.issues) {
             List<Comment> commentList = jira.getIssue(issue.getKey(), "comment").getComments();
-            Speech speech =  parseIssue(issue, event);
-            if(speech != null) {
-                System.out.println(speech);
-            }
-        }
-
-        } catch(JiraException je){
-            LOG.error(je.getMessage(), je);
-         }
-        return null;
-    }
-
-    public Speech parseIssue(Issue issue, Event event) {
-        //TODO: parse Speech and Participant
-        Matcher fullMatcher = Pattern.compile("\\*Name:\\*\\s+([\\s\\S]*);\\s*\\*Company:\\*\\s+([\\s\\S]*),\\s*\\*Photo link:\\*\\s+([\\s\\S]*);\\s*\\*Email:\\*\\s+([\\s\\S]*);\\s*\\*Skype:\\*\\s+([\\s\\S]*);\\s*\\*Phone:\\*\\s+([\\s\\S]*);\\s*\\*Twitter:\\*\\s+([\\s\\S]*)\\s*\\*Country, City:\\*\\s+([\\s\\S]*);\\s*\\*Travel:\\*\\s+([\\s\\S]*);\\s*\\*Bio:\\*\\s+([\\s\\S]*);\\s*\\*Speaker background:\\*\\s+([\\s\\S]*);\\s*\\*Talk title:\\*\\s+([\\s\\S]*);\\s*\\*Description:\\*\\s+([\\s\\S]*);\\s*\\*Short Description:\\*\\s+([\\s\\S]*);\\s*\\*Short Description:\\*\\s+([\\s\\S]*).").matcher(issue.getDescription());
-        Matcher speakerMatcher = Pattern.compile("\\*Name:\\*\\s+([\\s\\S]*);\\s*\\*Company:\\*\\s+([\\s\\S]*),\\s*\\*Photo link:\\*\\s+([\\s\\S]*);\\s*\\*Email:\\*\\s+([\\s\\S]*);\\s*\\*Skype:\\*\\s+([\\s\\S]*);\\s*\\*Phone:\\*\\s+([\\s\\S]*);\\s*\\*Twitter:\\*\\s+([\\s\\S]*)\\s*\\*Country, City:\\*\\s+([\\s\\S]*);\\s*\\*Travel:\\*\\s+([\\s\\S]*);\\s*\\*Bio:\\*\\s+([\\s\\S]*);\\s*\\*Speaker background:\\*\\s+([\\s\\S]*);\\s*\\*Talk ").matcher(issue.getDescription());
-        Participant part;
-        Speech speech = new Speech();
-        String speechTitle;
-        String speechTitleEN;
-
-        if (fullMatcher.find()) {
-            String email = fullMatcher.group(4);
-            part = participantService.getByEmail(email);
-            if(part == null) {
-                part = new Participant();
-                part.addEmail(new Email(null, email, true, part));
-            }
-
-
-            String[] names = checkEN(fullMatcher.group(1));
-            if (names != null) {
-                part.setFullName(names[0]);
-                part.setFullNameEN(names[1]);
+            if(parseIssue(issue, commentList)) {
+                success.add(issue.getKey());
             } else {
-                part.setFullName(fullMatcher.group(1));
+                error.add(issue.getKey());
             }
-            part.setEmployer(fullMatcher.group(2));
-            part.setPhotoURL(fullMatcher.group(3));
-            part.setSkype(fullMatcher.group(5));
-            part.setPhone(fullMatcher.group(6));
-            part.setTwitter(new Twitter(null, checkTwitter(fullMatcher.group(7)), part));
-            part.setCity(fullMatcher.group(8));
-            part.setTravelHelp(fullMatcher.group(9));
-            // regex to separate with bio en: ([\s\S]*);\s+\*Bio en:\*\s+([\s\S]*)
-            part.setBiography(fullMatcher.group(10));
-            part.setSpeakerBackground(fullMatcher.group(11));
-
-
-
-            String[] titles = checkEN(fullMatcher.group(12));
-            if (titles != null) {
-                speechTitle = titles[0];
-                speechTitleEN = titles[1];
-            } else
-                speechTitle = fullMatcher.group(12);
-            for (Speech s : part.getSpeechSet()) {
-                if(s.getName().equals(speechTitle) && Objects.equals(s.getEvent().getId(), event.getId())) {
-                    speech = s;
-                }
-            }
-            speech.addSpeaker(part);
-            speech.setFullDescription(fullMatcher.group(13));
-            speech.setShortDescriptionEN(fullMatcher.group(14));
-            speech.setShortDescription(fullMatcher.group(15));
-
-            return new Speech();
-
         }
-        if (speakerMatcher.find()) {
-            String email = speakerMatcher.group(4);
 
-/*            name = speakerMatcher.group(1);
-            String[] names = checkEN(name);
-            if (names != null) {
-                name = names[0];
-                nameEN = names[1];
-            }
-            company = speakerMatcher.group(2);
-            photo = speakerMatcher.group(3);
-            email = speakerMatcher.group(4);
-            skype = speakerMatcher.group(5);
-            phone = speakerMatcher.group(6);
-            twitter = checkTwitter(speakerMatcher.group(7));
-            city = speakerMatcher.group(8);
-            travel = speakerMatcher.group(9);
-            bio = speakerMatcher.group(10);
-            back = speakerMatcher.group(11);
-            if (back.contains("*Talk title:*")) {
-                back = back.split(";\\s*\\*")[0];
-            }
-
-            if (email == null || name == null) {
-                System.out.println(debug + " speakerMatcher error");
-            }*/
-        }
-        return null;
+        return success;
     }
 
-    private String[] checkEN(String str) {
-        if (str != null) {
-            if (str.contains("NameEN")) {
-                String[] arr = str.split(";*\\s*\\*NameEN:\\*\\s*");
-                if (arr.length > 1) {
-                    if(arr[1].equals("null")){
-                        arr[1] = null;
-                    }
-                    return arr;
-                }
-            } else if (str.contains("Talk title")) {
-                String[] arr = str.split(";\\s*\\*Talk title:\\*\\s*");
-                if (arr.length > 1) {
-                    if(arr[1].equals("null")){
-                        arr[1] = null;
-                    }
-                    return arr;
-                }
-            }
-        }
-        return null;
+    private boolean parseIssue(Issue issue, List<Comment> comments) {
 
-    }
-
-    private String checkTwitter(String twitter) {
-        if(twitter != null) {
-            if (twitter.contains(";")) {
-                String[] arr = twitter.split(";\\s*");
-                if (arr.length > 0) {
-                    twitter = arr[0];
-                } else if (arr.length > 1) {
-                    String f = arr[1];
-                    // get followers count
-                }
-            }
+        Participant part;
+        Speech speech =  speechService.getByJiraId(Integer.parseInt(issue.getId()));
+        if(speech == null) {
+            speech = new Speech();
+            speech.setJiraId(Integer.parseInt(issue.getId()));
+            speech.setJiraKey(issue.getKey());
+            speech.setJiraLink("http://jira.jugru.org/browse/" + issue.getKey());
         }
-        return twitter;
-    }
+        speech.setJiraResolution(issue.getResolution().getName());
+        speech.setJiraStatus(issue.getStatus().getName());
+        speech.setJiraSync(LocalDateTime.now());
 
-    private String checkTitle(String title) {
-        if(title != null) {
-            if (title.contains("\n")) {
-                String[] arr = title.split(";");
-                if (arr.length >= 1) {
-                    title = arr[0];
-                }
-            }
+        // speaker - title
+        String[] summary = issue.getSummary().split("\\s+\u2014\\s+");
+        speech.setName(summary[1]);
+
+        Map<String, String> result = new Parser(issue.getDescription(), issue.getKey()).getResult();
+        if(result.get("email") != null) {
+            part = participantService.getByEmail(result.get("email"));
+        } else {
+            throw new NotFoundException("Can`t parse email from " + issue.getKey());
         }
-        return title;
+        if(part == null) {
+            part = new Participant();
+            part.setFullName(summary[0]);
+            part.addEmail(new Email(null,result.get("email"), true, part));
+        }
+        if(part.getTwitter() == null && result.get("twitter") != null) {
+            part.setTwitter(new Twitter(null, result.get("twitter"), part));
+        }
+
+        part.setFullNameEN(result.get("nameEN"));
+        part.setEmployer(result.get("company"));
+        part.setSkype(result.get("skype"));
+        part.setPhotoURL(result.get("photo"));
+        part.setPhone(result.get("phone"));
+        part.setCity(result.get("city"));
+        part.setTravelHelp(result.get("travel"));
+        part.setBiography(result.get("bio"));
+        part.setSpeakerBackground(result.get("back"));
+        part.setRegistered(LocalDateTime.now());
+        part.setEnabled(true);
+
+        part = participantService.save(part);
+
+
+        if(result.get("name") != null && result.get("title") != null) {
+            System.out.println("Ok " + issue.getKey());
+        }
+
+        return true;
     }
 
 

@@ -19,14 +19,14 @@
                 <ul class="nav nav-pills nav-stacked">
                     <li class="subheader"><fmt:message key="app.control.header"/></li>
                     <li role="separator" class="divider"></li>
-                    <%--                    <li id="create-new-participant" class="create-new"><a class="" href="#"><i
-                                                class="fa fa-plus"
-                                                aria-hidden="true"></i><fmt:message key="app.participant.control.new"/></a>
-                                        </li>
-                                        <li id="all-participants" class=""><a class="" href="../participants"><i
-                                                class="fa fa-list-ul"
-                                                aria-hidden="true"></i><fmt:message key="app.participant.control.list"/></a>
-                                        </li>--%>
+                    <li id="create-new-speech" class="create-new"><a class="" href="#"><i
+                            class="fa fa-plus"
+                            aria-hidden="true"></i><fmt:message key="app.speech.new"/></a>
+                    </li>
+                    <li id="add-speech-from-jira" class=""><a class="" href="#"><i
+                            class="fa fa-cloud-download"
+                            aria-hidden="true"></i><fmt:message key="app.event.control.importSpeechesFromJira"/></a>
+                    </li>
 
                 </ul>
 
@@ -57,12 +57,12 @@
             </div>
 
             <datatables:table id="speechTable" url="${ajaxUrl}" cssClass="row table table-hover" autoWidth="true">
-                <fmt:message key="app.event" var="event"/>
-                <datatables:column title="${event}" property="eventName"/>
-
                 <fmt:message key="app.speech" var="speech"/>
                 <datatables:column title="${speech}" property="name" sortable="false"
                                    renderFunction="renderSpeechName"/>
+
+                <fmt:message key="app.speaker" var="speaker"/>
+                <datatables:column title="${speaker}" property="participants" sortable="false"  renderFunction="renderSpeakerName"/>
 
                 <fmt:message key="app.speech.rating" var="rating"/>
                 <datatables:column title="${rating}" property="rating"/>
@@ -104,7 +104,8 @@
     var tagContainer = tagForm.find('#tag-container');
 
     $(function () {
-        makeSpeechTableEditable();
+        makeEventSpeechTableEditable();
+        initSingleEventControl();
 
     });
 

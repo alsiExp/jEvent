@@ -78,6 +78,23 @@ function renderDate( data, type, row ) {
 
 
 /* events */
+function renderSpeakerName( data, type, row ) {
+    if(type == 'display') {
+        var str = '';
+        Object.keys(data).forEach(function (key) {
+            var val = data[key];
+            str += '<a class="event-list-speaker" href="../speaker/' + key + '">' + val + '</a>';
+        });
+        return str;
+    }
+}
+
+function renderEventLink( data, type, row ) {
+    if(type == 'display') {
+        return '<a href=../event/' + row.id + '>' + data + '</a>';
+    }
+}
+
 function renderConfirmedSpeeches( data, type, row ) {
     if(type == 'display') {
         var str = '';
@@ -294,6 +311,38 @@ function addInputAdditionalEmail(containerId, btnId, pHolderText) {
 }
 
 /**** end common section ****/
+
+/**** single event js ****/
+
+function makeEventSpeechTableEditable() {
+    table = $('#speechTable').DataTable();
+    mainForm = $('#detailsSpeechForm');
+    modal = $('#editSpeech');
+}
+
+function initSingleEventControl() {
+    $('#add-speech-from-jira').click(function () {
+        $.ajax({
+            type: "GET",
+            url: ajaxUrl + 'jira/',
+            success: function (data) {
+                if(data.length > 0) {
+/*                    var str = 'Updated events: ';
+                    var separator = '';
+                    data.forEach(function (eventName) {
+                        str += separator +  eventName;
+                        separator = ', '
+                    });
+                    successNote(str);*/
+                    updateTable();
+                }
+
+            }
+        });
+    });
+}
+
+/**** end single event js ****/
 
 /**** events js ****/
 

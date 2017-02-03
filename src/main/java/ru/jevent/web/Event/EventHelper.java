@@ -55,8 +55,19 @@ public class EventHelper {
         try {
             return jiraService.getAllEvent(LoggedUser.id());
         } catch (JiraException je) {
-            LOG.error(je.getMessage());
+            LOG.error("jiraService Exception" + je.getMessage());
+            return null;
         }
-        return null;
+
+    }
+
+    public List<String> getSpeechesByEvent(long eventId) {
+        try {
+            return jiraService.getEventSpeechList(eventId, LoggedUser.id());
+        } catch (JiraException je) {
+            LOG.error("jiraService Exception" + je.getMessage());
+            return null;
+        }
+
     }
 }

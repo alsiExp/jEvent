@@ -47,6 +47,11 @@ public class SpeechServiceImpl implements SpeechService{
     }
 
     @Override
+    public Speech getByJiraId(int jiraId) {
+        return repository.getByJiraId(jiraId);
+    }
+
+    @Override
     public List<SpeechTag> getPossibleTags(long speechId) {
         return repository.getPossibleTags(speechId);
     }

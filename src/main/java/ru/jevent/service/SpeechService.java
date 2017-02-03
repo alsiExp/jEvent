@@ -18,5 +18,7 @@ public interface SpeechService {
 
     List<Speech> getByPartner(long id);
 
+    Speech getByJiraId(int jiraId);
+
     List<SpeechTag> getPossibleTags(long speechId);
 }

@@ -10,6 +10,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+import static ru.jevent.util.exception.ExceptionUtil.checkUniqueResult;
+
 @Repository
 @Transactional(readOnly = true)
 public class JpaSpeechRepositoryImpl implements SpeechRepository {
@@ -48,5 +50,12 @@ public class JpaSpeechRepositoryImpl implements SpeechRepository {
     @Override
     public List<SpeechTag> getPossibleTags(long speechId) {
         return em.createNamedQuery(Speech.GET_POSSIBLE_TAGS, SpeechTag.class).setParameter("id", speechId).getResultList();
+    }
+
+    @Override
+    public Speech getByJiraId(int jiraId) {
+        if(jiraId != 0) {
+            return checkUniqueResult(em.createNamedQuery(Speech.BY_JIRA_ID, Speech.class).setParameter("jiraId", jiraId).getResultList());
+        } else return null;
     }
 }

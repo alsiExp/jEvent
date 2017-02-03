@@ -44,4 +44,9 @@ public class MockSpeechRepositoryImpl implements SpeechRepository {
     public List<SpeechTag> getPossibleTags(long speechId) {
         return null;
     }
+
+    @Override
+    public Speech getByJiraId(int jiraId) {
+        return null;
+    }
 }

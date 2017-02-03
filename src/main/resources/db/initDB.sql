@@ -193,13 +193,12 @@ CREATE TABLE speeches
   jira_status      VARCHAR NOT NULL   DEFAULT ('Local'),
   jira_link        VARCHAR,
   sync_time        TIMESTAMP,
-  is_from_jira     BOOL,
   rating           NUMERIC(8, 4)      DEFAULT 0,
 
+  jira_id          INT                DEFAULT 0,
   jira_key         VARCHAR,
   jira_resolution  VARCHAR,
   jira_comments    VARCHAR,
-  jira_update_time TIMESTAMP,
 
   name             VARCHAR,
   full_desc        VARCHAR,

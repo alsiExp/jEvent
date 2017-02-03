@@ -48,6 +48,8 @@ public class JpaEventRepositoryImpl implements EventRepository {
 
     @Override
     public Event getByJiraId(int jiraId) {
-        return checkUniqueResult(em.createNamedQuery(Event.BY_JIRA_ID, Event.class).setParameter("jiraId", jiraId).getResultList());
+        if(jiraId != 0) {
+            return checkUniqueResult(em.createNamedQuery(Event.BY_JIRA_ID, Event.class).setParameter("jiraId", jiraId).getResultList());
+        } else return null;
     }
 }
