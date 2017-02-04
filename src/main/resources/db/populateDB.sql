@@ -98,13 +98,12 @@ INSERT INTO twitteraccs (account_link)
 VALUES
   ('tlberglund');
 
-INSERT INTO speeches (event_id, partner_id, short_desc,jira_status ,is_from_jira, name, full_desc, speaker_cost)
+INSERT INTO speeches (event_id, partner_id, short_desc,jira_status, name, full_desc, speaker_cost)
 VALUES
   (100013,
    NULL,
    'A series of technical and leadership lessons from the world of filmmaking.',
    'НОВАЯ',
-   FALSE,
    'Seven lessons developers can learn from film',
    '<p>Filmmaking is a deeply technical, collaborative, artistic, high-stakes endeavor. The details of this mysterious craft are unknown to all but an elite few, while the benefits are enjoyed by almost everyone. Sound like a profession you know?</p><p>In this short talk, we’ll explore some stories from filmmaking’s past and present and learn from another industry’s technological transitions, collaborative patterns, and specialized roles. From synchronized sound to diva directors to dolly grips, this highly scientific art has a lot to teach us about the way we developers are changing the world.</p>',
    2560
@@ -119,12 +118,11 @@ INSERT INTO twitteraccs (account_link)
 VALUES
   ('jbaruch');
 
-INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
+INSERT INTO speeches (event_id, partner_id, short_desc, name, full_desc, speaker_cost)
 VALUES
   (100013,
    NULL,
    'За несколько лет существования Bintray-я мы постоянно его ковыряем. В этом докладе я расскажу зачем мы это делаем, что изменилось.',
-   FALSE,
    'Работает — не трогай! Или зачем мы опять переделали всю архитектуру',
    '<p>Нет, ну естественно мы всё планировали заранее. Нагрузку, модель использования, необходимые фичи. И как всегда в разработке софта, «что-то пошло не так.»</p><p>Bintray изначально разрабатывался как высоконагруженная распределенная система, мы готовились к масштабу, и всё равно, когда оно всё навалилось, нам пришлось несладко.</p><p>На этом докладе я представлю вам два года динамичной архитектуры проекта, что было, что мы меняли, что стало, и самое главное — почему. На примере наших успехов, проколов и «Разборов Полетов» я покажу вам столько граблей, что хватит на ваши нынешние и будущие проекты.</p>',
    0
@@ -147,12 +145,11 @@ INSERT INTO twitteraccs (account_link)
 VALUES
   ('shipilev');
 
-INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
+INSERT INTO speeches (event_id, partner_id, short_desc, name, full_desc, speaker_cost)
 VALUES
   (100013,
    NULL,
    'Дизайн и реализация JEP-254 (Compact Strings) и JEP-280 (Indify String Concat): инсайты и идеи, ангст и грабли, катарсис и бенчмарки.',
-   FALSE,
    'The Lord of the Strings: Two Scours',
    '<p>java. lang.String — один из наиболее часто используемых классов в Java-приложениях. Не удивительно, что мы пытаемся его улучшать и микро-, и макро-оптимизациями. В докладе будут освещены вопросы рациональности, подходов к реализации, практических граблей, с которыми сталкиваются разработчики JDK, пытающиеся ничего не сломать в огромной экосистеме, а также чем эта подковёрная деятельность грозит простым пользователям.</p><p>В этом докладе мы посмотрим на две грядущие фичи в JDK 9, направленные на оптимизацию строк: Compact Strings, сжимающие строки с однобайтовыми символами, что улучшает футпринт и даже общую производительность; и Indify String Concat, использующий магию invokedynamic для конкатенации строк, позволяющий подкручивать реализацию конкатенации без рекомпиляции программ.</p>',
    580
@@ -181,12 +178,11 @@ INSERT INTO twitteraccs (account_link)
 VALUES
   ('yegor256');
 
-INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
+INSERT INTO speeches (event_id, partner_id, short_desc, name, full_desc, speaker_cost)
 VALUES
   (100013,
    NULL,
    'Object-Relational Mapping(JPA/Hibernate) is a design pattern, which is very popular and totally anti basic principles of object-oriented programming',
-   FALSE,
    'ORM — это обидно',
    '<p>Object-Relational Mapping (ORM), как метод интеграции реляционных баз данных с Java-приложениями, очень популярен последние лет десять. В то же время (и об этом будет мой доклад) он совершенно не совместим с ключевыми принципами объектно-ориентированного программирования. ORM превращает объекты в глупые и бездушные хранилища данных, грубо нарушая инкапсуляцию. В своем докладе Егор подробно раскроет эту тему и предложит альтернативу.</p>',
    4300
@@ -209,12 +205,11 @@ INSERT INTO twitteraccs (account_link)
 VALUES
   ('gamussa');
 
-INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
+INSERT INTO speeches (event_id, partner_id, short_desc, name, full_desc, speaker_cost)
 VALUES
   (100013,
    NULL,
    'В своем докладе я собираюсь рассмотреть один из способов улучшения производительности Java-приложений, основанный на использовании стандарта JCache и возможностей, которые предоставляет распределенное кэширование данных.',
-   FALSE,
    'JCache и Распределенные Кэши: Беспредел!',
    '<p>Java тормозит. Что же делать?! Вариантов видится несколько:</p><ol><li>Паника! (отставить панику)</li><li>Молиться на иконы Шипилёва</li><li>Всё кэшировать</li></ol><p>Даже если второй вариант выглядит заманчиво, мы пойдем третьим путем. Но на все данные серьезных пацанов никакого heap-а не хватит. Но тут на помощь приходит распределенное кэширование вообще, и стандарт JCache в частности. В этом докладе вы узнаете, что такое JCache, и требует ли он чтобы данные хранились в куче (on-heap) или вне кучи (off-heap), на одной Java-машине или на нескольких.</p>',
    4300
@@ -238,12 +233,11 @@ INSERT INTO twitteraccs (account_link)
 VALUES
   ('AndreiPangin');
 
-INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
+INSERT INTO speeches (event_id, partner_id, short_desc, name, full_desc, speaker_cost)
 VALUES
   (100013,
    100000,
    'Мифы и факты о внутренностях JVM, связанных со стеками потоков и дампами хипа.',
-   FALSE,
    'Глубже стек-трейсов, шире хип-дампов',
    '<p>Stack trace и heap dump - не просто инструменты отладки; это потайные дверцы к самым недрам виртуальной Java машины. Доклад будет посвящён малоизвестным особенностям JDK, так или иначе связанным с обоходом хипа и стеками потоков.</p><p>Мы разберём:</p><ul><li>как снимать дампы в продакшне без побочных эффектов;</li><li>как работают утилиты jmap и jstack изнутри, и в чём хитрость forced режима;</li><li>почему все профилировщики врут, и как с этим бороться;</li><li>познакомимся с новым Stack-Walking API в Java 9;</li><li>научимся сканировать Heap средствами JVMTI;</li><li>узнаем о недокументированных функциях Хотспота и других интересных штуках.</li><ul>',
    0
@@ -267,12 +261,11 @@ INSERT INTO twitteraccs (account_link)
 VALUES
   ('xpinjection');
 
-INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
+INSERT INTO speeches (event_id, partner_id, short_desc, name, full_desc, speaker_cost)
 VALUES
   (100013,
    NULL,
    'Будут рассмотрены различные слои приложения с конкретными примерами и техниками тестирования.',
-   FALSE,
    'Сага о том, как Java-разработчики должны тестировать свои приложения',
    '<p>В современном мире разработки все осознают пользу от тестирования. В теории, большая часть Java-разработчиков даже понимает, что нужно писать модульные и интеграционные, а еще лучше и функциональные тесты. Но в воздухе зависает основной вопрос: «КАК?» Ведь в реальной жизни не все так просто как в примерах, найденных в интернетах.</p><p>В докладе Николай расскажет о своем опыте и применяемых инструментах тестирования разных слоев приложений с участием реляционных БД, NoSQL хранилищ, файловой системы, MVC фреймворков, REST сервисов и прочих составляющих большинства продуктов. Слайдов практически не будет, зато будет много кода и тестов...</p><p><b>Внимание: продолжительность этого доклада — два часа!</b></p>',
    0
@@ -295,12 +288,11 @@ INSERT INTO twitteraccs (account_link)
 VALUES
   ('tagir_valeev');
 
-INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, name, full_desc, speaker_cost)
+INSERT INTO speeches (event_id, partner_id, short_desc, name, full_desc, speaker_cost)
 VALUES
   (100013,
    NULL,
    'Stream API: производительность, загадочное поведение, интересные задачи и практические советы.',
-   FALSE,
    'Странности Stream API',
    '<p>На разных конференциях было много докладов на тему, что такое Stream API и как им пользоваться. Здесь мы сосредоточимся на деталях реализации. Какие операции выполняются быстро, какие медленно, какие неожиданно кушают много памяти, какие просто ведут себя странно. Мы разберёмся, какие баги есть в Java 8 Stream API и что будет исправлено в Java 9. Также мы посмотрим, как решать некоторые нетривиальные задачи. Будет немного рекламы моей бесплатной библиотеки StreamEx.</p>',
    0
@@ -317,12 +309,11 @@ VALUES
 
 -- joker 2016
 -- tagir valeev
-INSERT INTO speeches (event_id, partner_id, short_desc, is_from_jira, rating, name, full_desc, speaker_cost)
+INSERT INTO speeches (event_id, partner_id, short_desc, rating, name, full_desc, speaker_cost)
 VALUES
   (100012,
    100002,
    NULL,
-   FALSE,
    5,
    'Причуды Stream API',
    '<p>Stream API уже не первый год с нами, и многие разработчики вовсю им пользуются. Однако за волшебным API скрывается обычный Java-код со своими причудами. Тагир вместе со слушателями приглядится к некоторым конструкциям, которые могут привести к неожиданным провалам в производительности, или работать не так, как вы ожидаете. Также мы посмотрим на примере, как можно расширить Stream API, добавив свою операцию, и при этом добиться наилучшей производительности. Доклад развивает темы, затронутые Тагиром в этом году на JPoint ("Странности Stream API") и JBreak ("Stream API: рекомендации лучших собаководов").</p>',
@@ -337,13 +328,12 @@ VALUES
 
 -- shipilev
 
-INSERT INTO speeches (event_id, partner_id, short_desc,jira_status , is_from_jira, rating, name, full_desc, speaker_cost)
+INSERT INTO speeches (event_id, partner_id, short_desc,jira_status , rating, name, full_desc, speaker_cost)
 VALUES
   (100012,
    100002,
    NULL,
    'ЗАКРЫТА',
-   FALSE,
    4.88,
    'Перформанс: Что В Имени Тебе Моём?',
    '<p>Оптимизация производительности бередит умы опытных разработчиков с начала компьютерных времён. В коллективном бессознательном оптимизация — это то, что делает программирование интересным, конференции раскупаемыми, личный послужной лист — золотым.</p><p>В этом обзорном докладе мы поговорим об оптимизации больших/инфраструктурных проектов (к примеру, OpenJDK): общих принципах, тенденциях и соотношениях; жизненном цикле проекта и экономике оптимизаций; роли и жизненном цикле тестов производительности; типичных ловушках, разногласиях и противоречиях, в которых оказываются оптимизационные задачи в крупных проектах.</p>',

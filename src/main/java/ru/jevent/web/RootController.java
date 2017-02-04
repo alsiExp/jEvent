@@ -30,9 +30,7 @@ public class RootController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public String userList() {
-        return "userList";
-    }
+    public String userList() {return "userList"; }
 
     @RequestMapping(value = "/participants", method = RequestMethod.GET)
     public String participantList() {
