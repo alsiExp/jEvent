@@ -41,7 +41,7 @@
         <div class="col-sm-9 col-md-9 col-lg-10 main">
             <c:set var="ajaxUrl" value="ajax/events/"/>
 
-            <datatables:table id="eventTable" url="${ajaxUrl}" row="event" cssClass="table table-hover" autoWidth="true">
+            <datatables:table id="eventTable" url="${ajaxUrl}" row="event" cssClass="table table-hover" autoWidth="true" stateSave="true">
                 <fmt:message key="app.event.name" var="name"/>
                 <datatables:column title="${name}" property="name" renderFunction="renderEventLink"/>
 
@@ -50,9 +50,6 @@
 
                 <fmt:message key="app.event.confirmedSpeeches" var="confirmedSpeeches"/>
                 <datatables:column title="${confirmedSpeeches}" property="speechesCount" renderFunction="renderConfirmedSpeeches"/>
-
-                <fmt:message key="app.event.newSpeeches" var="newSpeeches"/>
-                <datatables:column title="${newSpeeches}" property="speechesCount" renderFunction="renderNewSpeeches"/>
 
                 <fmt:message key="app.event.jiraLink" var="jiraLink"/>
                 <datatables:column title="${jiraLink}" property="jiraLink" filterable="false" sortable="false" renderFunction="renderJiraLink"/>

@@ -1,6 +1,7 @@
 package ru.jevent.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ru.jevent.model.additionalEntity.SpeechTag;
 import ru.jevent.model.superclasses.NamedEntity;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -315,6 +317,16 @@ public class Speech extends NamedEntity {
         } else {
             return null;
         }
+    }
+
+    @JsonIgnore
+    public boolean hasSpeaker(Participant participant) {
+        for(Participant part : getSpeakers()) {
+            if(Objects.equals(part.getId(), participant.getId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

@@ -56,16 +56,6 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="password" class="control-label col-xs-4"><fmt:message
-                                key="app.user.modal.password"/></label>
-
-                        <div class="col-xs-8">
-                            <input type="password" class="form-control" id="password" name="password" placeholder=
-                            <fmt:message key="app.user.modal.password.placeholder"/>>
-                        </div>
-                    </div>
-
                     <div id="group-jiraLogin" class="form-group">
                         <label for="jiraLogin" class="control-label col-xs-4"><fmt:message
                                 key="app.user.jiraLogin"/></label>
@@ -81,6 +71,18 @@
 
                         <div class="col-xs-8">
                             <input type="password" class="form-control" id="jiraPassword" name="jiraPassword">
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label for="password" class="control-label col-xs-4"><fmt:message
+                                key="app.user.modal.password"/></label>
+
+                        <div class="col-xs-8">
+                            <fmt:message key="app.required" var="required"/>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="${required}">
                         </div>
                     </div>
 

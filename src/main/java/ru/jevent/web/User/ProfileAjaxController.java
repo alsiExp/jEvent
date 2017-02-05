@@ -1,7 +1,9 @@
 package ru.jevent.web.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,11 +24,11 @@ public class ProfileAjaxController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public List<String> update(@RequestParam("fullName") String fullName,
-                       @RequestParam("login") String login,
-                       @RequestParam("password") String password,
-                       @RequestParam(value = "jiraLogin", required = false) String jiraLogin,
-                       @RequestParam(value = "jiraPassword", required = false) String jiraPassword) {
+    public ResponseEntity<List<String>> update(@RequestParam("fullName") String fullName,
+                                               @RequestParam("login") String login,
+                                               @RequestParam("password") String password,
+                                               @RequestParam(value = "jiraLogin", required = false) String jiraLogin,
+                                               @RequestParam(value = "jiraPassword", required = false) String jiraPassword) {
         User user = new User();
         user.setId(LoggedUser.id());
         user.setFullName(fullName);
@@ -45,9 +47,9 @@ public class ProfileAjaxController {
         List<String> list = helper.testJira();
         if(list != null && !list.isEmpty()) {
             helper.setJiraValidCredentials(user.getId(), true);
-            return list;
+            return new ResponseEntity<>(list, HttpStatus.OK);
         }
-        return null;
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

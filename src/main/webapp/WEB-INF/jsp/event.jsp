@@ -43,11 +43,11 @@
             </div>
 
             <div class="row event-info">
-                <div id="photo" class="col-lg-3 col-md-6 col-sm-6 col-xs-12 speaker-photo">
+                <div id="photo" class="col-lg-1 col-md-1 col-sm-3 col-xs-4 event-logo">
 
                 </div>
 
-                <div id="contacts" class="col-lg-3 col-md-6 col-sm-6 col-xs-12 speaker-contacts">
+                <div id="contacts" class="col-lg-5 col-md-5 col-sm-12 col-xs-12 speaker-contacts">
 
                 </div>
 
@@ -56,7 +56,7 @@
                 </div>
             </div>
 
-            <datatables:table id="speechTable" url="${ajaxUrl}" cssClass="row table table-hover" autoWidth="true">
+            <datatables:table id="speechTable" url="${ajaxUrl}" cssClass="row table table-hover" autoWidth="true" stateSave="true">
                 <fmt:message key="app.speech" var="speech"/>
                 <datatables:column title="${speech}" property="name" sortable="false"
                                    renderFunction="renderSpeechName"/>
@@ -72,14 +72,11 @@
                                    renderFunction="renderSpeechTags"/>
 
                 <fmt:message key="app.speech.status" var="jiraStatus"/>
-                <datatables:column title="${jiraStatus}" property="jiraStatus" filterable="false" sortable="false"/>
+                <datatables:column title="${jiraStatus}" property="jiraStatus" filterable="false" renderFunction="renderSpeechStatus"/>
 
                 <fmt:message key="app.speech.jiraLink" var="jiraLink"/>
-                <datatables:column title="${jiraLink}" property="jiraLink" filterable="false" sortable="false"/>
+                <datatables:column title="${jiraLink}" property="jiraLink" filterable="false" sortable="false" renderFunction="renderSpeechJiraLink"/>
 
-                <fmt:message key="app.table.managment" var="managment"/>
-                <datatables:column title="${managment}" filterable="false" sortable="false"
-                                   renderFunction="renderDeleteBtn"/>
             </datatables:table>
 
         </div>
@@ -106,6 +103,7 @@
     $(function () {
         makeEventSpeechTableEditable();
         initSingleEventControl();
+        initEvent();
 
     });
 

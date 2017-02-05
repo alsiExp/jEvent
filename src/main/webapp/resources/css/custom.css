@@ -250,7 +250,7 @@ visitor list
     margin-right: 36px;
 }
 
-.speaker-info {
+.speaker-info, .event-info  {
     margin-bottom: 15px;
 }
 .speaker-info-text {

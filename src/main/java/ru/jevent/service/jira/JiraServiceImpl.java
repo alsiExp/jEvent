@@ -11,7 +11,6 @@ import ru.jevent.model.User;
 import ru.jevent.model.additionalEntity.Email;
 import ru.jevent.model.additionalEntity.Twitter;
 import ru.jevent.service.*;
-import ru.jevent.util.exception.NotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -60,10 +59,15 @@ public class JiraServiceImpl implements JiraService {
     }
 
     @Override
-    public List<String> getAllEvent(long userId) throws JiraException {
+    public Map<String, List<String>> getAllEvent(long userId) throws JiraException {
+        Map<String, List<String>> parseMap = new HashMap<>();
+        List<String> success = new ArrayList<>();
+        List<String> error = new ArrayList<>();
+        parseMap.put("success", success);
+        parseMap.put("error", error);
+
         JiraClient jira = new JiraClient(BASE_URL, getCredentials(userId));
         List<Project> projectList = jira.getProjects();
-        List<String> eventNames = new ArrayList<>();
         for(Project p : projectList) {
             p = jira.getProject(p.getKey());
             for(Version version : p.getVersions()) {
@@ -85,39 +89,55 @@ public class JiraServiceImpl implements JiraService {
                 } else {
                     eventService.update(event);
                 }
-                eventNames.add(event.getName() + " " + event.getVersion());
+                success.add(event.getName() + " " + event.getVersion());
             }
         }
 
-        return eventNames;
+        return parseMap;
     }
 
+    //List<Comment> commentList = jira.getIssue(issue.getKey(), "comment").getComments();
+
     @Override
-    public List<String> getEventSpeechList(long eventId, long userId) throws JiraException {
+    public Map<String, List<String>> getEventSpeechList(long eventId, long userId) throws JiraException {
         Map<String, List<String>> parseMap = new HashMap<>();
         List<String> success = new ArrayList<>();
+        List<String> duplicate = new ArrayList<>();
         List<String> error = new ArrayList<>();
-        parseMap.put("sucess", success);
+        parseMap.put("success", success);
         parseMap.put("error", error);
+        parseMap.put("duplicate", duplicate);
 
         JiraClient jira = new JiraClient(BASE_URL, getCredentials(userId));
         Event event = eventService.get(eventId);
 
         int maxResult = 350;
         Issue.SearchResult speechResult = jira.searchIssues(JiraHelper.getSpeechIssuesJQL(event.getJiraKey(), event.getVersion()), maxResult);
+        if(speechResult.total > maxResult) {
+            speechResult = jira.searchIssues(JiraHelper.getSpeechIssuesJQL(event.getJiraKey(), event.getVersion()), speechResult.total);
+        }
         for(Issue issue : speechResult.issues) {
-            List<Comment> commentList = jira.getIssue(issue.getKey(), "comment").getComments();
-            if(parseIssue(issue, commentList)) {
+            if(issue.getResolution() != null) {
+                if(issue.getResolution().getName().equals("Дубликат")) {
+                    Speech speech =  speechService.getByJiraId(Integer.parseInt(issue.getId()));
+                    if(speech != null && speech.getId() != null) {
+                        speechService.delete(speech.getId());
+                    }
+                    duplicate.add(issue.getKey());
+                    continue;
+                }
+            }
+            if(parseIssue(issue, event)) {
                 success.add(issue.getKey());
             } else {
                 error.add(issue.getKey());
             }
         }
 
-        return success;
+        return parseMap;
     }
 
-    private boolean parseIssue(Issue issue, List<Comment> comments) {
+    private boolean parseIssue(Issue issue, Event event) {
 
         Participant part;
         Speech speech =  speechService.getByJiraId(Integer.parseInt(issue.getId()));
@@ -127,19 +147,25 @@ public class JiraServiceImpl implements JiraService {
             speech.setJiraKey(issue.getKey());
             speech.setJiraLink("http://jira.jugru.org/browse/" + issue.getKey());
         }
-        speech.setJiraResolution(issue.getResolution().getName());
+        if(issue.getResolution() != null) {
+            speech.setJiraResolution(issue.getResolution().getName());
+        }
         speech.setJiraStatus(issue.getStatus().getName());
         speech.setJiraSync(LocalDateTime.now());
 
+        // Looks like
         // speaker - title
         String[] summary = issue.getSummary().split("\\s+\u2014\\s+");
         speech.setName(summary[1]);
 
         Map<String, String> result = new Parser(issue.getDescription(), issue.getKey()).getResult();
+        if(result == null) {
+            return false;
+        }
         if(result.get("email") != null) {
             part = participantService.getByEmail(result.get("email"));
         } else {
-            throw new NotFoundException("Can`t parse email from " + issue.getKey());
+            return false;
         }
         if(part == null) {
             part = new Participant();
@@ -158,18 +184,31 @@ public class JiraServiceImpl implements JiraService {
         part.setCity(result.get("city"));
         part.setTravelHelp(result.get("travel"));
         part.setBiography(result.get("bio"));
+        part.setBiographyEN(result.get("bioEN"));
         part.setSpeakerBackground(result.get("back"));
         part.setRegistered(LocalDateTime.now());
         part.setEnabled(true);
 
         part = participantService.save(part);
 
+        speech.setNameEN(result.get("titleEN"));
+        speech.setFullDescription(result.get("desc"));
+        speech.setFullDescriptionEN(result.get("descEN"));
+        speech.setViewerValue(result.get("profit"));
+        //?? speech.setPlan
+        speech.setFocus(result.get("focus"));
+        speech.setShortDescription(result.get("shortDesc"));
+        speech.setShortDescriptionEN(result.get("shortDescEN"));
 
-        if(result.get("name") != null && result.get("title") != null) {
-            System.out.println("Ok " + issue.getKey());
+        speech = speechService.save(speech);
+        if(!speech.hasSpeaker(part)) {
+            speech.addSpeaker(part);
         }
+        speech.setEvent(event);
 
-        return true;
+        speechService.update(speech);
+
+        return speech.getId() != null;
     }
 
 

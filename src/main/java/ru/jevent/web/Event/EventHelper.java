@@ -10,6 +10,7 @@ import ru.jevent.service.EventService;
 import ru.jevent.service.JiraService;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class EventHelper {
@@ -51,7 +52,7 @@ public class EventHelper {
         return service.getAll();
     }
 
-    public List<String> getAllFromJira() {
+    public Map<String, List<String>> getAllEventsFromJira() {
         try {
             return jiraService.getAllEvent(LoggedUser.id());
         } catch (JiraException je) {
@@ -61,7 +62,7 @@ public class EventHelper {
 
     }
 
-    public List<String> getSpeechesByEvent(long eventId) {
+    public Map<String, List<String>> getSpeechesByEvent(long eventId) {
         try {
             return jiraService.getEventSpeechList(eventId, LoggedUser.id());
         } catch (JiraException je) {

@@ -59,7 +59,7 @@
 
             <datatables:table id="speechTable" url="${ajaxUrl}" cssClass="row table table-hover" autoWidth="true">
                 <fmt:message key="app.event" var="event"/>
-                <datatables:column title="${event}" property="eventName"/>
+                <datatables:column title="${event}" property="eventName" renderFunction="renderSpeechEventLink"/>
 
                 <fmt:message key="app.speech" var="speech"/>
                 <datatables:column title="${speech}" property="name" sortable="false" renderFunction="renderSpeechName"/>
@@ -72,14 +72,11 @@
                                    renderFunction="renderSpeechTags"/>
 
                 <fmt:message key="app.speech.status" var="jiraStatus"/>
-                <datatables:column title="${jiraStatus}" property="jiraStatus" filterable="false" sortable="false"/>
+                <datatables:column title="${jiraStatus}" property="jiraStatus" filterable="false" renderFunction="renderSpeechStatus"/>
 
                 <fmt:message key="app.speech.jiraLink" var="jiraLink"/>
-                <datatables:column title="${jiraLink}" property="jiraLink" filterable="false" sortable="false"/>
+                <datatables:column title="${jiraLink}" property="jiraLink" filterable="false" sortable="false" renderFunction="renderSpeechJiraLink"/>
 
-                <fmt:message key="app.table.managment" var="managment"/>
-                <datatables:column title="${managment}" filterable="false" sortable="false"
-                                   renderFunction="renderDeleteBtn"/>
             </datatables:table>
 
         </div>

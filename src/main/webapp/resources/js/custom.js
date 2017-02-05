@@ -89,6 +89,51 @@ function renderSpeakerName( data, type, row ) {
     }
 }
 
+function renderSpeechStatus( data, type, row ) {
+    if(type == 'display') {
+        return data;
+    }
+
+    if(type == 'sort') {
+        if(data == "Новая") {
+            return 10;
+        }
+        else if(data == "Рассмотрение заявки") {
+            return 20;
+        }
+        else if(data == "Описание доклада") {
+            return 30;
+        }
+        else if(data == "Тестирование, тренинги") {
+            return 40;
+        }
+        else if(data == "Требует уточнения") {
+            return 50;
+        }
+        else if(data == "Фидбек спикера") {
+            return 60;
+        }
+        else if(data == "Фидбек участников") {
+            return 70;
+        }
+        else if(data == "Анализ") {
+            return 80;
+        }
+        else if(data == "Закрыта") {
+            return 90;
+        }
+        else {
+            return 200;
+        }
+    }
+}
+
+function renderSpeechJiraLink( data, type, row ) {
+    if(type == 'display') {
+        return '<a target="_blank" href=' + data + '> Jira </a>';
+    }
+}
+
 function renderEventLink( data, type, row ) {
     if(type == 'display') {
         return '<a href=../event/' + row.id + '>' + data + '</a>';
@@ -98,21 +143,58 @@ function renderEventLink( data, type, row ) {
 function renderConfirmedSpeeches( data, type, row ) {
     if(type == 'display') {
         var str = '';
+        var tmp = '';
+        var sNew = '';
+        var sExplore = '';
+        var sDescription = '';
+        var sTesting = '';
+        var sRevision = '';
+        var sFeedbackSpeaker = '';
+        var sFeedbackPart = '';
+        var sAnalyse = '';
+        var sClosed =  '';
+
         Object.keys(data).forEach(function (key) {
             var val = data[key];
-            if(key != 'НОВАЯ'){
-                str += '<div class="event-speech-status">' + key + ' : ' + val + '</div>';
+            if(key == "Новая") {
+                sNew = '<div class="event-speech-status">' + key + ' : ' + val + '</div>';
+            }
+            else if(key == "Рассмотрение заявки") {
+                sExplore = '<div class="event-speech-status">' + key + ' : ' + val + '</div>';
+            }
+            else if(key == "Описание доклада") {
+                sDescription = '<div class="event-speech-status">' + key + ' : ' + val + '</div>';
+            }
+            else if(key == "Тестирование, тренинги") {
+                sTesting = '<div class="event-speech-status">' + key + ' : ' + val + '</div>';
+            }
+            else if(key == "Требует уточнения") {
+                sRevision = '<div class="event-speech-status">' + key + ' : ' + val + '</div>';
+            }
+            else if(key == "Фидбек спикера") {
+                sFeedbackSpeaker = '<div class="event-speech-status">' + key + ' : ' + val + '</div>';
+            }
+            else if(key == "Фидбек участников") {
+                sFeedbackPart = '<div class="event-speech-status">' + key + ' : ' + val + '</div>';
+            }
+            else if(key == "Анализ") {
+                sAnalyse = '<div class="event-speech-status">' + key + ' : ' + val + '</div>';
+            }
+            else if(key == "Закрыта") {
+                sClosed = '<div class="event-speech-status">' + key + ' : ' + val + '</div>';
+            }
+            else {
+                tmp += '<div class="event-speech-status">' + key + ' : ' + val + '</div>';
             }
         });
+        str = sNew + sExplore + sDescription + sTesting + sRevision + sFeedbackSpeaker + sFeedbackPart + sAnalyse + sClosed + tmp;
         return str;
     }
     if(type == 'sort') {
         var summ = 0;
         Object.keys(data).forEach(function (key) {
             var val = data[key];
-            if(key != 'НОВАЯ'){
                 summ += val;
-            }
         });
         return summ;
     }
@@ -123,7 +205,7 @@ function renderNewSpeeches( data, type, row ) {
         var str = '';
         Object.keys(data).forEach(function (key) {
             var val = data[key];
-            if(key == 'НОВАЯ'){
+            if(key == 'Новая'){
                 str += '<div class="">' + val + '</div>';
             }
         });
@@ -151,7 +233,7 @@ function renderJiraLink( data, type, row ) {
     }
 }
 
-/* speech */
+/* speech + speaker */
 
 function renderSpeechName( data, type, row ) {
     if(type == 'display') {
@@ -172,6 +254,11 @@ function renderSpeechTags( data, type, row ) {
     return data;
 }
 
+function renderSpeechEventLink( data, type, row ) {
+    if(type == 'display') {
+        return '<a href=../event/' + row.eventId + '>' + data + '</a>';
+    }
+}
 
 /* participant */
 
@@ -326,17 +413,32 @@ function initSingleEventControl() {
             type: "GET",
             url: ajaxUrl + 'jira/',
             success: function (data) {
-                if(data.length > 0) {
-/*                    var str = 'Updated events: ';
-                    var separator = '';
-                    data.forEach(function (eventName) {
-                        str += separator +  eventName;
-                        separator = ', '
-                    });
-                    successNote(str);*/
-                    updateTable();
-                }
-
+                Object.keys(data).forEach(function (key) {
+                    var val = data[key];
+                    if (key == "success") {
+                        if (val.length > 0) {
+                            var str = 'Updated events: ';
+                            var separator = '';
+                            val.forEach(function (eventName) {
+                                str += separator + eventName;
+                                separator = ', '
+                            });
+                            successNote(str);
+                        }
+                    }
+                    if (key == "error") {
+                        if (val.length > 0) {
+                            var str = 'Error by update events: ';
+                            var separator = '';
+                            val.forEach(function (eventName) {
+                                str += separator + eventName;
+                                separator = ', '
+                            });
+                            failNote(str);
+                        }
+                    }
+                });
+                updateTable();
             }
         });
     });
@@ -367,20 +469,51 @@ function makeEventTableEditable() {
             type: "GET",
             url: ajaxUrl + 'jira/',
             success: function (data) {
-                if(data.length > 0) {
-                    var str = 'Updated events: ';
-                    var separator = '';
-                    data.forEach(function (eventName) {
-                        str += separator +  eventName;
-                        separator = ', '
-                    });
-                    successNote(str);
-                    updateTable();
-                }
-
+                Object.keys(data).forEach(function (key) {
+                    var val = data[key];
+                    if (key == "success") {
+                        if (val.length > 0) {
+                            var str = 'Updated events: ';
+                            var separator = '';
+                            val.forEach(function (eventName) {
+                                str += separator + eventName;
+                                separator = ', '
+                            });
+                            successNote(str);
+                        }
+                    }
+                    if (key == "error") {
+                        if (val.length > 0) {
+                            var str = 'Error by update events: ';
+                            var separator = '';
+                            val.forEach(function (eventName) {
+                                str += separator + eventName;
+                                separator = ', '
+                            });
+                            failNote(str);
+                        }
+                    }
+                });
+                updateTable();
             }
         });
     });
+}
+
+function initEvent() {
+    $.ajax({
+        type: "GET",
+        url: "../ajax/events/" + eventID,
+        success: function (data) {
+            event = data;
+            addEventInfo();
+        }
+    });
+}
+
+function addEventInfo(){
+    $('#page-name').html('Конференция: ' +event.name + ' ' + event.version);
+    $('#photo').html('<img class="" src="' + event.logoURL + '" />');
 }
 
 /**** end events js ****/
@@ -694,7 +827,6 @@ function initUserProfile() {
             url: ajaxUrl,
             data: mainForm.serialize(),
             success: function (data) {
-                console.log(data.length);
                 if (data.length > 0) {
                     displaytestJiraInfo(
                         '<h4 class="text-success">Jira connection success</h4>' +
