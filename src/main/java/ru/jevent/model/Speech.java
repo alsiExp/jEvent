@@ -66,6 +66,8 @@ public class Speech extends NamedEntity {
     private String shortDescription;
     @Column(name = "short_desc_en")
     private String shortDescriptionEN;
+    @Column(name = "plan")
+    private String plan;
 
     @Column(name = "jira_id")
     private int jiraId;
@@ -200,6 +202,14 @@ public class Speech extends NamedEntity {
 
     public void setJiraStatus(String jiraStatus) {
         this.jiraStatus = jiraStatus;
+    }
+
+    public String getPlan() {
+        return plan;
+    }
+
+    public void setPlan(String plan) {
+        this.plan = plan;
     }
 
     public String getJiraLink() {
@@ -353,6 +363,8 @@ public class Speech extends NamedEntity {
             return false;
         if (jiraKey != null ? !jiraKey.equals(speech.jiraKey) : speech.jiraKey != null)
             return false;
+        if (plan != null ? !plan.equals(speech.plan) : speech.plan != null)
+            return false;
         if (jiraResolution != null ? !jiraResolution.equals(speech.jiraResolution) : speech.jiraResolution != null)
             return false;
         if (jiraComments != null ? !jiraComments.equals(speech.jiraComments) : speech.jiraComments != null)
@@ -402,6 +414,7 @@ public class Speech extends NamedEntity {
         result = 31 * result + (shortDescriptionEN != null ? shortDescriptionEN.hashCode() : 0);
         result = 31 * result + jiraId;
         result = 31 * result + (jiraKey != null ? jiraKey.hashCode() : 0);
+        result = 31 * result + (plan != null ? plan.hashCode() : 0);
         result = 31 * result + (jiraResolution != null ? jiraResolution.hashCode() : 0);
         result = 31 * result + (jiraComments != null ? jiraComments.hashCode() : 0);
         result = 31 * result + (jiraStatus != null ? jiraStatus.hashCode() : 0);

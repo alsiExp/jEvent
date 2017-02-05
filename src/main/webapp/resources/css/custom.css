@@ -333,3 +333,6 @@ visitor list
 .event-speech-status {
     font-size: 75%;
 }
+#count .event-speech-status {
+    font-size: 100%;
+}

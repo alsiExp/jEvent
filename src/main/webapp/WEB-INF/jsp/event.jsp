@@ -47,11 +47,11 @@
 
                 </div>
 
-                <div id="contacts" class="col-lg-5 col-md-5 col-sm-12 col-xs-12 speaker-contacts">
+                <div id="count" class="col-lg-5 col-md-5 col-sm-12 col-xs-12 event-count">
 
                 </div>
 
-                <div id="bio" class="col-lg-6 col-md-6 col-sm-6 col-xs-12 speaker-bio">
+                <div id="desc" class="col-lg-6 col-md-6 col-sm-6 col-xs-12 event-desc">
 
                 </div>
             </div>

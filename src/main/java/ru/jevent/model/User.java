@@ -8,6 +8,7 @@ import ru.jevent.model.superclasses.Person;
 import ru.jevent.util.HasPassword;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +21,7 @@ import java.util.Set;
         @NamedQuery(name = "User.setJiraValidCredentials", query = "UPDATE User u SET u.jiraValidCredentials = :cred WHERE u.id = :id"),
         @NamedQuery(name = User.BY_LOGIN, query = "SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.login=?1")
 })
-public class User extends Person implements HasPassword {
+public class User extends Person implements HasPassword, Serializable {
 
     public static final String DELETE = "User.delete";
     public static final String ALL_SORTED = "User.getAllSorted";

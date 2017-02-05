@@ -195,7 +195,7 @@ public class JiraServiceImpl implements JiraService {
         speech.setFullDescription(result.get("desc"));
         speech.setFullDescriptionEN(result.get("descEN"));
         speech.setViewerValue(result.get("profit"));
-        //?? speech.setPlan
+        speech.setPlan(result.get("plan"));
         speech.setFocus(result.get("focus"));
         speech.setShortDescription(result.get("shortDesc"));
         speech.setShortDescriptionEN(result.get("shortDescEN"));

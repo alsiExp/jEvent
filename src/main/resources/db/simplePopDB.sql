@@ -42,3 +42,9 @@ INSERT INTO users (full_name, enabled, photo_url, login, password)
 VALUES
   ('Админ Вася', TRUE, NULL, 'admin', '$2a$10$WejOLxVuXRpOgr4IlzQJ.eT4UcukNqHlAiOVZj1P/nmc8WbpMkiju'),
   ('Юзер Петя', TRUE, NULL, 'user', '$2a$10$WejOLxVuXRpOgr4IlzQJ.eT4UcukNqHlAiOVZj1P/nmc8WbpMkiju');
+
+INSERT INTO user_roles(user_id, role)
+VALUES
+  (100000, 'ROLE_USER'),
+  (100000, 'ROLE_ADMIN'),
+  (100001, 'ROLE_USER');

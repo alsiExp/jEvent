@@ -104,7 +104,11 @@ public class Parser {
             city = fullMatcher.group(8);
             travel = fullMatcher.group(9);
             bio = fullMatcher.group(10);
-            // regex to separate with bio en: ([\s\S]*);\s+\*Bio en:\*\s+([\s\S]*)
+            String[] bios = checkBio(fullMatcher.group(10));
+            if (bios != null) {
+                bio = bios[0];
+                bioEN = bios[1];
+            }
             back = fullMatcher.group(11);
             String[] titles = checkEN(fullMatcher.group(12));
             if (titles != null) {
@@ -142,6 +146,11 @@ public class Parser {
             city = speakerMatcher.group(8);
             travel = speakerMatcher.group(9);
             bio = speakerMatcher.group(10);
+            String[] bios = checkBio(speakerMatcher.group(10));
+            if (bios != null) {
+                bio = bios[0];
+                bioEN = bios[1];
+            }
             back = speakerMatcher.group(11);
             if (back.contains("*Talk title:*")) {
                 back = back.split(";\\s*\\*")[0];
@@ -283,6 +292,7 @@ public class Parser {
 
     }
 
+
     private void customSpeakerParse(String description) {
         Matcher nameMatcher = Pattern.compile("\\*Name:\\*\\s+([\\s\\S]*);").matcher(description);
         if(nameMatcher.find()){
@@ -401,6 +411,22 @@ public class Parser {
             }
         }
         return title;
+    }
+
+    private String[] checkBio(String bio) {
+        // regex to separate with bio en: ([\s\S]*);\s+\*Bio en:\*\s+([\s\S]*)
+        if (bio != null) {
+            if (bio.contains("Bio en")) {
+                String[] arr = bio.split(";\\s+\\*Bio en:\\*\\s*");
+                if (arr.length > 1) {
+                    if (arr[1].equals("null")) {
+                        arr[1] = null;
+                    }
+                    return arr;
+                }
+            }
+        }
+        return null;
     }
 
 }

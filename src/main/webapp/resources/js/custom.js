@@ -514,6 +514,9 @@ function initEvent() {
 function addEventInfo(){
     $('#page-name').html('Конференция: ' +event.name + ' ' + event.version);
     $('#photo').html('<img class="" src="' + event.logoURL + '" />');
+    $('#count').html('Сводка статусов докладов: <br>' + renderConfirmedSpeeches(event.speechesCount, "display"));
+    $('#desc').html(event.description);
+
 }
 
 /**** end events js ****/

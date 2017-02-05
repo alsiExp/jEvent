@@ -204,6 +204,7 @@ CREATE TABLE speeches
   full_desc        VARCHAR,
   viewer_value     VARCHAR,
   focus            VARCHAR,
+  plan             VARCHAR,
 
   speaker_cost     NUMERIC(20, 2)     DEFAULT 0,
   name_en          VARCHAR,
