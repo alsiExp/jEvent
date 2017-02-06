@@ -104,6 +104,7 @@
         makeEventSpeechTableEditable();
         initSingleEventControl();
         initEvent();
+        initTagForm();
 
     });
 

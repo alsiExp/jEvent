@@ -1,11 +1,14 @@
 package ru.jevent.web.Speech;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.jevent.model.Speech;
 import ru.jevent.model.additionalEntity.SpeechTag;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,10 +44,11 @@ public class SpeechAjaxController {
     }
 
     @RequestMapping(value = "/tags", method = RequestMethod.POST)
-    public void saveTags(@RequestParam("speechId") long id,
-                         @RequestParam(value = "tags", required = false) String[] tags) {
+    public ResponseEntity<List<String>> saveTags(@RequestParam("speechId") long id,
+                                           @RequestParam(value = "tags", required = false) String[] tags) {
 
         Speech speech = helper.get(id);
+        List<String> response = new ArrayList<>();
         Set<SpeechTag> tagSet = new HashSet<>();
         if(tags != null) {
             for (String s : tags) {
@@ -57,12 +61,14 @@ public class SpeechAjaxController {
                 } else {
                     helper.create(tag);
                 }
+                response.add(tag.getTag());
                 tagSet.add(tag);
             }
         }
 
         speech.setTags(tagSet);
         helper.update(speech);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

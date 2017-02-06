@@ -37,7 +37,7 @@
         <div class="col-sm-9 col-md-9 col-lg-10 main">
             <c:set var="ajaxUrl" value="ajax/participants/"/>
 
-            <datatables:table id="participantTable" url="${ajaxUrl}" row="participant" cssClass="table table-hover" autoWidth="true">
+            <datatables:table id="participantTable" url="${ajaxUrl}" row="participant" cssClass="table table-hover" autoWidth="true" stateSave="true">
                 <fmt:message key="app.table.name" var="name"/>
                 <datatables:column title="${name}" property="fullName" renderFunction="renderParticipantName"/>
 

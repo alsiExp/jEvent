@@ -41,7 +41,7 @@ VALUES (90030, 'ONLINE_LITE'), (90031, 'ONLINE_STANDARD'), (90032, 'ONLINE_BUSIN
 INSERT INTO users (full_name, enabled, photo_url, login, password)
 VALUES
   ('Админ Вася', TRUE, NULL, 'admin', '$2a$10$WejOLxVuXRpOgr4IlzQJ.eT4UcukNqHlAiOVZj1P/nmc8WbpMkiju'),
-  ('Юзер Петя', TRUE, NULL, 'user', '$2a$10$WejOLxVuXRpOgr4IlzQJ.eT4UcukNqHlAiOVZj1P/nmc8WbpMkiju');
+  ('Юзер Петя', TRUE, NULL, 'user', '$2a$10$MZJEp4xVP4k8ga2Du5Czqe4OFq3yDl37nBYjnMidEspAMaWkLOW4K');
 
 INSERT INTO user_roles(user_id, role)
 VALUES

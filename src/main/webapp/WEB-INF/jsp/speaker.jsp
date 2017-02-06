@@ -377,7 +377,7 @@
     $(function () {
         makeSpeechTableEditable();
         initSpeaker();
-        initSpeechForm();
+        initTagForm();
 
     });
 

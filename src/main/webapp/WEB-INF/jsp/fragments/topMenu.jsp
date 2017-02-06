@@ -26,7 +26,7 @@
             <div class="collapse navbar-collapse" id="top-navbar-collapse">
                 <ul class="nav navbar-nav">
 
-                    <li><a href="../events"><fmt:message key="app.menu.event"/></a></li>
+                    <li><a href="/events"><fmt:message key="app.menu.event"/></a></li>
 
                     <%--                    <li class="dropdown">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
@@ -39,7 +39,7 @@
                                         </li>
                     --%>
 
-                    <li><a href="../participants"><fmt:message key="app.menu.participant"/></a></li>
+                    <li><a href="/participants"><fmt:message key="app.menu.participant"/></a></li>
 
                     <%--
                                         <li class="dropdown">
@@ -102,10 +102,10 @@
                         </a>
                         <ul class="dropdown-menu">
                             <sec:authorize access="isAuthenticated()">
-                                <li><a href="../profile"><fmt:message key="app.menu.profile"/></a></li>
+                                <li><a href="/profile"><fmt:message key="app.menu.profile"/></a></li>
                                 <li role="separator" class="divider"></li>
                                 <sec:authorize access="hasRole('ROLE_ADMIN')">
-                                    <li><a href="../users"><fmt:message key="app.menu.profile.team"/></a></li>
+                                    <li><a href="/users"><fmt:message key="app.menu.profile.team"/></a></li>
                                     <li role="separator" class="divider"></li>
                                 </sec:authorize>
                                 <li><a href="#"><fmt:message key="app.menu.profile.logout"/>&nbsp;<i class="fa fa-sign-out fa-fw" aria-hidden="true"></i></a></li>

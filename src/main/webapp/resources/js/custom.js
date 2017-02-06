@@ -248,7 +248,7 @@ function renderSpeechTags( data, type, row ) {
             str += '<div class="participant-tag" data-tag-id="' + obj.id +'">#' + obj.tag + '</div>';
 
         });
-        str += '<div class="participant-tag"><a class="btn btn-xs btn-success" onclick="addSpeakerTag(' + row.id + ')">Edit Tags</a></div>';
+        str += '<div class="participant-tag"><a class="btn btn-xs btn-success" onclick="addSpeechTag(' + row.id + ')">Edit Tags</a></div>';
         return str;
     }
     return data;
@@ -523,6 +523,18 @@ function addEventInfo(){
 
 /**** speech js ****/
 
+function initSingleSpechControl() {
+    $('#edit-tags').click(function () {
+        addSpeechTag(speechId);
+    });
+
+
+}
+
+function reDrawSpeech() {
+    
+}
+
 function initSpeech() {
     $.ajax({
         type: "GET",
@@ -566,7 +578,7 @@ function addSpeechInfo() {
 
 /**** speaker js ****/
 
-function initSpeechForm() {
+function initTagForm() {
     $('#add-new-tag').click(function () {
         var tagName = tagForm.find('#new-tag').val();
         if(tagName != null && tagName != ''){
@@ -581,26 +593,30 @@ function initSpeechForm() {
     tagForm.submit(function () {
             $.ajax({
                 type: "POST",
-                url: "../ajax/speeches/tags",
+                url: "/ajax/speeches/tags",
                 data: tagForm.serialize(),
                 success: function (data) {
                     tagModal.modal('hide');
-                    updateTable();
-                    successNote('Saved');
+                    if(typeof ajaxUrl !== 'undefined') {
+                        updateTable();
+                    } else if (typeof ajaxUrl !== 'undefined') {
+                        reDrawSpeech();
+                    }
+                    successNote('New speech tags: ' + data );
                 }
             });
             return false;
         });
 }
 
-function addSpeakerTag(speechId) {
+function addSpeechTag(speechId) {
     tagForm.find('#speechIdTags').val(speechId);
     tagContainer.html('');
     tagForm.find('#new-tag').val('');
 
     $.ajax({
         type: "GET",
-        url: "../ajax/speeches/tags/",
+        url: "/ajax/speeches/tags/",
         success: function (data) {
             data.forEach(function (tag) {
                 tagContainer.append(
@@ -612,7 +628,7 @@ function addSpeakerTag(speechId) {
             });
             $.ajax({
                 type: "GET",
-                url: "../ajax/speeches/" + speechId,
+                url: "/ajax/speeches/" + speechId,
                 success: function (data) {
                     data.tags.forEach(function (tag) {
                         el = "#" + tag.id;
