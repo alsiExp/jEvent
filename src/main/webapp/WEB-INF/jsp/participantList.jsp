@@ -37,7 +37,7 @@
         <div class="col-sm-9 col-md-9 col-lg-10 main">
             <c:set var="ajaxUrl" value="ajax/participants/"/>
 
-            <datatables:table id="participantTable" url="${ajaxUrl}" row="participant" cssClass="table table-hover" autoWidth="true" stateSave="true">
+            <datatables:table id="participantTable" url="${ajaxUrl}" row="participant" cssClass="table table-hover" autoWidth="false" stateSave="true">
                 <fmt:message key="app.table.name" var="name"/>
                 <datatables:column title="${name}" property="fullName" renderFunction="renderParticipantName"/>
 
@@ -50,11 +50,9 @@
                 <fmt:message key="app.table.phone" var="phone"/>
                 <datatables:column title="${phone}" property="phone" filterable="false" sortable="false"/>
 
-                <fmt:message key="app.table.registered" var="registered"/>
-                <datatables:column title="${registered}" property="registered" renderFunction="renderDate"/>
+                <fmt:message key="app.table.email" var="email"/>
+                <datatables:column title="${email}" property="emails" filterable="false" sortable="false" renderFunction="renderParticipantEmails"/>
 
-                <fmt:message key="app.table.managment" var="managment"/>
-                <datatables:column title="${managment}"  filterable="false" sortable="false" renderFunction="renderDeleteBtn"/>
             </datatables:table>
 
         </div>

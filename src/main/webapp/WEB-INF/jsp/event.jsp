@@ -56,7 +56,7 @@
                 </div>
             </div>
 
-            <datatables:table id="speechTable" url="${ajaxUrl}" cssClass="row table table-hover" autoWidth="true" stateSave="true">
+            <datatables:table id="speechTable" url="${ajaxUrl}" cssClass="row table table-hover" autoWidth="true"  stateSave="true">
                 <fmt:message key="app.speech" var="speech"/>
                 <datatables:column title="${speech}" property="name" sortable="false"
                                    renderFunction="renderSpeechName"/>

@@ -27,11 +27,10 @@
                             class="fa fa-tags"
                             aria-hidden="true"></i><fmt:message key="app.speech.edit.tags"/></a>
                     </li>
-                    <%--
-                                        <li id="all-participants" class=""><a class="" href="../participants"><i
-                                                class="fa fa-list-ul"
-                                                aria-hidden="true"></i><fmt:message key="app.participant.control.list"/></a>
-                                        </li>--%>
+                    <li id="delete-speech" class=""><a class="" href="#"><i
+                            class="fa fa-trash"
+                            aria-hidden="true"></i><fmt:message key="app.speech.delete"/></a>
+                    </li>
 
                 </ul>
 
@@ -46,21 +45,19 @@
             </div>
 
             <div class="row speech-info">
-                <div id="speech-info" class="col-lg-3 col-md-6 col-sm-6 col-xs-12 speaker-photo">
+                <div id="common-speech-info" class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
 
                 </div>
 
-                <div id="speech-links" class="col-lg-3 col-md-6 col-sm-6 col-xs-12 speaker-contacts">
+                <div id="speech-description" class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
 
                 </div>
 
-                <div id="speech-short-description" class="col-lg-6 col-md-6 col-sm-6 col-xs-12 speaker-bio">
+                <div id="speech-others" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 
                 </div>
 
-                <div id="speech-full-description" class="col-lg-6 col-md-6 col-sm-6 col-xs-12 speaker-bio">
 
-                </div>
             </div>
 
         </div>

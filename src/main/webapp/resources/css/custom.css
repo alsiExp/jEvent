@@ -145,6 +145,7 @@ body {
     margin-top: 50px;
     padding-bottom: 50px;
     padding-top: 20px;
+    min-height: 450px;
 }
 
 .footer h4 {
@@ -335,4 +336,11 @@ visitor list
 }
 #count .event-speech-status {
     font-size: 100%;
+}
+.speaker-block-link {
+    display:block;
+}
+
+.speech-info div div {
+    margin-bottom: 4px;
 }

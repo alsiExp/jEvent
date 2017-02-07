@@ -53,7 +53,7 @@
                                             </ul>
                                         </li>
                     --%>
-
+                    <%--
                     <li class="dropdown hidden-sm">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-haspopup="true" aria-expanded="false"><fmt:message key="app.menu.partner"/><span
@@ -64,6 +64,7 @@
                             <li><a href="#"><fmt:message key="app.menu.partner.new"/></a></li>
                         </ul>
                     </li>
+                    --%>
                     <!--
                     <li class="dropdown hidden-sm">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"

@@ -138,77 +138,88 @@ public class JiraServiceImpl implements JiraService {
     }
 
     private boolean parseIssue(Issue issue, Event event) {
+        try {
+            Participant part;
+            Speech speech = speechService.getByJiraId(Integer.parseInt(issue.getId()));
+            if (speech == null) {
+                speech = new Speech();
+                speech.setJiraId(Integer.parseInt(issue.getId()));
+                speech.setJiraKey(issue.getKey());
+                speech.setJiraLink("http://jira.jugru.org/browse/" + issue.getKey());
+            }
+            if (issue.getResolution() != null) {
+                speech.setJiraResolution(issue.getResolution().getName());
+            }
+            speech.setJiraStatus(issue.getStatus().getName());
+            speech.setJiraSync(LocalDateTime.now());
 
-        Participant part;
-        Speech speech =  speechService.getByJiraId(Integer.parseInt(issue.getId()));
-        if(speech == null) {
-            speech = new Speech();
-            speech.setJiraId(Integer.parseInt(issue.getId()));
-            speech.setJiraKey(issue.getKey());
-            speech.setJiraLink("http://jira.jugru.org/browse/" + issue.getKey());
-        }
-        if(issue.getResolution() != null) {
-            speech.setJiraResolution(issue.getResolution().getName());
-        }
-        speech.setJiraStatus(issue.getStatus().getName());
-        speech.setJiraSync(LocalDateTime.now());
+            Map<String, String> result = new Parser(issue.getDescription(), issue.getKey()).getResult();
 
-        // Looks like
-        // speaker - title
-        String[] summary = issue.getSummary().split("\\s+\u2014\\s+");
-        speech.setName(summary[1]);
+            // Looks like
+            // speaker - title
+            String[] summary = issue.getSummary().split("\\s+\u2014\\s+");
+            if (summary.length > 1) {
+                speech.setName(summary[1]);
+            } else {
+                speech.setName(result.get("title"));
+            }
+            if (result == null) {
+                return false;
+            }
+            if (result.get("email") != null) {
+                part = participantService.getByEmail(result.get("email"));
+            } else {
+                return false;
+            }
+            if (part == null) {
+                part = new Participant();
+                if (summary.length > 0) {
+                    part.setFullName(summary[0]);
+                } else {
+                    part.setFullName(result.get("name"));
+                }
+                part.addEmail(new Email(null, result.get("email"), true, part));
+            }
+            if (part.getTwitter() == null && result.get("twitter") != null) {
+                part.setTwitter(new Twitter(null, result.get("twitter"), part));
+            }
 
-        Map<String, String> result = new Parser(issue.getDescription(), issue.getKey()).getResult();
-        if(result == null) {
+            part.setFullNameEN(result.get("nameEN"));
+            part.setEmployer(result.get("company"));
+            part.setSkype(result.get("skype"));
+            part.setPhotoURL(result.get("photo"));
+            part.setPhone(result.get("phone"));
+            part.setCity(result.get("city"));
+            part.setTravelHelp(result.get("travel"));
+            part.setBiography(result.get("bio"));
+            part.setBiographyEN(result.get("bioEN"));
+            part.setSpeakerBackground(result.get("back"));
+            part.setRegistered(LocalDateTime.now());
+            part.setEnabled(true);
+
+            part = participantService.save(part);
+
+            speech.setNameEN(result.get("titleEN"));
+            speech.setFullDescription(result.get("desc"));
+            speech.setFullDescriptionEN(result.get("descEN"));
+            speech.setViewerValue(result.get("profit"));
+            speech.setPlan(result.get("plan"));
+            speech.setFocus(result.get("focus"));
+            speech.setShortDescription(result.get("shortDesc"));
+            speech.setShortDescriptionEN(result.get("shortDescEN"));
+
+            speech = speechService.save(speech);
+            if (!speech.hasSpeaker(part)) {
+                speech.addSpeaker(part);
+            }
+            speech.setEvent(event);
+
+            speechService.update(speech);
+
+            return speech.getId() != null;
+        } catch (Exception ex) {
             return false;
         }
-        if(result.get("email") != null) {
-            part = participantService.getByEmail(result.get("email"));
-        } else {
-            return false;
-        }
-        if(part == null) {
-            part = new Participant();
-            part.setFullName(summary[0]);
-            part.addEmail(new Email(null,result.get("email"), true, part));
-        }
-        if(part.getTwitter() == null && result.get("twitter") != null) {
-            part.setTwitter(new Twitter(null, result.get("twitter"), part));
-        }
-
-        part.setFullNameEN(result.get("nameEN"));
-        part.setEmployer(result.get("company"));
-        part.setSkype(result.get("skype"));
-        part.setPhotoURL(result.get("photo"));
-        part.setPhone(result.get("phone"));
-        part.setCity(result.get("city"));
-        part.setTravelHelp(result.get("travel"));
-        part.setBiography(result.get("bio"));
-        part.setBiographyEN(result.get("bioEN"));
-        part.setSpeakerBackground(result.get("back"));
-        part.setRegistered(LocalDateTime.now());
-        part.setEnabled(true);
-
-        part = participantService.save(part);
-
-        speech.setNameEN(result.get("titleEN"));
-        speech.setFullDescription(result.get("desc"));
-        speech.setFullDescriptionEN(result.get("descEN"));
-        speech.setViewerValue(result.get("profit"));
-        speech.setPlan(result.get("plan"));
-        speech.setFocus(result.get("focus"));
-        speech.setShortDescription(result.get("shortDesc"));
-        speech.setShortDescriptionEN(result.get("shortDescEN"));
-
-        speech = speechService.save(speech);
-        if(!speech.hasSpeaker(part)) {
-            speech.addSpeaker(part);
-        }
-        speech.setEvent(event);
-
-        speechService.update(speech);
-
-        return speech.getId() != null;
     }
 
 

@@ -20,10 +20,23 @@ function successNote(text) {
 
 function failNote(event, jqXHR, options, jsExc) {
     closeNote();
+    if(typeof jqXHR !== 'undefined') {
+        failedNote = noty({
+            text: 'Failed: ' + jqXHR.statusText + "<br>",
+            type: 'error',
+            layout: 'bottomRight'
+        });
+    }
+
+}
+
+function customErrorNote(text) {
+    closeNote();
     failedNote = noty({
-        text: 'Failed: ' + jqXHR.statusText + "<br>",
+        text: 'Failed: ' + text + "<br>",
         type: 'error',
-        layout: 'bottomRight'
+        layout: 'bottomRight',
+        timeout: 30000
     });
 }
 
@@ -83,7 +96,7 @@ function renderSpeakerName( data, type, row ) {
         var str = '';
         Object.keys(data).forEach(function (key) {
             var val = data[key];
-            str += '<a class="event-list-speaker" href="../speaker/' + key + '">' + val + '</a>';
+            str += '<a class="event-list-speaker" href="/speaker/' + key + '">' + val + '</a>';
         });
         return str;
     }
@@ -142,6 +155,7 @@ function renderEventLink( data, type, row ) {
 
 function renderConfirmedSpeeches( data, type, row ) {
     if(type == 'display') {
+        console.log(data);
         var str = '';
         var tmp = '';
         var sNew = '';
@@ -298,6 +312,19 @@ function renderParticipantTags( data, type, row ) {
     return data;
 }
 
+function renderParticipantEmails( data, type, row ) {
+    if(type == 'display') {
+        var sep = '';
+       var str = "";
+        data.forEach(function (obj) {
+            str += sep + obj.email;
+            sep = ', ';
+        });
+        return str;
+    }
+    return data;
+}
+
 function renderParticipantName( data, type, row ) {
     if(type == 'display') {
         return '<a href="../speaker/' + row.id + '"> ' + data + '</a>';
@@ -434,7 +461,7 @@ function initSingleEventControl() {
                                 str += separator + eventName;
                                 separator = ', '
                             });
-                            failNote(str);
+                            customErrorNote(str);
                         }
                     }
                 });
@@ -490,7 +517,7 @@ function makeEventTableEditable() {
                                 str += separator + eventName;
                                 separator = ', '
                             });
-                            failNote(str);
+                            customErrorNote(str);
                         }
                     }
                 });
@@ -528,12 +555,25 @@ function initSingleSpechControl() {
         addSpeechTag(speechId);
     });
 
+    $('#delete-speech').click(function () {
+        /*
+
+         $.ajax({
+         url: ajaxUrl + id,
+         type: 'DELETE',
+         success: function () {
+
+         successNote('Deleted');
+         }
+         });
+
+         */
+    });
+
+
 
 }
 
-function reDrawSpeech() {
-    
-}
 
 function initSpeech() {
     $.ajax({
@@ -549,28 +589,124 @@ function initSpeech() {
 function addSpeechInfo() {
     $('#page-name').html('Доклад: ' +speech.name);
     var nameEN = '-';
-    if(speech.jiraStatus != null) {
-        nameEn = speech.jiraStatus;
+    if(speech.nameEN != null) {
+        nameEN = speech.nameEN;
     }
     var status =  '-';
     if(speech.jiraStatus != null) {
-        status = '<button type="button" class="btn btn-xs btn-primary" disabled="disabled">' + nameEN + '</button>';
+        status = '<button type="button" class="btn btn-xs btn-primary" disabled="disabled">' + speech.jiraStatus + '</button>';
     }
+    var resolution = 'Нет решения';
+    if(speech.jiraResolution != null) {
+        resolution = speech.jiraResolution;
+    }
+
+    var rating = '';
+    if(speech.rating != null) {
+        rating = speech.rating;
+    }
+
+    var event = '-';
+    if(speech.eventId != null) {
+        event = '<a href="/event/' + speech.eventId + '">' + speech.eventName + '</a>';
+    }
+
+    var speakers = '';
+    if(speech.participants != null) {
+        Object.keys(speech.participants).forEach(function (key) {
+            var val = speech.participants[key];
+            speakers += '<a class="speaker-block-link" href="/speaker/' + key + '">' + val + '</a>';
+        });
+    }
+
+    var link = '-';
+    if(speech.jiraLink != null) {
+        link = '<a target="_blank" href="' + speech.jiraLink + '"> Jira </a>'
+    }
+
+    var sync = '-';
+    if(speech.jiraSync != null) {
+        ds = speech.jiraSync;
+        if(ds.length > 4) {
+            var dateObject = new Date(ds[0], ds[1], ds[2], ds[3], ds[4]);
+            var options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                second: 'numeric',
+                timezone: 'UTC'
+            };
+            sync = dateObject.toLocaleString("ru", options);
+        }
+    }
+
+    var tags = '';
+    if(speech.tags != null) {
+        var separator = '';
+        speech.tags.forEach(function (obj) {
+            tags += separator + '<strong>' +  obj.tag + '</strong>';
+            separator = ', ';
+        });
+    }
+
     var sDesc = '-';
     if(speech.shortDescription != null) {
         sDesc = speech.shortDescription;
     }
+
+    var desc = '-';
+    if(speech.fullDescription != null) {
+        desc = speech.fullDescription
+    }
+
+    var descEN = '-';
+    if(speech.fullDescription != null) {
+        descEN = speech.fullDescription
+    }
+
     var sDescEN = '-';
     if(speech.shortDescriptionEN != null) {
         sDescEN = speech.shortDescriptionEN;
     }
 
+    var plan = '-';
+    if(speech.plan != null) {
+        plan = speech.plan;
+    }
 
-    $('#speech-info').html(
+    var viwerVal = '-';
+    if(speech.viewerValue != null) {
+        viwerVal = speech.viewerValue;
+    }
+
+    var focus = '-';
+    if(speech.focus != null) {
+        focus = speech.focus;
+    }
+
+    $('#common-speech-info').html(
         '<div class="row"><div class="col-xs-4"><strong>Name (en):</strong></div> <div class="col-xs-8 speaker-info-text">'+ nameEN + '</div></div>' +
         '<div class="row"><div class="col-xs-4"><strong>Jira Status:</strong></div> <div class="col-xs-8 speaker-info-text">'+ status + '</div></div>' +
-        '<div class="row"><div class="col-xs-4"><strong>Short Description:</strong></div> <div class="col-xs-8 speaker-info-text">'+ sDesc + '</div></div>' +
-        '<div class="row"><div class="col-xs-4"><strong>Short Description (en):</strong></div> <div class="col-xs-8 speaker-info-text">'+ sDescEN + '</div></div>'
+        '<div class="row"><div class="col-xs-4"><strong>Jira Resolution:</strong></div> <div class="col-xs-8 speaker-info-text">'+ resolution + '</div></div>' +
+        '<div class="row"><div class="col-xs-4"><strong>Rating:</strong></div> <div class="col-xs-8 speaker-info-text"><strong>'+ rating + '</strong></div></div>' +
+        '<div class="row"><div class="col-xs-4"><strong>Event:</strong></div> <div class="col-xs-8 speaker-info-text">'+ event + '</div></div>' +
+        '<div class="row"><div class="col-xs-4"><strong>Speakers:</strong></div> <div class="col-xs-8 speaker-info-text">'+ speakers + '</div></div>' +
+        '<div class="row"><div class="col-xs-4"><strong>Jira link:</strong></div> <div class="col-xs-8 speaker-info-text">'+ link + '</div></div>' +
+        '<div class="row"><div class="col-xs-4"><strong>Last sync:</strong></div> <div class="col-xs-8 speaker-info-text">'+ sync + '</div></div>' +
+        '<div class="row"><div class="col-xs-4"><strong>Tags:</strong></div> <div class="col-xs-8 speaker-info-text">'+ tags + '</div></div>'
+    );
+    $('#speech-description').html(
+        '<div class="row"><div class="col-xs-3"><strong>Short Description:</strong></div> <div class="col-xs-9 speaker-info-text">'+ sDesc + '</div></div>' +
+        '<div class="row"><div class="col-xs-3"><strong>Description:</strong></div> <div class="col-xs-9 speaker-info-text">'+ desc + '</div></div>' +
+        '<div class="row"><div class="col-xs-3"><strong>Short Description (en):</strong></div> <div class="col-xs-9 speaker-info-text">'+ sDescEN + '</div></div>' +
+        '<div class="row"><div class="col-xs-3"><strong>Description (en):</strong></div> <div class="col-xs-9 speaker-info-text">'+ descEN + '</div></div>'
+    );
+    $('#speech-others').html(
+        '<div class="row"><div class="col-xs-3"><strong>Что получат:</strong></div> <div class="col-xs-9 speaker-info-text">'+ viwerVal + '</div></div>' +
+        '<div class="row"><div class="col-xs-3"><strong>Plan:</strong></div> <div class="col-xs-9 speaker-info-text">'+ plan + '</div></div>' +
+        '<div class="row"><div class="col-xs-3"><strong>Доклад ориентирован:</strong></div> <div class="col-xs-9 speaker-info-text">'+ focus + '</div></div>'
     );
 }
 
@@ -599,8 +735,8 @@ function initTagForm() {
                     tagModal.modal('hide');
                     if(typeof ajaxUrl !== 'undefined') {
                         updateTable();
-                    } else if (typeof ajaxUrl !== 'undefined') {
-                        reDrawSpeech();
+                    } else if (typeof speechId !== 'undefined') {
+                        initSpeech();
                     }
                     successNote('New speech tags: ' + data );
                 }

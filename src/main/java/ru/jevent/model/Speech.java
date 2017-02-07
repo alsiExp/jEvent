@@ -43,7 +43,6 @@ public class Speech extends NamedEntity {
 
         additionally fields:
         synchronizationTime - last sync time
-        isFromJira - true if speech was import from jira, false if add manually
     */
 
     public static final String DELETE = "Speech.delete";
