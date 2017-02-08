@@ -1,11 +1,11 @@
 package ru.jevent.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import ru.jevent.model.additionalEntity.SpeechTag;
 import ru.jevent.model.superclasses.NamedEntity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Map;
@@ -328,7 +328,21 @@ public class Speech extends NamedEntity {
         }
     }
 
-    @JsonIgnore
+    public void updateFields(@NotNull Speech newSpeech) {
+        setName(newSpeech.getName());
+        setNameEN(newSpeech.getNameEN());
+        setRating(newSpeech.getRating());
+        setSpeakerCost(newSpeech.getSpeakerCost());
+        setShortDescription(newSpeech.getShortDescription());
+        setShortDescriptionEN(newSpeech.getShortDescriptionEN());
+        setFullDescription(newSpeech.getFullDescription());
+        setFullDescriptionEN(newSpeech.getFullDescriptionEN());
+        setViewerValue(newSpeech.getViewerValue());
+        setFocus(newSpeech.getFocus());
+        setPlan(newSpeech.getPlan());
+    }
+
+
     public boolean hasSpeaker(Participant participant) {
         for(Participant part : getSpeakers()) {
             if(Objects.equals(part.getId(), participant.getId())) {
@@ -439,6 +453,8 @@ public class Speech extends NamedEntity {
     @Override
     public String toString() {
         StringBuilder speakerSB = new StringBuilder();
+        String eventName = "";
+        String partnerName = "";
         if(!this.getSpeakers().isEmpty()){
             String prefix = "";
             speakerSB.append('[');
@@ -449,14 +465,16 @@ public class Speech extends NamedEntity {
             }
             speakerSB.append(']');
         }
-        String partnerName = "";
+        if(event != null) {
+            eventName = event.getName();
+        }
         if(partner != null) {
             partnerName =  ", partner=" + partner.getName();
         }
         return "Speech{" +
                 super.toString() +
                 ", speaker=" + speakerSB.toString() +
-                ", event=" + event.getName() +
+                ", event=" + eventName +
                 partnerName +
                 "}";
     }

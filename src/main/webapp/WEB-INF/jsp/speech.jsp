@@ -53,6 +53,12 @@
 
                 </div>
 
+            </div>
+
+            <hr>
+
+            <div class="row speech-info">
+
                 <div id="speech-others" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 
                 </div>
@@ -81,10 +87,14 @@
     var tagModal = $('#editTags');
     var tagContainer = tagForm.find('#tag-container');
 
+    var mainForm = $('#detailsSpeechForm');
+    var modal = $('#editSpeech');
+
     $(function () {
         initTagForm();
         initSpeech();
         initSingleSpechControl();
+        initErrorNotify();
     });
 
 </script>

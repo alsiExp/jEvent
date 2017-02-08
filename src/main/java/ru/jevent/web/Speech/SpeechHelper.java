@@ -5,6 +5,8 @@ import org.springframework.stereotype.Component;
 import ru.jevent.LoggerWrapper;
 import ru.jevent.model.Speech;
 import ru.jevent.model.additionalEntity.SpeechTag;
+import ru.jevent.service.EventService;
+import ru.jevent.service.ParticipantService;
 import ru.jevent.service.SpeechService;
 import ru.jevent.service.SpeechTagService;
 
@@ -15,15 +17,28 @@ public class SpeechHelper {
     private static final LoggerWrapper LOG = LoggerWrapper.get(SpeechHelper.class);
     private final SpeechService service;
     private final SpeechTagService tagService;
+    private final ParticipantService participantService;
+    private final EventService eventService;
 
     @Autowired
-    public SpeechHelper(SpeechService service, SpeechTagService tagService) {
+    public SpeechHelper(SpeechService service, SpeechTagService tagService, ParticipantService participantService, EventService eventService) {
         this.service = service;
         this.tagService = tagService;
+        this.participantService = participantService;
+        this.eventService = eventService;
     }
 
     public Speech create (Speech speech) {
-        LOG.info("create " + speech);
+        LOG.info("create speech" + speech);
+        return service.save(speech);
+    }
+
+    public Speech create (Speech speech, long eventId, long[] participantIds) {
+        LOG.info("create speech" + speech + " for event id = " + eventId);
+        for(long pId : participantIds) {
+            speech.addSpeaker(participantService.get(pId));
+        }
+        speech.setEvent(eventService.get(eventId));
         return service.save(speech);
     }
 

@@ -33,6 +33,23 @@ public class SpeechAjaxController {
         helper.delete(id);
     }
 
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<String> update(Speech newSpeech,
+                                         @RequestParam("eventId") long eventId,
+                                         @RequestParam("partId") long[] partId) {
+
+        if(newSpeech.getId() == 0) {
+            System.out.println(eventId);
+        } else {
+            Speech oldSpeech = helper.get(newSpeech.getId());
+            oldSpeech.updateFields(newSpeech);
+            helper.update(oldSpeech);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
     @RequestMapping(value = "/tags", method = RequestMethod.GET)
     public List<SpeechTag> getAllSpeechTags() {
         return helper.getAllTags();

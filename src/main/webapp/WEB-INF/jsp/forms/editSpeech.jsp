@@ -8,7 +8,9 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" method="post" id="detailsSpeechForm">
-                    <input type="text" hidden="hidden" name="speechId" id="speechId">
+                    <input type="text" hidden="hidden" name="id" id="id">
+                    <input type="text" hidden="hidden" name="eventId" id="eventId">
+                    <input type="text" hidden="hidden" name="partId" id="partId">
 
                     <div class="form-group">
                         <label for="name" class="control-label col-xs-3"><fmt:message
@@ -23,6 +25,22 @@
                                 key="app.modal.speech.nameEN"/></label>
                         <div class="col-xs-9">
                             <input type="text" class="form-control" id="nameEN" name="nameEN">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rating" class="control-label col-xs-3"><fmt:message
+                                key="app.speech.rating"/></label>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" id="rating" name="rating">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="speakerCost" class="control-label col-xs-3"><fmt:message
+                                key="app.speech.cost"/></label>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" id="speakerCost" name="speakerCost">
                         </div>
                     </div>
 
@@ -76,6 +94,13 @@
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label for="plan" class="control-label col-xs-3"><fmt:message
+                                key="app.modal.speech.plan"/></label>
+                        <div class="col-xs-9">
+                            <textarea class="form-control" id="plan" name="plan"></textarea>
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <div class="col-xs-offset-3 col-xs-9">

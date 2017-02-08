@@ -555,6 +555,35 @@ function initSingleSpechControl() {
         addSpeechTag(speechId);
     });
 
+    $('#edit-speech').click(function () {
+        clearForm(mainForm);
+        $.each(speech, function (key, value) {
+            mainForm.find("input[name='" + key + "']").val(value);
+            mainForm.find("textarea[name='" + key + "']").val(value);
+        });
+        var part = [];
+        Object.keys(speech.participants).forEach(function (key) {
+            part.push(key);
+        });
+        mainForm.find('#partId').val(part);
+        modal.modal();
+    });
+
+    mainForm.submit(function () {
+        $.ajax({
+            type: "POST",
+            url: "/ajax/speeches/",
+            data: mainForm.serialize(),
+            success: function (data) {
+                modal.modal('hide');
+                initSpeech();
+                successNote('Saved');
+            }
+        });
+        return false;
+    });
+
+
     $('#delete-speech').click(function () {
         /*
 
@@ -662,8 +691,8 @@ function addSpeechInfo() {
     }
 
     var descEN = '-';
-    if(speech.fullDescription != null) {
-        descEN = speech.fullDescription
+    if(speech.fullDescriptionEN != null) {
+        descEN = speech.fullDescriptionEN
     }
 
     var sDescEN = '-';
