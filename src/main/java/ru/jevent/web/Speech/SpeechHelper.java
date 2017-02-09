@@ -3,6 +3,7 @@ package ru.jevent.web.Speech;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.jevent.LoggerWrapper;
+import ru.jevent.model.Participant;
 import ru.jevent.model.Speech;
 import ru.jevent.model.additionalEntity.SpeechTag;
 import ru.jevent.service.EventService;
@@ -10,7 +11,9 @@ import ru.jevent.service.ParticipantService;
 import ru.jevent.service.SpeechService;
 import ru.jevent.service.SpeechTagService;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class SpeechHelper {
@@ -44,6 +47,32 @@ public class SpeechHelper {
 
     public void update(Speech speech) {
         LOG.info("update " + speech);
+        service.update(speech);
+    }
+
+    public void update(Speech speech, long[] participantIds) {
+        LOG.info("update " + speech);
+        boolean needUpdate = false;
+
+        Set<Long> newSpeakers = new HashSet<>();
+        for(long newId : participantIds){
+            newSpeakers.add(newId);
+        }
+        Set<Long> oldSpeakers = new HashSet<>();
+        for(Participant p : speech.getSpeakers()){
+            oldSpeakers.add(p.getId());
+        }
+        for(long oldId : oldSpeakers) {
+            if(!newSpeakers.contains(oldId)) {
+                speech.removeSpeaker(participantService.get(oldId));
+            }
+        }
+
+        for(long pId : participantIds) {
+            if(!oldSpeakers.contains(pId)) {
+                speech.addSpeaker(participantService.get(pId));
+            }
+        }
         service.update(speech);
     }
 

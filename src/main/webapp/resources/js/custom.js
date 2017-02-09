@@ -300,8 +300,9 @@ function renderParticipantRatings( data, type, row ) {
 }
 
 function renderParticipantTags( data, type, row ) {
+    var str = "";
+
     if(type == 'display') {
-        var str = "";
         Object.keys(data).forEach(function (key) {
             var val = data[key];
             str += '<a href="#" class="participant-tag" data-tag-id="' + key +'" onclick="loadTagData(' + key + ')">#' + val + '</a>';
@@ -309,6 +310,16 @@ function renderParticipantTags( data, type, row ) {
         });
         return str;
     }
+
+    if(type == 'filter') {
+        Object.keys(data).forEach(function (key) {
+            var val = data[key];
+            str += val + ' ';
+
+        });
+        return str;
+    }
+
     return data;
 }
 
@@ -555,6 +566,26 @@ function initSingleSpechControl() {
         addSpeechTag(speechId);
     });
 
+    $('#edit-speakers').click(function () {
+        showSpeakerSearchForm(speech.participants);
+    });
+
+    speakerFindForm.submit(function () {
+        $.ajax({
+            type: "POST",
+            url: "/ajax/speeches/" + speechId + "/participants",
+            data: speakerFindForm.serialize(),
+            success: function (data) {
+                $('#addSpeaker').modal('hide');
+                initSpeech();
+                successNote('Saved');
+            }
+        });
+        return false;
+    });
+
+
+
     $('#edit-speech').click(function () {
         clearForm(mainForm);
         $.each(speech, function (key, value) {
@@ -603,6 +634,62 @@ function initSingleSpechControl() {
 
 }
 
+/*
+    Don`t forget override submint btn for this form
+ */
+function showSpeakerSearchForm(part) {
+    var speakerArray = [];
+    $('#speaker-container').html();
+    if(part != null) {
+        Object.keys(part).forEach(function (key) {
+            speakerArray.push(key);
+            $('#speaker-container').append('<label class="checkbox-inline">' +
+                '<input type="checkbox" name="speakers" value="'+ key +'" checked>' + part[key] +
+                '</label>')
+        });
+    }
+
+    $('#addSpeaker').modal();
+
+    if(speakerSearchDatatable == null) {
+        $.ajax({
+            type: "GET",
+            url: "/ajax/participants",
+            success: function (data) {
+                var speakerData = [];
+                data.forEach(function (el) {
+                    if( !indexContains(speakerArray, el.id) ){
+                        speakerData.push([el.fullName, '<a class="btn btn-success" data-fullName="el.fullName" ' +
+                        'onclick="addSpeakerToSpeech(' + el.id + ', \'' + el.fullName  + '\')" href="#"><i class="fa fa-plus"aria-hidden="true"></i></a>']);
+                    }
+                });
+
+                initSpeakerSearchTable(speakerData);
+            }
+        });
+    }
+}
+
+function initSpeakerSearchTable(data) {
+    speakerSearchDatatable = $('#speakerSearchTable').DataTable({
+        data: data,
+        scrollY: '50vh',
+        scrollCollapse: true,
+        paging: false,
+        ordering: false,
+        info: false,
+        columns: [
+            {title: "Name"},
+            {title: "Add"}
+        ]
+    } );
+}
+
+function addSpeakerToSpeech(id, name) {
+    $('#speaker-container').append('<label class="checkbox-inline">' +
+        '<input type="checkbox" name="speakers" value="'+ id +'" checked>' + name +
+        '</label>');
+}
 
 function initSpeech() {
     $.ajax({
@@ -749,7 +836,7 @@ function initTagForm() {
         if(tagName != null && tagName != ''){
             tagContainer.append(
                 '<label class="checkbox-inline">' +
-                    '<input type="checkbox" id="inlineCheckbox1" name="tags" value="0-' + tagName + '">' + tagName +
+                    '<input type="checkbox" name="tags" value="0-' + tagName + '" checked>' + tagName +
                 '</label>'
             );
             tagForm.find('#new-tag').val('');
@@ -1056,3 +1143,14 @@ function updateProfileForm() {
     });
 }
 /**** end profile ****/
+
+
+function indexContains(a, obj) {
+    var i = a.length;
+    while (i--) {
+        if (a[i] == obj) {
+            return true;
+        }
+    }
+    return false;
+}

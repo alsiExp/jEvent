@@ -39,7 +39,8 @@ public class SpeechAjaxController {
                                          @RequestParam("partId") long[] partId) {
 
         if(newSpeech.getId() == 0) {
-            System.out.println(eventId);
+            //TODO: implement
+
         } else {
             Speech oldSpeech = helper.get(newSpeech.getId());
             oldSpeech.updateFields(newSpeech);
@@ -88,4 +89,13 @@ public class SpeechAjaxController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+
+    @RequestMapping(value = "/{id}/participants", method = RequestMethod.POST)
+    public ResponseEntity<String> setParticipants(@PathVariable("id") long speechId,
+                                                  @RequestParam(value = "speakers") long[] speakers) {
+
+        Speech speech = helper.get(speechId);
+        helper.update(speech, speakers);
+        return null;
+    }
 }

@@ -23,6 +23,10 @@
                             class="fa fa-pencil"
                             aria-hidden="true"></i><fmt:message key="app.speech.edit"/></a>
                     </li>
+                    <li id="edit-speakers" class=""><a class="" href="#"><i
+                            class="fa fa-user-plus"
+                            aria-hidden="true"></i><fmt:message key="app.speech.edit.speakers"/></a>
+                    </li>
                     <li id="edit-tags" class=""><a class="" href="#"><i
                             class="fa fa-tags"
                             aria-hidden="true"></i><fmt:message key="app.speech.edit.tags"/></a>
@@ -76,6 +80,8 @@
 
     <jsp:include page="forms/editTags.jsp"/>
 
+    <jsp:include page="forms/addSpeaker.jsp"/>
+
 </div>
 
 </body>
@@ -83,12 +89,16 @@
     var speechId = ${speechId};
     var speech;
 
+    var speakerFindForm = $('#detailsSpeakersFindForm');
+
     var tagForm = $('#detailsTagsForm');
     var tagModal = $('#editTags');
     var tagContainer = tagForm.find('#tag-container');
 
     var mainForm = $('#detailsSpeechForm');
     var modal = $('#editSpeech');
+
+    var speakerSearchDatatable;
 
     $(function () {
         initTagForm();

@@ -277,6 +277,14 @@ public class Speech extends NamedEntity {
         }
     }
 
+
+    public void removeSpeaker(Participant p) {
+        if(p != null) {
+            p.removeSpeech(this);
+            getSpeakers().remove(p);
+        }
+    }
+
     public Set<SpeechTag> getTags() {
         if (tags == null) {
             tags = new HashSet<>();

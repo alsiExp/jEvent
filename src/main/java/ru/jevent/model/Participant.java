@@ -53,7 +53,7 @@ public class Participant extends Person {
     @Column(name = "full_name_en")
     private String fullNameEN;
 
-    @ManyToMany(mappedBy = "speakers", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "speakers", cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE})
     @JsonManagedReference
     @LazyCollection(LazyCollectionOption.FALSE)
     private Set<Speech> speechSet;
@@ -245,6 +245,12 @@ public class Participant extends Person {
     public void addSpeech(Speech speech) {
         if(speech != null) {
             getSpeechSet().add(speech);
+        }
+    }
+
+    public void removeSpeech(Speech speech) {
+        if(speech != null) {
+            getSpeechSet().remove(speech);
         }
     }
 

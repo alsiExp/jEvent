@@ -42,10 +42,10 @@
                 <datatables:column title="${name}" property="fullName" renderFunction="renderParticipantName"/>
 
                 <fmt:message key="app.participant.table.rating" var="rating"/>
-                <datatables:column title="${rating}" property="speechSet" renderFunction="renderParticipantRatings"/>
+                <datatables:column title="${rating}" property="speechSet" sortType="natural" renderFunction="renderParticipantRatings"/>
 
                 <fmt:message key="app.participant.table.tags" var="tags"/>
-                <datatables:column title="${tags}" property="participantTags" filterable="false" sortable="false" renderFunction="renderParticipantTags"/>
+                <datatables:column title="${tags}" property="participantTags" sortable="false" renderFunction="renderParticipantTags"/>
 
                 <fmt:message key="app.table.phone" var="phone"/>
                 <datatables:column title="${phone}" property="phone" filterable="false" sortable="false"/>
