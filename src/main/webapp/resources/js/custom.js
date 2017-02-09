@@ -518,6 +518,7 @@ function makeEventTableEditable() {
                                 separator = ', '
                             });
                             successNote(str);
+                            initEvent();
                         }
                     }
                     if (key == "error") {
@@ -639,7 +640,7 @@ function initSingleSpechControl() {
  */
 function showSpeakerSearchForm(part) {
     var speakerArray = [];
-    $('#speaker-container').html();
+    $('#speaker-container').html('');
     if(part != null) {
         Object.keys(part).forEach(function (key) {
             speakerArray.push(key);
