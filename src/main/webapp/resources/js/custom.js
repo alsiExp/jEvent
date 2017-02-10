@@ -446,6 +446,24 @@ function makeEventSpeechTableEditable() {
 }
 
 function initSingleEventControl() {
+
+    $('#create-new-speech').click(function () {
+        //without param patricipants - this is new speech
+        showSpeakerSearchForm();
+    });
+
+
+    speakerFindForm.submit(function (event) {
+        event.preventDefault();
+        var part = $.each($('#detailsSpeakersFindForm input[name="speakers"]'), function (key, value) {
+
+            console.log($(this).val());
+        });
+
+
+    });
+
+
     $('#add-speech-from-jira').click(function () {
         $.ajax({
             type: "GET",

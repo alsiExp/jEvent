@@ -89,6 +89,8 @@
 
     <jsp:include page="forms/editTags.jsp"/>
 
+    <jsp:include page="forms/addSpeaker.jsp"/>
+
 </div>
 
 </body>
@@ -100,12 +102,16 @@
     var tagModal = $('#editTags');
     var tagContainer = tagForm.find('#tag-container');
 
+    var speakerFindForm = $('#detailsSpeakersFindForm');
+    var speakerSearchDatatable;
+
     $(function () {
         makeEventSpeechTableEditable();
         initSingleEventControl();
         initEvent();
         initTagForm();
 
+        initErrorNotify();
     });
 
 </script>
