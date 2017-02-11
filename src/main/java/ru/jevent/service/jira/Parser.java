@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.springframework.util.StringUtils.isEmpty;
-
 public class Parser {
     private Map<String, String> result = new HashMap<>();
     private final String description;
@@ -20,6 +18,8 @@ public class Parser {
     private String photo;
     private String phone;
     private String twitter;
+    private String github;
+    private String homePage;
     private String city;
     private String travel;
     private String bio;
@@ -50,11 +50,78 @@ public class Parser {
 
 
     public Map<String, String> getResult() {
-        if(parse(description)) {
+        boolean speakerComplete = false;
+
+        /*
+            First check full pattern - it work at some issues from HolyJS 2016 Piter
+        */
+        if(findFullMatch(description)){
             fillResult();
             return result;
-        } else
+        }
+        if(findFullMatchWithPanels(description)) {
+            fillResult();
+            return result;
+        }
+
+        /*
+            We try find speaker field with common Pattern,
+            where fields are surrounded by stars (for example *Name:*).
+         */
+        if(findSpeakerDataStarPattern(description)) {
+            speakerComplete = true;
+        }
+
+        /*
+            One more try - in common Speaker Pattern some fields can miss.
+            So separateSpeakerDataStarPattrens check every field, where can find data.
+         */
+        if(!speakerComplete) {
+            if(separateSpeakerDataStarPattrens(description))
+                speakerComplete = true;
+        }
+
+        if(!speakerComplete) {
             return null;
+        }
+
+        /*
+            Speaker is complete, so we parse speech from description.
+            First check most complete pattern for Speech
+            with fields plan
+         */
+
+        if(findSpeechDataWithPlan(description)){
+            fillResult();
+            return result;
+        }
+
+        /*
+            Pattern with main fields - title (+en), shortDescription (+en), description (+en), profit, focus
+
+         */
+        if(findSpeechDataWithMainFields(description)) {
+            fillResult();
+            return result;
+        }
+
+        /*
+            Try to parse only 4 or 6 fields: title (and maybe en), descripion (and maybe en) and ShortDescription (+en)
+         */
+        if(findSpeechDataSimplifiedPattern(description)){
+            fillResult();
+            return result;
+        }
+
+        /*
+            Last chance to find just something
+         */
+        if(findSpeechDataLastChance(description)) {
+            fillResult();
+            return result;
+        }
+
+        return null;
     }
 
     private void fillResult() {
@@ -66,6 +133,8 @@ public class Parser {
         result.put("photo", photo);
         result.put("phone", phone);
         result.put("twitter", twitter);
+        result.put("github", github);
+        result.put("homePage", homePage);
         result.put("city", city);
         result.put("travel", travel);
         result.put("bio", bio);
@@ -82,12 +151,41 @@ public class Parser {
         result.put("shortDescEN", shortDescEN);
     }
 
+    private boolean findFullMatchWithPanels(String description) {
+        Matcher fullMatcher = Pattern.compile(".*\\*Name:\\*\\s+([\\s\\S]*)\\s{5}\\*Name EN:\\*\\s+([\\s\\S]*)\\s{5}\\*Company:\\*\\s+([\\s\\S]*)\\s{5}\\*Mail:\\*\\s+([\\s\\S]*)\\s{5}\\*Twitter:\\*\\s+([\\s\\S]*)\\s{5}\\*Github:\\*\\s+([\\s\\S]*)\\s{5}\\*HomePage:\\*\\s+([\\s\\S]*)\\s{5}\\*Phone:\\*\\s+([\\s\\S]*)\\s{5}\\*City:\\*\\s+([\\s\\S]*)\\s{5}\\*Photo:\\*\\s+([\\s\\S]*)\\s{5}\\*Bio:\\*\\s+([\\s\\S]*)\\s{5}\\*Bio EN:\\*\\s+([\\s\\S]*)\\s{5}\\*Background:\\*\\s+([\\s\\S]*)\\s{5}\\*Travel:\\*\\s+([\\s\\S]*)\\s{5}.*\\*Title:\\*\\s+([\\s\\S]*)\\s{5}\\*Title EN:\\*\\s+([\\s\\S]*)\\s{5}\\*Talk Short:\\*\\s+([\\s\\S]*)\\s{5}\\*Talk Short EN:\\*\\s+([\\s\\S]*)\\s{5}\\*Talk description:\\*\\s+([\\s\\S]*)\\s{5}\\*Talk description EN:\\*\\s+([\\s\\S]*)\\s{5}\\*Plan:\\*\\s+([\\s\\S]*)\\s{5}\\*Audience:\\*\\s+([\\s\\S]*)\\s{5}\\*Oriented:\\*\\s+([\\s\\S]*)\\s{5}").matcher(description);
+        if (fullMatcher.find()) {
+            name = fullMatcher.group(1);
+            nameEN = fullMatcher.group(2);
+            company = fullMatcher.group(3);
+            email = fullMatcher.group(4);
+            twitter = fullMatcher.group(5);
+            github = fullMatcher.group(6);
+            homePage = fullMatcher.group(7);
+            phone = fullMatcher.group(8);
+            city = fullMatcher.group(9);
+            photo = fullMatcher.group(10);
+            bio = fullMatcher.group(11);
+            bioEN = fullMatcher.group(12);
+            back = fullMatcher.group(13);
+            travel = fullMatcher.group(14);
+            title = fullMatcher.group(15);
+            titleEN = fullMatcher.group(16);
+            shortDesc = fullMatcher.group(17);
+            shortDescEN = fullMatcher.group(18);
+            desc = fullMatcher.group(19);
+            descEN = fullMatcher.group(20);
+            plan = fullMatcher.group(21);
+            profit = fullMatcher.group(22);
+            focus = fullMatcher.group(23);
+            if (name != null && title != null && desc != null) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-    private boolean parse(String description) {
-
+    private boolean findFullMatch(String description) {
         Matcher fullMatcher = Pattern.compile("\\*Name:\\*\\s+([\\s\\S]*);\\s*\\*Company:\\*\\s+([\\s\\S]*),\\s*\\*Photo link:\\*\\s+([\\s\\S]*);\\s*\\*Email:\\*\\s+([\\s\\S]*);\\s*\\*Skype:\\*\\s+([\\s\\S]*);\\s*\\*Phone:\\*\\s+([\\s\\S]*);\\s*\\*Twitter:\\*\\s+([\\s\\S]*)\\s*\\*Country, City:\\*\\s+([\\s\\S]*);\\s*\\*Travel:\\*\\s+([\\s\\S]*);\\s*\\*Bio:\\*\\s+([\\s\\S]*);\\s*\\*Speaker background:\\*\\s+([\\s\\S]*);\\s*\\*Talk title:\\*\\s+([\\s\\S]*);\\s*\\*Description:\\*\\s+([\\s\\S]*);\\s*\\*Short Description:\\*\\s+([\\s\\S]*);\\s*\\*Short Description:\\*\\s+([\\s\\S]*).").matcher(description);
-        Matcher speakerMatcher = Pattern.compile("\\*Name:\\*\\s+([\\s\\S]*);\\s*\\*Company:\\*\\s+([\\s\\S]*),\\s*\\*Photo link:\\*\\s+([\\s\\S]*);\\s*\\*Email:\\*\\s+([\\s\\S]*);\\s*\\*Skype:\\*\\s+([\\s\\S]*);\\s*\\*Phone:\\*\\s+([\\s\\S]*);\\s*\\*Twitter:\\*\\s+([\\s\\S]*)\\s*\\*Country, City:\\*\\s+([\\s\\S]*);\\s*\\*Travel:\\*\\s+([\\s\\S]*);\\s*\\*Bio:\\*\\s+([\\s\\S]*);\\s*\\*Speaker background:\\*\\s+([\\s\\S]*);\\s*\\*Talk ").matcher(description);
-
         if (fullMatcher.find()) {
             String[] names = checkEN(fullMatcher.group(1));
             if (names != null) {
@@ -120,16 +218,16 @@ public class Parser {
             shortDescEN = fullMatcher.group(14);
             shortDesc = fullMatcher.group(15);
 
-            if (isEmpty(email) || isEmpty(name) || isEmpty(title) || isEmpty(desc)) {
-                if(debug != null)
-                    System.err.println("Bad result " + debug);
-                return false;
-            }
-
-            if (!name.isEmpty() && !title.isEmpty() && !desc.isEmpty()) {
+            if (name != null && title != null && desc != null) {
                 return true;
             }
         }
+        return false;
+    }
+
+    private boolean findSpeakerDataStarPattern(String description) {
+        Matcher speakerMatcher = Pattern.compile("\\*Name:\\*\\s+([\\s\\S]*);\\s*\\*Company:\\*\\s+([\\s\\S]*),\\s*\\*Photo link:\\*\\s+([\\s\\S]*);\\s*\\*Email:\\*\\s+([\\s\\S]*);\\s*\\*Skype:\\*\\s+([\\s\\S]*);\\s*\\*Phone:\\*\\s+([\\s\\S]*);\\s*\\*Twitter:\\*\\s+([\\s\\S]*)\\s*\\*Country, City:\\*\\s+([\\s\\S]*);\\s*\\*Travel:\\*\\s+([\\s\\S]*);\\s*\\*Bio:\\*\\s+([\\s\\S]*);\\s*\\*Speaker background:\\*\\s+([\\s\\S]*);\\s*\\*Talk ").matcher(description);
+
         if (speakerMatcher.find()) {
             name = speakerMatcher.group(1);
             String[] names = checkEN(name);
@@ -156,144 +254,14 @@ public class Parser {
                 back = back.split(";\\s*\\*")[0];
             }
 
-            if (email == null || name == null) {
-                if(debug != null)
-                    System.err.println("SpeakerMatcher error " + debug);
-                return false;
+            if (email != null && name != null) {
+                return true;
             }
-        } else {
-            customSpeakerParse(description);
         }
-
-
-        Pattern speechWithPlanPattern = Pattern.compile("\\*Talk title:\\*\\s+([\\s\\S]*);\\s+\\*Talk title:\\*\\s+([\\s\\S]*);\\s+\\*Description:\\*\\s+([\\s\\S]*);\\s+\\*Description EN:\\*\\s+([\\s\\S]*);\\s+\\*Что получат:\\*\\s+([\\s\\S]*);\\s+\\*План:\\*\\s*([\\s\\S]*);\\s+\\*Доклад ориентирован:\\*\\s*([\\s\\S]*);\\s+\\*Short Description EN:\\*\\s*([\\s\\S]*);\\s*(?:\\*Short Description:\\*\\s*([\\s\\S]*))?", Pattern.DOTALL);
-        Matcher speechWithPlanMatcher = speechWithPlanPattern.matcher(description);
-        if (speechWithPlanMatcher.find()) {
-            title = checkTitle(speechWithPlanMatcher.group(1));
-            titleEN = speechWithPlanMatcher.group(2);
-            if (titleEN.equals("null")) {
-                titleEN = null;
-            }
-            desc = speechWithPlanMatcher.group(3);
-            descEN = speechWithPlanMatcher.group(4);
-            if (descEN.equals("null")) {
-                descEN = null;
-            }
-
-            profit = speechWithPlanMatcher.group(5);
-            plan = speechWithPlanMatcher.group(6);
-            focus = speechWithPlanMatcher.group(7);
-
-            shortDescEN = speechWithPlanMatcher.group(8);
-            if (shortDescEN.equals("null")) {
-                shortDescEN = null;
-            }
-
-            shortDesc = speechWithPlanMatcher.group(9);
-
-
-            if (title == null || desc == null) {
-                if(debug != null)
-                    System.err.println("SpeechWithPlanMatcher error " + debug);
-                return false;
-            }
-            return true;
-        }
-
-        Pattern speechWithoutPlanPattern = Pattern.compile("\\*Talk title:\\*\\s+([\\s\\S]*);\\s+\\*Talk title:\\*\\s+([\\s\\S]*);\\s+\\*Description:\\*\\s+([\\s\\S]*);\\s+\\*Description EN:\\*\\s+([\\s\\S]*);\\s+\\*Что получат:\\*\\s+([\\s\\S]*);\\s+\\*Доклад ориентирован:\\*\\s*([\\s\\S]*);\\s+\\*Short Description EN:\\*\\s*([\\s\\S]*);\\s*(?:\\*Short Description:\\*\\s*([\\s\\S]*))?", Pattern.DOTALL);
-        Matcher speechWithoutPlanMatcher = speechWithoutPlanPattern.matcher(description);
-        if (speechWithoutPlanMatcher.find()) {
-            title = checkTitle(speechWithoutPlanMatcher.group(1));
-            titleEN = speechWithoutPlanMatcher.group(2);
-            if (titleEN.equals("null")) {
-                titleEN = null;
-            }
-            desc = speechWithoutPlanMatcher.group(3);
-            descEN = speechWithoutPlanMatcher.group(4);
-            if (descEN.equals("null")) {
-                descEN = null;
-            }
-
-            profit = speechWithoutPlanMatcher.group(5);
-            focus = speechWithoutPlanMatcher.group(6);
-
-            shortDescEN = speechWithoutPlanMatcher.group(7);
-            if (shortDescEN.equals("null")) {
-                shortDescEN = null;
-            }
-
-            shortDesc = speechWithoutPlanMatcher.group(8);
-
-
-            if (title == null || desc == null) {
-                if(debug != null)
-                    System.err.println("SpeechWithoutPlanMatcher error" + debug);
-                return false;
-            }
-            return true;
-        }
-
-        Pattern speechSimplePattern = Pattern.compile("\\*Talk title:\\*\\s+([\\s\\S]*);\\s*\\*Description:\\*\\s+([\\s\\S]*);\\s*\\*Short Description:\\*\\s+([\\s\\S]*);\\s*\\*Short Description:\\*\\s+([\\s\\S]*).");
-        Matcher speechSimpleMatcher = speechSimplePattern.matcher(description);
-        if(speechSimpleMatcher.find()) {
-            title = checkTitle(speechSimpleMatcher.group(1));
-            String[] titles = checkEN(title);
-            if(titles != null) {
-                title = titles[0];
-                titleEN = titles[1];
-            }
-            desc = speechSimpleMatcher.group(2);
-            shortDescEN = speechSimpleMatcher.group(3);
-            if (shortDescEN.equals("null")) {
-                shortDescEN = null;
-            }
-            shortDesc = speechSimpleMatcher.group(4);
-            if (title == null || desc == null) {
-                if(debug != null)
-                    System.err.println("SpeechSimpleMatcher error " + debug);
-                return false;
-            }
-            return true;
-        }
-
-        Pattern speechCommonPattern = Pattern.compile("\\*Talk title:\\*\\s+([\\s\\S]*);\\s*\\*Description:\\*\\s+([\\s\\S]*);\\s*\\*Short Description:\\*\\s+([\\s\\S]*).|!");
-        Matcher speechCommonMatcher = speechCommonPattern.matcher(description);
-        if(speechCommonMatcher.find()) {
-            title = checkTitle(speechCommonMatcher.group(1));
-            String[] titles = checkEN(title);
-            if(titles != null) {
-                title = titles[0];
-                titleEN = titles[1];
-            }
-            desc = speechCommonMatcher.group(2);
-            shortDesc = speechCommonMatcher.group(3);
-            if (title == null || desc == null) {
-                if(debug != null)
-                    System.err.println("SpeechCommonMatcher error " + debug);
-                return false;
-            }
-            return true;
-        }
-
-        Matcher speechCommonAltMatcher = Pattern.compile("\\*Talk title:\\*\\s+([\\s\\S]*);\\s*\\*Description:\\*\\s+([\\s\\S]*)(;|\\.)").matcher(description);
-        if(speechCommonAltMatcher.find()) {
-            title = checkTitle(speechCommonAltMatcher.group(1));
-            String[] titles = checkEN(title);
-            if (titles != null) {
-                title = titles[0];
-                titleEN = titles[1];
-            }
-            desc = speechCommonAltMatcher.group(2);
-            return true;
-        }
-        if(debug != null)
-            System.err.println("Parse error " + debug);
         return false;
-
     }
 
-
-    private void customSpeakerParse(String description) {
+    private boolean separateSpeakerDataStarPattrens(String description) {
         Matcher nameMatcher = Pattern.compile("\\*Name:\\*\\s+([\\s\\S]*);").matcher(description);
         if(nameMatcher.find()){
             name = nameMatcher.group(1).split(";")[0];
@@ -359,6 +327,132 @@ public class Parser {
             back = backMatcher.group(1).split(";")[0];
         }
 
+        if (email != null && name != null) {
+            return true;
+        }
+        return false;
+    }
+
+
+    private boolean findSpeechDataWithPlan(String description) {
+        Pattern speechWithPlanPattern = Pattern.compile("\\*Talk title:\\*\\s+([\\s\\S]*);\\s+\\*Talk title:\\*\\s+([\\s\\S]*);\\s+\\*Description:\\*\\s+([\\s\\S]*);\\s+\\*Description EN:\\*\\s+([\\s\\S]*);\\s+\\*Что получат:\\*\\s+([\\s\\S]*);\\s+\\*План:\\*\\s*([\\s\\S]*);\\s+\\*Доклад ориентирован:\\*\\s*([\\s\\S]*);\\s+\\*Short Description EN:\\*\\s*([\\s\\S]*);\\s*(?:\\*Short Description:\\*\\s*([\\s\\S]*))?", Pattern.DOTALL);
+        Matcher speechWithPlanMatcher = speechWithPlanPattern.matcher(description);
+        if (speechWithPlanMatcher.find()) {
+            title = checkTitle(speechWithPlanMatcher.group(1));
+            titleEN = speechWithPlanMatcher.group(2);
+            if (titleEN.equals("null")) {
+                titleEN = null;
+            }
+            desc = speechWithPlanMatcher.group(3);
+            descEN = speechWithPlanMatcher.group(4);
+            if (descEN.equals("null")) {
+                descEN = null;
+            }
+
+            profit = speechWithPlanMatcher.group(5);
+            plan = speechWithPlanMatcher.group(6);
+            focus = speechWithPlanMatcher.group(7);
+
+            shortDescEN = speechWithPlanMatcher.group(8);
+            if (shortDescEN.equals("null")) {
+                shortDescEN = null;
+            }
+
+            shortDesc = speechWithPlanMatcher.group(9);
+
+
+            if (title != null && desc != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean findSpeechDataWithMainFields(String description) {
+        Pattern speechWithoutPlanPattern = Pattern.compile("\\*Talk title:\\*\\s+([\\s\\S]*);\\s+\\*Talk title:\\*\\s+([\\s\\S]*);\\s+\\*Description:\\*\\s+([\\s\\S]*);\\s+\\*Description EN:\\*\\s+([\\s\\S]*);\\s+\\*Что получат:\\*\\s+([\\s\\S]*);\\s+\\*Доклад ориентирован:\\*\\s*([\\s\\S]*);\\s+\\*Short Description EN:\\*\\s*([\\s\\S]*);\\s*(?:\\*Short Description:\\*\\s*([\\s\\S]*))?", Pattern.DOTALL);
+        Matcher speechWithoutPlanMatcher = speechWithoutPlanPattern.matcher(description);
+        if (speechWithoutPlanMatcher.find()) {
+            title = checkTitle(speechWithoutPlanMatcher.group(1));
+            titleEN = speechWithoutPlanMatcher.group(2);
+            if (titleEN.equals("null")) {
+                titleEN = null;
+            }
+            desc = speechWithoutPlanMatcher.group(3);
+            descEN = speechWithoutPlanMatcher.group(4);
+            if (descEN.equals("null")) {
+                descEN = null;
+            }
+
+            profit = speechWithoutPlanMatcher.group(5);
+            focus = speechWithoutPlanMatcher.group(6);
+
+            shortDescEN = speechWithoutPlanMatcher.group(7);
+            if (shortDescEN.equals("null")) {
+                shortDescEN = null;
+            }
+
+            shortDesc = speechWithoutPlanMatcher.group(8);
+
+            if (title != null && desc != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean findSpeechDataSimplifiedPattern(String description) {
+        Pattern speechSimplePattern = Pattern.compile("\\*Talk title:\\*\\s+([\\s\\S]*);\\s*\\*Description:\\*\\s+([\\s\\S]*);\\s*\\*Short Description:\\*\\s+([\\s\\S]*);\\s*\\*Short Description:\\*\\s+([\\s\\S]*).");
+        Matcher speechSimpleMatcher = speechSimplePattern.matcher(description);
+        if(speechSimpleMatcher.find()) {
+            title = checkTitle(speechSimpleMatcher.group(1));
+            String[] titles = checkEN(title);
+            if(titles != null) {
+                title = titles[0];
+                titleEN = titles[1];
+            }
+            desc = speechSimpleMatcher.group(2);
+            shortDescEN = speechSimpleMatcher.group(3);
+            if (shortDescEN.equals("null")) {
+                shortDescEN = null;
+            }
+            shortDesc = speechSimpleMatcher.group(4);
+            if (title != null && desc != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean findSpeechDataLastChance(String description) {
+
+        Pattern speechCommonPattern = Pattern.compile("\\*Talk title:\\*\\s+([\\s\\S]*);\\s*\\*Description:\\*\\s+([\\s\\S]*);\\s*\\*Short Description:\\*\\s+([\\s\\S]*).|!");
+        Matcher speechCommonMatcher = speechCommonPattern.matcher(description);
+        if(speechCommonMatcher.find()) {
+            title = checkTitle(speechCommonMatcher.group(1));
+            String[] titles = checkEN(title);
+            if(titles != null) {
+                title = titles[0];
+                titleEN = titles[1];
+            }
+            desc = speechCommonMatcher.group(2);
+            shortDesc = speechCommonMatcher.group(3);
+            if (title != null && desc != null) {
+                return true;
+            }
+        }
+
+        Matcher speechCommonAltMatcher = Pattern.compile("\\*Talk title:\\*\\s+([\\s\\S]*);\\s*\\*Description:\\*\\s+([\\s\\S]*)(;|\\.)").matcher(description);
+        if(speechCommonAltMatcher.find()) {
+            title = checkTitle(speechCommonAltMatcher.group(1));
+            String[] titles = checkEN(title);
+            if (titles != null) {
+                title = titles[0];
+                titleEN = titles[1];
+            }
+            desc = speechCommonAltMatcher.group(2);
+            return true;
+        }
+        return false;
     }
 
 
