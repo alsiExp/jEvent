@@ -35,11 +35,20 @@ public class SpeechAjaxController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<String> update(Speech newSpeech,
-                                         @RequestParam("eventId") long eventId,
-                                         @RequestParam("partId") long[] partId) {
+                                         @RequestParam(name = "eventId", required = false) long eventId,
+                                         @RequestParam(name = "partId", required = false) long[] partId) {
 
         if(newSpeech.getId() == 0) {
-            //TODO: implement
+            if(eventId == 0) {
+                return new ResponseEntity<>("Event Id can`t be 0", HttpStatus.UNPROCESSABLE_ENTITY);
+            }
+            for(long i : partId) {
+                if(i == 0) {
+                    return new ResponseEntity<>("Speaker Id can`t be 0", HttpStatus.UNPROCESSABLE_ENTITY);
+                }
+            }
+            newSpeech.setJiraStatus("Local");
+            helper.create(newSpeech, eventId, partId);
 
         } else {
             Speech oldSpeech = helper.get(newSpeech.getId());
@@ -94,8 +103,11 @@ public class SpeechAjaxController {
     public ResponseEntity<String> setParticipants(@PathVariable("id") long speechId,
                                                   @RequestParam(value = "speakers") long[] speakers) {
 
+        if(speakers.length == 0) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
         Speech speech = helper.get(speechId);
         helper.update(speech, speakers);
-        return null;
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

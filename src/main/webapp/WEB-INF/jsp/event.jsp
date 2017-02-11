@@ -28,6 +28,11 @@
                             aria-hidden="true"></i><fmt:message key="app.event.control.importSpeechesFromJira"/></a>
                     </li>
 
+                    <li id="delete-event" class=""><a class="" href="#"><i
+                            class="fa fa-trash-o"
+                            aria-hidden="true"></i><fmt:message key="app.event.delete"/></a>
+                    </li>
+
                 </ul>
 
             </div>
@@ -56,13 +61,20 @@
                 </div>
             </div>
 
+            <div class="row">
+                <div id="alertArea"  class="col-xs-6">
+
+                </div>
+            </div>
+
             <datatables:table id="speechTable" url="${ajaxUrl}" cssClass="row table table-hover" autoWidth="true"  stateSave="true">
                 <fmt:message key="app.speech" var="speech"/>
-                <datatables:column title="${speech}" property="name" sortable="false"
+                <datatables:column title="${speech}" property="name" sortable="false" searchable="true"
                                    renderFunction="renderSpeechName"/>
 
                 <fmt:message key="app.speaker" var="speaker"/>
-                <datatables:column title="${speaker}" property="participants" sortable="false"  renderFunction="renderSpeakerName"/>
+                <datatables:column title="${speaker}" property="participants" sortable="false" searchable="true"
+                                   renderFunction="renderSpeakerName"/>
 
                 <fmt:message key="app.speech.rating" var="rating"/>
                 <datatables:column title="${rating}" property="rating"/>
@@ -105,10 +117,14 @@
     var speakerFindForm = $('#detailsSpeakersFindForm');
     var speakerSearchDatatable;
 
+    //modal and form for creating new speech
+    var mainForm = $('#detailsSpeechForm');
+    var modal = $('#editSpeech');
+
     $(function () {
         makeEventSpeechTableEditable();
-        initSingleEventControl();
         initEvent();
+        initSingleEventControl();
         initTagForm();
 
         initErrorNotify();

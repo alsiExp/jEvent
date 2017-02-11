@@ -35,8 +35,7 @@ function customErrorNote(text) {
     failedNote = noty({
         text: 'Failed: ' + text + "<br>",
         type: 'error',
-        layout: 'bottomRight',
-        timeout: 30000
+        layout: 'bottomRight'
     });
 }
 
@@ -68,9 +67,7 @@ function renderDeleteBtn( data, type, row ) {
     if(type == 'display') {
         return '<a class="btn btn-xs btn-danger deleteElem" onclick="deleteRow(' + row.id + ')">Delete</a>';
     }
-    else {
-        return data;
-    }
+    return data;
 }
 
 function renderDate( data, type, row ) {
@@ -84,9 +81,7 @@ function renderDate( data, type, row ) {
         };
         return '<span>' + dateObject.toLocaleString("ru", options)  + '</span>';
     }
-    else {
-        return data;
-    }
+    return data;
 }
 
 
@@ -100,6 +95,7 @@ function renderSpeakerName( data, type, row ) {
         });
         return str;
     }
+    return data;
 }
 
 function renderSpeechStatus( data, type, row ) {
@@ -139,23 +135,28 @@ function renderSpeechStatus( data, type, row ) {
             return 200;
         }
     }
+
+    return data;
 }
 
 function renderSpeechJiraLink( data, type, row ) {
     if(type == 'display') {
         return '<a target="_blank" href=' + data + '> Jira </a>';
     }
+
+    return data;
 }
 
 function renderEventLink( data, type, row ) {
     if(type == 'display') {
         return '<a href=../event/' + row.id + '>' + data + '</a>';
     }
+    return data;
 }
 
 function renderConfirmedSpeeches( data, type, row ) {
     if(type == 'display') {
-        console.log(data);
+            console.log(data);
         var str = '';
         var tmp = '';
         var sNew = '';
@@ -212,6 +213,8 @@ function renderConfirmedSpeeches( data, type, row ) {
         });
         return summ;
     }
+
+    return data;
 }
 
 function renderNewSpeeches( data, type, row ) {
@@ -235,6 +238,8 @@ function renderNewSpeeches( data, type, row ) {
         });
         return summ;
     }
+
+    return data;
 }
 
 function renderJiraLink( data, type, row ) {
@@ -245,6 +250,8 @@ function renderJiraLink( data, type, row ) {
             return '-';
         }
     }
+
+    return data;
 }
 
 /* speech + speaker */
@@ -253,6 +260,7 @@ function renderSpeechName( data, type, row ) {
     if(type == 'display') {
         return '<a href="../speech/'+ row.id + '/"> ' + data + '</a>';
     }
+    return data;
 }
 
 function renderSpeechTags( data, type, row ) {
@@ -272,6 +280,8 @@ function renderSpeechEventLink( data, type, row ) {
     if(type == 'display') {
         return '<a href=../event/' + row.eventId + '>' + data + '</a>';
     }
+
+    return data;
 }
 
 /* participant */
@@ -353,18 +363,15 @@ function renderUserStatus( data, type, row ) {
             return '<button type="button" class="btn btn-xs btn-danger" disabled="disabled">Blocked</button>';
         }
     }
-    else {
-        return data;
-    }
+    return data;
+
 }
 
 function renderUserName( data, type, row ) {
     if(type == 'display') {
         return '<a class="updateElem" href="#" onclick="updateUserRow(' + row.id + ')">' + data + '</a>';
     }
-    else {
-        return data;
-    }
+    return data;
 }
 
 /**** end render functions ****/
@@ -435,6 +442,59 @@ function addInputAdditionalEmail(containerId, btnId, pHolderText) {
     });
 }
 
+function createDeleteDialog(entityName, deleteUrl, redirectUrl) {
+    $("#footer").append(
+    '<div id="deleteDialog" class="modal fade" tabindex="-1" role="dialog">' +
+        '<div class="modal-dialog" role="document">' +
+            '<div class="modal-content">' +
+                '<div class="modal-header">' +
+                    '<button id="delete-close" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                    '<h3 class="modal-title">Confirm delete Entity</h3>' +
+                '</div>' +
+                '<div class="modal-body">' +
+                    '<p>' + entityName + '</p>' +
+                '</div>' +
+                '<div class="modal-footer">' +
+                    '<button id="delete-cancel" type="button" class="btn btn-default">Cancel</button>' +
+                    '<button id="delete-confirm" type="button" class="btn btn-danger">Delete</button>' +
+                '</div>' +
+            '</div>' +
+        '</div>' +
+    '</div>'
+    );
+    var deleteDialog = $('#deleteDialog');
+    deleteDialog.find('#delete-close').click(function () {
+       removeDeleteDialog();
+    });
+    deleteDialog.find('#delete-cancel').click(function () {
+        removeDeleteDialog();
+    });
+    deleteDialog.find('#delete-confirm').click(function () {
+        $.ajax({
+            url: deleteUrl,
+            type: 'DELETE',
+            success: function () {
+                successNote('Deleted: ' + entityName);
+                removeDeleteDialog();
+                if(redirectUrl != null) {
+                    window.location.replace(redirectUrl);
+                }
+            }
+        });
+
+    });
+
+
+    deleteDialog.modal();
+
+
+
+}
+
+function removeDeleteDialog() {
+    $('#deleteDialog').remove();
+}
+
 /**** end common section ****/
 
 /**** single event js ****/
@@ -453,30 +513,58 @@ function initSingleEventControl() {
     });
 
 
-    speakerFindForm.submit(function (event) {
-        event.preventDefault();
-        var part = $.each($('#detailsSpeakersFindForm input[name="speakers"]'), function (key, value) {
-
-            console.log($(this).val());
+    speakerFindForm.submit(function (ev) {
+        ev.preventDefault();
+        var partId = [];
+        $.each($('#detailsSpeakersFindForm').find('input[name="speakers"]:checked'), function (key, value) {
+            partId.push($(this).val());
         });
-
-
+        $('#addSpeaker').modal('hide');
+        clearForm(mainForm);
+        mainForm.find('#eventId').val(eventID);
+        mainForm.find('#partId').val(partId);
+        //speaker cost and rating must be not null
+        mainForm.find('#speakerCost').val(0);
+        mainForm.find('#rating').val(0);
+        //this is new speech
+        mainForm.find('#id').val(0);
+        modal.modal();
+        //second modal window doesn't scroll
+        //this fix it
+        modal.css('overflow-y', 'scroll');
     });
 
+    mainForm.submit(function () {
+        $.ajax({
+            type: "POST",
+            url: "/ajax/speeches/",
+            data: mainForm.serialize(),
+            success: function (data) {
+                modal.modal('hide');
+                updateTable();
+                successNote('New speech saved');
+            }
+        });
+        return false;
+    });
 
     $('#add-speech-from-jira').click(function () {
         $.ajax({
             type: "GET",
             url: ajaxUrl + 'jira/',
             success: function (data) {
+                var isEmpty = true;
                 Object.keys(data).forEach(function (key) {
                     var val = data[key];
+                    var str;
+                    var separator;
                     if (key == "success") {
                         if (val.length > 0) {
-                            var str = 'Updated events: ';
-                            var separator = '';
-                            val.forEach(function (eventName) {
-                                str += separator + eventName;
+                            isEmpty = false;
+                            str = 'Updated events: ';
+                            separator = '';
+                            val.forEach(function (speechName) {
+                                str += separator + speechName;
                                 separator = ', '
                             });
                             successNote(str);
@@ -484,20 +572,50 @@ function initSingleEventControl() {
                     }
                     if (key == "error") {
                         if (val.length > 0) {
-                            var str = 'Error by update events: ';
-                            var separator = '';
-                            val.forEach(function (eventName) {
-                                str += separator + eventName;
-                                separator = ', '
+                            isEmpty = false;
+                            str = 'Error by update speeches: ';
+                            var speechLinks = [];
+                            separator = '';
+                            val.forEach(function (speechName) {
+                                str += separator + speechName;
+                                separator = ', ';
+                                speechLinks.push('<a class="speech-link-error alert-link" target="_blank" href="http://jira.jugru.org/browse/' + speechName + '">' + speechName + '</a>' );
                             });
                             customErrorNote(str);
+                            showErrorAlert(speechLinks);
+
                         }
                     }
                 });
+                if(isEmpty) {
+                    successNote("No speeches found");
+                }
+                initEvent();
                 updateTable();
             }
         });
     });
+
+    $('#delete-event').click(function () {
+        createDeleteDialog(event.name + " " + event.version, "/ajax/events/" + eventID, "/events");
+    });
+}
+
+function showErrorAlert(speechLinks) {
+    var speechStr = '';
+    var separator = '';
+    speechLinks.forEach(function (link) {
+        speechStr += separator + link;
+        separator = ' ,'
+    });
+    $('#alertArea').html(
+    '<div class="alert alert-danger alert-dismissible" role="alert">' +
+        '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+    '<strong>Ой, что-то пошло не так!</strong> Пожалуйста, вручную проверьте эти доклады: <br>' +
+        speechStr +
+    '</div>'
+    );
+
 }
 
 /**** end single event js ****/
@@ -520,29 +638,31 @@ function makeEventTableEditable() {
         return false;
     });
 
-    $('#add-from-jira').click(function () {
+    $('#add-all-from-jira').click(function () {
         $.ajax({
             type: "GET",
             url: ajaxUrl + 'jira/',
             success: function (data) {
+                updateTable();
                 Object.keys(data).forEach(function (key) {
                     var val = data[key];
+                    var str;
+                    var separator;
                     if (key == "success") {
                         if (val.length > 0) {
-                            var str = 'Updated events: ';
-                            var separator = '';
+                            str = 'Updated events: ';
+                            separator = '';
                             val.forEach(function (eventName) {
                                 str += separator + eventName;
                                 separator = ', '
                             });
                             successNote(str);
-                            initEvent();
                         }
                     }
                     if (key == "error") {
                         if (val.length > 0) {
-                            var str = 'Error by update events: ';
-                            var separator = '';
+                            str = 'Error by update events: ';
+                            separator = '';
                             val.forEach(function (eventName) {
                                 str += separator + eventName;
                                 separator = ', '
@@ -551,7 +671,7 @@ function makeEventTableEditable() {
                         }
                     }
                 });
-                updateTable();
+
             }
         });
     });
@@ -635,18 +755,7 @@ function initSingleSpechControl() {
 
 
     $('#delete-speech').click(function () {
-        /*
-
-         $.ajax({
-         url: ajaxUrl + id,
-         type: 'DELETE',
-         success: function () {
-
-         successNote('Deleted');
-         }
-         });
-
-         */
+        createDeleteDialog(speech.name, "/ajax/speeches/" + speechId, "/event/" + speech.eventId);
     });
 
 

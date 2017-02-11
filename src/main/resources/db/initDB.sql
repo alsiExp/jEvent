@@ -110,8 +110,8 @@ CREATE TABLE participants
   twitter_id      BIGINT,
   github_id       BIGINT,
 
-  FOREIGN KEY (twitter_id) REFERENCES twitteraccs (id) ON DELETE CASCADE,
-  FOREIGN KEY (github_id) REFERENCES githubaccs (id) ON DELETE CASCADE
+  FOREIGN KEY (twitter_id) REFERENCES twitteraccs (id),
+  FOREIGN KEY (github_id) REFERENCES githubaccs (id)
 );
 
 CREATE TABLE emails
@@ -181,7 +181,7 @@ CREATE TABLE visitors
 
   FOREIGN KEY (participant_id) REFERENCES participants (id) ON DELETE CASCADE,
   FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE,
-  FOREIGN KEY (rate_id) REFERENCES rates (id) ON DELETE CASCADE
+  FOREIGN KEY (rate_id) REFERENCES rates (id)
 );
 
 CREATE TABLE speeches

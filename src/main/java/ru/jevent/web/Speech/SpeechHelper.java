@@ -52,7 +52,6 @@ public class SpeechHelper {
 
     public void update(Speech speech, long[] participantIds) {
         LOG.info("update " + speech);
-        boolean needUpdate = false;
 
         Set<Long> newSpeakers = new HashSet<>();
         for(long newId : participantIds){

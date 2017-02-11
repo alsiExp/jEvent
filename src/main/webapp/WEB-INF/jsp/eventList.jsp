@@ -27,7 +27,7 @@
                             class="fa fa-list-ul"
                             aria-hidden="true"></i><fmt:message key="app.participant.control.list"/></a>
                     </li>--%>
-                    <li id="add-from-jira" class=""><a class="" href="#"><i
+                    <li id="add-all-from-jira" class=""><a class="" href="#"><i
                             class="fa fa-cloud-download"
                             aria-hidden="true"></i><fmt:message key="app.event.control.importFromJira"/></a>
                     </li>
@@ -54,8 +54,6 @@
                 <fmt:message key="app.event.jiraLink" var="jiraLink"/>
                 <datatables:column title="${jiraLink}" property="jiraLink" filterable="false" sortable="false" renderFunction="renderJiraLink"/>
 
-                <fmt:message key="app.table.managment" var="managment"/>
-                <datatables:column title="${managment}"  filterable="false" sortable="false" renderFunction="renderDeleteBtn"/>
             </datatables:table>
 
         </div>

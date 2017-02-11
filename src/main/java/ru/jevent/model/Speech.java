@@ -278,10 +278,10 @@ public class Speech extends NamedEntity {
     }
 
 
-    public void removeSpeaker(Participant p) {
-        if(p != null) {
-            p.removeSpeech(this);
-            getSpeakers().remove(p);
+    public void removeSpeaker(Participant participant) {
+        if(participant != null) {
+            participant.removeSpeech(this);
+            getSpeakers().removeIf(p -> p.getId().equals(participant.getId()));
         }
     }
 
