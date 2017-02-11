@@ -250,7 +250,8 @@ public class Participant extends Person {
 
     public void removeSpeech(Speech speech) {
         if(speech != null) {
-            getSpeechSet().remove(speech);
+            getSpeechSet().removeIf(s -> s.getId().equals(speech.getId()));
+
         }
     }
 

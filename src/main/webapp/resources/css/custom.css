@@ -344,3 +344,7 @@ visitor list
 .speech-info div div {
     margin-bottom: 4px;
 }
+
+.event-list-speaker {
+    display: block;
+}
