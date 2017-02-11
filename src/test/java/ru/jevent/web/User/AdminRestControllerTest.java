@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import ru.jevent.model.enums.Role;
+import ru.jevent.model.superclasses.BaseEntity;
 import ru.jevent.web.WebTest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -14,16 +15,23 @@ import static ru.jevent.Profiles.JPA;
 import static ru.jevent.Profiles.POSTGRES;
 import ru.jevent.model.User;
 import ru.jevent.web.json.JsonUtil;
-
+import ru.jevent.model.enums.Role;
+import static ru.jevent.web.User.TestUtil.*;
 
 @ActiveProfiles({POSTGRES, JPA})
 public class AdminRestControllerTest extends WebTest {
+
+
+    User USER = new User(100006L, "Яна Пилюгина", true, "yana", "user", Role.ROLE_ADMIN);
+
+    //public static final User ADMIN = new User(BaseEntity.START_SEQ + 1, "Admin", "admin@gmail.com", "admin", true, Role.ROLE_ADMIN);
 
     private static final String REST_URL = "/rest/admin/users/";
 
     @Test
     public void testDelete() throws Exception {
-        mockMvc.perform(delete(REST_URL+ (100006)))
+        mockMvc.perform(delete(REST_URL+ (100006))
+                .with(userHttpBasic(USER)))
                 .andExpect(status().isOk())
                 .andDo(print());
     }

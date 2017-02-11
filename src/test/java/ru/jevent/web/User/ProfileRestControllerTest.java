@@ -42,7 +42,7 @@ public class ProfileRestControllerTest extends WebTest{
 
     @Test
     public void testUpdate() throws Exception {
-       User user1 = service.get(LoggedUser.id());
+        User user1 = service.get(LoggedUser.id());
         user1.setFullName("Test");
         String FullName1 = user1.getFullName();
         mockMvc.perform(post(REST_URL).contentType(MediaType.APPLICATION_JSON_VALUE)

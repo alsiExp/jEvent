@@ -172,15 +172,15 @@ public class User extends Person implements HasPassword, Serializable {
     @Override
     public String toString() {
         StringBuilder roleSB = new StringBuilder();
-        if(!this.getRoles().isEmpty()) {
-            String prefix = "";
-            roleSB.append('[');
-            for (Object o : this.getRoles().toArray()) {
-                roleSB.append(prefix);
-                prefix = ",";
-                roleSB.append((o).toString());
-            }
-            roleSB.append(']');
+            if(!this.getRoles().isEmpty()) {
+                String prefix = "";
+                roleSB.append('[');
+                for (Object o : this.getRoles().toArray()) {
+                    roleSB.append(prefix);
+                    prefix = ",";
+                    roleSB.append((o).toString());
+                }
+                roleSB.append(']');
         }
 
         return "User{" +

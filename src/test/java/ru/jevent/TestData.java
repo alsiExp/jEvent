@@ -175,6 +175,13 @@ public class TestData {
         return Arrays.asList(v1, v2, v3);
     }
 
+    public Set<Participant> getMixedVisitorsSet() {
+        Participant v1 = participantService.save(getNewParticipant());
+        Participant v2 = participantService.get(100005L);
+        Participant v3 = getNewParticipant();
+        return new HashSet<>(Arrays.asList(v1, v2, v3));
+    }
+
     //Partners
     public Partner getNewPartner() {
         Partner p = new Partner();

@@ -23,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.jevent.Profiles.JPA;
 import static ru.jevent.Profiles.POSTGRES;
 
+
 @ActiveProfiles({POSTGRES, JPA})
 public class AdminAjaxControllerTest extends WebTest {
 
