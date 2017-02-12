@@ -11,16 +11,14 @@ DROP TABLE IF EXISTS rates;
 DROP TABLE IF EXISTS user_roles;
 
 DROP TABLE IF EXISTS emails;
-
+DROP TABLE IF EXISTS githubaccs;
+DROP TABLE IF EXISTS twitteraccs;
 
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS events;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS participants;
 DROP TABLE IF EXISTS partners;
-DROP TABLE IF EXISTS githubaccs;
-DROP TABLE IF EXISTS twitteraccs;
-
 
 DROP TABLE IF EXISTS person_sex;
 DROP TABLE IF EXISTS partner_status;
@@ -74,19 +72,6 @@ CREATE TABLE user_roles
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
-CREATE TABLE githubaccs
-(
-  id           BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  account_link VARCHAR
-
-);
-
-CREATE TABLE twitteraccs
-(
-  id           BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  account_link VARCHAR
-
-);
 
 CREATE TABLE participants
 (
@@ -106,12 +91,26 @@ CREATE TABLE participants
   biography       VARCHAR,
   biography_en    VARCHAR,
   background      VARCHAR,
-  travel_help     VARCHAR,
-  twitter_id      BIGINT,
-  github_id       BIGINT,
+  travel_help     VARCHAR
 
-  FOREIGN KEY (twitter_id) REFERENCES twitteraccs (id),
-  FOREIGN KEY (github_id) REFERENCES githubaccs (id)
+);
+
+CREATE TABLE githubaccs
+(
+  id           BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  account_link VARCHAR,
+  owner_id     BIGINT,
+
+  FOREIGN KEY (owner_id) REFERENCES participants (id)
+);
+
+CREATE TABLE twitteraccs
+(
+  id           BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  account_link VARCHAR,
+  owner_id     BIGINT,
+
+  FOREIGN KEY (owner_id) REFERENCES participants (id)
 );
 
 CREATE TABLE emails

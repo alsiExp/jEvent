@@ -14,26 +14,28 @@ public class Twitter extends BaseEntity {
     private final static String baseURL = "https://twitter.com/";
 
     @Column(name = "account_link")
-    private String accountLink;
+    private String account;
+
     @JsonBackReference
-    @OneToOne(fetch= FetchType.LAZY, mappedBy="twitter")
+    @OneToOne(fetch= FetchType.EAGER)
+    @JoinColumn(name = "owner_id")
     private Participant owner;
 
     public Twitter() {
     }
 
-    public Twitter(Long id, String accountLink, Participant owner) {
+    public Twitter(Long id, String account, Participant owner) {
         super(id);
-        this.accountLink = accountLink;
+        this.account = account;
         this.owner = owner;
     }
 
-    public String getAccountLink() {
-        return accountLink;
+    public String getAccount() {
+        return account;
     }
 
-    public void setAccountLink(String account) {
-        this.accountLink = account;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public Participant getOwner() {
@@ -45,8 +47,8 @@ public class Twitter extends BaseEntity {
     }
 
     public String getFullLink() {
-        if(!StringUtils.isEmpty(accountLink)) {
-            return baseURL + accountLink;
+        if(!StringUtils.isEmpty(account)) {
+            return baseURL + account;
         } else return null;
     }
 
@@ -58,14 +60,14 @@ public class Twitter extends BaseEntity {
 
         Twitter twitter = (Twitter) o;
 
-        if (accountLink != null ? !accountLink.equals(twitter.accountLink) : twitter.accountLink != null) return false;
+        if (account != null ? !account.equals(twitter.account) : twitter.account != null) return false;
         return owner != null ? owner.getId().equals(twitter.owner.getId()) : twitter.owner == null;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (accountLink != null ? accountLink.hashCode() : 0);
+        result = 31 * result + (account != null ? account.hashCode() : 0);
         result = 31 * result + (owner != null ? owner.getId().hashCode() : 0);
         return result;
     }
@@ -74,7 +76,7 @@ public class Twitter extends BaseEntity {
     public String toString() {
         return "Twitter{" +
                 super.toString() +
-                ", account='" + accountLink + '\'' +
+                ", account='" + account + '\'' +
                 "}";
     }
 }

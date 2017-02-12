@@ -117,7 +117,7 @@ public class TestData {
 
         Twitter t = new Twitter();
         t.setId(100017L);
-        t.setAccountLink("jbaruch");
+        t.setAccount("jbaruch");
 
         part.setTwitter(t);
 
@@ -156,12 +156,12 @@ public class TestData {
         Participant part = getNewParticipant();
 
         Twitter t = new Twitter();
-        t.setAccountLink("shipilev");
+        t.setAccount("shipilev");
         t.setOwner(part);
         part.setTwitter(t);
 
         GitHub g = new GitHub();
-        g.setAccountLink("alsiExp");
+        g.setAccount("alsiExp");
         g.setOwner(part);
         part.setGitHub(g);
 

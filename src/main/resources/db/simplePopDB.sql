@@ -2,17 +2,17 @@ DELETE FROM speeches_speech_tags;
 
 DELETE FROM speech_participants;
 
-DELETE FROM rates;
 DELETE FROM emails;
 DELETE FROM githubaccs;
 DELETE FROM twitteraccs;
 DELETE FROM speech_tags;
 
+DELETE FROM visitors;
+DELETE FROM rates;
 
 DELETE FROM speeches;
 DELETE FROM events;
 DELETE FROM users;
-DELETE FROM visitors;
 DELETE FROM partners;
 DELETE FROM participants;
 

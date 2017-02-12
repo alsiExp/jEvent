@@ -72,12 +72,10 @@ public class Participant extends Person {
     private String phone;
     @Column(name = "skype")
     private String skype;
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name="github_id")
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "owner", cascade = CascadeType.ALL)
     @JsonManagedReference
     private GitHub gitHub;
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name="twitter_id")
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "owner", cascade = CascadeType.ALL)
     @JsonManagedReference
     private Twitter twitter;
 

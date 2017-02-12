@@ -1070,11 +1070,11 @@ function addSpeakerInfo(){
     });
     var twitter = '-';
     if(speaker.twitter != null) {
-        twitter = '<a href="' + speaker.twitter.fullLink + '" target="_blank"> @' + speaker.twitter.accountLink + '</a>';
+        twitter = '<a href="' + speaker.twitter.fullLink + '" target="_blank"> @' + speaker.twitter.account + '</a>';
     }
     var github = '-';
     if(speaker.github != null) {
-        twitter = '<a href="' + speaker.github.fullLink + '" target="_blank"> ' + speaker.github.accountLink + '</a>';
+        twitter = '<a href="' + speaker.github.fullLink + '" target="_blank"> ' + speaker.github.account + '</a>';
     }
     var skype = '-';
     if(speaker.skype != null) {

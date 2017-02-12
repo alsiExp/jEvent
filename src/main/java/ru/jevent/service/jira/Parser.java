@@ -132,8 +132,8 @@ public class Parser {
         result.put("skype", skype);
         result.put("photo", photo);
         result.put("phone", phone);
-        result.put("twitter", twitter);
-        result.put("github", github);
+        result.put("twitter", validateSocial(twitter));
+        result.put("github", validateSocial(github));
         result.put("homePage", homePage);
         result.put("city", city);
         result.put("travel", travel);
@@ -142,10 +142,10 @@ public class Parser {
         result.put("back", back);
         result.put("title", title);
         result.put("titleEN", titleEN);
-        result.put("desc", desc);
-        result.put("descEN", descEN);
-        result.put("profit", profit);
-        result.put("plan", plan);
+        result.put("desc", validateLargeFields(desc));
+        result.put("descEN", validateLargeFields(descEN));
+        result.put("profit", validateLargeFields(profit));
+        result.put("plan", validateLargeFields(plan));
         result.put("focus", focus);
         result.put("shortDesc", shortDesc);
         result.put("shortDescEN", shortDescEN);
@@ -523,4 +523,30 @@ public class Parser {
         return null;
     }
 
+    private String validateSocial(String social) {
+        if(social != null && social.length() > 0) {
+            if(social.contains(" ")){
+                social = social.trim();
+                social = social.split(" ")[0];
+            }
+            if(social.length() > 0) {
+                if (social.contains(".com")) {
+                    String[] segments = social.split("/");
+                    social = segments[segments.length - 1];
+                }
+
+                if (social.charAt(0) == '@') {
+                    social = social.substring(1, social.length());
+                }
+            }
+        }
+        return social;
+    }
+
+    private String validateLargeFields(String field) {
+        if(field != null && field.length() > 0) {
+            field = field.replaceAll("\\r\\n", "<br>");
+        }
+        return field;
+    }
 }

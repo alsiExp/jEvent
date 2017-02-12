@@ -14,20 +14,28 @@ public class GitHub extends BaseEntity {
     private final static String baseURL = "https://github.com/";
 
     @Column(name = "account_link")
-    private String accountLink;
-    @OneToOne(fetch= FetchType.LAZY, mappedBy="gitHub")
+    private String account;
+
+    @OneToOne(fetch= FetchType.EAGER)
+    @JoinColumn(name = "owner_id")
     @JsonBackReference
     private Participant owner;
 
     public GitHub() {
     }
 
-    public String getAccountLink() {
-        return accountLink;
+    public GitHub(Long id, String account, Participant owner) {
+        super(id);
+        this.account = account;
+        this.owner = owner;
     }
 
-    public void setAccountLink(String account) {
-        this.accountLink = account;
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public Participant getOwner() {
@@ -39,8 +47,8 @@ public class GitHub extends BaseEntity {
     }
 
     public String getFullLink() {
-        if(!StringUtils.isEmpty(accountLink)) {
-            return baseURL + accountLink;
+        if(!StringUtils.isEmpty(account)) {
+            return baseURL + account;
         } else return null;
     }
 
@@ -52,14 +60,14 @@ public class GitHub extends BaseEntity {
 
         GitHub gitHub = (GitHub) o;
 
-        if (accountLink != null ? !accountLink.equals(gitHub.accountLink) : gitHub.accountLink != null) return false;
+        if (account != null ? !account.equals(gitHub.account) : gitHub.account != null) return false;
         return owner != null ? owner.getId().equals(gitHub.owner.getId()) : gitHub.owner == null;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (accountLink != null ? accountLink.hashCode() : 0);
+        result = 31 * result + (account != null ? account.hashCode() : 0);
         result = 31 * result + (owner != null ? owner.getId().hashCode() : 0);
         return result;
     }
@@ -68,7 +76,7 @@ public class GitHub extends BaseEntity {
     public String toString() {
         return "GitHub{" +
                 super.toString() +
-                ", account='" + accountLink + '\'' +
+                ", account='" + account + '\'' +
                 "}";
     }
 }

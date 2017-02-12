@@ -9,7 +9,7 @@ public class StringToTwitterConverter implements Converter<String, Twitter> {
     public Twitter convert(String source) {
         if(!StringUtils.isEmpty(source)){
             Twitter twitter = new Twitter();
-            twitter.setAccountLink(source);
+            twitter.setAccount(source);
             return twitter;
         }
         return null;

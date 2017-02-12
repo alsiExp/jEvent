@@ -9,6 +9,7 @@ import ru.jevent.model.Participant;
 import ru.jevent.model.Speech;
 import ru.jevent.model.User;
 import ru.jevent.model.additionalEntity.Email;
+import ru.jevent.model.additionalEntity.GitHub;
 import ru.jevent.model.additionalEntity.Twitter;
 import ru.jevent.service.*;
 
@@ -161,7 +162,11 @@ public class JiraServiceImpl implements JiraService {
             if (summary.length > 1) {
                 speech.setName(summary[1]);
             } else {
-                speech.setName(result.get("title"));
+                if(result.get("title") != null && result.get("title").length() > 0) {
+                    speech.setName(result.get("title"));
+                } else {
+                    return false;
+                }
             }
             if (result == null) {
                 return false;
@@ -173,7 +178,7 @@ public class JiraServiceImpl implements JiraService {
             }
             if (part == null) {
                 part = new Participant();
-                if (summary.length > 0) {
+                if (summary.length > 1) {
                     part.setFullName(summary[0]);
                 } else {
                     part.setFullName(result.get("name"));
@@ -182,6 +187,9 @@ public class JiraServiceImpl implements JiraService {
             }
             if (part.getTwitter() == null && result.get("twitter") != null) {
                 part.setTwitter(new Twitter(null, result.get("twitter"), part));
+            }
+            if (part.getGitHub() == null && result.get("github") != null) {
+                part.setGitHub(new GitHub(null, result.get("github"), part));
             }
 
             part.setFullNameEN(result.get("nameEN"));
@@ -218,6 +226,8 @@ public class JiraServiceImpl implements JiraService {
 
             return speech.getId() != null;
         } catch (Exception ex) {
+            LOG.error(ex.getMessage());
+            ex.printStackTrace();
             return false;
         }
     }
