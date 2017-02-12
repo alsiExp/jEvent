@@ -19,11 +19,11 @@
                 <ul class="nav nav-pills nav-stacked">
                     <li class="subheader"><fmt:message key="app.control.header"/></li>
                     <li role="separator" class="divider"></li>
-                    <%--                    <li id="create-new-participant" class="create-new"><a class="" href="#"><i
-                                                class="fa fa-plus"
-                                                aria-hidden="true"></i><fmt:message key="app.participant.control.new"/></a>
-                                        </li>
-                                        <li id="all-participants" class=""><a class="" href="../participants"><i
+                    <li id="edit-participant" class="create-new"><a class="" href="#">
+                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                        <fmt:message key="app.participant.edit"/></a>
+                    </li>
+                    <%--                    <li id="all-participants" class=""><a class="" href="../participants"><i
                                                 class="fa fa-list-ul"
                                                 aria-hidden="true"></i><fmt:message key="app.participant.control.list"/></a>
                                         </li>--%>
@@ -87,6 +87,7 @@
 
     <jsp:include page="forms/editTags.jsp"/>
 
+    <jsp:include page="forms/editParticipant.jsp"/>
 
 </div>
 
@@ -95,15 +96,19 @@
     var ajaxUrl = '${ajaxUrl}';
     var speakerID = ${speakerId};
     var speaker;
+
+    mainForm = $('#detailsParticipantForm');
+    modal = $('#editParticipant');
+
     var tagForm = $('#detailsTagsForm');
     var tagModal = $('#editTags');
     var tagContainer = tagForm.find('#tag-container');
 
     $(function () {
-        makeSpeechTableEditable();
         initSpeaker();
         initTagForm();
-
+        initParticipantControl();
+        initErrorNotify();
     });
 
 </script>

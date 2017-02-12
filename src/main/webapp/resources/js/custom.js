@@ -208,8 +208,7 @@ function renderConfirmedSpeeches( data, type, row ) {
     if(type == 'sort') {
         var summ = 0;
         Object.keys(data).forEach(function (key) {
-            var val = data[key];
-                summ += val;
+            summ += data[key];
         });
         return summ;
     }
@@ -232,7 +231,7 @@ function renderNewSpeeches( data, type, row ) {
         var summ = 0;
         Object.keys(data).forEach(function (key) {
             var val = data[key];
-            if(key == 'НОВАЯ'){
+            if(key == 'Новая'){
                 summ += val;
             }
         });
@@ -484,11 +483,7 @@ function createDeleteDialog(entityName, deleteUrl, redirectUrl) {
 
     });
 
-
     deleteDialog.modal();
-
-
-
 }
 
 function removeDeleteDialog() {
@@ -757,9 +752,6 @@ function initSingleSpechControl() {
     $('#delete-speech').click(function () {
         createDeleteDialog(speech.name, "/ajax/speeches/" + speechId, "/event/" + speech.eventId);
     });
-
-
-
 }
 
 /*
@@ -958,6 +950,19 @@ function addSpeechInfo() {
 
 /**** speaker js ****/
 
+function initParticipantControl() {
+    $('#edit-participant').click(function () {
+
+        clearForm(mainForm);
+        $.each(speaker, function (key, value) {
+            mainForm.find("input[name='" + key + "']").val(value);
+            mainForm.find("textarea[name='" + key + "']").val(value);
+        });
+        modal.modal();
+
+    });
+}
+
 function initTagForm() {
     $('#add-new-tag').click(function () {
         var tagName = tagForm.find('#new-tag').val();
@@ -1023,9 +1028,7 @@ function addSpeechTag(speechId) {
 
 
 function makeSpeechTableEditable() {
-    table = $('#speechTable').DataTable();
-    mainForm = $('#detailsSpeechForm');
-    modal = $('#editSpeech');
+
 }
 
 

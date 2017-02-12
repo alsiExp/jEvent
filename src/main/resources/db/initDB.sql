@@ -106,9 +106,10 @@ CREATE TABLE githubaccs
 
 CREATE TABLE twitteraccs
 (
-  id           BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
-  account_link VARCHAR,
-  owner_id     BIGINT,
+  id                BIGINT PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
+  account_link      VARCHAR,
+  owner_id          BIGINT,
+  followers_counter INT,
 
   FOREIGN KEY (owner_id) REFERENCES participants (id)
 );

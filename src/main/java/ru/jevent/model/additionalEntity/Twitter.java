@@ -16,6 +16,9 @@ public class Twitter extends BaseEntity {
     @Column(name = "account_link")
     private String account;
 
+    @Column(name = "followers_counter")
+    private Integer followersCounter;
+
     @JsonBackReference
     @OneToOne(fetch= FetchType.EAGER)
     @JoinColumn(name = "owner_id")
@@ -46,6 +49,14 @@ public class Twitter extends BaseEntity {
         this.owner = owner;
     }
 
+    public Integer getFollowersCounter() {
+        return followersCounter;
+    }
+
+    public void setFollowersCounter(Integer followersCounter) {
+        this.followersCounter = followersCounter;
+    }
+
     public String getFullLink() {
         if(!StringUtils.isEmpty(account)) {
             return baseURL + account;
@@ -60,6 +71,7 @@ public class Twitter extends BaseEntity {
 
         Twitter twitter = (Twitter) o;
 
+        if (followersCounter != null ? !followersCounter.equals(twitter.followersCounter) : twitter.followersCounter != null) return false;
         if (account != null ? !account.equals(twitter.account) : twitter.account != null) return false;
         return owner != null ? owner.getId().equals(twitter.owner.getId()) : twitter.owner == null;
     }
@@ -67,6 +79,7 @@ public class Twitter extends BaseEntity {
     @Override
     public int hashCode() {
         int result = super.hashCode();
+        result = 31 * result + (followersCounter != null ? followersCounter.hashCode() : 0);
         result = 31 * result + (account != null ? account.hashCode() : 0);
         result = 31 * result + (owner != null ? owner.getId().hashCode() : 0);
         return result;
