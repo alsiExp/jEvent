@@ -1,8 +1,10 @@
 package ru.jevent.web.User;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MvcResult;
 import ru.jevent.model.enums.Role;
 import ru.jevent.model.superclasses.BaseEntity;
 import ru.jevent.web.WebTest;
@@ -39,10 +41,15 @@ public class AdminRestControllerTest extends WebTest {
 
     @Test
     public void testGet() throws Exception {
-        mockMvc.perform(get(REST_URL + (100006)))
+
+        MvcResult res_test = mockMvc.perform(get(REST_URL + (100006)))
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn();
+        String userString = res_test.getResponse().getContentAsString();
+        User userResult = JsonUtil.readValue(userString, User.class);
+        Assert.assertTrue(USER.getLogin().equals(userResult.getLogin()));
     }
 
     @Test

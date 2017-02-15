@@ -6,10 +6,12 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import ru.jevent.model.User;
 import ru.jevent.service.UserService;
 import ru.jevent.web.WebTest;
+import ru.jevent.web.json.JsonUtil;
 
 import java.util.List;
 
@@ -34,10 +36,16 @@ public class AdminAjaxControllerTest extends WebTest {
     @Test
     public void getTest() throws Exception {
 
-        mockMvc.perform(get(REST_URL+ '/' + 100006))
+        MvcResult res_test = mockMvc.perform(get(REST_URL+ '/' + 100006))
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
-                .andDo(print());
+                .andDo(print())
+                .andReturn();
+        String userString = res_test.getResponse().getContentAsString();
+        User userResult = JsonUtil.readValue(userString, User.class);
+        User userTest = service.get(100006);
+        String userLogin = userTest.getLogin();
+        Assert.assertTrue(userLogin.equals(userResult.getLogin()));
     }
 
     @Test
