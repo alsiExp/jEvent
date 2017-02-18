@@ -156,7 +156,6 @@ function renderEventLink( data, type, row ) {
 
 function renderConfirmedSpeeches( data, type, row ) {
     if(type == 'display') {
-            console.log(data);
         var str = '';
         var tmp = '';
         var sNew = '';
@@ -436,7 +435,7 @@ function addInputAdditionalEmail(containerId, btnId, pHolderText) {
         var inputCount = $( containerId + " input").length  - 1;
         $(containerId).append(
             '<div class="col-xs-offset-3 col-xs-7 additional-field">' +
-            '<input id="'+ btnId + inputCount + '" type="email" class="form-control" value="" placeholder="' + pHolderText + " " + inputCount + '"/>' +
+            '<input data-id="0" id="'+ btnId + inputCount + '" type="email" class="form-control" value="" placeholder="' + pHolderText + " " + inputCount + '"/>' +
             '</div>');
     });
 }
@@ -488,6 +487,36 @@ function createDeleteDialog(entityName, deleteUrl, redirectUrl) {
 
 function removeDeleteDialog() {
     $('#deleteDialog').remove();
+}
+
+function customDateFormat(dateArr) {
+    var str = dateArr[0] + '-';
+    if(dateArr[1] < 10) {
+        str += '0' + dateArr[1] +  '-';
+    } else {
+        str += dateArr[1] +  '-';
+    }
+    if(dateArr[2] < 10) {
+        str += '0' + dateArr[2];
+    } else {
+        str += dateArr[2];
+    }
+    return str;
+}
+
+function customDateTimeFormat(dateArr) {
+    var str = customDateFormat(dateArr) + ' ';
+    if(dateArr[3] < 10) {
+        str += '0' + dateArr[3] +  ':';
+    } else {
+        str += dateArr[3] +  ':';
+    }
+    if(dateArr[4] < 10) {
+        str += '0' + dateArr[4];
+    } else {
+        str += dateArr[4];
+    }
+    return str;
 }
 
 /**** end common section ****/
@@ -951,16 +980,76 @@ function addSpeechInfo() {
 /**** speaker js ****/
 
 function initParticipantControl() {
-    $('#edit-participant').click(function () {
 
+    $('#edit-participant').click(function () {
         clearForm(mainForm);
         $.each(speaker, function (key, value) {
-            mainForm.find("input[name='" + key + "']").val(value);
-            mainForm.find("textarea[name='" + key + "']").val(value);
+            if (value != null) {
+                mainForm.find("input[name='" + key + "']").val(value);
+                mainForm.find("textarea[name='" + key + "']").val(value);
+            }
         });
+        var reg = speaker.registered;
+        if(reg != null && reg.length > 5) {
+            mainForm.find('#registered').val(customDateTimeFormat(reg));
+        } else {
+            mainForm.find('#registered').val('');
+        }
+
+        var bd = speaker.birthDay;
+        if(bd != null && bd.length > 2) {
+            mainForm.find('#birthday').val(customDateFormat(bd));
+        } else {
+            mainForm.find('#birthday').val('');
+        }
+        speaker.emails.forEach(function (e) {
+            console.log(e);
+            if(e.main == true) {
+                var mainInput = mainForm.find("#email-0");
+                mainInput.val(e.email);
+                mainInput.data('id', e.id).attr('data-id', e.id);
+            } else {
+                $("#emailContainer").append(
+                    '<div class="col-xs-offset-3 col-xs-7 additional-field">' +
+                    '<input data-id="' + e.id + '" type="email" class="form-control" value="' + e.email + '"/>' +
+                    '</div>');
+            }
+        });
+
+        if(speaker.gitHub != null) {
+            var gitHubInput = mainForm.find('input[name="gitHub"]');
+            gitHubInput.data('id', speaker.gitHub.id).attr('data-id', speaker.gitHub.id);
+            gitHubInput.val(speaker.gitHub.account);
+        }
+
+        if(speaker.twitter != null) {
+            var twitterInput = mainForm.find('input[name="twitter"]');
+            twitterInput.data('id', speaker.twitter.id).attr('data-id', speaker.twitter.id);
+            twitterInput.val(speaker.twitter.account);
+        }
+
         modal.modal();
 
     });
+
+    mainForm.submit(function () {
+        emailHelper();
+        $.ajax({
+            type: "POST",
+            url: "/ajax/participants/",
+            data: mainForm.serialize(),
+            success: function (data) {
+                modal.modal('hide');
+                initSpeaker();
+                successNote('Saved');
+            }
+        });
+        return false;
+    });
+    addInputAdditionalEmail("#emailContainer", "#addEmail", "Additional Email");
+    initDTpicker();
+
+
 }
 
 function initTagForm() {
@@ -1058,14 +1147,20 @@ function initSpeaker() {
 
 function addSpeakerInfo(){
     $('#page-name').html('Спикер: ' +speaker.fullName);
-    $('#photo').html('<img class="img-circle" src="' + speaker.photoURL + '" />');
+    var photo = "";
+    if(speaker.photoURL != null) {
+        $('#photo').html('<img class="img-circle" src="' + speaker.photoURL + '" />');
+    } else {
+        $('#photo').html('<img class="img-circle" src="/resources/img/visitors/avatar.png" />');
+    }
+
     var phone = '-';
     if(speaker.phone != null) {
         phone = speaker.phone;
     }
     var emails = '';
     speaker.emails.forEach(function (e) {
-        if(e.main = true) {
+        if(e.main == true) {
             emails += '<div> <strong>' + e.email + '</strong></div>';
         } else {
             emails += '<div>' + e.email + '</div>';
@@ -1135,6 +1230,7 @@ function makeParticipantTableEditable(ajaxUrl) {
     $('#create-new-participant').click(function () {
         clearForm(mainForm);
         mainForm.find('#participantId').val(0);
+        mainForm.find("#email-0").data('id', 0).attr('data-id', 0);
         modal.modal();
     });
 
@@ -1150,10 +1246,14 @@ function makeParticipantTableEditable(ajaxUrl) {
 }
 
 function emailHelper() {
-    var separator = "::";
-    var str = mainForm.find("#email-0").val();
+    var emailSeparator = "::";
+    var idSeparator = "%%";
+    var str = '';
+    str += mainForm.find("#email-0").data('id');
+    str += idSeparator;
+    str += mainForm.find("#email-0").val();
     mainForm.find(".additional-field input").each(function () {
-        str += separator + $( this ).val();
+        str += emailSeparator + $( this ).data('id') + idSeparator + $( this ).val();
     });
     mainForm.find("#email").val(str);
 }

@@ -45,9 +45,11 @@ public class SpeechHelper {
         return service.save(speech);
     }
 
-    public void update(Speech speech) {
-        LOG.info("update " + speech);
-        service.update(speech);
+    public void update(Speech newSpeech) {
+        LOG.info("update " + newSpeech);
+        Speech oldSpeech = service.get(newSpeech.getId());
+        oldSpeech.updateFields(newSpeech);
+        service.update(newSpeech);
     }
 
     public void update(Speech speech, long[] participantIds) {

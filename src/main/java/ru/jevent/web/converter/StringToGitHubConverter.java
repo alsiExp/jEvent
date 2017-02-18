@@ -10,8 +10,9 @@ public class StringToGitHubConverter implements Converter<String, GitHub> {
         if(!StringUtils.isEmpty(source)){
             GitHub gitHub = new GitHub();
             gitHub.setAccount(source);
+            gitHub.setValid(true);
             return gitHub;
         }
-        return null;
+        return new GitHub();
     }
 }

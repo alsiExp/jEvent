@@ -71,6 +71,7 @@
     var ajaxUrl = '${ajaxUrl}';
     $(function () {
         makeParticipantTableEditable();
+        initErrorNotify();
     });
 
 </script>

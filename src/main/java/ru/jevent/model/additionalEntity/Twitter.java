@@ -24,6 +24,9 @@ public class Twitter extends BaseEntity {
     @JoinColumn(name = "owner_id")
     private Participant owner;
 
+    @Transient
+    private boolean valid;
+
     public Twitter() {
     }
 
@@ -55,6 +58,14 @@ public class Twitter extends BaseEntity {
 
     public void setFollowersCounter(Integer followersCounter) {
         this.followersCounter = followersCounter;
+    }
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    public void setValid(boolean valid) {
+        this.valid = valid;
     }
 
     public String getFullLink() {

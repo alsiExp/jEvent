@@ -21,6 +21,9 @@ public class GitHub extends BaseEntity {
     @JsonBackReference
     private Participant owner;
 
+    @Transient
+    private boolean valid;
+
     public GitHub() {
     }
 
@@ -50,6 +53,14 @@ public class GitHub extends BaseEntity {
         if(!StringUtils.isEmpty(account)) {
             return baseURL + account;
         } else return null;
+    }
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    public void setValid(boolean valid) {
+        this.valid = valid;
     }
 
     @Override

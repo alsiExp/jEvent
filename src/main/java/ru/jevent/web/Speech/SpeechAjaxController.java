@@ -51,9 +51,7 @@ public class SpeechAjaxController {
             helper.create(newSpeech, eventId, partId);
 
         } else {
-            Speech oldSpeech = helper.get(newSpeech.getId());
-            oldSpeech.updateFields(newSpeech);
-            helper.update(oldSpeech);
+            helper.update(newSpeech);
         }
 
         return new ResponseEntity<>(HttpStatus.OK);

@@ -1,13 +1,15 @@
 package ru.jevent.web.Participant;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import ru.jevent.model.Participant;
 import ru.jevent.model.Speech;
-import ru.jevent.model.additionalEntity.Email;
-import ru.jevent.model.additionalEntity.GitHub;
-import ru.jevent.model.additionalEntity.Twitter;
 import ru.jevent.web.Speech.SpeechHelper;
 
 import java.time.LocalDateTime;
@@ -48,45 +50,26 @@ public class ParticipantAjaxController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public void update(@RequestParam("participantId") long id,
-                       @RequestParam("fullName") String fullName,
-                       @RequestParam("fullNameEN") String fullNameEN,
-                       @RequestParam("birthday") LocalDateTime birthday,
-                       @RequestParam("registered") LocalDateTime registered,
-                       @RequestParam("phone") String phone,
-                       @RequestParam("skype") String skype,
-                       @RequestParam("email") Set<Email> email,
-                       @RequestParam("github") GitHub github,
-                       @RequestParam("twitter") Twitter twitter,
-                       @RequestParam("city") String city,
-                       @RequestParam("employer") String employer,
-                       @RequestParam("bio") String biography,
-                       @RequestParam("bioEN") String biographyEN,
-                       @RequestParam("speakerBackground") String speakerBackground,
-                       @RequestParam("travelHelp") String travelHelp) {
-        Participant participant = new Participant();
-        participant.setFullName(fullName);
-        participant.setFullNameEN(fullNameEN);
-        participant.setBirthDay(birthday);
-        participant.setRegistered(registered);
-        participant.setPhone(phone);
-        participant.setSkype(skype);
-        participant.setEmails(email);
-        participant.setGitHub(github);
-        participant.setTwitter(twitter);
-        participant.setCity(city);
-        participant.setEmployer(employer);
-        participant.setBiography(biography);
-        participant.setBiographyEN(biographyEN);
-        participant.setSpeakerBackground(speakerBackground);
-        participant.setTravelHelp(travelHelp);
-        if(id == 0) {
-            helper.create(participant);
-        } else {
-            participant.setId(id);
-            helper.update(participant);
+    public ResponseEntity<String> update(Participant newParticipant) {
+        if(newParticipant.getBirthDay().equals(LocalDateTime.MIN)){
+            newParticipant.setBirthDay(null);
         }
-
+        if(newParticipant.getRegistered().equals(LocalDateTime.MIN)){
+            newParticipant.setRegistered(LocalDateTime.now());
+        }
+        if(!newParticipant.getTwitter().isValid()) {
+            newParticipant.setTwitter(null);
+        }
+        if(!newParticipant.getGitHub().isValid()){
+            newParticipant.setGitHub(null);
+        }
+        newParticipant.setEnabled(true);
+        if(newParticipant.getId() == 0) {
+            helper.create(newParticipant);
+        } else {
+            helper.update(newParticipant);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{speakerId}/speeches", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

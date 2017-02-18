@@ -16,7 +16,12 @@ public class StringToEmailSetConverter implements Converter<String, Set<Email>> 
             String separator = "::";
             for (String e : source.split(separator)) {
                 Email email = new Email();
-                email.setEmail(e);
+                String[] parts = e.split("%%");
+                Long id = Long.parseLong(parts[0]);
+                if (id != 0) {
+                    email.setId(id);
+                }
+                email.setEmail(parts[1]);
                 if (isFirst) {
                     email.setMain(true);
                     isFirst = false;
@@ -24,6 +29,8 @@ public class StringToEmailSetConverter implements Converter<String, Set<Email>> 
                 emails.add(email);
             }
             return emails;
-        } else return null;
+        } else {
+            return null;
+        }
     }
 }

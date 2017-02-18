@@ -11,6 +11,7 @@ import ru.jevent.model.superclasses.BaseEntity;
 import ru.jevent.model.superclasses.Person;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -151,7 +152,9 @@ public class Participant extends Person {
     }
 
     public void setGitHub(GitHub gitHub) {
-        gitHub.setOwner(this);
+        if(gitHub != null) {
+            gitHub.setOwner(this);
+        }
         this.gitHub = gitHub;
     }
 
@@ -160,7 +163,9 @@ public class Participant extends Person {
     }
 
     public void setTwitter(Twitter twitter) {
-        twitter.setOwner(this);
+        if(twitter != null) {
+            twitter.setOwner(this);
+        }
         this.twitter = twitter;
     }
 
@@ -257,6 +262,21 @@ public class Participant extends Person {
         Map<Long,String> map = new HashMap<>();
         speechSet.forEach(speech -> map.putAll( speech.getTags().stream().collect(Collectors.toMap(BaseEntity::getId, SpeechTag::getTag))));
         return map;
+    }
+
+    public void updateFields(@NotNull Participant newPart) {
+        setFullName(newPart.getFullName());
+        setFullNameEN(newPart.getFullNameEN());
+        setBirthDay(newPart.getBirthDay());
+        setPhotoURL(newPart.getPhotoURL());
+        setPhone(newPart.getPhone());
+        setSkype(newPart.getSkype());
+        setCity(newPart.getCity());
+        setEmployer(newPart.getEmployer());
+        setBiography(newPart.getBiography());
+        setBiographyEN(newPart.getBiographyEN());
+        setSpeakerBackground(newPart.getSpeakerBackground());
+        setTravelHelp(newPart.getTravelHelp());
     }
 
     @Override

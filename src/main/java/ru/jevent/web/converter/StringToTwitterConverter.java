@@ -10,8 +10,9 @@ public class StringToTwitterConverter implements Converter<String, Twitter> {
         if(!StringUtils.isEmpty(source)){
             Twitter twitter = new Twitter();
             twitter.setAccount(source);
+            twitter.setValid(true);
             return twitter;
         }
-        return null;
+        return new Twitter();
     }
 }

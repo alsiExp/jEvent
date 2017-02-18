@@ -12,7 +12,7 @@ public class StringToLocalDateTimeConverter implements Converter<String, LocalDa
     @Override
     public LocalDateTime convert(String param) {
         if(StringUtils.isEmpty(param)) {
-            return LocalDateTime.now();
+            return LocalDateTime.MIN;
         } else if(param.length() == 10) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate date = LocalDate.parse(param, formatter);

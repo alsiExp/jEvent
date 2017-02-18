@@ -35,7 +35,7 @@
         </div>
 
         <div class="col-sm-9 col-md-9 col-lg-10 main">
-            <c:set var="ajaxUrl" value="../ajax/participants/${speakerId}/speeches/"/>
+            <c:set var="ajaxUrl" value="/ajax/participants/${speakerId}/speeches/"/>
 
 
 

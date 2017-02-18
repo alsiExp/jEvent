@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" method="post" id="detailsParticipantForm">
-                    <input type="text" hidden="hidden" name="participantId" id="participantId">
+                    <input type="text" hidden="hidden" name="id" id="participantId">
                     <input type="text" hidden="hidden" name="registered" id="registered">
 
                     <div class="form-group">
@@ -29,7 +29,15 @@
                         <label for="birthday" class="control-label col-xs-3"><fmt:message key="app.participant.birthday"/></label>
 
                         <div class="col-xs-9">
-                            <input type="datetime" class="form-control date-picker" id="birthday" name="birthday">
+                            <input type="datetime" class="form-control date-picker" id="birthday" name="birthDay">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="photoURL" class="control-label col-xs-3"><fmt:message key="app.table.photoURL"/></label>
+
+                        <div class="col-xs-9">
+                            <input type="tel" class="form-control" id="photoURL" name="photoURL">
                         </div>
                     </div>
 
@@ -51,7 +59,7 @@
 
                     <div class="form-group" id="emailContainer">
                         <label for="email" class="control-label col-xs-3"><fmt:message key="app.table.email"/></label>
-                        <input type="hidden" class="form-control" id="email" name="email">
+                        <input type="hidden" class="form-control" id="email" name="emails">
 
                         <div class="col-xs-7">
                             <input type="email" class="form-control" id="email-0">
@@ -67,7 +75,7 @@
                         <div class="col-xs-9">
                             <div class="input-group">
                                 <div class="input-group-addon">https://github.com/</div>
-                                <input type="text" class="form-control" id="github" name="github">
+                                <input type="text" class="form-control" id="github" name="gitHub">
                             </div>
                         </div>
                     </div>
@@ -104,7 +112,7 @@
 
                         <div class="col-xs-9">
                             <fmt:message key="app.html.enabled" var="htmlOn"/>
-                            <textarea class="form-control" id="bio" name="bio" placeholder="${htmlOn}"></textarea>
+                            <textarea class="form-control" id="bio" name="biography" placeholder="${htmlOn}"></textarea>
                         </div>
                     </div>
 
@@ -112,7 +120,7 @@
                         <label for="bioEN" class="control-label col-xs-3"><fmt:message key="app.table.bioEN"/></label>
 
                         <div class="col-xs-9">
-                            <textarea class="form-control" id="bioEN" name="bioEN" placeholder="${htmlOn}"></textarea>
+                            <textarea class="form-control" id="bioEN" name="biographyEN" placeholder="${htmlOn}"></textarea>
                         </div>
                     </div>
 
@@ -121,15 +129,6 @@
 
                         <div class="col-xs-9">
                                 <textarea class="form-control" id="speakerBackground" name="speakerBackground" >
-                                </textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="description" class="control-label col-xs-3"><fmt:message key="app.participant.description"/></label>
-
-                        <div class="col-xs-9">
-                                <textarea class="form-control" id="description" name="description">
                                 </textarea>
                         </div>
                     </div>
