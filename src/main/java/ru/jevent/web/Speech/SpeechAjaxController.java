@@ -71,8 +71,6 @@ public class SpeechAjaxController {
     @RequestMapping(value = "/tags", method = RequestMethod.POST)
     public ResponseEntity<List<String>> saveTags(@RequestParam("speechId") long id,
                                            @RequestParam(value = "tags", required = false) String[] tags) {
-
-        Speech speech = helper.get(id);
         List<String> response = new ArrayList<>();
         Set<SpeechTag> tagSet = new HashSet<>();
         if(tags != null) {
@@ -91,8 +89,7 @@ public class SpeechAjaxController {
             }
         }
 
-        speech.setTags(tagSet);
-        helper.update(speech);
+        helper.updateTags(id, tagSet);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

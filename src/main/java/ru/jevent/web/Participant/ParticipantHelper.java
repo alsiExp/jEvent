@@ -29,13 +29,17 @@ public class ParticipantHelper {
     public void update(Participant newPart) {
         LOG.info("update " + newPart);
         Participant oldPart = service.get(newPart.getId());
-        if(!oldPart.getGitHub().getAccount().equals(newPart.getGitHub().getAccount())){
-            oldPart.setGitHub(newPart.getGitHub());
-            //TODO: delete old github?
+        if(newPart.getGitHub() != null) {
+            if (newPart.getGitHub() != null && !oldPart.getGitHub().getAccount().equals(newPart.getGitHub().getAccount())) {
+                oldPart.setGitHub(newPart.getGitHub());
+                //TODO: delete old github?
+            }
         }
-        if(!oldPart.getTwitter().getAccount().equals(newPart.getTwitter().getAccount())) {
-            oldPart.setTwitter(newPart.getTwitter());
-            //TODO: delete old twitter?
+        if(newPart.getTwitter() != null) {
+            if (newPart.getTwitter() != null && !oldPart.getTwitter().getAccount().equals(newPart.getTwitter().getAccount())) {
+                oldPart.setTwitter(newPart.getTwitter());
+                //TODO: delete old twitter?
+            }
         }
         oldPart.updateFields(newPart);
         //TODO implement emails delete

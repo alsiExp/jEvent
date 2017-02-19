@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.jevent.model.Speech;
 import ru.jevent.model.additionalEntity.SpeechTag;
 import ru.jevent.repository.SpeechRepository;
+import ru.jevent.service.EventService;
 import ru.jevent.service.SpeechService;
 import ru.jevent.util.exception.ExceptionUtil;
 import ru.jevent.util.exception.NotFoundException;
@@ -15,19 +16,24 @@ import java.util.List;
 public class SpeechServiceImpl implements SpeechService{
 
     private SpeechRepository repository;
+    private EventService eventService;
 
     @Autowired
-    public SpeechServiceImpl(SpeechRepository repository) {
+    public SpeechServiceImpl(SpeechRepository repository, EventService eventService) {
         this.repository = repository;
+        this.eventService = eventService;
     }
 
     @Override
     public Speech save(Speech speech) {
+        eventService.dropCache();
         return repository.save(speech);
+
     }
 
     @Override
     public void update(Speech speech) throws NotFoundException {
+        eventService.dropCache();
         ExceptionUtil.check(repository.save(speech), speech.getId());
     }
 
@@ -38,6 +44,7 @@ public class SpeechServiceImpl implements SpeechService{
 
     @Override
     public void delete(long id) throws NotFoundException {
+        eventService.dropCache();
         ExceptionUtil.check(repository.delete(id), id);
     }
 

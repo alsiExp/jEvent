@@ -20,4 +20,6 @@ public interface ParticipantService {
     List<Participant> getByTag(long tagId);
 
     List<Participant> getAll();
+
+    void dropCache();
 }

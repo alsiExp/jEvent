@@ -100,6 +100,10 @@
 
     var speakerSearchDatatable;
 
+    function customViewUpdate() {
+        initSpeech();
+    }
+
     $(function () {
         initTagForm();
         initSpeech();

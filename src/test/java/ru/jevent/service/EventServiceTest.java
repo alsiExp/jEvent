@@ -27,7 +27,7 @@ import static ru.jevent.Profiles.POSTGRES;
 public class EventServiceTest {
 
     @Autowired
-    EventService eventService;
+    private EventService eventService;
     @Autowired
     private TestData testData;
     @Autowired

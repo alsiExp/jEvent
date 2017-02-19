@@ -764,6 +764,9 @@ function initSingleSpechControl() {
     });
 
     mainForm.submit(function () {
+        var rating = mainForm.find('#rating').val();
+        rating = rating.replace(",", ".");
+        mainForm.find('#rating').val(rating);
         $.ajax({
             type: "POST",
             url: "/ajax/speeches/",
@@ -1071,11 +1074,8 @@ function initTagForm() {
                 data: tagForm.serialize(),
                 success: function (data) {
                     tagModal.modal('hide');
-                    if(typeof ajaxUrl !== 'undefined') {
-                        updateTable();
-                    } else if (typeof speechId !== 'undefined') {
-                        initSpeech();
-                    }
+                    //must be defined in jsp
+                    customViewUpdate();
                     successNote('New speech tags: ' + data );
                 }
             });
@@ -1135,9 +1135,10 @@ function updateSpeechRow(id){
 
 
 function initSpeaker() {
+    table = $('#speechTable').DataTable();
     $.ajax({
         type: "GET",
-        url: "../ajax/participants/" + speakerID,
+        url: "/ajax/participants/" + speakerID,
         success: function (data) {
             speaker = data;
             addSpeakerInfo();

@@ -3,6 +3,7 @@ package ru.jevent.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.jevent.model.additionalEntity.Rate;
 import ru.jevent.model.superclasses.NamedEntity;
 
@@ -20,6 +21,7 @@ import static java.util.stream.Collectors.groupingBy;
         @NamedQuery(name = Event.ALL_SORTED, query = "SELECT e FROM Event e ORDER BY e.id"),
         @NamedQuery(name = Event.BY_JIRA_ID, query = "SELECT e FROM Event e WHERE e.jiraId = :jiraId")
 })
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Event extends NamedEntity {
     /*
 

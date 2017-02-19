@@ -1,6 +1,7 @@
 package ru.jevent.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import ru.jevent.model.additionalEntity.Email;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
         @NamedQuery(name = Participant.BY_EMAIL, query = "SELECT p FROM Participant p JOIN p.emails e WHERE e.email = ?1"),
         @NamedQuery(name = Participant.BY_TAG, query = "SELECT DISTINCT p FROM Participant p JOIN p.speechSet ss join ss.tags t WHERE t.id = ?1")
 })
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Participant extends Person {
     /*
         fields from jira:

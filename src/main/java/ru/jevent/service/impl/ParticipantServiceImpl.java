@@ -1,6 +1,8 @@
 package ru.jevent.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import ru.jevent.model.Participant;
 import ru.jevent.repository.ParticipantRepository;
@@ -20,11 +22,13 @@ public class ParticipantServiceImpl implements ParticipantService {
         this.repository = repository;
     }
 
+    @CacheEvict(value = "participants", allEntries = true)
     @Override
     public Participant save(Participant participant) {
         return repository.save(participant);
     }
 
+    @CacheEvict(value = "participants", allEntries = true)
     @Override
     public void update(Participant participant) throws NotFoundException {
         ExceptionUtil.check(repository.save(participant), participant.getId());
@@ -40,6 +44,7 @@ public class ParticipantServiceImpl implements ParticipantService {
         return repository.getByEmail(email);
     }
 
+    @CacheEvict(value = "participants", allEntries = true)
     @Override
     public void delete(long id) throws NotFoundException {
         ExceptionUtil.check(repository.delete(id), id);
@@ -50,8 +55,15 @@ public class ParticipantServiceImpl implements ParticipantService {
         return repository.getByTag(tagId);
     }
 
+    @Cacheable("participants")
     @Override
     public List<Participant> getAll() {
         return repository.getAll();
+    }
+
+    @CacheEvict(value = "participants", allEntries = true)
+    @Override
+    public void dropCache() {
+
     }
 }

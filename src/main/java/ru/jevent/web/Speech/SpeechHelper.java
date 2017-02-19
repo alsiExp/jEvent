@@ -49,7 +49,15 @@ public class SpeechHelper {
         LOG.info("update " + newSpeech);
         Speech oldSpeech = service.get(newSpeech.getId());
         oldSpeech.updateFields(newSpeech);
-        service.update(newSpeech);
+
+        service.update(oldSpeech);
+    }
+
+    public void updateTags(long speechId, Set<SpeechTag> newTags) {
+        LOG.info("update tags for speech " + speechId);
+        Speech oldSpeech = service.get(speechId);
+        oldSpeech.setTags(newTags);
+        service.update(oldSpeech);
     }
 
     public void update(Speech speech, long[] participantIds) {

@@ -57,7 +57,7 @@
                 </div>
             </div>
 
-            <datatables:table id="speechTable" url="${ajaxUrl}" cssClass="row table table-hover" autoWidth="true">
+            <datatables:table id="speechTable" url="${ajaxUrl}" cssClass="row table table-hover" autoWidth="true" stateSave="true">
                 <fmt:message key="app.event" var="event"/>
                 <datatables:column title="${event}" property="eventName" renderFunction="renderSpeechEventLink"/>
 
@@ -97,12 +97,18 @@
     var speakerID = ${speakerId};
     var speaker;
 
+
+
     mainForm = $('#detailsParticipantForm');
     modal = $('#editParticipant');
 
     var tagForm = $('#detailsTagsForm');
     var tagModal = $('#editTags');
     var tagContainer = tagForm.find('#tag-container');
+
+    function customViewUpdate() {
+        updateTable();
+    }
 
     $(function () {
         initSpeaker();

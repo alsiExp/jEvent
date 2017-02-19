@@ -121,6 +121,10 @@
     var mainForm = $('#detailsSpeechForm');
     var modal = $('#editSpeech');
 
+    function customViewUpdate() {
+        updateTable();
+    }
+
     $(function () {
         makeEventSpeechTableEditable();
         initEvent();

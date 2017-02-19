@@ -36,6 +36,7 @@ public class ParticipantServiceTest {
     @Before
     public void setUp() throws Exception {
         dbPopulator.execute();
+        service.dropCache();
     }
 
     @Test
