@@ -6,6 +6,7 @@ import ru.jevent.model.Speech;
 import ru.jevent.model.additionalEntity.SpeechTag;
 import ru.jevent.repository.SpeechRepository;
 import ru.jevent.service.EventService;
+import ru.jevent.service.ParticipantService;
 import ru.jevent.service.SpeechService;
 import ru.jevent.util.exception.ExceptionUtil;
 import ru.jevent.util.exception.NotFoundException;
@@ -17,16 +18,19 @@ public class SpeechServiceImpl implements SpeechService{
 
     private SpeechRepository repository;
     private EventService eventService;
+    private ParticipantService participantService;
 
     @Autowired
-    public SpeechServiceImpl(SpeechRepository repository, EventService eventService) {
+    public SpeechServiceImpl(SpeechRepository repository, EventService eventService, ParticipantService participantService) {
         this.repository = repository;
         this.eventService = eventService;
+        this.participantService = participantService;
     }
 
     @Override
     public Speech save(Speech speech) {
         eventService.dropCache();
+        participantService.dropCache();
         return repository.save(speech);
 
     }
@@ -34,6 +38,7 @@ public class SpeechServiceImpl implements SpeechService{
     @Override
     public void update(Speech speech) throws NotFoundException {
         eventService.dropCache();
+        participantService.dropCache();
         ExceptionUtil.check(repository.save(speech), speech.getId());
     }
 
@@ -45,6 +50,7 @@ public class SpeechServiceImpl implements SpeechService{
     @Override
     public void delete(long id) throws NotFoundException {
         eventService.dropCache();
+        participantService.dropCache();
         ExceptionUtil.check(repository.delete(id), id);
     }
 

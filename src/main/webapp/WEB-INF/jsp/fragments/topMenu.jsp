@@ -109,7 +109,7 @@
                                     <li><a href="/users"><fmt:message key="app.menu.profile.team"/></a></li>
                                     <li role="separator" class="divider"></li>
                                 </sec:authorize>
-                                <li><a href="#"><fmt:message key="app.menu.profile.logout"/>&nbsp;<i class="fa fa-sign-out fa-fw" aria-hidden="true"></i></a></li>
+                                <li><a href="/logout"><fmt:message key="app.menu.profile.logout"/>&nbsp;<i class="fa fa-sign-out fa-fw" aria-hidden="true"></i></a></li>
                             </sec:authorize>
                         </ul>
                     </li>
